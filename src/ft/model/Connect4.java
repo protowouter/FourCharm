@@ -3,9 +3,6 @@
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
 package ft.model;
-
-import java.io.*;
-
 /**
  * Class for modeling an board for the game connect four. This class's responsibility is
  * to keep the state of the board. For efficiency reasons the board state is implemented in
@@ -69,7 +66,7 @@ public class Connect4 {
 	}
 	
 	
-	private boolean columnHasFreeSpace(int col) {
+	public boolean columnHasFreeSpace(int col) {
 		
 		return isLegalBoard(color[nplies & 1] | (1L << height[col]));
 		
@@ -150,38 +147,6 @@ public class Connect4 {
 	// so that positioncode() is a complete board encoding
 	}
 	
-	public static void main(String[] argv)
-	  {
-	    Connect4 c4;
-	    String line;
-	    int col=0, i, result;
-	    long nodes, msecs;
-
-	    c4 = new Connect4();
-	    BufferedReader dis = new BufferedReader(new InputStreamReader(System.in));
-
-	    for (;;) {
-	      System.out.println("position " + c4.positioncode() + " after moves " + c4 + "enter move(s):");
-	      try {
-	        line = dis.readLine();
-	      } catch (IOException e) {
-	        System.out.println(e);
-	        System.exit(0);
-	        return;
-	      }
-	      if (line == null) {
-			break;
-		}
-	      for (i=0; i < line.length(); i++) {
-	        col = line.charAt(i) - '1';
-	        if (col >= 0 && col < COLUMNS && c4.columnHasFreeSpace(col)) {
-				c4.makemove(col);
-			}
-	      }
-	    }
-	  }
-	
-	
 	public String toString() {
 	    StringBuilder repr = new StringBuilder();
 
@@ -200,12 +165,6 @@ public class Connect4 {
 	                   (color[1] & mask) != 0 ? " 0" : " .");
 	    	}
 	    	repr.append("\n");
-	    }
-	    if (haswon(color[0])) {
-	        repr.append("@ won\n");
-	    }
-	    if (haswon(color[1])) {
-	        repr.append("O won\n");
 	    }
 	    return repr.toString();
 	}

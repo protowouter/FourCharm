@@ -9,6 +9,6 @@ package ft.model;
  */
 public interface Player {
 	
-	public int doMove();
+	public int doMove(Connect4 board);
 
 }

@@ -3,6 +3,9 @@
  */
 package ft.model;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -23,6 +26,8 @@ public class Game {
 		
 		board = new Connect4();
 		
+		playerlist = new ArrayList<Player>();
+		
 		for (Player player : players) {
 			
 			playerlist.add(player);
@@ -37,7 +42,7 @@ public class Game {
 	private void nextPlayer() {
 		
 		if (playerIterator.hasNext()) {
-			board.makemove(playerIterator.next().doMove());
+			board.makemove(playerIterator.next().doMove(board));
 		}
 		
 		else {
@@ -49,6 +54,7 @@ public class Game {
 	public void start() {
 		
 		while (!this.hasFinished()) {
+			System.out.println(board);
 			this.nextPlayer();
 		}
 		
@@ -65,6 +71,13 @@ public class Game {
 	
 	public boolean hasFinished() {
 		return false;
+	}
+	
+	public static void main(String[] args) {
+		
+		BufferedReader dis = new BufferedReader(new InputStreamReader(System.in));
+		
+		new Game(new Player[]{new HumanPlayer(dis), new RandomComputerPlayer()}).start();
 	}
 	
 
