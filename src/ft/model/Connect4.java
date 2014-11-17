@@ -7,16 +7,13 @@ package ft.model;
 import java.io.*;
 
 /**
+ * Class for modeling an board for the game connect four. This class's responsibility is
+ * to keep the state of the board. For efficiency reasons the board state is implemented in
+ * an array of 2 longs
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
 public class Connect4 {
-	
-	/**
-	 * Class for modeling an board for the game connect four. This class's responsibility is
-	 * to keep the state of the board 
-	 */
-	
 	
 	/**
 	 * Amount of columns of the board.
@@ -27,31 +24,30 @@ public class Connect4 {
 	 */
 	public static final int ROWS	= 6;
 	
-	private static long[] color; // black and white bitboard?
-	
-	
 	private static final int H1 = ROWS + 1; // H1 is the multiple of the index 
 											// for the first row of each column
-	
 	private static final int H2 = ROWS + 2;
 	
 	private static final int SIZE = COLUMNS * ROWS;
 	
 	private static final int SIZE1 = H1 * COLUMNS;
 	
-	private static final long ALL1 = (1L << SIZE1) - 1L; // 1L is the number one as a long
+	private static final long ALL1 = (1L << SIZE1) - 1L; // As much one's as there are spots
 	
 	private static final int COL1 = (1 << H1) - 1;
 	
 	private static final long BOTTOM = ALL1 / COL1;
 	
-	private static final long TOP = BOTTOM << ROWS;
+	private static final long TOP = BOTTOM << ROWS; // Bitmask for detecting overflows in columns
 	
 	private int[] moves; // Array with moves since the start of the game
 	
 	private int nplies; // Amount of turns since the start of the game
 	
-	private byte[] height; // Array with bit index of lowest free sqaure for every column
+	private byte[] height; // Array with the index of lowest free sqaure 
+						   // for every column; assumes SIZE < 128
+	
+	private static long[] color; // Holds bitboard for every color
 	
 	
 	public Connect4() {
@@ -60,7 +56,6 @@ public class Connect4 {
 		height = new byte[COLUMNS];
 		moves = new int[SIZE];
 		reset();
-		
 	}
 	
 	private void reset() {
@@ -70,7 +65,6 @@ public class Connect4 {
 		
 		for (int i = 0; i < COLUMNS; i++) {
 			height[i] = (byte) (H1 * i);
-			System.out.println("height[i] = " + (byte) (H1 * i));
 		}
 	}
 	
@@ -135,16 +129,11 @@ public class Connect4 {
 	 * @requires gets called for the player which current turn it is
 	 */
 	
-	void makemove(int col) {
+	public void makemove(int col) {
 		
 		int player = nplies & 1; // same as modulo 2 but probably more efficient
 		
 		nplies++; //Increment the plie count
-	
-		
-		System.out.println(Byte.toString(height[col]));
-		System.out.println(Long.toBinaryString(1L << height[col]));
-		
 		
 		
 		color[player] ^= 1L << height[col];
@@ -152,13 +141,10 @@ public class Connect4 {
 		
 		height[col]++; //Increment the height of the column where the piece is placed
 		
-		System.out.println("Player 1: " + color[0]);
-		System.out.println("Player 2; " + color[1]);
-		
-		
 	}
 	
 	public long positioncode() {
+		
 	    return 2 * color[0] + color[1] + BOTTOM;
 	// color[0] + color[1] + BOTTOM forms bitmap of heights
 	// so that positioncode() is a complete board encoding
@@ -197,25 +183,31 @@ public class Connect4 {
 	
 	
 	public String toString() {
-	    StringBuilder buf = new StringBuilder();
+	    StringBuilder repr = new StringBuilder();
 
 	    for (int i = 0; i < nplies; i++) {
-			buf.append(1 + moves[i]);
+			repr.append(1 + moves[i]);
 		}
-	    buf.append("\n");
+	    repr.append("\n");
 	    for (int w = 0; w < COLUMNS; w++) {
-			buf.append(" " + (w + 1));
+			repr.append(" " + (w + 1));
 		}
-	    buf.append("\n");
+	    repr.append("\n");
 	    for (int h = ROWS - 1; h >= 0; h--) {
 	    	for (int w = h; w < SIZE1; w += H1) {
 	    		long mask = 1L << w;
-	    		buf.append((color[0] & mask) != 0 ? " @" :
+	    		repr.append((color[0] & mask) != 0 ? " @" :
 	                   (color[1] & mask) != 0 ? " 0" : " .");
 	    	}
-	    	buf.append("\n");
+	    	repr.append("\n");
 	    }
-	    return buf.toString();
+	    if (haswon(color[0])) {
+	        repr.append("@ won\n");
+	    }
+	    if (haswon(color[1])) {
+	        repr.append("O won\n");
+	    }
+	    return repr.toString();
 	}
 	
 	
