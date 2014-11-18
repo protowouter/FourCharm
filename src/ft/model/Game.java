@@ -77,7 +77,8 @@ public class Game {
 		
 		BufferedReader dis = new BufferedReader(new InputStreamReader(System.in));
 		
-		new Game(new Player[]{new HumanPlayer(dis), new RandomComputerPlayer()}).start();
+		new Game(new Player[]{new HumanPlayer(dis), 
+			new ComputerPlayer(new RandomStrategy())}).start();
 	}
 	
 

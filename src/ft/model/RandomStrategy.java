@@ -9,10 +9,10 @@ import java.util.Random;
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
-public class RandomComputerPlayer implements ComputerPlayer {
+public class RandomStrategy implements GameStrategy {
 
 	/* (non-Javadoc)
-	 * @see ft.model.Player#doMove()
+	 * @see ft.model.GameStrategy#doMove()
 	 */
 	@Override
 	public int doMove(Connect4 board) {
