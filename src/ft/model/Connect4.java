@@ -44,7 +44,7 @@ public class Connect4 {
 	private byte[] height; // Array with the index of lowest free sqaure 
 						   // for every column; assumes SIZE < 128
 	
-	private static long[] color; // Holds bitboard for every color
+	private long[] color; // Holds bitboard for every color
 	
 	
 	public Connect4() {

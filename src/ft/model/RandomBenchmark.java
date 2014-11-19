@@ -18,7 +18,7 @@ public class RandomBenchmark {
 		int gCount = 0;
 		long pCount = 0;
 		final int step = 1_000_000; 
-		final int total = 100_000_000;
+		final int total = 10_000_000;
 		long startTime = System.currentTimeMillis();
 		long oStartTime = System.currentTimeMillis();
 		PrintStream nullStream = new PrintStream(ByteStreams.nullOutputStream());
