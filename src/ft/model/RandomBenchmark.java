@@ -13,34 +13,30 @@ import com.google.common.io.ByteStreams;
 
 public class RandomBenchmark {
 	
-	public static void main(String[] args) {
+	public static final int ITERATIONS = 10_000_000;
+	
+	private static int runBenchmark(Class<? extends Board> boardClass) {
+		
 		
 		int gCount = 0;
 		long pCount = 0;
-		final int step = 1_000_000; 
-		final int total = 10_000_000;
-		long startTime = System.currentTimeMillis();
+		final int total = ITERATIONS;
+		final int step = total / 10; 
 		long oStartTime = System.currentTimeMillis();
 		PrintStream nullStream = new PrintStream(ByteStreams.nullOutputStream());
 		
-		DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.ITALY);
-		DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
-		symbols.setGroupingSeparator(' ');
 		
 		
-		while (gCount < total) {
+		
+		while (gCount < total + 1) {
 			
 			if (gCount % step == 0 && gCount != 0) {
-				long endTime = System.currentTimeMillis();
-				int gps = (int) (step / ((float) (endTime - startTime) / 1000));
-				String progress = gCount + " of " + total;
-				System.out.println(progress + " : " + formatter.format(gps) + " gps");
-				startTime = System.currentTimeMillis();
+				float percent = ((float) gCount / (float) total) * 100;
+				int intPercent = (int) percent;
+				System.out.println(intPercent + "%");
 			}
-			
-			
 		
-			Game game = new Game(new Player[]{new ComputerPlayer(new RandomStrategy())
+			Game game = new Game(boardClass, new Player[]{new ComputerPlayer(new RandomStrategy())
 							, new ComputerPlayer(new RandomStrategy())}
 							, nullStream, false);
 			game.start();
@@ -49,13 +45,39 @@ public class RandomBenchmark {
 		
 		}
 		long endTime = System.currentTimeMillis();
-		System.out.println(formatter.format(
-						(int) (total / ((float) (endTime - oStartTime) / 1000))) 
-						+ " gps (games per second)");
-		
 		int mps = (int) (pCount / ((float) (endTime - oStartTime) / 1000));
-		System.out.println(formatter.format(mps) + " mps (moves per second");
+		
+		return mps;
+		
 		
 	}
+	
+	public static void main(String[] args) {
+		
+		DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.ITALY);
+		DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
+		symbols.setGroupingSeparator(' ');
+		
+		System.out.println("Running Benchmark with " 
+						+ formatter.format(ITERATIONS) + " iterations");
+		
+		System.out.println("\n\n" + BinaryBoard.class.getSimpleName() + ":");
+		int binMps = runBenchmark(BinaryBoard.class);
+		System.out.println("\n\n" + ReferenceBoard.class.getSimpleName() + ":");
+		int refMps = runBenchmark(ReferenceBoard.class);
+		float speedup = (float) binMps / refMps;
+		
+		System.out.println("\n\n\nResults:\n-----------\n");
+		
+		System.out.println("BinaryBoard: " + formatter.format(binMps) 
+						+ " mps (moves per second)");
+		System.out.println("ReferenceBoard: " + formatter.format(refMps) 
+						+ " mps (moves per second)");
+		System.out.println("\nBinaryBoard is " + speedup 
+						+ "x faster than the 2D array reference implementation");
+		
+	}
+		
+		
 
 }

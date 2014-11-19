@@ -25,7 +25,7 @@ public class HumanPlayer implements Player {
 	/* (non-Javadoc)
 	 * @see ft.model.Player#doMove()
 	 */
-	public int doMove(Connect4 board) {
+	public int doMove(Board board) {
 		
 		System.out.println("Voer kolomnummer in: ");
 		
@@ -43,7 +43,7 @@ public class HumanPlayer implements Player {
 	    }
 	    for (int i = 0; i < line.length(); i++) {
 	        int col = line.charAt(i) - '1';
-	        if (col >= 0 && col < Connect4.COLUMNS && board.columnHasFreeSpace(col)) {
+	        if (col >= 0 && col < BinaryBoard.COLUMNS && board.columnHasFreeSpace(col)) {
 	        	move = col;
 	        }
 	    }

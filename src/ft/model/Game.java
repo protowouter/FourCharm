@@ -18,7 +18,7 @@ import com.google.common.collect.Iterables;
  */
 public class Game {
 	
-	private Connect4 board;
+	private Board board;
 	
 	private ArrayList<Player> playerlist;
 	
@@ -28,9 +28,16 @@ public class Game {
 	
 	private boolean verbose;
 	
-	public Game(Player[] players, PrintStream oStream, boolean beVerbose) {
+	public Game(Class<? extends Board> boardClass
+					, Player[] players, PrintStream oStream, boolean beVerbose) {
 		
-		board = new Connect4();
+		try {
+			board = boardClass.newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
 		
 		playerlist = new ArrayList<Player>();
 		
@@ -103,7 +110,7 @@ public class Game {
 		
 		BufferedReader dis = new BufferedReader(new InputStreamReader(System.in));
 		
-		new Game(new Player[]{new HumanPlayer(dis), 
+		new Game(BinaryBoard.class, new Player[]{new HumanPlayer(dis), 
 			new ComputerPlayer(new RandomStrategy())}, System.out, true).start();
 	}
 	

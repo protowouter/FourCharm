@@ -10,7 +10,7 @@ package ft.model;
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
-public class Connect4 {
+public class BinaryBoard implements Board {
 	
 	/**
 	 * Amount of columns of the board.
@@ -47,7 +47,7 @@ public class Connect4 {
 	private long[] color; // Holds bitboard for every color
 	
 	
-	public Connect4() {
+	public BinaryBoard() {
 		
 		color = new long[2];
 		height = new byte[COLUMNS];

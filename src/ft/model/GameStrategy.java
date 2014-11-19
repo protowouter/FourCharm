@@ -5,6 +5,6 @@ package ft.model;
 
 public interface GameStrategy {
 	
-	public int doMove(Connect4 board);
+	public int doMove(Board board);
 
 }

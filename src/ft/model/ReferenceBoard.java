@@ -14,7 +14,7 @@ import java.util.Arrays;
  *
  */
 
-public class ReferenceBoard {
+public class ReferenceBoard implements Board{
 	
 	/**
 	 * Amount of columns of the board.
@@ -43,7 +43,10 @@ public class ReferenceBoard {
 	public ReferenceBoard() {
 		
 		board = new int[COLUMNS][ROWS];
-		Arrays.fill(board, EMPTY);
+		for (int i = 0; i < COLUMNS; i++) {
+			Arrays.fill(board[i], EMPTY);
+		}
+		
 		moves = new int[SIZE];
 		reset();
 	}
@@ -51,6 +54,9 @@ public class ReferenceBoard {
 	private void reset() {
 		nplies = 0;
 		board = new int[COLUMNS][ROWS];
+		for (int i = 0; i < COLUMNS; i++) {
+			Arrays.fill(board[i], EMPTY);
+		}
 	}
 	
 	
@@ -83,15 +89,37 @@ public class ReferenceBoard {
 		
 	}
 	
-	private boolean hasLRDiagonal(int newboard) {
+	private boolean hasLRDiagonal(int player) {
 		
-		return false;
+		boolean diag = false;
+		
+		for (int column = 4; column < COLUMNS && !diag; column++) {
+			int streak = 0;
+			int tColumn = column;
+			for (int row = 0; row < ROWS && tColumn < COLUMNS; row++, tColumn--) {
+				streak = board[column][row] == player ? streak + 1 : 0;
+			}
+			diag = streak == 4;
+		}
+		
+		return diag;
 		
 	}
 	
-	private boolean hasRLDiagonal(int newboard) {
+	private boolean hasRLDiagonal(int player) {
 		
-		return false;
+		boolean diag = false;
+		
+		for (int column = COLUMNS - 4; column >= 0 && !diag; column--) {
+			int streak = 0;
+			int tColumn = column;
+			for (int row = 0; row < ROWS && tColumn < COLUMNS; row++, tColumn++) {
+				streak = board[column][row] == player ? streak + 1 : 0;
+			}
+			diag = streak == 4;
+		}
+		
+		return diag;
 		
 	}
 	
@@ -100,11 +128,11 @@ public class ReferenceBoard {
 		boolean horizontal = false;
 		
 		for (int row = 0; row < ROWS && !horizontal; row++) {
-			boolean possible = true;
-			for (int column = 0; column < COLUMNS && possible; column++) {
-				possible = board[column][row] == player;
+			int streak = 0;
+			for (int column = 0; column < COLUMNS && streak < 4; column++) {
+				streak = board[column][row] == player ? streak + 1 : 0;
 			}
-			horizontal = possible;
+			horizontal = streak == 4;
 			
 		}
 		
@@ -113,9 +141,20 @@ public class ReferenceBoard {
 		
 	}
 	
-	private boolean hasVertical(int newboard) {
+	private boolean hasVertical(int player) {
 		
-		return false;
+		boolean vertical = false;
+		
+		for (int column = 0; column < COLUMNS && !vertical; column++) {
+			int streak = 0;
+			for (int row = 0; row < ROWS && streak < 4; row++) {
+				streak = board[column][row] == player ? streak + 1 : 0;
+			}
+			vertical = streak == 4;
+			
+		}
+		
+		return vertical;
 		
 		
 	}
@@ -132,12 +171,12 @@ public class ReferenceBoard {
 		
 		nplies++; //Increment the plie count
 		
-		boolean needPlacement = false;
+		boolean needPlacement = true;
 		
 		for (int i = 0; i < ROWS && needPlacement; i++) {
 			if (board[col][i] == EMPTY) {
 				board[col][i] = player;
-				needPlacement = true;
+				needPlacement = false;
 			}
 		}
 		
@@ -156,6 +195,20 @@ public class ReferenceBoard {
 			repr.append(" " + (w + 1));
 		}
 	    repr.append("\n");
+	    
+	    for (int row = ROWS - 1; row >= 0; row--) {
+	    	for (int column = 0; column < COLUMNS; column++) {
+	    		int player = board[column][row];
+	    		if (player == PLAYER1) {
+	    			repr.append(" @");
+	    		} else if (player == PLAYER2) {
+	    			repr.append(" 0");
+	    		} else {
+	    			repr.append(" .");
+	    		}
+	    	}
+	    	repr.append("\n");
+	    }
 
 	    return repr.toString();
 	}

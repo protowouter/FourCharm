@@ -13,7 +13,7 @@ public class ComputerPlayer implements Player {
 		
 	}
 	
-	public int doMove(Connect4 board) {
+	public int doMove(Board board) {
 		return strategy.doMove(board);
 	}
 

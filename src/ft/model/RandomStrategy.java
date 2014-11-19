@@ -16,7 +16,7 @@ public class RandomStrategy implements GameStrategy {
 	/* (non-Javadoc)
 	 * @see ft.model.GameStrategy#doMove()
 	 */
-	public int doMove(Connect4 board) {
+	public int doMove(Board board) {
 		
 		int col = R_GENERATOR.nextInt(7);
 		
