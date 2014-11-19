@@ -5,8 +5,11 @@ package ft.model;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import com.google.common.collect.Iterables;
 
 /**
  * Models an game of Connect 4.
@@ -21,11 +24,19 @@ public class Game {
 	
 	private Iterator<Player> playerIterator;
 	
-	public Game(Player[] players) {
+	private PrintStream stream;
+	
+	private boolean verbose;
+	
+	public Game(Player[] players, PrintStream oStream, boolean beVerbose) {
 		
 		board = new Connect4();
 		
 		playerlist = new ArrayList<Player>();
+		
+		stream = oStream;
+		
+		verbose = beVerbose;
 		
 		for (Player player : players) {
 			
@@ -33,32 +44,40 @@ public class Game {
 			
 		}
 		
+		playerIterator = Iterables.cycle(playerlist).iterator();
 		
-		playerIterator = playerlist.iterator();
 		
 	}
 	
 	private void nextPlayer() {
 		
-		if (playerIterator.hasNext()) {
-			board.makemove(playerIterator.next().doMove(board));
-		} else {
-			playerIterator = playerlist.iterator();
-			nextPlayer();
-		}
+		
+		board.makemove(playerIterator.next().doMove(board));
+			
 	}
 	
 	public void start() {
 		
 		while (!this.hasFinished()) {
-			System.out.println(board);
+			if (verbose) { 
+				stream.println(board);
+			}
 			this.nextPlayer();
+			
 		}
 		
 		if (this.hasWinner()) {
-			//Winner is the last player
-			//Player winner = 
+			if (verbose) {
+				stream.println(board);
+				stream.println("Someone Won!");
+			}
 		}
+		
+	}
+	
+	public int plieCount() {
+		
+		return board.plieCount();
 		
 	}
 	
@@ -76,7 +95,7 @@ public class Game {
 	
 	public boolean hasFinished() {
 		
-		return board.full() && board.lastMoveWon();
+		return board.full() || board.lastMoveWon();
 		
 	}
 	
@@ -85,7 +104,7 @@ public class Game {
 		BufferedReader dis = new BufferedReader(new InputStreamReader(System.in));
 		
 		new Game(new Player[]{new HumanPlayer(dis), 
-			new ComputerPlayer(new RandomStrategy())}).start();
+			new ComputerPlayer(new RandomStrategy())}, System.out, true).start();
 	}
 	
 

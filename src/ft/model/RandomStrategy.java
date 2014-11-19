@@ -10,18 +10,18 @@ import java.util.Random;
  *
  */
 public class RandomStrategy implements GameStrategy {
+	
+	public static final Random R_GENERATOR = new Random();
 
 	/* (non-Javadoc)
 	 * @see ft.model.GameStrategy#doMove()
 	 */
 	public int doMove(Connect4 board) {
 		
-		Random random = new Random();
-		
-		int col = random.nextInt(7);
+		int col = R_GENERATOR.nextInt(7);
 		
 		while (!board.columnHasFreeSpace(col)) {
-        	col = random.nextInt(7);
+        	col = R_GENERATOR.nextInt(7);
         }
 		
 		return col;

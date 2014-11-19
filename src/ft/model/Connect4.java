@@ -90,7 +90,13 @@ public class Connect4 {
 	
 	public boolean full() {
 		
-		return nplies >= SIZE;
+		return nplies >= SIZE - 1;
+		
+	}
+	
+	public int plieCount() {
+		
+		return nplies;
 		
 	}
 	
