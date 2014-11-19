@@ -1,3 +1,6 @@
+/**
+ * copyright 2014 Luce Sandfort and Wouter Timmermans 
+ */
 package ft.model;
 
 import java.io.PrintStream;
