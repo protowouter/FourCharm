@@ -35,8 +35,7 @@ public class HumanPlayer implements Player {
 		String line = "";
 		try { 
 			line = reader.readLine(); 
-		} 
-		catch (IOException e) {
+		} catch (IOException e) {
 	        System.out.println(e);
 	        System.exit(0);
 	    }

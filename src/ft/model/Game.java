@@ -4,7 +4,6 @@
 package ft.model;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -43,9 +42,7 @@ public class Game {
 		
 		if (playerIterator.hasNext()) {
 			board.makemove(playerIterator.next().doMove(board));
-		}
-		
-		else {
+		} else {
 			playerIterator = playerlist.iterator();
 			nextPlayer();
 		}
