@@ -25,7 +25,6 @@ public class HumanPlayer implements Player {
 	/* (non-Javadoc)
 	 * @see ft.model.Player#doMove()
 	 */
-	@Override
 	public int doMove(Connect4 board) {
 		
 		System.out.println("Voer kolomnummer in: ");

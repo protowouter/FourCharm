@@ -21,21 +21,21 @@ public class Connect4 {
 	 */
 	public static final int ROWS	= 6;
 	
-	private static final int H1 = ROWS + 1; // H1 is the multiple of the index 
+	public static final int H1 = ROWS + 1; // H1 is the multiple of the index 
 											// for the first row of each column
-	private static final int H2 = ROWS + 2;
+	public static final int H2 = ROWS + 2;
 	
-	private static final int SIZE = COLUMNS * ROWS;
+	public static final int SIZE = COLUMNS * ROWS;
 	
-	private static final int SIZE1 = H1 * COLUMNS;
+	public static final int SIZE1 = H1 * COLUMNS;
 	
-	private static final long ALL1 = (1L << SIZE1) - 1L; // As much one's as there are spots
+	public static final long ALL1 = (1L << SIZE1) - 1L; // As much one's as there are spots
 	
-	private static final int COL1 = (1 << H1) - 1;
+	public static final int COL1 = (1 << H1) - 1;
 	
-	private static final long BOTTOM = ALL1 / COL1;
+	public static final long BOTTOM = ALL1 / COL1;
 	
-	private static final long TOP = BOTTOM << ROWS; // Bitmask for detecting overflows in columns
+	public static final long TOP = BOTTOM << ROWS; // Bitmask for detecting overflows in columns
 	
 	private int[] moves; // Array with moves since the start of the game
 	
@@ -79,10 +79,18 @@ public class Connect4 {
 		
 	}
 	
-	public boolean haswon(long newboard) {
+	public boolean lastMoveWon() {
 		
-		return hasLRDiagonal(newboard) || hasHorizontal(newboard) 
-				|| hasRLDiagonal(newboard) || hasVertical(newboard);
+		long board = color[(nplies - 1) & 1];
+		
+		return hasLRDiagonal(board) || hasHorizontal(board) 
+				|| hasRLDiagonal(board) || hasVertical(board);
+		
+	}
+	
+	public boolean full() {
+		
+		return nplies >= SIZE;
 		
 	}
 	
@@ -136,7 +144,8 @@ public class Connect4 {
 		color[player] ^= 1L << height[col];
 		moves[nplies] = col;
 		
-		height[col]++; //Increment the height of the column where the piece is placed
+		height[col]++; //Increment the height of the column where the piece is placed,
+					   //This should be done after altering color[player]
 		
 	}
 	

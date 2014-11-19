@@ -14,7 +14,6 @@ public class RandomStrategy implements GameStrategy {
 	/* (non-Javadoc)
 	 * @see ft.model.GameStrategy#doMove()
 	 */
-	@Override
 	public int doMove(Connect4 board) {
 		
 		Random random = new Random();

@@ -55,19 +55,29 @@ public class Game {
 			this.nextPlayer();
 		}
 		
+		if (this.hasWinner()) {
+			//Winner is the last player
+			//Player winner = 
+		}
+		
 	}
 	
 	
-	public boolean hasWon() {
-		return false;
-	}
-	
+	/**
+	 * Returns wether or not an player has won the game. If this method returns
+	 * true the player wich has won the game is the last player to make a move
+	 * because the rules of connect4 offers no posibility to let an other player
+	 * win solely based on the move you make. 
+	 * @return true if a player has won the game; otherwise false
+	 */
 	public boolean hasWinner() {
-		return false;
+		return board.lastMoveWon();
 	}
 	
 	public boolean hasFinished() {
-		return false;
+		
+		return board.full() && board.lastMoveWon();
+		
 	}
 	
 	public static void main(String[] args) {
