@@ -25,5 +25,12 @@ public interface Board {
 	
 	public void makemove(int col);
 	
+	
+	/**
+	 * Returns an deepcopy of the board.
+	 * @return deepcopy of this board
+	 */
+	public Board deepCopy();
+	
 
 }

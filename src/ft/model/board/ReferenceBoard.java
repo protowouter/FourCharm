@@ -197,6 +197,15 @@ public class ReferenceBoard implements Board {
 	    return repr.toString();
 	}
 	
+	public Board deepCopy() {
+		ReferenceBoard boardCopy = new ReferenceBoard();
+		boardCopy.reset();
+		for (int col: moves) {
+			boardCopy.makemove(col);
+		}
+		return boardCopy;
+	}
+	
 
 	
 	// ----------------------- Commands ---------------------

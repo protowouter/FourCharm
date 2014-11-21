@@ -193,6 +193,15 @@ public class BinaryBoard implements Board {
 	    return repr.toString();
 	}
 	
+	public Board deepCopy() {
+		BinaryBoard board = new BinaryBoard();
+		board.reset();
+		for (int col: moves) {
+			board.makemove(col);
+		}
+		return board;
+	}
+	
 	
 
 }

@@ -44,13 +44,8 @@ public class Game {
 	public Game(Class<? extends Board> boardClass
 					, Player[] players, PrintStream oStream, boolean beVerbose) {
 		
-		try {
-			board = boardClass.newInstance();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
+		
+		initBoard(boardClass);
 		
 		stream = oStream;
 		
@@ -69,10 +64,23 @@ public class Game {
 		
 	}
 	
+	/**
+	 * @param boardClass Class to use as board implementation
+	 */
+	private void initBoard(Class<? extends Board> boardClass) {
+		try {
+			board = boardClass.newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void nextPlayer() {
 		
 		
-		board.makemove(playerIterator.next().doMove(board));
+		board.makemove(playerIterator.next().doMove(board.deepCopy()));
 			
 	}
 	
