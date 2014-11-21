@@ -17,8 +17,10 @@ public class HumanPlayer implements Player {
 	
 	private BufferedReader reader;
 	
-	
-	
+	/**
+	 * Create an new humanplayer given an way to communicate with the player.
+	 * @param inputReader Reader from which the human input can be parsed
+	 */
 	public HumanPlayer(BufferedReader inputReader) {
 		
 		reader = inputReader;

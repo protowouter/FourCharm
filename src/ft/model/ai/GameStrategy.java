@@ -3,10 +3,13 @@
  */
 package ft.model.ai;
 
-import ft.model.board.Board;
+import ft.model.Player;
 
-public interface GameStrategy {
+/**
+ * An strategy used by an computerplayer.
+ * @author Luce Sandfort and Wouter Timmermans
+ *
+ */
+public interface GameStrategy extends Player {
 	
-	public int doMove(Board board);
-
 }

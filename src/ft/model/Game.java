@@ -32,6 +32,15 @@ public class Game {
 	
 	private boolean verbose;
 	
+	
+	/**
+	 * Create an new Game of connect 4. This constructor accepts an class implementing
+	 * the interface Board and initializes an new board of the given type.
+	 * @param boardClass Class to use as board implementation
+	 * @param players An array of player who will take part in this game
+	 * @param oStream Stream to communicate with the user
+	 * @param beVerbose true if output has to written to oStream, false if not
+	 */
 	public Game(Class<? extends Board> boardClass
 					, Player[] players, PrintStream oStream, boolean beVerbose) {
 		
@@ -67,7 +76,11 @@ public class Game {
 			
 	}
 	
-	public void start() {
+	
+	/**
+	 * Play an game of connect 4 till the game has ended.
+	 */
+	public void play() {
 		
 		while (!this.hasFinished()) {
 			if (verbose) { 
@@ -86,6 +99,11 @@ public class Game {
 		
 	}
 	
+	
+	/**
+	 * Returns the amount of plies that have been made since the start of the game.
+	 * @return 0..boardClass.SIZE
+	 */
 	public int plieCount() {
 		
 		return board.plieCount();
@@ -104,6 +122,11 @@ public class Game {
 		return board.lastMoveWon();
 	}
 	
+	
+	/**
+	 * Return wether or not the game has ended.
+	 * @return true if board is full or a player won the game
+	 */
 	public boolean hasFinished() {
 		
 		return board.full() || board.lastMoveWon();
@@ -115,7 +138,7 @@ public class Game {
 		BufferedReader dis = new BufferedReader(new InputStreamReader(System.in));
 		
 		new Game(BinaryBoard.class, new Player[]{new HumanPlayer(dis), 
-			new ComputerPlayer(new RandomStrategy())}, System.out, true).start();
+			new ComputerPlayer(new RandomStrategy())}, System.out, true).play();
 	}
 	
 

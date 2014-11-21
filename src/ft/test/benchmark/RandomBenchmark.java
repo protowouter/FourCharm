@@ -47,7 +47,7 @@ public class RandomBenchmark {
 			Game game = new Game(boardClass, new Player[]{new ComputerPlayer(new RandomStrategy())
 							, new ComputerPlayer(new RandomStrategy())}
 							, nullStream, false);
-			game.start();
+			game.play();
 			gCount++;
 			pCount += game.plieCount();
 		

@@ -22,22 +22,32 @@ public class BinaryBoard implements Board {
 	 * Amount of rows of the board.
 	 */
 	public static final int ROWS	= 6;
+	/**
+	 * The multiple of the index for the first row of each column.
+	 */
+	public static final int H1 = ROWS + 1; 
 	
-	public static final int H1 = ROWS + 1; // H1 is the multiple of the index 
-											// for the first row of each column
 	public static final int H2 = ROWS + 2;
-	
+	/**
+	 * Amount of spaces in the board.
+	 */
 	public static final int SIZE = COLUMNS * ROWS;
-	
+	/**
+	 * Amount of spaces in the board plus the top row used by the implementation.
+	 */
 	public static final int SIZE1 = H1 * COLUMNS;
-	
-	public static final long ALL1 = (1L << SIZE1) - 1L; // As much one's as there are spots
-	
+	/**
+	 * As much one's as there are spots in the grid and the top row.
+	 */
+	public static final long ALL1 = (1L << SIZE1) - 1L;
+
 	public static final int COL1 = (1 << H1) - 1;
 	
 	public static final long BOTTOM = ALL1 / COL1;
-	
-	public static final long TOP = BOTTOM << ROWS; // Bitmask for detecting overflows in columns
+	/**
+	 * Bitmask for detecting overflows in columns.
+	 */
+	public static final long TOP = BOTTOM << ROWS;
 	
 	private int[] moves; // Array with moves since the start of the game
 	
@@ -49,6 +59,10 @@ public class BinaryBoard implements Board {
 	private long[] color; // Holds bitboard for every color
 	
 	
+	
+	/**
+	 * Make an new BinaryBoard and reset it to default settings.
+	 */
 	public BinaryBoard() {
 		
 		color = new long[2];
@@ -155,13 +169,6 @@ public class BinaryBoard implements Board {
 		height[col]++; //Increment the height of the column where the piece is placed,
 					   //This should be done after altering color[player]
 		
-	}
-	
-	public long positioncode() {
-		
-	    return 2 * color[0] + color[1] + BOTTOM;
-	// color[0] + color[1] + BOTTOM forms bitmap of heights
-	// so that positioncode() is a complete board encoding
 	}
 	
 	public String toString() {
