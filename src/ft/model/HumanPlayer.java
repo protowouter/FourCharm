@@ -6,6 +6,9 @@ package ft.model;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import ft.model.board.BinaryBoard;
+import ft.model.board.Board;
+
 /**
  * @author Luce Sandfort and Wouter Timmermans
  *

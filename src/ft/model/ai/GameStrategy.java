@@ -1,7 +1,9 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package ft.model;
+package ft.model.ai;
+
+import ft.model.board.Board;
 
 public interface GameStrategy {
 	

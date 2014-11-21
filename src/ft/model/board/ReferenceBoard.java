@@ -1,8 +1,7 @@
 /**
- * Heavily influenced by the Fhourstones 3.0 Board Logic Copyright 2000-2004 John Tromp
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package ft.model;
+package ft.model.board;
 
 import java.util.Arrays;
 
@@ -14,8 +13,9 @@ import java.util.Arrays;
  *
  */
 
-public class ReferenceBoard implements Board{
+public class ReferenceBoard implements Board {
 	
+	// ------------------ Class variables ----------------
 	/**
 	 * Amount of columns of the board.
 	 */
@@ -24,14 +24,24 @@ public class ReferenceBoard implements Board{
 	 * Amount of rows of the board.
 	 */
 	public static final int ROWS	= 6;
-	
+	/**
+	 * Amount of spots in the board.
+	 */
 	public static final int SIZE = COLUMNS * ROWS;
-	
+	/**
+	 * Value assigned to an empty spot.
+	 */
 	public static final int EMPTY = -1;
-	
+	/**
+	 * Value assigned to an spot for player1.
+	 */
 	public static final int PLAYER1 = 0;
-	
+	/**
+	 * Value assigned to an spot for player2.
+	 */
 	public static final int PLAYER2 = 1;
+	
+	// ------------------ Instance variables ----------------
 	
 	private int[] moves; // Array with moves since the start of the game
 	
@@ -39,7 +49,12 @@ public class ReferenceBoard implements Board{
 	
 	private static int[][] board; // Holds bitboard for every color
 	
+	// --------------------- Constructors -------------------
 	
+	
+	/**
+	 * Creates an new instance of an Board. In its initial state the board is empty
+	 */
 	public ReferenceBoard() {
 		
 		board = new int[COLUMNS][ROWS];
@@ -51,13 +66,7 @@ public class ReferenceBoard implements Board{
 		reset();
 	}
 	
-	private void reset() {
-		nplies = 0;
-		board = new int[COLUMNS][ROWS];
-		for (int i = 0; i < COLUMNS; i++) {
-			Arrays.fill(board[i], EMPTY);
-		}
-	}
+	// ----------------------- Queries ----------------------
 	
 	
 	public boolean columnHasFreeSpace(int col) {
@@ -159,31 +168,6 @@ public class ReferenceBoard implements Board{
 		
 	}
 	
-	/**
-	 * 
-	 * @param col
-	 * @requires gets called for the player which current turn it is
-	 */
-	
-	public void makemove(int col) {
-		
-		int player = nplies & 1; // same as modulo 2 but probably more efficient
-		
-		nplies++; //Increment the plie count
-		
-		boolean needPlacement = true;
-		
-		for (int i = 0; i < ROWS && needPlacement; i++) {
-			if (board[col][i] == EMPTY) {
-				board[col][i] = player;
-				needPlacement = false;
-			}
-		}
-		
-		moves[nplies] = col;
-		
-	}
-	
 	public String toString() {
 	    StringBuilder repr = new StringBuilder();
 
@@ -213,6 +197,40 @@ public class ReferenceBoard implements Board{
 	    return repr.toString();
 	}
 	
+
 	
+	// ----------------------- Commands ---------------------
+	
+	/**
+	 * 
+	 * @param col
+	 * @requires gets called for the player which current turn it is
+	 */
+	public void makemove(int col) {
+		
+		int player = nplies & 1; // same as modulo 2 but probably more efficient
+		
+		nplies++; //Increment the plie count
+		
+		boolean needPlacement = true;
+		
+		for (int i = 0; i < ROWS && needPlacement; i++) {
+			if (board[col][i] == EMPTY) {
+				board[col][i] = player;
+				needPlacement = false;
+			}
+		}
+		
+		moves[nplies] = col;
+		
+	}
+	
+	private void reset() {
+		nplies = 0;
+		board = new int[COLUMNS][ROWS];
+		for (int i = 0; i < COLUMNS; i++) {
+			Arrays.fill(board[i], EMPTY);
+		}
+	}
 
 }

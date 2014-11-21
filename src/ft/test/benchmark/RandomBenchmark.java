@@ -1,7 +1,7 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package ft.model;
+package ft.test.benchmark;
 
 import java.io.PrintStream;
 import java.text.DecimalFormat;
@@ -10,6 +10,14 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.google.common.io.ByteStreams;
+
+import ft.model.ComputerPlayer;
+import ft.model.Game;
+import ft.model.Player;
+import ft.model.ai.RandomStrategy;
+import ft.model.board.BinaryBoard;
+import ft.model.board.Board;
+import ft.model.board.ReferenceBoard;
 
 public class RandomBenchmark {
 	

@@ -3,6 +3,9 @@
  */
 package ft.model;
 
+import ft.model.ai.GameStrategy;
+import ft.model.board.Board;
+
 public class ComputerPlayer implements Player {
 	
 	GameStrategy strategy;

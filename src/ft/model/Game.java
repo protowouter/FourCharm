@@ -11,6 +11,10 @@ import java.util.Iterator;
 
 import com.google.common.collect.Iterables;
 
+import ft.model.ai.RandomStrategy;
+import ft.model.board.BinaryBoard;
+import ft.model.board.Board;
+
 /**
  * Models an game of Connect 4.
  * @author Luce Sandfort and Wouter Timmermans
@@ -39,11 +43,11 @@ public class Game {
 			e.printStackTrace();
 		}
 		
-		playerlist = new ArrayList<Player>();
-		
 		stream = oStream;
 		
 		verbose = beVerbose;
+		
+		playerlist = new ArrayList<Player>();
 		
 		for (Player player : players) {
 			

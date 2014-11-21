@@ -1,7 +1,7 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package ft.model;
+package ft.model.board;
 
 /**
  * @author Luce Sandfort and Wouter Timmermans

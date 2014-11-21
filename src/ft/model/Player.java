@@ -3,6 +3,8 @@
  */
 package ft.model;
 
+import ft.model.board.Board;
+
 /**
  * @author Luce Sandfort and Wouter Timmermans
  *

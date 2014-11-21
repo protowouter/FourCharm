@@ -1,9 +1,11 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package ft.model;
+package ft.model.ai;
 
 import java.util.Random;
+
+import ft.model.board.Board;
 
 /**
  * @author Luce Sandfort and Wouter Timmermans
