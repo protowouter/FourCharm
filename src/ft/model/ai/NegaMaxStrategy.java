@@ -119,7 +119,7 @@ public class NegaMaxStrategy implements GameStrategy {
 	}
 	
 	private double nodeValue(Board board) {
-		// TODO Write an better evaluation function
+		// FIXME Write an better evaluation function
 		
 		return board.lastMoveWon() ? -1 : 0;
 	}
