@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>FourCharm</groupId>
 	<artifactId>FourCharm</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.1</version>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
@@ -22,7 +22,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>ft.model.Game</mainClass>
+							<mainClass>main.java.model.Game</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -43,7 +43,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>ft.model.Game</mainClass>
+							<mainClass>main.java.model.Game</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
