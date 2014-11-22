@@ -27,7 +27,7 @@ public class ReferenceBoardTest {
 	 */
 	@Test
 	public void testReferenceBoard() {
-		 // TODO
+		fail("Not yet implemented"); // TODO
 	}
 
 	/**
@@ -35,7 +35,7 @@ public class ReferenceBoardTest {
 	 */
 	@Test
 	public void testColumnHasFreeSpace() {
-		 // TODO
+		fail("Not yet implemented"); // TODO
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class ReferenceBoardTest {
 	 */
 	@Test
 	public void testLastMoveWon() {
-		 // TODO
+		fail("Not yet implemented"); // TODO
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class ReferenceBoardTest {
 	 */
 	@Test
 	public void testFull() {
-		 // TODO
+		fail("Not yet implemented"); // TODO
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class ReferenceBoardTest {
 	 */
 	@Test
 	public void testPlieCount() {
-		 // TODO
+		fail("Not yet implemented"); // TODO
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class ReferenceBoardTest {
 	 */
 	@Test
 	public void testToString() {
-		 // TODO
+		fail("Not yet implemented"); // TODO
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class ReferenceBoardTest {
 	 */
 	@Test
 	public void testDeepCopy() {
-		 // TODO
+		fail("Not yet implemented"); // TODO
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class ReferenceBoardTest {
 	 */
 	@Test
 	public void testMakemove() {
-		// TODO
+		fail("Not yet implemented"); // TODO
 	}
 
 }
