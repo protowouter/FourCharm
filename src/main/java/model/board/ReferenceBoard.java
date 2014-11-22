@@ -1,7 +1,7 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package ft.model.board;
+package main.java.model.board;
 
 import java.util.Arrays;
 

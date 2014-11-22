@@ -1,10 +1,10 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package ft.model;
+package main.java.model;
 
-import ft.model.ai.GameStrategy;
-import ft.model.board.Board;
+import main.java.model.ai.GameStrategy;
+import main.java.model.board.Board;
 
 
 /**

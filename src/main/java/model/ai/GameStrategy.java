@@ -1,9 +1,9 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package ft.model.ai;
+package main.java.model.ai;
 
-import ft.model.Player;
+import main.java.model.Player;
 
 /**
  * An strategy used by an computerplayer.

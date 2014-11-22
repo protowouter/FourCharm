@@ -1,7 +1,7 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package ft.model;
+package main.java.model;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -9,10 +9,10 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.google.common.collect.Iterables;
+import main.java.model.ai.*;
+import main.java.model.board.*;
 
-import ft.model.ai.*;
-import ft.model.board.*;
+import com.google.common.collect.Iterables;
 
 /**
  * Models an game of Connect 4.

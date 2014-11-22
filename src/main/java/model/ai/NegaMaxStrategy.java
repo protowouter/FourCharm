@@ -1,9 +1,9 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package ft.model.ai;
+package main.java.model.ai;
 
-import ft.model.board.Board;
+import main.java.model.board.Board;
 
 /**
  * @author Luce Sandfort and Wouter Timmermans

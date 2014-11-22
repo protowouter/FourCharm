@@ -1,7 +1,7 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package ft.test.benchmark;
+package test.java.benchmark;
 
 import java.io.PrintStream;
 import java.text.DecimalFormat;
@@ -9,15 +9,15 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import com.google.common.io.ByteStreams;
+import main.java.model.ComputerPlayer;
+import main.java.model.Game;
+import main.java.model.Player;
+import main.java.model.ai.RandomStrategy;
+import main.java.model.board.BinaryBoard;
+import main.java.model.board.Board;
+import main.java.model.board.ReferenceBoard;
 
-import ft.model.ComputerPlayer;
-import ft.model.Game;
-import ft.model.Player;
-import ft.model.ai.RandomStrategy;
-import ft.model.board.BinaryBoard;
-import ft.model.board.Board;
-import ft.model.board.ReferenceBoard;
+import com.google.common.io.ByteStreams;
 
 public class RandomBenchmark {
 	

@@ -1,7 +1,7 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package ft.test;
+package test.java;
 
 import static org.junit.Assert.*;
 
@@ -22,7 +22,7 @@ public class ReferenceBoardTest {
 	}
 
 	/**
-	 * Test method for {@link ft.model.board.ReferenceBoard#ReferenceBoard()}.
+	 * Test method for {@link main.java.model.board.ReferenceBoard#ReferenceBoard()}.
 	 */
 	@Test
 	public void testReferenceBoard() {
@@ -30,7 +30,7 @@ public class ReferenceBoardTest {
 	}
 
 	/**
-	 * Test method for {@link ft.model.board.ReferenceBoard#columnHasFreeSpace(int)}.
+	 * Test method for {@link main.java.model.board.ReferenceBoard#columnHasFreeSpace(int)}.
 	 */
 	@Test
 	public void testColumnHasFreeSpace() {
@@ -38,7 +38,7 @@ public class ReferenceBoardTest {
 	}
 
 	/**
-	 * Test method for {@link ft.model.board.ReferenceBoard#lastMoveWon()}.
+	 * Test method for {@link main.java.model.board.ReferenceBoard#lastMoveWon()}.
 	 */
 	@Test
 	public void testLastMoveWon() {
@@ -46,7 +46,7 @@ public class ReferenceBoardTest {
 	}
 
 	/**
-	 * Test method for {@link ft.model.board.ReferenceBoard#full()}.
+	 * Test method for {@link main.java.model.board.ReferenceBoard#full()}.
 	 */
 	@Test
 	public void testFull() {
@@ -54,7 +54,7 @@ public class ReferenceBoardTest {
 	}
 
 	/**
-	 * Test method for {@link ft.model.board.ReferenceBoard#plieCount()}.
+	 * Test method for {@link main.java.model.board.ReferenceBoard#plieCount()}.
 	 */
 	@Test
 	public void testPlieCount() {
@@ -62,7 +62,7 @@ public class ReferenceBoardTest {
 	}
 
 	/**
-	 * Test method for {@link ft.model.board.ReferenceBoard#toString()}.
+	 * Test method for {@link main.java.model.board.ReferenceBoard#toString()}.
 	 */
 	@Test
 	public void testToString() {
@@ -70,7 +70,7 @@ public class ReferenceBoardTest {
 	}
 
 	/**
-	 * Test method for {@link ft.model.board.ReferenceBoard#deepCopy()}.
+	 * Test method for {@link main.java.model.board.ReferenceBoard#deepCopy()}.
 	 */
 	@Test
 	public void testDeepCopy() {
@@ -78,7 +78,7 @@ public class ReferenceBoardTest {
 	}
 
 	/**
-	 * Test method for {@link ft.model.board.ReferenceBoard#makemove(int)}.
+	 * Test method for {@link main.java.model.board.ReferenceBoard#makemove(int)}.
 	 */
 	@Test
 	public void testMakemove() {

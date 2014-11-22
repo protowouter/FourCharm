@@ -2,7 +2,7 @@
  * Heavily influenced by the Fhourstones 3.0 Board Logic Copyright 2000-2004 John Tromp
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package ft.model.board;
+package main.java.model.board;
 
 
 /**

@@ -1,13 +1,13 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package ft.model;
+package main.java.model;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 
-import ft.model.board.BinaryBoard;
-import ft.model.board.Board;
+import main.java.model.board.BinaryBoard;
+import main.java.model.board.Board;
 
 /**
  * @author Luce Sandfort and Wouter Timmermans
