@@ -25,3 +25,7 @@ notifications:
   email:
     on_success: change
     on_failure: change
+
+addons:
+  code_climate:
+    repo_token: 0fa29f4c2b913d5e308a95280ec815dc719ea7e50b2c0b1371d384994e629e39
