@@ -19,8 +19,17 @@ import main.java.model.board.ReferenceBoard;
 
 import com.google.common.io.ByteStreams;
 
+
+/**
+ * Class for perfoming an benchmark of the BinaryBoard.
+ * @author Luce Sandfort and Wouter Timmermans
+ *
+ */
 public class RandomBenchmark {
 	
+	/**
+	 * Amount of iterations of the benchmark.
+	 */
 	public static final int ITERATIONS = 10_000_000;
 	
 	private static int runBenchmark(Class<? extends Board> boardClass) {
@@ -60,6 +69,11 @@ public class RandomBenchmark {
 		
 	}
 	
+	
+	/**
+	 * Run the benchmark.
+	 * @param args N/A
+	 */
 	public static void main(String[] args) {
 		
 		DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.ITALY);

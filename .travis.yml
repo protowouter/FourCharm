@@ -3,9 +3,9 @@ jdk:
 - oraclejdk8
 
 before_install: mvn install -DskipTests=true -DfinalName=FourCharm-$TRAVIS_TAG
-    
+
 after_success:
-    - mkdir target/gh-release 
+    - mkdir target/gh-release
     - cp target/FourCharm-$TRAVIS_TAG-jar-with-dependencies.jar target/gh-release/FourCharm-$TRAVIS_TAG.jar
 
 deploy:
@@ -19,3 +19,9 @@ deploy:
         all_branches: true
         repo: protowouter/FourCharm
         branch: master
+
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change

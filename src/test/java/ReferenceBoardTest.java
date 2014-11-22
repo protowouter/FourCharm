@@ -19,6 +19,7 @@ public class ReferenceBoardTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		fail("Not yet implemented");
 	}
 
 	/**
