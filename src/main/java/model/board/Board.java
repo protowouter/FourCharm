@@ -8,29 +8,28 @@ package main.java.model.board;
  *
  */
 public interface Board {
-	
-	public boolean columnHasFreeSpace(int col);
-	
-	public boolean lastMoveWon();
-	
-	public boolean full();
-	
-	public int plieCount();
-	
-	/**
-	 * 
-	 * @param col
-	 * @requires gets called for the player which current turn it is
-	 */
-	
-	public void makemove(int col);
-	
-	
-	/**
-	 * Returns an deepcopy of the board.
-	 * @return deepcopy of this board
-	 */
-	public Board deepCopy();
-	
+
+    public boolean columnHasFreeSpace(int col);
+
+    public boolean lastMoveWon();
+
+    public boolean full();
+
+    public int plieCount();
+
+    /**
+     * 
+     * @param col
+     * @requires gets called for the player which current turn it is
+     */
+
+    public void makemove(int col);
+
+    /**
+     * Returns an deepcopy of the board.
+     * 
+     * @return deepcopy of this board
+     */
+    public Board deepCopy();
 
 }

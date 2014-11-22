@@ -14,67 +14,69 @@ import org.junit.Test;
  */
 public class GameTest {
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-	}
+    /**
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+    }
 
-	// ------------------ Instance variables ----------------
+    // ------------------ Instance variables ----------------
 
-	/**
-	 * Test method for {@link main.java.model.Game#Game(java.lang.Class, main.java.model.Player[], java.io.PrintStream, boolean)}.
-	 */
-	@Test
-	public void testGame() {
-		fail("Not yet implemented"); // TODO
-	}
+    /**
+     * Test method for
+     * {@link main.java.model.Game#Game(java.lang.Class, main.java.model.Player[], java.io.PrintStream, boolean)}
+     * .
+     */
+    @Test
+    public void testGame() {
+        fail("Not yet implemented"); // TODO
+    }
 
-	/**
-	 * Test method for {@link main.java.model.Game#play()}.
-	 */
-	@Test
-	public void testPlay() {
-		fail("Not yet implemented"); // TODO
-	}
+    /**
+     * Test method for {@link main.java.model.Game#play()}.
+     */
+    @Test
+    public void testPlay() {
+        fail("Not yet implemented"); // TODO
+    }
 
-	/**
-	 * Test method for {@link main.java.model.Game#plieCount()}.
-	 */
-	@Test
-	public void testPlieCount() {
-		fail("Not yet implemented"); // TODO
-	}
+    /**
+     * Test method for {@link main.java.model.Game#plieCount()}.
+     */
+    @Test
+    public void testPlieCount() {
+        fail("Not yet implemented"); // TODO
+    }
 
-	/**
-	 * Test method for {@link main.java.model.Game#hasWinner()}.
-	 */
-	@Test
-	public void testHasWinner() {
-		fail("Not yet implemented"); // TODO
-	}
+    /**
+     * Test method for {@link main.java.model.Game#hasWinner()}.
+     */
+    @Test
+    public void testHasWinner() {
+        fail("Not yet implemented"); // TODO
+    }
 
-	/**
-	 * Test method for {@link main.java.model.Game#hasFinished()}.
-	 */
-	@Test
-	public void testHasFinished() {
-		fail("Not yet implemented"); // TODO
-	}
+    /**
+     * Test method for {@link main.java.model.Game#hasFinished()}.
+     */
+    @Test
+    public void testHasFinished() {
+        fail("Not yet implemented"); // TODO
+    }
 
-	/**
-	 * Test method for {@link main.java.model.Game#main(java.lang.String[])}.
-	 */
-	@Test
-	public void testMain() {
-		fail("Not yet implemented"); // TODO
-	}
+    /**
+     * Test method for {@link main.java.model.Game#main(java.lang.String[])}.
+     */
+    @Test
+    public void testMain() {
+        fail("Not yet implemented"); // TODO
+    }
 
-	// --------------------- Constructors -------------------
+    // --------------------- Constructors -------------------
 
-	// ----------------------- Queries ----------------------
+    // ----------------------- Queries ----------------------
 
-	// ----------------------- Commands ---------------------
+    // ----------------------- Commands ---------------------
 
 }

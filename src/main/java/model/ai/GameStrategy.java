@@ -7,9 +7,10 @@ import main.java.model.Player;
 
 /**
  * An strategy used by an computerplayer.
+ * 
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
 public interface GameStrategy extends Player {
-	
+
 }
