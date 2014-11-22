@@ -11,9 +11,8 @@ import java.util.Iterator;
 
 import com.google.common.collect.Iterables;
 
-import ft.model.ai.RandomStrategy;
-import ft.model.board.BinaryBoard;
-import ft.model.board.Board;
+import ft.model.ai.*;
+import ft.model.board.*;
 
 /**
  * Models an game of Connect 4.
@@ -76,13 +75,6 @@ public class Game {
 			e.printStackTrace();
 		}
 	}
-
-	private void nextPlayer() {
-		
-		
-		board.makemove(playerIterator.next().doMove(board.deepCopy()));
-			
-	}
 	
 	
 	/**
@@ -94,7 +86,7 @@ public class Game {
 			if (verbose) { 
 				stream.println(board);
 			}
-			this.nextPlayer();
+			board.makemove(playerIterator.next().doMove(board.deepCopy()));
 			
 		}
 		
@@ -145,7 +137,7 @@ public class Game {
 		
 		BufferedReader dis = new BufferedReader(new InputStreamReader(System.in));
 		
-		new Game(BinaryBoard.class, new Player[]{new HumanPlayer(dis), 
+		new Game(ReferenceBoard.class, new Player[]{new HumanPlayer(dis), 
 			new ComputerPlayer(new RandomStrategy())}, System.out, true).play();
 	}
 	

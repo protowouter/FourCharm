@@ -160,11 +160,12 @@ public class BinaryBoard implements Board {
 		
 		int player = nplies & 1; // same as modulo 2 but probably more efficient
 		
+		moves[nplies] = col;
 		nplies++; //Increment the plie count
 		
 		
 		color[player] ^= 1L << height[col];
-		moves[nplies] = col;
+		
 		
 		height[col]++; //Increment the height of the column where the piece is placed,
 					   //This should be done after altering color[player]
@@ -196,8 +197,8 @@ public class BinaryBoard implements Board {
 	public Board deepCopy() {
 		BinaryBoard board = new BinaryBoard();
 		board.reset();
-		for (int col: moves) {
-			board.makemove(col);
+		for (int i = 0; i < nplies; i++) {
+			board.makemove(moves[i]);
 		}
 		return board;
 	}

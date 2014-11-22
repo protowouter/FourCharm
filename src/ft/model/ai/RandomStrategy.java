@@ -26,6 +26,8 @@ public class RandomStrategy implements GameStrategy {
         	col = R_GENERATOR.nextInt(7);
         }
 		
+		board.makemove(col);
+	
 		return col;
 		
 		

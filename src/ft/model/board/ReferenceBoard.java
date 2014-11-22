@@ -47,7 +47,7 @@ public class ReferenceBoard implements Board {
 	
 	private int nplies; // Amount of turns since the start of the game
 	
-	private static int[][] board; // Holds bitboard for every color
+	private int[][] board; // Holds bitboard for every color
 	
 	// --------------------- Constructors -------------------
 	
@@ -187,7 +187,7 @@ public class ReferenceBoard implements Board {
 	    			repr.append(" @");
 	    		} else if (player == PLAYER2) {
 	    			repr.append(" 0");
-	    		} else {
+	    		} else if (player == EMPTY) {
 	    			repr.append(" .");
 	    		}
 	    	}
@@ -200,8 +200,8 @@ public class ReferenceBoard implements Board {
 	public Board deepCopy() {
 		ReferenceBoard boardCopy = new ReferenceBoard();
 		boardCopy.reset();
-		for (int col: moves) {
-			boardCopy.makemove(col);
+		for (int i = 0; i < nplies; i++) {
+			boardCopy.makemove(moves[i]);
 		}
 		return boardCopy;
 	}
@@ -219,9 +219,13 @@ public class ReferenceBoard implements Board {
 		
 		int player = nplies & 1; // same as modulo 2 but probably more efficient
 		
+		moves[nplies] = col;
+		
 		nplies++; //Increment the plie count
 		
 		boolean needPlacement = true;
+		
+		System.out.println(this.columnHasFreeSpace(col));
 		
 		for (int i = 0; i < ROWS && needPlacement; i++) {
 			if (board[col][i] == EMPTY) {
@@ -230,7 +234,10 @@ public class ReferenceBoard implements Board {
 			}
 		}
 		
-		moves[nplies] = col;
+		if (needPlacement) {
+			System.out.println("Dit gaat mis");
+			System.exit(1);
+		}
 		
 	}
 	

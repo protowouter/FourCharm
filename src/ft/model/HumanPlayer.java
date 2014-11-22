@@ -50,6 +50,8 @@ public class HumanPlayer implements Player {
 	        int col = line.charAt(i) - '1';
 	        if (col >= 0 && col < BinaryBoard.COLUMNS && board.columnHasFreeSpace(col)) {
 	        	move = col;
+	        } else {
+	        	move = doMove(board);
 	        }
 	    }
 	    return move;
