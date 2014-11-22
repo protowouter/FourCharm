@@ -138,7 +138,7 @@ public class Game {
 		BufferedReader dis = new BufferedReader(new InputStreamReader(System.in));
 		
 		new Game(ReferenceBoard.class, new Player[]{new HumanPlayer(dis), 
-			new ComputerPlayer(new RandomStrategy())}, System.out, true).play();
+			new ComputerPlayer(new NegaMaxStrategy())}, System.out, true).play();
 	}
 	
 

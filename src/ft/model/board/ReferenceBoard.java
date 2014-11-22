@@ -225,8 +225,6 @@ public class ReferenceBoard implements Board {
 		
 		boolean needPlacement = true;
 		
-		System.out.println(this.columnHasFreeSpace(col));
-		
 		for (int i = 0; i < ROWS && needPlacement; i++) {
 			if (board[col][i] == EMPTY) {
 				board[col][i] = player;

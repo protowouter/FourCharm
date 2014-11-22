@@ -11,6 +11,8 @@ import ft.model.board.Board;
  */
 public class NegaMaxStrategy implements GameStrategy {
 	
+	private GameStrategy rStrat = new RandomStrategy();
+	
 	
 	/**
 	 * Default search depth for the NegaMax algorithm.
@@ -26,10 +28,8 @@ public class NegaMaxStrategy implements GameStrategy {
 		try {
 			move = doMove(board, DEF_DEPTH);
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -42,17 +42,20 @@ public class NegaMaxStrategy implements GameStrategy {
 	 * @param depth search depth for the NegaMax algorithm
 	 * @throws IllegalAccessException
 	 * @throws NoSuchFieldException
-	 * @return
+	 * @return The best move according to the negamax algorithm.
 	
 	 */
 	public int doMove(Board board, int depth) throws IllegalAccessException, NoSuchFieldException {
 		
 		double bestValue = Double.NEGATIVE_INFINITY;
 		int bestMove = 0;
+		int samevalues = 1;
+		int freecolumns = 0;
 		int columns = (int) board.getClass().getField("COLUMNS").get(board);
 		
 		for (int col = 0; col < columns; col++) {
 			if (board.columnHasFreeSpace(col)) {
+				freecolumns++;
 				Board cBoard = board.deepCopy();
 				cBoard.makemove(col);
 				double value = -negaMax(cBoard, depth);
@@ -60,12 +63,15 @@ public class NegaMaxStrategy implements GameStrategy {
 				if (value > bestValue) {
 					bestMove = col;
 					bestValue = value;
+				} else if (value == bestValue) {
+					samevalues++;
 				}
 				
 			}
 		}
 		
-		return bestMove;
+		
+		return samevalues == freecolumns ? rStrat.doMove(board.deepCopy()) : bestMove;
 		
 		
 		
@@ -77,11 +83,12 @@ public class NegaMaxStrategy implements GameStrategy {
 	 * 
 	 * @param board
 	 * @param depth
-	 * @return
+	 * @return The negamax value of the current board state
 	 * @throws IllegalAccessException
 	 * @throws NoSuchFieldException
 	 */
-	public double negaMax(Board board, int depth) throws IllegalAccessException, NoSuchFieldException {
+	public double negaMax(Board board, int depth) 
+			throws IllegalAccessException, NoSuchFieldException {
 		int player = board.plieCount() & 1; // Player which move it is
 		player = player == 0 ? -1 : player;
 		double value;
@@ -112,8 +119,9 @@ public class NegaMaxStrategy implements GameStrategy {
 	}
 	
 	private double nodeValue(Board board) {
+		// TODO Write an better evaluation function
 		
-		return board.lastMoveWon() ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY;
+		return board.lastMoveWon() ? -1 : 0;
 	}
 	
 	
