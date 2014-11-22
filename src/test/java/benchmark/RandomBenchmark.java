@@ -27,10 +27,16 @@ import com.google.common.io.ByteStreams;
  */
 public class RandomBenchmark {
 	
+	private RandomBenchmark() {
+		
+	}
+	
 	/**
 	 * Amount of iterations of the benchmark.
 	 */
 	public static final int ITERATIONS = 10_000_000;
+	
+	public static final int STEP_PERCENTAGE = 10;
 	
 	private static int runBenchmark(Class<? extends Board> boardClass) {
 		
@@ -38,7 +44,7 @@ public class RandomBenchmark {
 		int gCount = 0;
 		long pCount = 0;
 		final int total = ITERATIONS;
-		final int step = total / 10; 
+		final int step = total / STEP_PERCENTAGE; 
 		long oStartTime = System.currentTimeMillis();
 		PrintStream nullStream = new PrintStream(ByteStreams.nullOutputStream());
 		
@@ -62,9 +68,8 @@ public class RandomBenchmark {
 		
 		}
 		long endTime = System.currentTimeMillis();
-		int mps = (int) (pCount / ((float) (endTime - oStartTime) / 1000));
 		
-		return mps;
+		return (int) (pCount / ((float) (endTime - oStartTime) / 1000));
 		
 		
 	}
