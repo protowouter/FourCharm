@@ -6,6 +6,9 @@ deploy:
     api_key:
         secure: HIimgV0A3Ys4rHfN81F5y0Iwbogmk4GqgDYy0Sjk6aS4IMr+p1VYkpTJC3i4XrTwYmeAIheSo6fVJJjF9cL0IlseVCp9/inHKUBPlGyT5Xe5EN9i48TryBzw2XkQ1N594ykMoDkp55AS8dkjGPlzs0GFkIR0z05fatBHRx5FoE8=
     file: "target/FourCharm-0.0.1-SNAPSHOT-jar-with-dependencies.jar"
+    skip_cleanup: true
     on:
+        tags: true
+        all_branches: true
         repo: protowouter/FourCharm
         branch: master
