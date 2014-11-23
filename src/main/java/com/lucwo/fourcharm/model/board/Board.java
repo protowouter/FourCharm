@@ -51,6 +51,10 @@ public abstract class Board {
     public int getWinStreak() {
         return WIN_STREAK;
     }
+    
+    public int getSpotCount() {
+        return COLUMNS * ROWS;
+    }
 
     /**
      * 
