@@ -4,6 +4,8 @@
  */
 package com.lucwo.fourcharm.model.board;
 
+import com.lucwo.fourcharm.exception.InvalidMoveException;
+
 /**
  * Class for modeling an board for the game connect four. This class's
  * responsibility is to keep the state of the board. For efficiency reasons the
@@ -152,24 +154,28 @@ public class BinaryBoard extends Board {
      * @requires gets called for the player which current turn it is
      */
 
-    public void makemove(int col) {
+    public void makemove(int col) throws InvalidMoveException {
         
-        // same as modulo 2 but probably more efficient
-        int player = nplies & 1; 
-       
-
-        moves[nplies] = col;
-        
-        // Increment the plie count
-        nplies++; 
-
-        color[player] ^= 1L << height[col];
-        
-        
-        // Increment the height of the column where the piece is
-        // placed,
-        // This should be done after altering color[player]
-        height[col]++; 
+        if (columnHasFreeSpace(col)){
+            // same as modulo 2 but probably more efficient
+            int player = nplies & 1; 
+           
+    
+            moves[nplies] = col;
+            
+            // Increment the plie count
+            nplies++; 
+    
+            color[player] ^= 1L << height[col];
+            
+            
+            // Increment the height of the column where the piece is
+            // placed,
+            // This should be done after altering color[player]
+            height[col]++;
+        } else {
+            throw new InvalidMoveException("Column " + col + " is already full");
+        }
 
     }
 

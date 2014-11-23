@@ -9,10 +9,12 @@ import com.lucwo.fourcharm.model.ComputerPlayer;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.model.board.Board;
+import com.lucwo.fourcharm.model.board.ReferenceBoard;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import cucumber.api.java.en.And;
 import static org.junit.Assert.*;
 
 /**
@@ -23,27 +25,49 @@ public class BoardStateSteps {
     
     private static String TODO = "Not yet implemented";
     
-    private Board board;
+    private Board binBoard;
+    private Board refBoard;
     private static ComputerPlayer cP = new ComputerPlayer(new RandomStrategy());
     
     @Given("^an board with only one free spot$")
     public void an_board_with_only_one_free_spot() throws InvalidMoveException{
        
-        board = new BinaryBoard();
+        binBoard = new BinaryBoard();
+        refBoard = new ReferenceBoard();
         
         
-        for (int i = 0; i < board.getSpotCount() -1; i++) {
-            board.makemove(cP.doMove(board.deepCopy()));
+        for (int i = 0; i < binBoard.getSpotCount() -1; i++) {
+            binBoard.makemove(cP.doMove(binBoard.deepCopy()));
+        }
+        
+        for (int i = 0; i < refBoard.getSpotCount() -1; i++) {
+            refBoard.makemove(cP.doMove(refBoard.deepCopy()));
         }
     }
     @When("^I fill the last spot$")
     public void I_fill_the_last_spot() throws InvalidMoveException {
-        board.makemove(cP.doMove(board.deepCopy()));
+        binBoard.makemove(cP.doMove(binBoard.deepCopy()));
+        refBoard.makemove(cP.doMove(refBoard.deepCopy()));
     }
-    @Then("^the board should report its when asked$")
+    @Then("^the board should report its full$")
     public void the_board_should_report_its_when_asked() {
-        assertTrue(board.isFull());
+        assertTrue(binBoard.isFull());
+        assertTrue(refBoard.isFull());
     }
+    
+    @And("^I should not be able to make an move$")
+    public void unableToMove() {   
+        
+        try {
+            binBoard.makemove(5); 
+            refBoard.makemove(5);
+            fail();
+         } catch (InvalidMoveException e) {
+             
+         } 
+        
+    }
+    
 
 
 }
