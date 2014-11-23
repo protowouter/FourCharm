@@ -38,7 +38,7 @@ public class RandomBenchmark {
 
     public static final int STEP_PERCENTAGE = 10;
 
-    private static int runBenchmark(Class<? extends Board> boardClass) {
+    private static int runBenchmark(Class<? extends Board> boardClass) throws InstantiationException, IllegalAccessException {
 
         int gCount = 0;
         long pCount = 0;
@@ -56,9 +56,8 @@ public class RandomBenchmark {
             }
 
             Game game = new Game(boardClass, new Player[] {
-                    new ComputerPlayer(new RandomStrategy()),
-                    new ComputerPlayer(new RandomStrategy()) }, nullStream,
-                    false);
+                new ComputerPlayer(new RandomStrategy()),
+                new ComputerPlayer(new RandomStrategy()) });
             game.play();
             gCount++;
             pCount += game.plieCount();

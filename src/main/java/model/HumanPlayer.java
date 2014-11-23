@@ -5,6 +5,7 @@ package main.java.model;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import main.java.model.board.BinaryBoard;
 import main.java.model.board.Board;
@@ -36,7 +37,7 @@ public class HumanPlayer implements Player {
      */
     public int doMove(Board board) {
 
-        System.out.println("Voer kolomnummer in: ");
+        Logger.getGlobal().info("Voer kolomnummer in: ");
 
         int move = 0;
 
@@ -44,8 +45,8 @@ public class HumanPlayer implements Player {
         try {
             line = reader.readLine();
         } catch (IOException e) {
-            System.out.println(e);
-            System.exit(0);
+            Logger.getGlobal().warning(e.toString());
+            Logger.getGlobal().throwing("HumanPlayer", "doMove", e);
         }
         if (line == null) {
             doMove(board);

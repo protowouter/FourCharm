@@ -4,13 +4,11 @@
 package main.java.model;
 
 import java.util.List;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Observable;
+import java.util.logging.Logger;
 
-import main.java.model.ai.*;
 import main.java.model.board.*;
 
 import com.google.common.collect.Iterables;
@@ -21,18 +19,13 @@ import com.google.common.collect.Iterables;
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
-public class Game {
+public class Game extends Observable {
 
     private Board board;
 
     private List<Player> playerlist;
 
     private Iterator<Player> playerIterator;
-
-    private PrintStream stream;
-
-    private boolean verbose;
-
     /**
      * Create an new Game of connect 4. This constructor accepts an class
      * implementing the interface Board and initializes an new board of the
@@ -46,15 +39,13 @@ public class Game {
      *            Stream to communicate with the user
      * @param beVerbose
      *            true if output has to written to oStream, false if not
+     * @throws InstantiationException 
+     * @throws IllegalAccessException 
      */
-    public Game(Class<? extends Board> boardClass, Player[] players,
-            PrintStream oStream, boolean beVerbose) {
+    public Game(Class<? extends Board> boardClass, Player[] players) throws InstantiationException, 
+            IllegalAccessException {
 
         initBoard(boardClass);
-
-        stream = oStream;
-
-        verbose = beVerbose;
 
         playerlist = new ArrayList<Player>();
 
@@ -72,34 +63,39 @@ public class Game {
      * @param boardClass
      *            Class to use as board implementation
      */
-    private void initBoard(Class<? extends Board> boardClass) {
+    private void initBoard(Class<? extends Board> boardClass) throws InstantiationException, 
+        IllegalAccessException {
         try {
             board = boardClass.newInstance();
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            throw e;
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            throw e;
         }
     }
 
     /**
      * Play an game of connect 4 till the game has ended.
+     * @throws InvalidMoveException 
      */
-    public void play() {
+    public void play() throws InvalidMoveException{
+        
+        this.notifyObservers();
+        boolean fairplay = true;
+        Player current;
 
-        while (!this.hasFinished()) {
-            if (verbose) {
-                stream.println(board);
-            }
-            board.makemove(playerIterator.next().doMove(board.deepCopy()));
+        while (!this.hasFinished() && fairplay) {
+            this.setChanged();
+            this.notifyObservers();
+            current = playerIterator.next();
+            board.makemove(current.doMove(board.deepCopy()));
 
         }
 
         if (this.hasWinner()) {
-            if (verbose) {
-                stream.println(board);
-                stream.println("Someone Won!");
-            }
+            // TODO Determine which player actually won the game
+            this.setChanged();
+            this.notifyObservers();
         }
 
     }
@@ -138,15 +134,12 @@ public class Game {
         return board.full() || board.lastMoveWon();
 
     }
-
-    public static void main(String[] args) {
-
-        BufferedReader dis = new BufferedReader(
-                new InputStreamReader(System.in));
-
-        new Game(ReferenceBoard.class, new Player[] {new HumanPlayer(dis),
-            new ComputerPlayer(new NegaMaxStrategy()) }, System.out, true)
-                .play();
+    
+    /**
+     * @return copy of the board used for the game state
+     */
+    public Board getBoard() {
+        return board.deepCopy();
     }
 
 }

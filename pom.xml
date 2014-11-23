@@ -22,7 +22,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>main.java.model.Game</mainClass>
+							<mainClass>main.java.ui.tui.FourCharmTUI</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -43,7 +43,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>main.java.model.Game</mainClass>
+							<mainClass>main.java.ui.tui.FourCharmTUI</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

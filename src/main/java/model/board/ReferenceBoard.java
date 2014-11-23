@@ -4,6 +4,7 @@
 package main.java.model.board;
 
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 /**
  * Class for modeling an board for the game connect four. This class's
@@ -17,14 +18,6 @@ import java.util.Arrays;
 public class ReferenceBoard implements Board {
 
     // ------------------ Class variables ----------------
-    /**
-     * Amount of columns of the board.
-     */
-    public static final int COLUMNS = 7;
-    /**
-     * Amount of rows of the board.
-     */
-    public static final int ROWS = 6;
     /**
      * Amount of spots in the board.
      */
@@ -43,12 +36,12 @@ public class ReferenceBoard implements Board {
     public static final int PLAYER2 = 1;
 
     // ------------------ Instance variables ----------------
-
-    private int[] moves; // Array with moves since the start of the game
-
-    private int nplies; // Amount of turns since the start of the game
-
-    private int[][] board; // Holds bitboard for every color
+    // Array with moves since the start of the game
+    private int[] moves; 
+    // Amount of turns since the start of the game
+    private int nplies; 
+    // Holds bitboard for every color
+    private int[][] board; 
 
     // --------------------- Constructors -------------------
 
@@ -100,13 +93,13 @@ public class ReferenceBoard implements Board {
 
         boolean diag = false;
 
-        for (int column = 4; column < COLUMNS && !diag; column++) {
+        for (int column = WIN_STREAK; column < COLUMNS && !diag; column++) {
             int streak = 0;
             int tColumn = column;
             for (int row = 0; row < ROWS && tColumn < COLUMNS; row++, tColumn--) {
                 streak = board[column][row] == player ? streak + 1 : 0;
             }
-            diag = streak == 4;
+            diag = streak == WIN_STREAK;
         }
 
         return diag;
@@ -117,13 +110,13 @@ public class ReferenceBoard implements Board {
 
         boolean diag = false;
 
-        for (int column = COLUMNS - 4; column >= 0 && !diag; column--) {
+        for (int column = COLUMNS - WIN_STREAK; column >= 0 && !diag; column--) {
             int streak = 0;
             int tColumn = column;
             for (int row = 0; row < ROWS && tColumn < COLUMNS; row++, tColumn++) {
                 streak = board[column][row] == player ? streak + 1 : 0;
             }
-            diag = streak == 4;
+            diag = streak == WIN_STREAK;
         }
 
         return diag;
@@ -136,10 +129,10 @@ public class ReferenceBoard implements Board {
 
         for (int row = 0; row < ROWS && !horizontal; row++) {
             int streak = 0;
-            for (int column = 0; column < COLUMNS && streak < 4; column++) {
+            for (int column = 0; column < COLUMNS && streak < WIN_STREAK; column++) {
                 streak = board[column][row] == player ? streak + 1 : 0;
             }
-            horizontal = streak == 4;
+            horizontal = streak == WIN_STREAK;
 
         }
 
@@ -153,10 +146,10 @@ public class ReferenceBoard implements Board {
 
         for (int column = 0; column < COLUMNS && !vertical; column++) {
             int streak = 0;
-            for (int row = 0; row < ROWS && streak < 4; row++) {
+            for (int row = 0; row < ROWS && streak < WIN_STREAK; row++) {
                 streak = board[column][row] == player ? streak + 1 : 0;
             }
-            vertical = streak == 4;
+            vertical = streak == WIN_STREAK;
 
         }
 
@@ -197,7 +190,14 @@ public class ReferenceBoard implements Board {
         ReferenceBoard boardCopy = new ReferenceBoard();
         boardCopy.reset();
         for (int i = 0; i < nplies; i++) {
-            boardCopy.makemove(moves[i]);
+            try {
+                boardCopy.makemove(moves[i]);
+            } catch (InvalidMoveException e) {
+                // TODO Maybe it makes sense to use an different method for this 
+                // that doesn't throw exceptions.
+                Logger.getGlobal().throwing("ReferenceBoard", "deepCopy", e);
+            }
+            
         }
         return boardCopy;
     }
@@ -209,13 +209,16 @@ public class ReferenceBoard implements Board {
      * @param col
      * @requires gets called for the player which current turn it is
      */
-    public void makemove(int col) {
-
-        int player = nplies & 1; // same as modulo 2 but probably more efficient
+    public void makemove(int col) throws InvalidMoveException {
+        
+        
+        // same as modulo 2 but probably more efficient
+        int player = nplies & 1; 
 
         moves[nplies] = col;
 
-        nplies++; // Increment the plie count
+        // Increment the plie count
+        nplies++; 
 
         boolean needPlacement = true;
 
@@ -227,8 +230,9 @@ public class ReferenceBoard implements Board {
         }
 
         if (needPlacement) {
-            System.out.println("Dit gaat mis");
-            System.exit(1);
+            
+            
+            throw new InvalidMoveException("This column has no more free space");
         }
 
     }

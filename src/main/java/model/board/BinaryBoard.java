@@ -13,15 +13,6 @@ package main.java.model.board;
  *
  */
 public class BinaryBoard implements Board {
-
-    /**
-     * Amount of columns of the board.
-     */
-    public static final int COLUMNS = 7;
-    /**
-     * Amount of rows of the board.
-     */
-    public static final int ROWS = 6;
     /**
      * The multiple of the index for the first row of each column.
      */
@@ -50,21 +41,22 @@ public class BinaryBoard implements Board {
      */
     public static final long TOP = BOTTOM << ROWS;
 
-    private int[] moves; // Array with moves since the start of the game
-
-    private int nplies; // Amount of turns since the start of the game
-
-    private byte[] height; // Array with the index of lowest free sqaure
-                           // for every column; assumes SIZE < 128
-
-    private long[] color; // Holds bitboard for every color
+    // Array with moves since the start of the game
+    private int[] moves;
+    // Amount of turns since the start of the game
+    private int nplies;
+    // Array with the index of lowest free sqaure
+    // for every column; assumes SIZE < 128
+    private byte[] height; 
+    // Holds bitboard for every color
+    private long[] color; 
 
     /**
      * Make an new BinaryBoard and reset it to default settings.
      */
     public BinaryBoard() {
 
-        color = new long[2];
+        color = new long[PLAYERS];
         height = new byte[COLUMNS];
         moves = new int[SIZE];
         reset();
@@ -88,7 +80,9 @@ public class BinaryBoard implements Board {
 
     private boolean isLegalBoard(long newboard) {
 
-        return (newboard & TOP) == 0; // Checks wether no columns have overflown
+        // Checks wether no columns have overflown
+        return (newboard & TOP) == 0; 
+
 
     }
 
@@ -152,17 +146,23 @@ public class BinaryBoard implements Board {
      */
 
     public void makemove(int col) {
-
-        int player = nplies & 1; // same as modulo 2 but probably more efficient
+        
+        // same as modulo 2 but probably more efficient
+        int player = nplies & 1; 
+       
 
         moves[nplies] = col;
-        nplies++; // Increment the plie count
+        
+        // Increment the plie count
+        nplies++; 
 
         color[player] ^= 1L << height[col];
-
-        height[col]++; // Increment the height of the column where the piece is
-                       // placed,
-                       // This should be done after altering color[player]
+        
+        
+        // Increment the height of the column where the piece is
+        // placed,
+        // This should be done after altering color[player]
+        height[col]++; 
 
     }
 

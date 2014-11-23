@@ -3,7 +3,10 @@
  */
 package main.java.model.ai;
 
+import java.util.logging.Logger;
+
 import main.java.model.board.Board;
+import main.java.model.board.InvalidMoveException;
 
 /**
  * @author Luce Sandfort and Wouter Timmermans
@@ -25,16 +28,7 @@ public class NegaMaxStrategy implements GameStrategy {
      */
     @Override
     public int doMove(Board board) {
-        int move = 0;
-        try {
-            move = doMove(board, DEF_DEPTH);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-
-        return move;
+        return doMove(board, DEF_DEPTH);
     }
 
     /**
@@ -43,32 +37,35 @@ public class NegaMaxStrategy implements GameStrategy {
      * @param board
      * @param depth
      *            search depth for the NegaMax algorithm
-     * @throws IllegalAccessException
-     * @throws NoSuchFieldException
+     * @throws InvalidMoveException
      * @return The best move according to the negamax algorithm.
      */
-    public int doMove(Board board, int depth) throws IllegalAccessException,
-            NoSuchFieldException {
+    public int doMove(Board board, int depth) {
 
         double bestValue = Double.NEGATIVE_INFINITY;
         int bestMove = 0;
         int samevalues = 1;
         int freecolumns = 0;
-        int columns = (int) board.getClass().getField("COLUMNS").get(board);
+        int columns = Board.COLUMNS;
 
         for (int col = 0; col < columns; col++) {
             if (board.columnHasFreeSpace(col)) {
-                freecolumns++;
-                Board cBoard = board.deepCopy();
-                cBoard.makemove(col);
-                double value = -negaMax(cBoard, depth);
-                System.out.println("Move: " + col + "Value:" + value);
-                if (value > bestValue) {
-                    bestMove = col;
-                    bestValue = value;
-                } else if (value == bestValue) {
-                    samevalues++;
+                try {
+                    Board cBoard = board.deepCopy();
+                    cBoard.makemove(col);
+                    freecolumns++;
+                    double value = -negaMax(cBoard, depth);
+                    Logger.getGlobal().fine("Move: " + col + "Value:" + value);
+                    if (value > bestValue) {
+                        bestMove = col;
+                        bestValue = value;
+                    } else if (value == bestValue) {
+                        samevalues++;
+                    }
+                } catch (InvalidMoveException e) {
+                    Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
                 }
+                
 
             }
         }
@@ -82,13 +79,12 @@ public class NegaMaxStrategy implements GameStrategy {
      * 
      * @param board
      * @param depth
+     * @throws InvalidMoveException
      * @return The negamax value of the current board state
-     * @throws IllegalAccessException
-     * @throws NoSuchFieldException
      */
-    public double negaMax(Board board, int depth)
-            throws IllegalAccessException, NoSuchFieldException {
-        int player = board.plieCount() & 1; // Player which move it is
+    private double negaMax(Board board, int depth) {
+        // Determine which player should make a move
+        int player = board.plieCount() & 1;
         player = player == 0 ? -1 : player;
         double value;
 
@@ -97,14 +93,19 @@ public class NegaMaxStrategy implements GameStrategy {
         } else {
 
             double bestValue = Double.NEGATIVE_INFINITY;
-            int columns = (int) board.getClass().getField("COLUMNS").get(board);
+            int columns = Board.COLUMNS;
 
             for (int col = 0; col < columns; col++) {
                 if (board.columnHasFreeSpace(col)) {
-                    Board childBoard = board.deepCopy();
-                    childBoard.makemove(col);
-                    double tValue = -negaMax(childBoard, depth - 1);
-                    bestValue = Math.max(bestValue, tValue);
+                    try {
+                        Board childBoard = board.deepCopy();
+                        childBoard.makemove(col);
+                        double tValue = -negaMax(childBoard, depth - 1);
+                        bestValue = Math.max(bestValue, tValue);
+                    } catch (InvalidMoveException e) {
+                        Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
+                    }
+                    
                 }
             }
 
