@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Observable;
-import java.util.logging.Logger;
 
+import main.java.exception.InvalidMoveException;
 import main.java.model.board.*;
 
 import com.google.common.collect.Iterables;
@@ -65,13 +65,9 @@ public class Game extends Observable {
      */
     private void initBoard(Class<? extends Board> boardClass) throws InstantiationException, 
         IllegalAccessException {
-        try {
-            board = boardClass.newInstance();
-        } catch (InstantiationException e) {
-            throw e;
-        } catch (IllegalAccessException e) {
-            throw e;
-        }
+            
+        board = boardClass.newInstance();
+      
     }
 
     /**
@@ -93,7 +89,6 @@ public class Game extends Observable {
         }
 
         if (this.hasWinner()) {
-            // TODO Determine which player actually won the game
             this.setChanged();
             this.notifyObservers();
         }
@@ -108,7 +103,7 @@ public class Game extends Observable {
      */
     public int plieCount() {
 
-        return board.plieCount();
+        return board.getPlieCount();
 
     }
 
@@ -131,7 +126,7 @@ public class Game extends Observable {
      */
     public boolean hasFinished() {
 
-        return board.full() || board.lastMoveWon();
+        return board.isFull() || board.lastMoveWon();
 
     }
     

@@ -1,7 +1,7 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package main.java.model.board;
+package main.java.exception;
 
 /**
  * Exception that gets thrown when an invalid is attempted to be made.
@@ -13,8 +13,8 @@ public class InvalidMoveException extends Exception {
     /**
      * 
      */
-    private static final long serialVersionUID = -6960421680924145617L;
-    
+    private static final long serialVersionUID = -148107440122750510L;
+
     /**
      * InvalidMoveException without an message.
      */

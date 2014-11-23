@@ -6,6 +6,8 @@ package main.java.model.board;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import main.java.exception.InvalidMoveException;
+
 /**
  * Class for modeling an board for the game connect four. This class's
  * responsibility is to keep the state of the board. This is the reference
@@ -15,7 +17,7 @@ import java.util.logging.Logger;
  *
  */
 
-public class ReferenceBoard implements Board {
+public class ReferenceBoard extends Board {
 
     // ------------------ Class variables ----------------
     /**
@@ -77,13 +79,13 @@ public class ReferenceBoard implements Board {
 
     }
 
-    public boolean full() {
+    public boolean isFull() {
 
         return nplies >= SIZE - 1;
 
     }
 
-    public int plieCount() {
+    public int getPlieCount() {
 
         return nplies;
 
@@ -193,8 +195,6 @@ public class ReferenceBoard implements Board {
             try {
                 boardCopy.makemove(moves[i]);
             } catch (InvalidMoveException e) {
-                // TODO Maybe it makes sense to use an different method for this 
-                // that doesn't throw exceptions.
                 Logger.getGlobal().throwing("ReferenceBoard", "deepCopy", e);
             }
             

@@ -3,12 +3,13 @@
  */
 package test.java.benchmark;
 
-import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.logging.Logger;
 
+import main.java.exception.InvalidMoveException;
 import main.java.model.ComputerPlayer;
 import main.java.model.Game;
 import main.java.model.Player;
@@ -17,8 +18,6 @@ import main.java.model.board.BinaryBoard;
 import main.java.model.board.Board;
 import main.java.model.board.ReferenceBoard;
 
-import com.google.common.io.ByteStreams;
-
 /**
  * Class for perfoming an benchmark of the BinaryBoard.
  * 
@@ -26,39 +25,44 @@ import com.google.common.io.ByteStreams;
  *
  */
 public class RandomBenchmark {
-
+    
     private RandomBenchmark() {
-
+        // Hide the public constructor
     }
 
     /**
      * Amount of iterations of the benchmark.
      */
-    public static final int ITERATIONS = 10_000_000;
+    public static final int ITERATIONS = 5_000_000;
 
+    /**
+     * How many times the current percentage should be shown.
+     */
     public static final int STEP_PERCENTAGE = 10;
 
-    private static int runBenchmark(Class<? extends Board> boardClass) throws InstantiationException, IllegalAccessException {
+    private static int runBenchmark(Class<? extends Board> boardClass)
+            throws InstantiationException, IllegalAccessException, InvalidMoveException {
 
         int gCount = 0;
         long pCount = 0;
         final int total = ITERATIONS;
         final int step = total / STEP_PERCENTAGE;
         long oStartTime = System.currentTimeMillis();
-        PrintStream nullStream = new PrintStream(ByteStreams.nullOutputStream());
 
         while (gCount < total + 1) {
 
             if (gCount % step == 0 && gCount != 0) {
                 float percent = ((float) gCount / (float) total) * 100;
                 int intPercent = (int) percent;
-                System.out.println(intPercent + "%");
+                Logger.getGlobal().info(intPercent + "%");
             }
 
             Game game = new Game(boardClass, new Player[] {
                 new ComputerPlayer(new RandomStrategy()),
                 new ComputerPlayer(new RandomStrategy()) });
+   
             game.play();
+            
             gCount++;
             pCount += game.plieCount();
 
@@ -74,30 +78,33 @@ public class RandomBenchmark {
      * 
      * @param args
      *            N/A
+     * @throws IllegalAccessException
+     * @throws InstantiationException
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InstantiationException,
+            IllegalAccessException, InvalidMoveException {
 
         DecimalFormat formatter = (DecimalFormat) NumberFormat
                 .getInstance(Locale.ITALY);
         DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
         symbols.setGroupingSeparator(' ');
 
-        System.out.println("Running Benchmark with "
+        Logger.getGlobal().info("Running Benchmark with "
                 + formatter.format(ITERATIONS) + " iterations");
 
-        System.out.println("\n\n" + BinaryBoard.class.getSimpleName() + ":");
+        Logger.getGlobal().info("\n\n" + BinaryBoard.class.getSimpleName() + ":");
         int binMps = runBenchmark(BinaryBoard.class);
-        System.out.println("\n\n" + ReferenceBoard.class.getSimpleName() + ":");
+        Logger.getGlobal().info("\n\n" + ReferenceBoard.class.getSimpleName() + ":");
         int refMps = runBenchmark(ReferenceBoard.class);
         float speedup = (float) binMps / refMps;
 
-        System.out.println("\n\n\nResults:\n-----------\n");
+        Logger.getGlobal().info("\n\n\nResults:\n-----------\n");
 
-        System.out.println("BinaryBoard: " + formatter.format(binMps)
+        Logger.getGlobal().info("BinaryBoard: " + formatter.format(binMps)
                 + " mps (moves per second)");
-        System.out.println("ReferenceBoard: " + formatter.format(refMps)
+        Logger.getGlobal().info("ReferenceBoard: " + formatter.format(refMps)
                 + " mps (moves per second)");
-        System.out.println("\nBinaryBoard is " + speedup
+        Logger.getGlobal().info("\nBinaryBoard is " + speedup
                 + "x faster than the 2D array reference implementation");
 
     }

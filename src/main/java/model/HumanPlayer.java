@@ -6,8 +6,6 @@ package main.java.model;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.logging.Logger;
-
-import main.java.model.board.BinaryBoard;
 import main.java.model.board.Board;
 
 /**
@@ -53,7 +51,7 @@ public class HumanPlayer implements Player {
         }
         for (int i = 0; i < line.length(); i++) {
             int col = line.charAt(i) - '1';
-            if (col >= 0 && col < BinaryBoard.COLUMNS
+            if (col >= 0 && col < board.getColumns()
                     && board.columnHasFreeSpace(col)) {
                 move = col;
             } else {

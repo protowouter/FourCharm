@@ -5,8 +5,8 @@ package main.java.model.ai;
 
 import java.util.logging.Logger;
 
+import main.java.exception.InvalidMoveException;
 import main.java.model.board.Board;
-import main.java.model.board.InvalidMoveException;
 
 /**
  * @author Luce Sandfort and Wouter Timmermans
@@ -46,7 +46,7 @@ public class NegaMaxStrategy implements GameStrategy {
         int bestMove = 0;
         int samevalues = 1;
         int freecolumns = 0;
-        int columns = Board.COLUMNS;
+        int columns = board.getColumns();
 
         for (int col = 0; col < columns; col++) {
             if (board.columnHasFreeSpace(col)) {
@@ -84,16 +84,16 @@ public class NegaMaxStrategy implements GameStrategy {
      */
     private double negaMax(Board board, int depth) {
         // Determine which player should make a move
-        int player = board.plieCount() & 1;
+        int player = board.getPlieCount() & 1;
         player = player == 0 ? -1 : player;
         double value;
 
-        if (depth == 0 || board.full() || board.lastMoveWon()) {
+        if (depth == 0 || board.isFull() || board.lastMoveWon()) {
             value = player * nodeValue(board);
         } else {
 
             double bestValue = Double.NEGATIVE_INFINITY;
-            int columns = Board.COLUMNS;
+            int columns = board.getColumns();
 
             for (int col = 0; col < columns; col++) {
                 if (board.columnHasFreeSpace(col)) {

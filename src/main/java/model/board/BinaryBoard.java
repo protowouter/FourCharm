@@ -12,7 +12,7 @@ package main.java.model.board;
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
-public class BinaryBoard implements Board {
+public class BinaryBoard extends Board {
     /**
      * The multiple of the index for the first row of each column.
      */
@@ -61,6 +61,13 @@ public class BinaryBoard implements Board {
         moves = new int[SIZE];
         reset();
     }
+    
+    private BinaryBoard(int[] origMoves, int origNplies, byte[] origHeight, long[] origColor) {
+        moves = origMoves;
+        nplies = origNplies;
+        height = origHeight;
+        color = origColor;
+    }
 
     private void reset() {
         nplies = 0;
@@ -95,13 +102,13 @@ public class BinaryBoard implements Board {
 
     }
 
-    public boolean full() {
+    public boolean isFull() {
 
         return nplies >= SIZE - 1;
 
     }
 
-    public int plieCount() {
+    public int getPlieCount() {
 
         return nplies;
 
@@ -189,12 +196,12 @@ public class BinaryBoard implements Board {
     }
 
     public Board deepCopy() {
-        BinaryBoard board = new BinaryBoard();
-        board.reset();
-        for (int i = 0; i < nplies; i++) {
-            board.makemove(moves[i]);
-        }
-        return board;
+        int[] moveCopy = moves.clone();
+        byte[] heightCopy = height.clone();
+        long[] colorCopy = color.clone();
+        
+        return new BinaryBoard(moveCopy, nplies, heightCopy, colorCopy);
+  
     }
 
 }
