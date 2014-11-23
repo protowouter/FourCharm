@@ -1,9 +1,9 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package main.java.model.ai;
+package com.lucwo.fourcharm.model.ai;
 
-import main.java.model.Player;
+import com.lucwo.fourcharm.model.Player;
 
 /**
  * An strategy used by an computerplayer.

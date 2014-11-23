@@ -1,11 +1,11 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package main.java.model.ai;
+package com.lucwo.fourcharm.model.ai;
 
 import java.util.Random;
 
-import main.java.model.board.Board;
+import com.lucwo.fourcharm.model.board.Board;
 
 /**
  * @author Luce Sandfort and Wouter Timmermans

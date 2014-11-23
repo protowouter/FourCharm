@@ -1,7 +1,7 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package test.java.benchmark;
+package com.lucwo.fourcharm.benchmark;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -9,14 +9,14 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.logging.Logger;
 
-import main.java.exception.InvalidMoveException;
-import main.java.model.ComputerPlayer;
-import main.java.model.Game;
-import main.java.model.Player;
-import main.java.model.ai.RandomStrategy;
-import main.java.model.board.BinaryBoard;
-import main.java.model.board.Board;
-import main.java.model.board.ReferenceBoard;
+import com.lucwo.fourcharm.exception.InvalidMoveException;
+import com.lucwo.fourcharm.model.ComputerPlayer;
+import com.lucwo.fourcharm.model.Game;
+import com.lucwo.fourcharm.model.Player;
+import com.lucwo.fourcharm.model.ai.RandomStrategy;
+import com.lucwo.fourcharm.model.board.BinaryBoard;
+import com.lucwo.fourcharm.model.board.Board;
+import com.lucwo.fourcharm.model.board.ReferenceBoard;
 
 /**
  * Class for perfoming an benchmark of the BinaryBoard.

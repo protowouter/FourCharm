@@ -1,12 +1,12 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package main.java.model.ai;
+package com.lucwo.fourcharm.model.ai;
 
 import java.util.logging.Logger;
 
-import main.java.exception.InvalidMoveException;
-import main.java.model.board.Board;
+import com.lucwo.fourcharm.exception.InvalidMoveException;
+import com.lucwo.fourcharm.model.board.Board;
 
 /**
  * @author Luce Sandfort and Wouter Timmermans

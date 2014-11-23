@@ -1,7 +1,7 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package test.java.features;
+package com.lucwo.fourcharm.features;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;

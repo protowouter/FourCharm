@@ -1,17 +1,16 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package main.java.model;
+package com.lucwo.fourcharm.model;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Observable;
 
-import main.java.exception.InvalidMoveException;
-import main.java.model.board.*;
-
 import com.google.common.collect.Iterables;
+import com.lucwo.fourcharm.exception.InvalidMoveException;
+import com.lucwo.fourcharm.model.board.*;
 
 /**
  * Models an game of Connect 4.

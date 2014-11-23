@@ -1,12 +1,12 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package main.java.model.board;
+package com.lucwo.fourcharm.model.board;
 
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-import main.java.exception.InvalidMoveException;
+import com.lucwo.fourcharm.exception.InvalidMoveException;
 
 /**
  * Class for modeling an board for the game connect four. This class's

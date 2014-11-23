@@ -1,7 +1,7 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package main.java.ui.tui;
+package com.lucwo.fourcharm.ui.tui;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -9,13 +9,13 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Logger;
 
-import main.java.exception.InvalidMoveException;
-import main.java.model.ComputerPlayer;
-import main.java.model.Game;
-import main.java.model.HumanPlayer;
-import main.java.model.Player;
-import main.java.model.ai.NegaMaxStrategy;
-import main.java.model.board.BinaryBoard;
+import com.lucwo.fourcharm.exception.InvalidMoveException;
+import com.lucwo.fourcharm.model.ComputerPlayer;
+import com.lucwo.fourcharm.model.Game;
+import com.lucwo.fourcharm.model.HumanPlayer;
+import com.lucwo.fourcharm.model.Player;
+import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
+import com.lucwo.fourcharm.model.board.BinaryBoard;
 
 /**
  * @author Luce Sandfort and Wouter Timmermans

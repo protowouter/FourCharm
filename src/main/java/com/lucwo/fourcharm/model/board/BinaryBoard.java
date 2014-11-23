@@ -2,7 +2,7 @@
  * Heavily influenced by the Fhourstones 3.0 Board Logic Copyright 2000-2004 John Tromp
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package main.java.model.board;
+package com.lucwo.fourcharm.model.board;
 
 /**
  * Class for modeling an board for the game connect four. This class's

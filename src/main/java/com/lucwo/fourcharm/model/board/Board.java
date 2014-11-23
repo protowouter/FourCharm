@@ -1,9 +1,9 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package main.java.model.board;
+package com.lucwo.fourcharm.model.board;
 
-import main.java.exception.InvalidMoveException;
+import com.lucwo.fourcharm.exception.InvalidMoveException;
 
 /**
  * @author Luce Sandfort and Wouter Timmermans

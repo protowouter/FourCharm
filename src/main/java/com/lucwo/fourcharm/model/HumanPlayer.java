@@ -1,12 +1,13 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package main.java.model;
+package com.lucwo.fourcharm.model;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.logging.Logger;
-import main.java.model.board.Board;
+
+import com.lucwo.fourcharm.model.board.Board;
 
 /**
  * @author Luce Sandfort and Wouter Timmermans

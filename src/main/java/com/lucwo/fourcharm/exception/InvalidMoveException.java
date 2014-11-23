@@ -1,7 +1,7 @@
 /**
  * copyright 2014 Luce Sandfort and Wouter Timmermans 
  */
-package main.java.exception;
+package com.lucwo.fourcharm.exception;
 
 /**
  * Exception that gets thrown when an invalid is attempted to be made.
