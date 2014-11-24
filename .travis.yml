@@ -4,6 +4,8 @@ jdk:
 
 before_install: mvn install -DskipTests=true -DfinalName=FourCharm-$TRAVIS_TAG
 
+script: mvn test verify
+
 after_success:
     - mkdir target/gh-release
     - cp target/FourCharm-$TRAVIS_TAG-jar-with-dependencies.jar target/gh-release/FourCharm-$TRAVIS_TAG.jar
