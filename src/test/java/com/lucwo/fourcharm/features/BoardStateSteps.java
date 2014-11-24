@@ -29,8 +29,8 @@ public class BoardStateSteps {
     private Board refBoard;
     private static ComputerPlayer cP = new ComputerPlayer(new RandomStrategy());
     
-    @Given("^an board with only one free spot$")
-    public void an_board_with_only_one_free_spot() throws InvalidMoveException{
+    @Given("^a board with only one free spot$")
+    public void a_board_with_only_one_free_spot() throws InvalidMoveException{
        
         binBoard = new BinaryBoard();
         refBoard = new ReferenceBoard();

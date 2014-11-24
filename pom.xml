@@ -20,7 +20,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>main.java.ui.tui.FourCharmTUI</mainClass>
+                            <mainClass>com.lucwo.fourcharm.ui.tui.FourCharmTUI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -41,7 +41,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>main.java.ui.tui.FourCharmTUI</mainClass>
+                            <mainClass>com.lucwo.fourcharm.ui.tui.FourCharmTUI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
