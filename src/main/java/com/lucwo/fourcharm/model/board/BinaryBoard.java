@@ -1,6 +1,5 @@
-/**
- * Heavily influenced by the Fhourstones 3.0 Board Logic Copyright 2000-2004 John Tromp
- * copyright 2014 Luce Sandfort and Wouter Timmermans 
+/*
+ * Copyright (c) 2014. Luce Sandfort and Wouter Timmermans
  */
 package com.lucwo.fourcharm.model.board;
 
@@ -155,8 +154,8 @@ public class BinaryBoard extends Board {
      */
 
     public void makemove(int col) throws InvalidMoveException {
-        
-        if (columnHasFreeSpace(col)){
+
+        if (columnHasFreeSpace(col)) {
             // same as modulo 2 but probably more efficient
             int player = nplies & 1; 
            

@@ -1,16 +1,16 @@
-/**
- * copyright 2014 Luce Sandfort and Wouter Timmermans 
+/*
+ * Copyright (c) 2014. Luce Sandfort and Wouter Timmermans
  */
 package com.lucwo.fourcharm.model;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Observable;
-
 import com.google.common.collect.Iterables;
 import com.lucwo.fourcharm.exception.InvalidMoveException;
-import com.lucwo.fourcharm.model.board.*;
+import com.lucwo.fourcharm.model.board.Board;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Observable;
 
 /**
  * Models an game of Connect 4.
@@ -73,7 +73,7 @@ public class Game extends Observable {
      * Play an game of connect 4 till the game has ended.
      * @throws InvalidMoveException 
      */
-    public void play() throws InvalidMoveException{
+    public void play() throws InvalidMoveException {
         
         this.notifyObservers();
         boolean fairplay = true;
