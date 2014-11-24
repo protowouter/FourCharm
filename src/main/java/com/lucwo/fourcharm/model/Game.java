@@ -7,10 +7,7 @@ import com.google.common.collect.Iterables;
 import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.board.Board;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Observable;
+import java.util.*;
 
 /**
  * Models an game of Connect 4.
@@ -21,8 +18,6 @@ import java.util.Observable;
 public class Game extends Observable {
 
     private Board board;
-
-    private List<Player> playerlist;
 
     private Iterator<Player> playerIterator;
     /**
@@ -46,13 +41,9 @@ public class Game extends Observable {
 
         initBoard(boardClass);
 
-        playerlist = new ArrayList<Player>();
+        List<Player> playerlist = new ArrayList<Player>();
 
-        for (Player player : players) {
-
-            playerlist.add(player);
-
-        }
+        Collections.addAll(playerlist, players);
 
         playerIterator = Iterables.cycle(playerlist).iterator();
 

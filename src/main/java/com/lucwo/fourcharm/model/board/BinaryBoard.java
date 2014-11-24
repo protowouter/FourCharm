@@ -186,7 +186,7 @@ public class BinaryBoard extends Board {
         }
         repr.append("\n");
         for (int w = 0; w < COLUMNS; w++) {
-            repr.append(" " + (w + 1));
+            repr.append(" ").append(w + 1);
         }
         repr.append("\n");
         for (int h = ROWS - 1; h >= 0; h--) {

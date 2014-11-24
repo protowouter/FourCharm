@@ -3,10 +3,10 @@
  */
 package com.lucwo.fourcharm.model.board;
 
+import com.lucwo.fourcharm.exception.InvalidMoveException;
+
 import java.util.Arrays;
 import java.util.logging.Logger;
-
-import com.lucwo.fourcharm.exception.InvalidMoveException;
 
 /**
  * Class for modeling an board for the game connect four. This class's
@@ -167,7 +167,7 @@ public class ReferenceBoard extends Board {
         }
         repr.append("\n");
         for (int w = 0; w < COLUMNS; w++) {
-            repr.append(" " + (w + 1));
+            repr.append(" ").append(w + 1);
         }
         repr.append("\n");
 
