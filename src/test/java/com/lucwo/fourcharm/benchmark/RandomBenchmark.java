@@ -3,12 +3,6 @@
  */
 package com.lucwo.fourcharm.benchmark;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
-import java.util.Locale;
-import java.util.logging.Logger;
-
 import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.ComputerPlayer;
 import com.lucwo.fourcharm.model.Game;
@@ -18,6 +12,12 @@ import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.model.board.Board;
 import com.lucwo.fourcharm.model.board.ReferenceBoard;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.logging.Logger;
+
 /**
  * Class for perfoming an benchmark of the BinaryBoard.
  * 
@@ -26,19 +26,19 @@ import com.lucwo.fourcharm.model.board.ReferenceBoard;
  */
 public class RandomBenchmark {
     
-    private RandomBenchmark() {
-        // Hide the public constructor
-    }
-
     /**
      * Amount of iterations of the benchmark.
      */
     public static final int ITERATIONS = 5_000_000;
-
     /**
      * How many times the current percentage should be shown.
      */
     public static final int STEP_PERCENTAGE = 10;
+
+    private RandomBenchmark() {
+        super();
+        // Hide the public constructor
+    }
 
     private static int runBenchmark(Class<? extends Board> boardClass)
             throws InstantiationException, IllegalAccessException, InvalidMoveException {
@@ -49,9 +49,9 @@ public class RandomBenchmark {
         final int step = total / STEP_PERCENTAGE;
         long oStartTime = System.currentTimeMillis();
 
-        while (gCount < total + 1) {
+        while (gCount < (total + 1)) {
 
-            if (gCount % step == 0 && gCount != 0) {
+            if (((gCount % step) == 0) && (gCount != 0)) {
                 float percent = ((float) gCount / (float) total) * 100;
                 int intPercent = (int) percent;
                 Logger.getGlobal().info(intPercent + "%");

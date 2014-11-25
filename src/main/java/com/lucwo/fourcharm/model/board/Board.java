@@ -14,19 +14,19 @@ public abstract class Board {
     /**
      * Amount of columns of the board.
      */
-    protected static final int COLUMNS = 7;
+    static final int COLUMNS = 7;
     /**
      * Amount of rows of the board.
      */
-    protected static final int ROWS = 6;
+    static final int ROWS = 6;
     /**
      * Amount of players.
      */
-    protected static final int PLAYERS = 2;
+    static final int PLAYERS = 2;
     /**
      * Amount of pieces in a row a player has to have to win.
      */
-    protected static final int WIN_STREAK = 4;
+    static final int WIN_STREAK = 4;
 
     public abstract boolean columnHasFreeSpace(int col);
 

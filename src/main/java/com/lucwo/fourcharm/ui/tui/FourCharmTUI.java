@@ -3,12 +3,6 @@
  */
 package com.lucwo.fourcharm.ui.tui;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.logging.Logger;
-
 import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.ComputerPlayer;
 import com.lucwo.fourcharm.model.Game;
@@ -17,32 +11,55 @@ import com.lucwo.fourcharm.model.Player;
 import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.logging.Logger;
+
 /**
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
-public class FourCharmTUI implements Observer {
+class FourCharmTUI implements Observer {
     
     
     
     // ------------------ Instance variables ----------------
-    
-    private Game game;
+
+    private final Game game;
     
     // --------------------- Constructors -------------------
     
     private FourCharmTUI() throws InstantiationException, IllegalAccessException {
-        
+        super();
+
         BufferedReader dis = new BufferedReader(
                 new InputStreamReader(System.in));
-        
-        game = new Game(BinaryBoard.class, new Player[] {new HumanPlayer(dis),
-            new ComputerPlayer(new NegaMaxStrategy()) });
-        
+
+        game = new Game(BinaryBoard.class, new Player[]{new HumanPlayer(dis),
+                new ComputerPlayer(new NegaMaxStrategy())});
+
         game.addObserver(this);
-        
-        
+
+
     }
+
+    /**
+     * @param args none applicable
+     */
+    public static void main(String[] args) {
+
+        try {
+            new FourCharmTUI().play();
+        } catch (InstantiationException | IllegalAccessException e) {
+            Logger.getGlobal().throwing("FourCharmTUI", "main", e);
+        }
+
+
+    }
+
+    // ----------------------- Commands ---------------------
 
     /* (non-Javadoc)
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
@@ -55,36 +72,19 @@ public class FourCharmTUI implements Observer {
         }
 
     }
-
-    // ----------------------- Commands ---------------------
     
     /**
      * Start the game.
      */
     public void play() {
-        
+
         try {
             game.play();
         } catch (InvalidMoveException e) {
             Logger.getGlobal().info("Quitting: someone tried cheating");
             Logger.getGlobal().throwing("FourCharmTUI", "play", e);
         }
-        
-    }
-    
-    /**
-     * @param args none applicable
-     */
-    public static void main(String[] args) {
-        
-        try {
-            new FourCharmTUI().play();
-        } catch (InstantiationException | IllegalAccessException e) {
-            Logger.getGlobal().throwing("FourCharmTUI", "main", e);
-        }
-        
 
-           
     }
 
 }

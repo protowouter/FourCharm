@@ -3,10 +3,10 @@
  */
 package com.lucwo.fourcharm.model.ai;
 
-import java.util.logging.Logger;
-
 import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.board.Board;
+
+import java.util.logging.Logger;
 
 /**
  * @author Luce Sandfort and Wouter Timmermans
@@ -14,12 +14,11 @@ import com.lucwo.fourcharm.model.board.Board;
  */
 public class NegaMaxStrategy implements GameStrategy {
 
-    private GameStrategy rStrat = new RandomStrategy();
-
     /**
      * Default search depth for the NegaMax algorithm.
      */
     public static final int DEF_DEPTH = 5;
+    private final GameStrategy rStrat = new RandomStrategy();
 
     /*
      * (non-Javadoc)
@@ -70,7 +69,7 @@ public class NegaMaxStrategy implements GameStrategy {
             }
         }
 
-        return samevalues == freecolumns ? rStrat.doMove(board.deepCopy())
+        return (samevalues == freecolumns) ? rStrat.doMove(board.deepCopy())
                 : bestMove;
 
     }
@@ -85,10 +84,10 @@ public class NegaMaxStrategy implements GameStrategy {
     private double negaMax(Board board, int depth) {
         // Determine which player should make a move
         int player = board.getPlieCount() & 1;
-        player = player == 0 ? -1 : player;
+        player = (player == 0) ? -1 : player;
         double value;
 
-        if (depth == 0 || board.isFull() || board.lastMoveWon()) {
+        if ((depth == 0) || board.isFull() || board.lastMoveWon()) {
             value = player * nodeValue(board);
         } else {
 

@@ -19,7 +19,8 @@ public class InvalidMoveException extends Exception {
      * InvalidMoveException without an message.
      */
     public InvalidMoveException() {
-            
+        super();
+
     }
         
     /**

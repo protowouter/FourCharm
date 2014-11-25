@@ -39,7 +39,7 @@ public class ReferenceBoard extends Board {
 
     // ------------------ Instance variables ----------------
     // Array with moves since the start of the game
-    private int[] moves; 
+    private final int[] moves;
     // Amount of turns since the start of the game
     private int nplies; 
     // Holds bitboard for every color
@@ -52,6 +52,7 @@ public class ReferenceBoard extends Board {
      * empty
      */
     public ReferenceBoard() {
+        super();
 
         board = new int[COLUMNS][ROWS];
         for (int i = 0; i < COLUMNS; i++) {
@@ -81,7 +82,7 @@ public class ReferenceBoard extends Board {
 
     public boolean isFull() {
 
-        return nplies >= SIZE - 1;
+        return nplies >= (SIZE - 1);
 
     }
 
@@ -95,11 +96,11 @@ public class ReferenceBoard extends Board {
 
         boolean diag = false;
 
-        for (int column = WIN_STREAK; column < COLUMNS && !diag; column++) {
+        for (int column = WIN_STREAK; (column < COLUMNS) && !diag; column++) {
             int streak = 0;
             int tColumn = column;
-            for (int row = 0; row < ROWS && tColumn < COLUMNS; row++, tColumn--) {
-                streak = board[column][row] == player ? streak + 1 : 0;
+            for (int row = 0; (row < ROWS) && (tColumn < COLUMNS); row++, tColumn--) {
+                streak = (this.board[column][row] == player) ? (streak + 1) : 0;
             }
             diag = streak == WIN_STREAK;
         }
@@ -112,11 +113,11 @@ public class ReferenceBoard extends Board {
 
         boolean diag = false;
 
-        for (int column = COLUMNS - WIN_STREAK; column >= 0 && !diag; column--) {
+        for (int column = COLUMNS - WIN_STREAK; (column >= 0) && !diag; column--) {
             int streak = 0;
             int tColumn = column;
-            for (int row = 0; row < ROWS && tColumn < COLUMNS; row++, tColumn++) {
-                streak = board[column][row] == player ? streak + 1 : 0;
+            for (int row = 0; (row < ROWS) && (tColumn < COLUMNS); row++, tColumn++) {
+                streak = (this.board[column][row] == player) ? (streak + 1) : 0;
             }
             diag = streak == WIN_STREAK;
         }
@@ -129,10 +130,10 @@ public class ReferenceBoard extends Board {
 
         boolean horizontal = false;
 
-        for (int row = 0; row < ROWS && !horizontal; row++) {
+        for (int row = 0; (row < ROWS) && !horizontal; row++) {
             int streak = 0;
-            for (int column = 0; column < COLUMNS && streak < WIN_STREAK; column++) {
-                streak = board[column][row] == player ? streak + 1 : 0;
+            for (int column = 0; (column < COLUMNS) && (streak < WIN_STREAK); column++) {
+                streak = (this.board[column][row] == player) ? (streak + 1) : 0;
             }
             horizontal = streak == WIN_STREAK;
 
@@ -146,10 +147,10 @@ public class ReferenceBoard extends Board {
 
         boolean vertical = false;
 
-        for (int column = 0; column < COLUMNS && !vertical; column++) {
+        for (int column = 0; (column < COLUMNS) && !vertical; column++) {
             int streak = 0;
-            for (int row = 0; row < ROWS && streak < WIN_STREAK; row++) {
-                streak = board[column][row] == player ? streak + 1 : 0;
+            for (int row = 0; (row < ROWS) && (streak < WIN_STREAK); row++) {
+                streak = (this.board[column][row] == player) ? (streak + 1) : 0;
             }
             vertical = streak == WIN_STREAK;
 
@@ -213,16 +214,16 @@ public class ReferenceBoard extends Board {
         
         
         // same as modulo 2 but probably more efficient
-        int player = nplies & 1; 
+        int player = nplies & 1;
 
         moves[nplies] = col;
 
         // Increment the plie count
-        nplies++; 
+        nplies++;
 
         boolean needPlacement = true;
 
-        for (int i = 0; i < ROWS && needPlacement; i++) {
+        for (int i = 0; (i < ROWS) && needPlacement; i++) {
             if (board[col][i] == EMPTY) {
                 board[col][i] = player;
                 needPlacement = false;

@@ -22,25 +22,25 @@ import static org.junit.Assert.fail;
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
-public class BoardStateSteps {
-    
-    private static String TODO = "Not yet implemented";
-    private static ComputerPlayer cP = new ComputerPlayer(new RandomStrategy());
+class BoardStateSteps {
+
+    private static final String TODO = "Not yet implemented";
+    private static final ComputerPlayer cP = new ComputerPlayer(new RandomStrategy());
     private Board binBoard;
     private Board refBoard;
     
     @Given("^a board with only one free spot$")
     public void a_board_with_only_one_free_spot() throws InvalidMoveException{
-       
+
         binBoard = new BinaryBoard();
         refBoard = new ReferenceBoard();
-        
-        
-        for (int i = 0; i < binBoard.getSpotCount() -1; i++) {
+
+
+        for (int i = 0; i < (this.binBoard.getSpotCount() - 1); i++) {
             binBoard.makemove(cP.doMove(binBoard.deepCopy()));
         }
-        
-        for (int i = 0; i < refBoard.getSpotCount() -1; i++) {
+
+        for (int i = 0; i < (this.refBoard.getSpotCount() - 1); i++) {
             refBoard.makemove(cP.doMove(refBoard.deepCopy()));
         }
     }
@@ -59,7 +59,7 @@ public class BoardStateSteps {
     public void unableToMove() {   
         
         try {
-            binBoard.makemove(5); 
+            binBoard.makemove(5);
             refBoard.makemove(5);
             fail();
          } catch (InvalidMoveException e) {

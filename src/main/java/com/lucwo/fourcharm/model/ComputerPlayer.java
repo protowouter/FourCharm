@@ -14,7 +14,7 @@ import com.lucwo.fourcharm.model.board.Board;
  */
 public class ComputerPlayer implements Player {
 
-    GameStrategy strategy;
+    private final GameStrategy strategy;
 
     /**
      * Create an new ComputerPlayer using an strategy to do moves on the board.
@@ -23,6 +23,7 @@ public class ComputerPlayer implements Player {
      *            strategy to be used by this player
      */
     public ComputerPlayer(GameStrategy computerStrategy) {
+        super();
 
         strategy = computerStrategy;
 

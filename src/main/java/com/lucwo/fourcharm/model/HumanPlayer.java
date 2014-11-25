@@ -3,11 +3,11 @@
  */
 package com.lucwo.fourcharm.model;
 
+import com.lucwo.fourcharm.model.board.Board;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.logging.Logger;
-
-import com.lucwo.fourcharm.model.board.Board;
 
 /**
  * @author Luce Sandfort and Wouter Timmermans
@@ -15,7 +15,7 @@ import com.lucwo.fourcharm.model.board.Board;
  */
 public class HumanPlayer implements Player {
 
-    private BufferedReader reader;
+    private final BufferedReader reader;
 
     /**
      * Create an new humanplayer given an way to communicate with the player.
@@ -24,6 +24,7 @@ public class HumanPlayer implements Player {
      *            Reader from which the human input can be parsed
      */
     public HumanPlayer(BufferedReader inputReader) {
+        super();
 
         reader = inputReader;
 
@@ -52,7 +53,7 @@ public class HumanPlayer implements Player {
         }
         for (int i = 0; i < line.length(); i++) {
             int col = line.charAt(i) - '1';
-            if (col >= 0 && col < board.getColumns()
+            if ((col >= 0) && (col < board.getColumns())
                     && board.columnHasFreeSpace(col)) {
                 move = col;
             } else {

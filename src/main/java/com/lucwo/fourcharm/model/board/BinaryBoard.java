@@ -17,45 +17,46 @@ public class BinaryBoard extends Board {
     /**
      * The multiple of the index for the first row of each column.
      */
-    public static final int H1 = ROWS + 1;
+    private static final int H1 = ROWS + 1;
 
-    public static final int H2 = ROWS + 2;
+    private static final int H2 = ROWS + 2;
     /**
      * Amount of spaces in the board.
      */
-    public static final int SIZE = COLUMNS * ROWS;
+    private static final int SIZE = COLUMNS * ROWS;
     /**
      * Amount of spaces in the board plus the top row used by the
      * implementation.
      */
-    public static final int SIZE1 = H1 * COLUMNS;
+    private static final int SIZE1 = H1 * COLUMNS;
     /**
      * As much one's as there are spots in the grid and the top row.
      */
-    public static final long ALL1 = (1L << SIZE1) - 1L;
+    private static final long ALL1 = (1L << SIZE1) - 1L;
 
-    public static final int COL1 = (1 << H1) - 1;
+    private static final int COL1 = (1 << H1) - 1;
 
-    public static final long BOTTOM = ALL1 / COL1;
+    private static final long BOTTOM = ALL1 / COL1;
     /**
      * Bitmask for detecting overflows in columns.
      */
-    public static final long TOP = BOTTOM << ROWS;
+    private static final long TOP = BOTTOM << ROWS;
 
     // Array with moves since the start of the game
-    private int[] moves;
-    // Amount of turns since the start of the game
-    private int nplies;
+    private final int[] moves;
     // Array with the index of lowest free sqaure
     // for every column; assumes SIZE < 128
-    private byte[] height; 
+    private final byte[] height;
     // Holds bitboard for every color
-    private long[] color; 
+    private final long[] color;
+    // Amount of turns since the start of the game
+    private int nplies;
 
     /**
      * Make an new BinaryBoard and reset it to default settings.
      */
     public BinaryBoard() {
+        super();
 
         color = new long[PLAYERS];
         height = new byte[COLUMNS];
@@ -64,6 +65,7 @@ public class BinaryBoard extends Board {
     }
     
     private BinaryBoard(int[] origMoves, int origNplies, byte[] origHeight, long[] origColor) {
+        super();
         moves = origMoves;
         nplies = origNplies;
         height = origHeight;
@@ -105,7 +107,7 @@ public class BinaryBoard extends Board {
 
     public boolean isFull() {
 
-        return nplies >= SIZE - 1;
+        return nplies >= (SIZE - 1);
 
     }
 
@@ -119,7 +121,7 @@ public class BinaryBoard extends Board {
 
         long y = newboard & (newboard >> ROWS);
 
-        return (y & (y >> 2 * ROWS)) != 0;
+        return (y & (y >> (2 * ROWS))) != 0;
 
     }
 
@@ -127,7 +129,7 @@ public class BinaryBoard extends Board {
 
         long y = newboard & (newboard >> H2);
 
-        return (y & (y >> 2 * H2)) != 0;
+        return (y & (y >> (2 * H2))) != 0;
 
     }
 
@@ -135,7 +137,7 @@ public class BinaryBoard extends Board {
 
         long y = newboard & (newboard >> H1);
 
-        return (y & (y >> 2 * H1)) != 0;
+        return (y & (y >> (2 * H1))) != 0;
 
     }
 
@@ -157,14 +159,14 @@ public class BinaryBoard extends Board {
 
         if (columnHasFreeSpace(col)) {
             // same as modulo 2 but probably more efficient
-            int player = nplies & 1; 
-           
-    
+            int player = nplies & 1;
+
+
             moves[nplies] = col;
             
             // Increment the plie count
-            nplies++; 
-    
+            nplies++;
+
             color[player] ^= 1L << height[col];
             
             
@@ -192,8 +194,8 @@ public class BinaryBoard extends Board {
         for (int h = ROWS - 1; h >= 0; h--) {
             for (int w = h; w < SIZE1; w += H1) {
                 long mask = 1L << w;
-                repr.append((color[0] & mask) != 0 ? " @"
-                        : (color[1] & mask) != 0 ? " 0" : " .");
+                repr.append(((this.color[0] & mask) != 0) ? " @"
+                        : (((this.color[1] & mask) != 0) ? " 0" : " ."));
             }
             repr.append("\n");
         }

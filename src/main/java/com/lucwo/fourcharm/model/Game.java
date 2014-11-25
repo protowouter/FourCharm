@@ -17,9 +17,8 @@ import java.util.*;
  */
 public class Game extends Observable {
 
+    private final Iterator<Player> playerIterator;
     private Board board;
-
-    private Iterator<Player> playerIterator;
     /**
      * Create an new Game of connect 4. This constructor accepts an class
      * implementing the interface Board and initializes an new board of the
@@ -38,10 +37,11 @@ public class Game extends Observable {
      */
     public Game(Class<? extends Board> boardClass, Player[] players) throws InstantiationException, 
             IllegalAccessException {
+        super();
 
         initBoard(boardClass);
 
-        List<Player> playerlist = new ArrayList<Player>();
+        List<Player> playerlist = new ArrayList<>();
 
         Collections.addAll(playerlist, players);
 
@@ -55,7 +55,7 @@ public class Game extends Observable {
      */
     private void initBoard(Class<? extends Board> boardClass) throws InstantiationException, 
         IllegalAccessException {
-            
+
         board = boardClass.newInstance();
       
     }
@@ -65,22 +65,22 @@ public class Game extends Observable {
      * @throws InvalidMoveException 
      */
     public void play() throws InvalidMoveException {
-        
-        this.notifyObservers();
+
+        notifyObservers();
         boolean fairplay = true;
         Player current;
 
-        while (!this.hasFinished() && fairplay) {
-            this.setChanged();
-            this.notifyObservers();
+        while (!hasFinished() && fairplay) {
+            setChanged();
+            notifyObservers();
             current = playerIterator.next();
             board.makemove(current.doMove(board.deepCopy()));
 
         }
 
-        if (this.hasWinner()) {
-            this.setChanged();
-            this.notifyObservers();
+        if (hasWinner()) {
+            setChanged();
+            notifyObservers();
         }
 
     }
