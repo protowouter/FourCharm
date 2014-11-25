@@ -22,7 +22,7 @@ import static org.junit.Assert.fail;
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
-class BoardStateSteps {
+public class BoardStateSteps {
 
     private static final String TODO = "Not yet implemented";
     private static final ComputerPlayer cP = new ComputerPlayer(new RandomStrategy());
