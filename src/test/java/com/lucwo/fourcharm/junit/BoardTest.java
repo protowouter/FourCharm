@@ -5,24 +5,48 @@
 package com.lucwo.fourcharm.junit;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
+import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.model.board.Board;
 import com.lucwo.fourcharm.model.board.ReferenceBoard;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 import static org.junit.Assert.assertFalse;
 
+@RunWith(value = Parameterized.class)
 public class BoardTest {
 
     private Board board;
 
-    // TODO make this an parameterized test
-    // http://stackoverflow.com/questions/16237135/junit-writing-a-single-unit-test-for-multiple-implementations-of-an-interface
+    private Class boardClass;
+
+
+    public BoardTest(Class bC) {
+
+        boardClass = bC;
+
+    }
+
+    @Parameterized.Parameters
+    public static Collection boardClasses() {
+
+        Collection retCol = new ArrayList();
+        retCol.add(new Class[]{ReferenceBoard.class});
+        retCol.add(new Class[]{BinaryBoard.class});
+
+        return retCol;
+
+    }
 
     @Before
     public void setUp() throws Exception {
 
-        board = new ReferenceBoard();
+        board = (Board) boardClass.newInstance();
 
     }
 

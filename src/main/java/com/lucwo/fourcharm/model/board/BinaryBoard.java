@@ -9,9 +9,8 @@ import com.lucwo.fourcharm.exception.InvalidMoveException;
  * Class for modeling an board for the game connect four. This class's
  * responsibility is to keep the state of the board. For efficiency reasons the
  * board state is implemented in an array of 2 longs
- * 
- * @author Luce Sandfort and Wouter Timmermans
  *
+ * @author Luce Sandfort and Wouter Timmermans
  */
 public class BinaryBoard extends Board {
     /**
@@ -63,7 +62,7 @@ public class BinaryBoard extends Board {
         moves = new int[SIZE];
         reset();
     }
-    
+
     private BinaryBoard(int[] origMoves, int origNplies, byte[] origHeight, long[] origColor) {
         super();
         moves = origMoves;
@@ -91,7 +90,7 @@ public class BinaryBoard extends Board {
     private boolean isLegalBoard(long newboard) {
 
         // Checks wether no columns have overflown
-        return (newboard & TOP) == 0; 
+        return (newboard & TOP) == 0;
 
 
     }
@@ -150,12 +149,12 @@ public class BinaryBoard extends Board {
     }
 
     /**
-     * 
      * @param col
      * @requires gets called for the player which current turn it is
      */
 
     public void makemove(int col) throws InvalidMoveException {
+
 
         if (columnHasFreeSpace(col)) {
             // same as modulo 2 but probably more efficient
@@ -163,13 +162,13 @@ public class BinaryBoard extends Board {
 
 
             moves[nplies] = col;
-            
+
             // Increment the plie count
             nplies++;
 
             color[player] ^= 1L << height[col];
-            
-            
+
+
             // Increment the height of the column where the piece is
             // placed,
             // This should be done after altering color[player]
@@ -206,9 +205,9 @@ public class BinaryBoard extends Board {
         int[] moveCopy = moves.clone();
         byte[] heightCopy = height.clone();
         long[] colorCopy = color.clone();
-        
+
         return new BinaryBoard(moveCopy, nplies, heightCopy, colorCopy);
-  
+
     }
 
 }
