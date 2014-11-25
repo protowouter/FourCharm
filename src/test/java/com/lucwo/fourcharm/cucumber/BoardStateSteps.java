@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014. Luce Sandfort and Wouter Timmermans
  */
-package com.lucwo.fourcharm.features;
+package com.lucwo.fourcharm.cucumber;
 
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
@@ -10,12 +10,13 @@ import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.model.board.Board;
 import com.lucwo.fourcharm.model.board.ReferenceBoard;
-
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import cucumber.api.java.en.And;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Luce Sandfort and Wouter Timmermans
@@ -24,10 +25,9 @@ import static org.junit.Assert.*;
 public class BoardStateSteps {
     
     private static String TODO = "Not yet implemented";
-    
+    private static ComputerPlayer cP = new ComputerPlayer(new RandomStrategy());
     private Board binBoard;
     private Board refBoard;
-    private static ComputerPlayer cP = new ComputerPlayer(new RandomStrategy());
     
     @Given("^a board with only one free spot$")
     public void a_board_with_only_one_free_spot() throws InvalidMoveException{

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014. Luce Sandfort and Wouter Timmermans
  */
-package com.lucwo.fourcharm.features;
+package com.lucwo.fourcharm.cucumber;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
