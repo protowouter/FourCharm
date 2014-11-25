@@ -211,30 +211,31 @@ public class ReferenceBoard extends Board {
      * @requires gets called for the player which current turn it is
      */
     public void makemove(int col) throws InvalidMoveException {
-        
-        
-        // same as modulo 2 but probably more efficient
-        int player = nplies & 1;
 
-        moves[nplies] = col;
+        if (columnHasFreeSpace(col)) {
 
-        // Increment the plie count
-        nplies++;
 
-        boolean needPlacement = true;
+            // same as modulo 2 but probably more efficient
+            int player = nplies & 1;
 
-        for (int i = 0; (i < ROWS) && needPlacement; i++) {
-            if (board[col][i] == EMPTY) {
-                board[col][i] = player;
-                needPlacement = false;
+            moves[nplies] = col;
+
+            // Increment the plie count
+            nplies++;
+
+            boolean needPlacement = true;
+
+
+            for (int i = 0; i < ROWS && needPlacement; i++) {
+                if (board[col][i] == EMPTY) {
+                    board[col][i] = player;
+                    needPlacement = false;
+                }
             }
-        }
-
-        if (needPlacement) {
-            
-            
+        } else {
             throw new InvalidMoveException("This column has no more free space");
         }
+
 
     }
 
