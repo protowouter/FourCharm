@@ -9,7 +9,7 @@ import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.HumanPlayer;
 import com.lucwo.fourcharm.model.Player;
 import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
-import com.lucwo.fourcharm.model.board.BinaryBoard;
+import com.lucwo.fourcharm.model.board.ReferenceBoard;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -37,7 +37,7 @@ class FourCharmTUI implements Observer {
         BufferedReader dis = new BufferedReader(
                 new InputStreamReader(System.in));
 
-        game = new Game(BinaryBoard.class, new Player[]{new HumanPlayer(dis),
+        game = new Game(ReferenceBoard.class, new Player[]{new HumanPlayer(dis),
                 new ComputerPlayer(new NegaMaxStrategy())});
 
         game.addObserver(this);
@@ -84,6 +84,18 @@ class FourCharmTUI implements Observer {
             Logger.getGlobal().info("Quitting: someone tried cheating");
             Logger.getGlobal().throwing("FourCharmTUI", "play", e);
         }
+
+        // Game Finished
+
+        Logger.getGlobal().info(game.getBoard().toString());
+
+        if (game.hasWinner()) {
+            Logger.getGlobal().info(game.getWinner().toString() + " Won");
+        } else {
+            Logger.getGlobal().info("The game is a tie");
+        }
+
+
 
     }
 

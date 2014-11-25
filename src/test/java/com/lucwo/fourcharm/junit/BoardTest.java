@@ -103,7 +103,27 @@ public class BoardTest {
     @Test
     public void testLastMoveWon() throws Exception {
 
-        //board.getWinStreak()
+        int winstreak = board.getWinStreak();
+        int columns = board.getColumns();
+        int p1 = 0;
+        int p2 = columns - 1;
+
+        if (p1 == p2) {
+            //Unwinnable board
+        } else {
+            for (int i = 0; i < (winstreak - 1); i++) {
+                board.makemove(p1);
+                board.makemove(p2);
+
+            }
+
+            assertFalse(board.lastMoveWon());
+            board.makemove(p1);
+            assert (board.lastMoveWon());
+        }
+
+
+
 
     }
 

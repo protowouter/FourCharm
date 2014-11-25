@@ -39,7 +39,7 @@ public class ReferenceBoard extends Board {
 
     // ------------------ Instance variables ----------------
     // Array with moves since the start of the game
-    private final int[] moves;
+    private int[] moves;
     // Amount of turns since the start of the game
     private int nplies; 
     // Holds bitboard for every color
@@ -53,13 +53,6 @@ public class ReferenceBoard extends Board {
      */
     public ReferenceBoard() {
         super();
-
-        board = new int[COLUMNS][ROWS];
-        for (int i = 0; i < COLUMNS; i++) {
-            Arrays.fill(board[i], EMPTY);
-        }
-
-        moves = new int[SIZE];
         reset();
     }
 
@@ -73,7 +66,8 @@ public class ReferenceBoard extends Board {
 
     public boolean lastMoveWon() {
 
-        int player = nplies & 1;
+        int player = (nplies - 1) & 1;
+
 
         return hasLRDiagonal(player) || hasHorizontal(player)
                 || hasRLDiagonal(player) || hasVertical(player);
@@ -82,7 +76,7 @@ public class ReferenceBoard extends Board {
 
     public boolean isFull() {
 
-        return nplies >= (SIZE - 1);
+        return nplies >= SIZE;
 
     }
 
@@ -91,6 +85,16 @@ public class ReferenceBoard extends Board {
         return nplies;
 
     }
+
+    /**
+     * Find columns of the following form:
+     * . . . . . . .
+     * . . . . . . .
+     * . . . @ . . .
+     * . . . . @ . .
+     * . . . . . @ .
+     * . . . . . . @
+     */
 
     private boolean hasLRDiagonal(int player) {
 
@@ -109,7 +113,20 @@ public class ReferenceBoard extends Board {
 
     }
 
+    /**
+     * Find columns of the following form:
+     * . . . . . . .
+     * . . . . . . .
+     * . . . @ . . .
+     * . . @ . . . .
+     * . @ . . . . .
+     *
+     * @ . . . . . .
+     */
+
     private boolean hasRLDiagonal(int player) {
+
+        // FIXME I suspect an error in this method
 
         boolean diag = false;
 
@@ -152,6 +169,7 @@ public class ReferenceBoard extends Board {
             for (int row = 0; (row < ROWS) && (streak < WIN_STREAK); row++) {
                 streak = (this.board[column][row] == player) ? (streak + 1) : 0;
             }
+            Logger.getGlobal().finer("Streak = " + streak);
             vertical = streak == WIN_STREAK;
 
         }
@@ -206,8 +224,8 @@ public class ReferenceBoard extends Board {
     // ----------------------- Commands ---------------------
 
     /**
-     * 
-     * @param col
+     *
+     * @param col column in which a piece will be placed
      * @requires gets called for the player which current turn it is
      */
     public void makemove(int col) throws InvalidMoveException {
@@ -240,6 +258,7 @@ public class ReferenceBoard extends Board {
     }
 
     private void reset() {
+        moves = new int[SIZE];
         nplies = 0;
         board = new int[COLUMNS][ROWS];
         for (int i = 0; i < COLUMNS; i++) {

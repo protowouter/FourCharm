@@ -19,6 +19,8 @@ public class Game extends Observable {
 
     private final Iterator<Player> playerIterator;
     private Board board;
+    private Player winner;
+
     /**
      * Create an new Game of connect 4. This constructor accepts an class
      * implementing the interface Board and initializes an new board of the
@@ -28,10 +30,6 @@ public class Game extends Observable {
      *            Class to use as board implementation
      * @param players
      *            An array of player who will take part in this game
-     * @param oStream
-     *            Stream to communicate with the user
-     * @param beVerbose
-     *            true if output has to written to oStream, false if not
      * @throws InstantiationException 
      * @throws IllegalAccessException 
      */
@@ -68,7 +66,7 @@ public class Game extends Observable {
 
         notifyObservers();
         boolean fairplay = true;
-        Player current;
+        Player current = null;
 
         while (!hasFinished() && fairplay) {
             setChanged();
@@ -79,6 +77,7 @@ public class Game extends Observable {
         }
 
         if (hasWinner()) {
+            winner = current;
             setChanged();
             notifyObservers();
         }
@@ -107,6 +106,16 @@ public class Game extends Observable {
      */
     public boolean hasWinner() {
         return board.lastMoveWon();
+    }
+
+
+    /**
+     * Returns the winner of the game, if there is a winner
+     *
+     * @return The Player who won the game, null if there is no winner (yet)
+     */
+    public Player getWinner() {
+        return winner;
     }
 
     /**
