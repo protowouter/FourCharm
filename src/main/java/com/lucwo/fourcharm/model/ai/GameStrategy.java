@@ -3,7 +3,7 @@
  */
 package com.lucwo.fourcharm.model.ai;
 
-import com.lucwo.fourcharm.model.Player;
+import com.lucwo.fourcharm.model.board.Board;
 
 /**
  * An strategy used by an computerplayer.
@@ -11,6 +11,8 @@ import com.lucwo.fourcharm.model.Player;
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
-public interface GameStrategy extends Player {
+public interface GameStrategy {
+
+    public int doMove(Board board);
 
 }
