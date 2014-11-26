@@ -125,8 +125,6 @@ public class ReferenceBoard extends Board {
 
     private boolean hasRLDiagonal(int player) {
 
-        // FIXME suspected an error in this method
-        // diagonal of the form shown above isn't detected
 
         boolean diag = false;
 

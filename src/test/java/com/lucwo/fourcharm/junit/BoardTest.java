@@ -238,4 +238,14 @@ public class BoardTest {
         assertFalse(board == board.deepCopy());
 
     }
+
+    @Test
+    public void testToString() throws Exception {
+        String before = board.toString();
+        assertFalse(before.equals(""));
+
+        board.makemove(0);
+        assertFalse(before.equals(board.toString()));
+
+    }
 }
