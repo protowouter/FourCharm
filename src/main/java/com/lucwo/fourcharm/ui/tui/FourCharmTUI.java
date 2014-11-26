@@ -30,8 +30,8 @@ class FourCharmTUI implements Observer {
     private final Game game;
     
     // --------------------- Constructors -------------------
-    
-    private FourCharmTUI() throws InstantiationException, IllegalAccessException {
+
+    protected FourCharmTUI() throws InstantiationException, IllegalAccessException {
         super();
 
         BufferedReader dis = new BufferedReader(
@@ -76,7 +76,7 @@ class FourCharmTUI implements Observer {
     /**
      * Start the game.
      */
-    public void play() {
+    protected void play() {
 
         try {
             game.play();
