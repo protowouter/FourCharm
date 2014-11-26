@@ -103,8 +103,8 @@ public class ReferenceBoard extends Board {
         for (int column = WIN_STREAK; (column < COLUMNS) && !diag; column++) {
             int streak = 0;
             int tColumn = column;
-            for (int row = 0; (row < ROWS) && (tColumn < COLUMNS); row++, tColumn--) {
-                streak = (this.board[column][row] == player) ? (streak + 1) : 0;
+            for (int row = 0; (row < ROWS) && (tColumn >= 0) && (streak < WIN_STREAK); row++, tColumn--) {
+                streak = (this.board[tColumn][row] == player) ? (streak + 1) : 0;
             }
             diag = streak == WIN_STREAK;
         }
@@ -120,21 +120,22 @@ public class ReferenceBoard extends Board {
      * . . . @ . . .
      * . . @ . . . .
      * . @ . . . . .
-     *
      * @ . . . . . .
      */
 
     private boolean hasRLDiagonal(int player) {
 
-        // FIXME I suspect an error in this method
+        // FIXME suspected an error in this method
+        // diagonal of the form shown above isn't detected
 
         boolean diag = false;
 
         for (int column = COLUMNS - WIN_STREAK; (column >= 0) && !diag; column--) {
             int streak = 0;
             int tColumn = column;
-            for (int row = 0; (row < ROWS) && (tColumn < COLUMNS); row++, tColumn++) {
-                streak = (this.board[column][row] == player) ? (streak + 1) : 0;
+            for (int row = 0; (row < ROWS) && (tColumn < COLUMNS) && (streak < WIN_STREAK); row++, tColumn++) {
+                Logger.getGlobal().finest("Checking col: " + tColumn + " row: " + row);
+                streak = (this.board[tColumn][row] == player) ? (streak + 1) : 0;
             }
             diag = streak == WIN_STREAK;
         }
@@ -194,9 +195,9 @@ public class ReferenceBoard extends Board {
             for (int column = 0; column < COLUMNS; column++) {
                 int player = board[column][row];
                 if (player == PLAYER1) {
-                    repr.append(" @");
+                    repr.append(" X");
                 } else if (player == PLAYER2) {
-                    repr.append(" 0");
+                    repr.append(" O");
                 } else if (player == EMPTY) {
                     repr.append(" .");
                 }

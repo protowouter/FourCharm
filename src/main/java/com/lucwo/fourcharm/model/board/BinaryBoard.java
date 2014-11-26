@@ -193,8 +193,8 @@ public class BinaryBoard extends Board {
         for (int h = ROWS - 1; h >= 0; h--) {
             for (int w = h; w < SIZE1; w += H1) {
                 long mask = 1L << w;
-                repr.append(((this.color[0] & mask) != 0) ? " @"
-                        : (((this.color[1] & mask) != 0) ? " 0" : " ."));
+                repr.append(((this.color[0] & mask) != 0) ? " X"
+                        : (((this.color[1] & mask) != 0) ? " O" : " ."));
             }
             repr.append("\n");
         }

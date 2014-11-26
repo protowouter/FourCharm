@@ -65,10 +65,9 @@ public class Game extends Observable {
     public void play() throws InvalidMoveException {
 
         notifyObservers();
-        boolean fairplay = true;
         Player current = null;
 
-        while (!hasFinished() && fairplay) {
+        while (!hasFinished()) {
             setChanged();
             notifyObservers();
             current = playerIterator.next();

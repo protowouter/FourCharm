@@ -128,6 +128,40 @@ public class BoardTest {
     }
 
     @Test
+    public void testLeftdownRightUpDiagonal() throws InvalidMoveException {
+        board.makemove(0);
+        board.makemove(1);
+        board.makemove(1);
+        board.makemove(2);
+        board.makemove(3);
+        board.makemove(2);
+        board.makemove(2);
+        board.makemove(3);
+        board.makemove(4);
+        board.makemove(3);
+        board.makemove(3);
+
+        assert board.lastMoveWon();
+    }
+
+    @Test
+    public void testRightdownLeftUpDiagonal() throws InvalidMoveException {
+        board.makemove(6);
+        board.makemove(5);
+        board.makemove(5);
+        board.makemove(4);
+        board.makemove(3);
+        board.makemove(4);
+        board.makemove(4);
+        board.makemove(3);
+        board.makemove(2);
+        board.makemove(3);
+        board.makemove(3);
+
+        assert board.lastMoveWon();
+    }
+
+    @Test
     public void fullBoardShouldReportFull() throws Exception {
 
         fillBoard();
