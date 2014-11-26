@@ -21,6 +21,14 @@ import java.util.logging.Logger;
 /**
  * Created by woutertimmermans on 26-11-14.
  */
+
+// ------------------ Instance variables ----------------
+
+// --------------------- Constructors -------------------
+
+// ----------------------- Queries ----------------------
+
+// ----------------------- Commands ---------------------
 public class AIBenchmark {
 
     /**
@@ -47,7 +55,6 @@ public class AIBenchmark {
         int pCount = 0;
         final int total = ITERATIONS;
         final int step = total / STEP_PERCENTAGE;
-        long oStartTime = System.currentTimeMillis();
 
         Player smartPlayer = new ComputerPlayer(new NegaMaxStrategy());
         Player dumbPlayer = new ComputerPlayer(new RandomStrategy());
@@ -89,7 +96,6 @@ public class AIBenchmark {
             }
 
         }
-        long endTime = System.currentTimeMillis();
 
         return new int[]{wins, ties, loss};
 
