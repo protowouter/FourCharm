@@ -82,13 +82,10 @@ public class NegaMaxStrategy implements GameStrategy {
      * @return The negamax value of the current board state
      */
     private double negaMax(Board board, int depth) {
-        // Determine which player should make a move
-        int player = board.getPlieCount() & 1;
-        player = (player == 0) ? -1 : player;
         double value;
 
         if ((depth == 0) || board.isFull() || board.lastMoveWon()) {
-            value = player * nodeValue(board);
+            value = nodeValue(board);
         } else {
 
             double bestValue = Double.NEGATIVE_INFINITY;
@@ -119,7 +116,17 @@ public class NegaMaxStrategy implements GameStrategy {
     private double nodeValue(Board board) {
         // FIXME Write an better evaluation function
 
-        return board.lastMoveWon() ? -1 : 0;
+        boolean full = board.isFull();
+        boolean won = board.lastMoveWon();
+        double value;
+
+        if (full) {
+            value = 0;
+        } else {
+            value = won ? -1 : 1;
+        }
+
+        return value;
     }
 
 }

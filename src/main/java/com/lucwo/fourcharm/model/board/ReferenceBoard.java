@@ -103,7 +103,8 @@ public class ReferenceBoard extends Board {
         for (int column = WIN_STREAK; (column < COLUMNS) && !diag; column++) {
             int streak = 0;
             int tColumn = column;
-            for (int row = 0; (row < ROWS) && (tColumn >= 0) && (streak < WIN_STREAK); row++, tColumn--) {
+            for (int row = 0; (row < ROWS) && (tColumn >= 0)
+                    && (streak < WIN_STREAK); row++, tColumn--) {
                 streak = (this.board[tColumn][row] == player) ? (streak + 1) : 0;
             }
             diag = streak == WIN_STREAK;
@@ -131,7 +132,8 @@ public class ReferenceBoard extends Board {
         for (int column = COLUMNS - WIN_STREAK; (column >= 0) && !diag; column--) {
             int streak = 0;
             int tColumn = column;
-            for (int row = 0; (row < ROWS) && (tColumn < COLUMNS) && (streak < WIN_STREAK); row++, tColumn++) {
+            for (int row = 0; (row < ROWS) && (tColumn < COLUMNS)
+                    && (streak < WIN_STREAK); row++, tColumn++) {
                 Logger.getGlobal().finest("Checking col: " + tColumn + " row: " + row);
                 streak = (this.board[tColumn][row] == player) ? (streak + 1) : 0;
             }
