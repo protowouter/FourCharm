@@ -2,12 +2,9 @@
  * Copyright (c) 2014. Luce Sandfort and Wouter Timmermans
  */
 
-package com.lucwo.fourcharm.junit;
+package com.lucwo.fourcharm.model.board;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
-import com.lucwo.fourcharm.model.board.BinaryBoard;
-import com.lucwo.fourcharm.model.board.Board;
-import com.lucwo.fourcharm.model.board.ReferenceBoard;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
