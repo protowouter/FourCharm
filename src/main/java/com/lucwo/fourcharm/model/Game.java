@@ -71,7 +71,7 @@ public class Game extends Observable {
             setChanged();
             notifyObservers();
             current = playerIterator.next();
-            board.makemove(current.doMove(board.deepCopy()));
+            board.makemove(current.determineMove(board.deepCopy()), current.getMark());
 
         }
 
@@ -104,7 +104,7 @@ public class Game extends Observable {
      * @return true if a player has won the game; otherwise false
      */
     public boolean hasWinner() {
-        return board.lastMoveWon();
+        return board.hasWon(Mark.P1) || board.hasWon(Mark.P2);
     }
 
 
@@ -124,7 +124,7 @@ public class Game extends Observable {
      */
     public boolean hasFinished() {
 
-        return board.isFull() || board.lastMoveWon();
+        return board.isFull() || board.hasWon(Mark.P1) || board.hasWon(Mark.P2);
 
     }
     

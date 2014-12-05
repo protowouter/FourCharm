@@ -4,6 +4,7 @@
 package com.lucwo.fourcharm.model.board;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
+import com.lucwo.fourcharm.model.Mark;
 
 /**
  * @author Luce Sandfort and Wouter Timmermans
@@ -30,7 +31,11 @@ public abstract class Board {
 
     public abstract boolean columnHasFreeSpace(int col);
 
-    public abstract boolean lastMoveWon();
+    public abstract Mark getMark(int index);
+
+    public abstract Mark getMark(int col, int row);
+
+    public abstract boolean hasWon(Mark mark);
 
     public abstract boolean isFull();
 
@@ -63,7 +68,7 @@ public abstract class Board {
      * @requires gets called for the player which current turn it is
      */
 
-    public abstract void makemove(int col) throws InvalidMoveException;
+    public abstract void makemove(int col, Mark mark) throws InvalidMoveException;
 
     /**
      * Returns an deepcopy of the board.

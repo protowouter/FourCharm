@@ -18,7 +18,7 @@ public class ComputerPlayerTest {
     @Before
     public void setUp() throws Exception {
 
-        player = new ComputerPlayer(new RandomStrategy());
+        player = new ComputerPlayer(new RandomStrategy(), Mark.P1);
         board = new BinaryBoard();
 
 
@@ -28,7 +28,7 @@ public class ComputerPlayerTest {
     @Test
     public void testDoMove() throws Exception {
 
-        assert board.columnHasFreeSpace(player.doMove(board));
+        assert board.columnHasFreeSpace(player.determineMove(board));
 
     }
 }

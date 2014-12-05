@@ -4,6 +4,9 @@
 package com.lucwo.fourcharm.model.board;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
+import com.lucwo.fourcharm.model.Mark;
+
+import java.util.Arrays;
 
 /**
  * Class for modeling an board for the game connect four. This class's
@@ -95,9 +98,9 @@ public class BinaryBoard extends Board {
 
     }
 
-    public boolean lastMoveWon() {
+    public boolean hasWon(Mark mark) {
 
-        long board = color[(nplies - 1) & 1];
+        long board = color[getPlayerIndex(mark)];
 
         return hasLRDiagonal(board) || hasHorizontal(board)
                 || hasRLDiagonal(board) || hasVertical(board);
@@ -148,12 +151,33 @@ public class BinaryBoard extends Board {
 
     }
 
+    public Mark getMark(int index) {
+
+        return Mark.EMPTY;
+    }
+
+    public Mark getMark(int col, int row) {
+        return getMark(col * row);
+    }
+
+
+    private int getPlayerIndex(Mark mark) {
+        int pI = -1;
+        if (mark == Mark.P1) {
+            pI = 0;
+        } else if (mark == Mark.P2) {
+            pI = 1;
+        }
+
+        return pI;
+    }
+
     /**
      * @param col
      * @requires gets called for the player which current turn it is
      */
-
-    public void makemove(int col) throws InvalidMoveException {
+    @Override
+    public void makemove(int col, Mark mark) throws InvalidMoveException {
 
 
         if (columnHasFreeSpace(col)) {
@@ -202,9 +226,9 @@ public class BinaryBoard extends Board {
     }
 
     public Board deepCopy() {
-        int[] moveCopy = moves.clone();
-        byte[] heightCopy = height.clone();
-        long[] colorCopy = color.clone();
+        int[] moveCopy = Arrays.copyOf(moves, moves.length);
+        byte[] heightCopy = Arrays.copyOf(height, height.length);
+        long[] colorCopy = Arrays.copyOf(color, color.length);
 
         return new BinaryBoard(moveCopy, nplies, heightCopy, colorCopy);
 

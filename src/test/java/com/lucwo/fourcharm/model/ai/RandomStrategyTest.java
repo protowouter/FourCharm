@@ -4,6 +4,7 @@
 
 package com.lucwo.fourcharm.model.ai;
 
+import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.model.board.Board;
 import org.junit.Before;
@@ -27,7 +28,7 @@ public class RandomStrategyTest {
     @Test
     public void testDoMove() throws Exception {
 
-        assert board.columnHasFreeSpace(strat.doMove(board));
+        assert board.columnHasFreeSpace(strat.determineMove(board, Mark.P1));
 
 
     }

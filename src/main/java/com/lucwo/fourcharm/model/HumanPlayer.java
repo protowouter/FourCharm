@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 public class HumanPlayer implements Player {
 
     private final BufferedReader reader;
+    private final Mark mark;
 
     /**
      * Create an new humanplayer given an way to communicate with the player.
@@ -23,19 +24,20 @@ public class HumanPlayer implements Player {
      * @param inputReader
      *            Reader from which the human input can be parsed
      */
-    public HumanPlayer(BufferedReader inputReader) {
+    public HumanPlayer(BufferedReader inputReader, Mark themark) {
         super();
 
         reader = inputReader;
+        mark = themark;
 
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see ft.model.Player#doMove()
+     * @see ft.model.Player#determineMove()
      */
-    public int doMove(Board board) {
+    public int determineMove(Board board) {
 
         Logger.getGlobal().info("Voer kolomnummer in: ");
 
@@ -46,10 +48,10 @@ public class HumanPlayer implements Player {
             line = reader.readLine();
         } catch (IOException e) {
             Logger.getGlobal().warning(e.toString());
-            Logger.getGlobal().throwing("HumanPlayer", "doMove", e);
+            Logger.getGlobal().throwing("HumanPlayer", "determineMove", e);
         }
         if (line == null) {
-            doMove(board);
+            determineMove(board);
         }
         for (int i = 0; i < line.length(); i++) {
             int col = line.charAt(i) - '1';
@@ -57,10 +59,14 @@ public class HumanPlayer implements Player {
                     && board.columnHasFreeSpace(col)) {
                 move = col;
             } else {
-                move = doMove(board);
+                move = determineMove(board);
             }
         }
         return move;
+    }
+
+    public Mark getMark() {
+        return mark;
     }
 
 }

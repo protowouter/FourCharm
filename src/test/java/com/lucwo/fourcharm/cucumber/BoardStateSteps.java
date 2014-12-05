@@ -6,6 +6,7 @@ package com.lucwo.fourcharm.cucumber;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.ComputerPlayer;
+import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.model.board.Board;
@@ -25,7 +26,7 @@ import static org.junit.Assert.fail;
 public class BoardStateSteps {
 
     private static final String TODO = "Not yet implemented";
-    private static final ComputerPlayer cP = new ComputerPlayer(new RandomStrategy());
+    private static final ComputerPlayer cP = new ComputerPlayer(new RandomStrategy(), Mark.P1);
     private Board binBoard;
     private Board refBoard;
     
@@ -37,17 +38,17 @@ public class BoardStateSteps {
 
 
         for (int i = 0; i < (this.binBoard.getSpotCount() - 1); i++) {
-            binBoard.makemove(cP.doMove(binBoard.deepCopy()));
+            binBoard.makemove(cP.determineMove(binBoard.deepCopy()), cP.getMark());
         }
 
         for (int i = 0; i < (this.refBoard.getSpotCount() - 1); i++) {
-            refBoard.makemove(cP.doMove(refBoard.deepCopy()));
+            refBoard.makemove(cP.determineMove(refBoard.deepCopy()), cP.getMark());
         }
     }
     @When("^I fill the last spot$")
     public void I_fill_the_last_spot() throws InvalidMoveException {
-        binBoard.makemove(cP.doMove(binBoard.deepCopy()));
-        refBoard.makemove(cP.doMove(refBoard.deepCopy()));
+        binBoard.makemove(cP.determineMove(binBoard.deepCopy()), cP.getMark());
+        refBoard.makemove(cP.determineMove(refBoard.deepCopy()), cP.getMark());
     }
     @Then("^the board should report its full$")
     public void the_board_should_report_its_when_asked() {
@@ -59,8 +60,8 @@ public class BoardStateSteps {
     public void unableToMove() {   
         
         try {
-            binBoard.makemove(5);
-            refBoard.makemove(5);
+            binBoard.makemove(5, cP.getMark());
+            refBoard.makemove(5, cP.getMark());
             fail();
          } catch (InvalidMoveException e) {
              

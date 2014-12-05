@@ -6,6 +6,7 @@ package com.lucwo.fourcharm.benchmark;
 import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.ComputerPlayer;
 import com.lucwo.fourcharm.model.Game;
+import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.Player;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
@@ -58,8 +59,8 @@ public class RandomBenchmark {
             }
 
             Game game = new Game(boardClass, new Player[] {
-                new ComputerPlayer(new RandomStrategy()),
-                new ComputerPlayer(new RandomStrategy()) });
+                    new ComputerPlayer(new RandomStrategy(), Mark.P1),
+                    new ComputerPlayer(new RandomStrategy(), Mark.P2)});
    
             game.play();
             

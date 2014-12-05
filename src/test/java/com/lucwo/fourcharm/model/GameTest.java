@@ -11,8 +11,8 @@ import org.junit.Test;
 
 public class GameTest {
 
-    static Player p1 = new ComputerPlayer(new RandomStrategy());
-    static Player p2 = new ComputerPlayer(new RandomStrategy());
+    static Player p1 = new ComputerPlayer(new RandomStrategy(), Mark.P1);
+    static Player p2 = new ComputerPlayer(new RandomStrategy(), Mark.P2);
     Game game;
 
     @Before
