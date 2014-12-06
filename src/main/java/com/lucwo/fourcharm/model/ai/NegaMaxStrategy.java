@@ -28,7 +28,7 @@ public class NegaMaxStrategy implements GameStrategy {
      */
     @Override
     public int determineMove(Board board, Mark mark) {
-        return determineMove(board, mark, DEF_DEPTH);
+        return determineMove(board.deepCopy(), mark, DEF_DEPTH);
     }
 
     /**

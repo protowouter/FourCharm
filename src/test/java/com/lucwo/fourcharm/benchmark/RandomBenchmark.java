@@ -30,7 +30,7 @@ public class RandomBenchmark {
     /**
      * Amount of iterations of the benchmark.
      */
-    public static final int ITERATIONS = 5_000_000;
+    public static final int ITERATIONS = 100_000_000;
     /**
      * How many times the current percentage should be shown.
      */

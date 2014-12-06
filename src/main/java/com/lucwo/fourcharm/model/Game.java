@@ -20,6 +20,7 @@ public class Game extends Observable {
     private final Iterator<Player> playerIterator;
     private Board board;
     private Player winner;
+    private Player current;
 
     /**
      * Create an new Game of connect 4. This constructor accepts an class
@@ -65,13 +66,13 @@ public class Game extends Observable {
     public void play() throws InvalidMoveException {
 
         notifyObservers();
-        Player current = null;
+        current = null;
 
-        while (!hasFinished()) {
+        while (current == null || !hasFinished()) {
+            current = playerIterator.next();
+            current.doMove(board);
             setChanged();
             notifyObservers();
-            current = playerIterator.next();
-            board.makemove(current.determineMove(board.deepCopy()), current.getMark());
 
         }
 
@@ -104,7 +105,7 @@ public class Game extends Observable {
      * @return true if a player has won the game; otherwise false
      */
     public boolean hasWinner() {
-        return board.hasWon(Mark.P1) || board.hasWon(Mark.P2);
+        return board.hasWon(current.getMark());
     }
 
 
@@ -124,7 +125,7 @@ public class Game extends Observable {
      */
     public boolean hasFinished() {
 
-        return board.isFull() || board.hasWon(Mark.P1) || board.hasWon(Mark.P2);
+        return board.isFull() || hasWinner();
 
     }
     
