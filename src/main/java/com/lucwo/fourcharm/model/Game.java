@@ -106,7 +106,7 @@ public class Game extends Observable {
 
 
     /**
-     * Returns the winner of the game, if there is a winner
+     * Returns the winner of the game, if there is a winner.
      *
      * @return The Player who won the game, null if there is no winner (yet)
      */
