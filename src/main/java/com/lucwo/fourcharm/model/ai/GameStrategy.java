@@ -3,6 +3,7 @@
  */
 package com.lucwo.fourcharm.model.ai;
 
+import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.board.Board;
 
 /**
@@ -13,6 +14,6 @@ import com.lucwo.fourcharm.model.board.Board;
  */
 public interface GameStrategy {
 
-    public int doMove(Board board);
+    public int determineMove(Board board, Mark mark);
 
 }

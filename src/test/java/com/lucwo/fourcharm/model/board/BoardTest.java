@@ -5,6 +5,7 @@
 package com.lucwo.fourcharm.model.board;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
+import com.lucwo.fourcharm.model.Mark;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(value = Parameterized.class)
 public class BoardTest {
@@ -52,7 +54,7 @@ public class BoardTest {
 
         int col = board.getColumns() - 1;
 
-        assert (board.columnHasFreeSpace(col));
+        assertTrue(board.columnHasFreeSpace(col));
 
     }
 
@@ -60,8 +62,10 @@ public class BoardTest {
 
         int rows = board.getRows();
 
+        Mark mark = Mark.P1;
         for (int i = 0; i < rows; i++) {
-            board.makemove(col);
+            board.makemove(col, mark);
+            mark = mark.other();
         }
 
     }
@@ -92,7 +96,7 @@ public class BoardTest {
         int col = board.getColumns() - 1;
         fillColumn(col);
 
-        board.makemove(col);
+        board.makemove(col, Mark.P1);
 
 
     }
@@ -108,15 +112,16 @@ public class BoardTest {
         if (p1 == p2) {
             //Unwinnable board
         } else {
+            Mark mark = Mark.P1;
             for (int i = 0; i < (winstreak - 1); i++) {
-                board.makemove(p1);
-                board.makemove(p2);
+                board.makemove(p1, mark);
+                board.makemove(p2, mark.other());
 
             }
 
-            assertFalse(board.lastMoveWon());
-            board.makemove(p1);
-            assert (board.lastMoveWon());
+            assertFalse(board.hasWon(mark));
+            board.makemove(p1, mark);
+            assertTrue(board.hasWon(mark));
         }
 
 
@@ -126,43 +131,47 @@ public class BoardTest {
 
     @Test
     public void testLeftdownRightUpDiagonal() throws InvalidMoveException {
-        board.makemove(0);
-        board.makemove(1);
-        board.makemove(1);
-        board.makemove(2);
-        board.makemove(3);
-        board.makemove(2);
-        board.makemove(2);
-        board.makemove(3);
-        board.makemove(4);
-        board.makemove(3);
-        board.makemove(3);
+        Mark winner = Mark.P1;
+        Mark loser = winner.other();
+        board.makemove(0, winner);
+        board.makemove(1, loser);
+        board.makemove(1, winner);
+        board.makemove(2, loser);
+        board.makemove(3, winner);
+        board.makemove(2, loser);
+        board.makemove(2, winner);
+        board.makemove(3, loser);
+        board.makemove(4, winner);
+        board.makemove(3, loser);
+        board.makemove(3, winner);
 
-        assert board.lastMoveWon();
+        assertTrue(board.hasWon(winner));
     }
 
     @Test
     public void testRightdownLeftUpDiagonal() throws InvalidMoveException {
-        board.makemove(6);
-        board.makemove(5);
-        board.makemove(5);
-        board.makemove(4);
-        board.makemove(3);
-        board.makemove(4);
-        board.makemove(4);
-        board.makemove(3);
-        board.makemove(2);
-        board.makemove(3);
-        board.makemove(3);
+        Mark winner = Mark.P1;
+        Mark loser = winner.other();
+        board.makemove(6, winner);
+        board.makemove(5, loser);
+        board.makemove(5, winner);
+        board.makemove(4, loser);
+        board.makemove(3, winner);
+        board.makemove(4, loser);
+        board.makemove(4, winner);
+        board.makemove(3, loser);
+        board.makemove(2, winner);
+        board.makemove(3, loser);
+        board.makemove(3, winner);
 
-        assert board.lastMoveWon();
+        assertTrue(board.hasWon(winner));
     }
 
     @Test
     public void fullBoardShouldReportFull() throws Exception {
 
         fillBoard();
-        assert (board.isFull());
+        assertTrue(board.isFull());
 
     }
 
@@ -170,7 +179,7 @@ public class BoardTest {
     public void fullBoardCannotBeFilled() throws Exception {
 
         fillBoard();
-        board.makemove(board.getColumns() - 1);
+        board.makemove(board.getColumns() - 1, Mark.P1);
 
     }
 
@@ -183,40 +192,42 @@ public class BoardTest {
 
         assert board.getPlieCount() == 0;
 
-        for (int i = 0; i < moves; i++) {
-            board.makemove(i);
+        Mark mark = Mark.P1;
+
+        for (int i = 0; i < moves; i++, mark = mark.other()) {
+            board.makemove(i, mark);
         }
 
-        assert board.getPlieCount() == moves;
+        assertTrue(board.getPlieCount() == moves);
 
     }
 
     @Test
     public void testGetColumns() throws Exception {
 
-        assert (board.getColumns() > 0);
+        assertTrue(board.getColumns() > 0);
 
     }
 
     @Test
     public void testGetRows() throws Exception {
 
-        assert (board.getRows() > 0);
+        assertTrue(board.getRows() > 0);
 
     }
 
     @Test
     public void testGetPlayers() throws Exception {
 
-        assert board.getPlayers() > 0;
+        assertTrue(board.getPlayers() > 0);
 
     }
 
     @Test
     public void testGetWinStreak() throws Exception {
 
-        assert board.getWinStreak() <= board.getRows();
-        assert board.getWinStreak() <= board.getColumns();
+        assertTrue(board.getWinStreak() <= board.getRows());
+        assertTrue(board.getWinStreak() <= board.getColumns());
 
     }
 
@@ -225,7 +236,7 @@ public class BoardTest {
 
         int spots = board.getColumns() * board.getRows();
 
-        assert board.getSpotCount() == spots;
+        assertTrue(board.getSpotCount() == spots);
 
     }
 
@@ -241,7 +252,7 @@ public class BoardTest {
         String before = board.toString();
         assertFalse(before.equals(""));
 
-        board.makemove(0);
+        board.makemove(0, Mark.P1);
         assertFalse(before.equals(board.toString()));
 
     }

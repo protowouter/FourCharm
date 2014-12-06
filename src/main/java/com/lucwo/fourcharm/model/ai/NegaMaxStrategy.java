@@ -4,6 +4,7 @@
 package com.lucwo.fourcharm.model.ai;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
+import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.board.Board;
 
 import java.util.logging.Logger;
@@ -23,11 +24,11 @@ public class NegaMaxStrategy implements GameStrategy {
     /*
      * (non-Javadoc)
      * 
-     * @see ft.model.Player#doMove(ft.model.board.Board)
+     * @see ft.model.Player#determineMove(ft.model.board.Board)
      */
     @Override
-    public int doMove(Board board) {
-        return doMove(board, DEF_DEPTH);
+    public int determineMove(Board board, Mark mark) {
+        return determineMove(board.deepCopy(), mark, DEF_DEPTH);
     }
 
     /**
@@ -39,7 +40,7 @@ public class NegaMaxStrategy implements GameStrategy {
      * @throws InvalidMoveException
      * @return The best move according to the negamax algorithm.
      */
-    public int doMove(Board board, int depth) {
+    public int determineMove(Board board, Mark mark, int depth) {
 
         double bestValue = Double.NEGATIVE_INFINITY;
         int bestMove = 0;
@@ -51,9 +52,9 @@ public class NegaMaxStrategy implements GameStrategy {
             if (board.columnHasFreeSpace(col)) {
                 try {
                     Board cBoard = board.deepCopy();
-                    cBoard.makemove(col);
+                    cBoard.makemove(col, mark);
                     freecolumns++;
-                    double value = -negaMax(cBoard, depth);
+                    double value = -negaMax(cBoard, mark.other(), depth);
                     Logger.getGlobal().fine("Move: " + col + "Value:" + value);
                     if (value > bestValue) {
                         bestMove = col;
@@ -69,7 +70,7 @@ public class NegaMaxStrategy implements GameStrategy {
             }
         }
 
-        return (samevalues == freecolumns) ? rStrat.doMove(board.deepCopy())
+        return (samevalues == freecolumns) ? rStrat.determineMove(board.deepCopy(), mark)
                 : bestMove;
 
     }
@@ -81,11 +82,11 @@ public class NegaMaxStrategy implements GameStrategy {
      * @throws InvalidMoveException
      * @return The negamax value of the current board state
      */
-    private double negaMax(Board board, int depth) {
+    private double negaMax(Board board, Mark mark, int depth) {
         double value;
 
-        if ((depth == 0) || board.isFull() || board.lastMoveWon()) {
-            value = nodeValue(board);
+        if ((depth == 0) || board.isFull() || board.hasWon(mark)) {
+            value = nodeValue(board, mark);
         } else {
 
             double bestValue = Double.NEGATIVE_INFINITY;
@@ -95,8 +96,8 @@ public class NegaMaxStrategy implements GameStrategy {
                 if (board.columnHasFreeSpace(col)) {
                     try {
                         Board childBoard = board.deepCopy();
-                        childBoard.makemove(col);
-                        double tValue = -negaMax(childBoard, depth - 1);
+                        childBoard.makemove(col, mark);
+                        double tValue = -negaMax(childBoard, mark.other(), depth - 1);
                         bestValue = Math.max(bestValue, tValue);
                     } catch (InvalidMoveException e) {
                         Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
@@ -113,17 +114,17 @@ public class NegaMaxStrategy implements GameStrategy {
 
     }
 
-    private double nodeValue(Board board) {
+    private double nodeValue(Board board, Mark mark) {
         // FIXME Write an better evaluation function
 
         boolean full = board.isFull();
-        boolean won = board.lastMoveWon();
+        boolean won = board.hasWon(mark);
         double value;
 
         if (full) {
             value = 0;
         } else {
-            value = won ? -1 : 1;
+            value = won ? 1 : -1;
         }
 
         return value;

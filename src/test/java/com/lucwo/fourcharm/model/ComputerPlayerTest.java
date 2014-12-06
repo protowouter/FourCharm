@@ -10,6 +10,8 @@ import com.lucwo.fourcharm.model.board.Board;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertTrue;
+
 public class ComputerPlayerTest {
 
     ComputerPlayer player;
@@ -18,7 +20,7 @@ public class ComputerPlayerTest {
     @Before
     public void setUp() throws Exception {
 
-        player = new ComputerPlayer(new RandomStrategy());
+        player = new ComputerPlayer(new RandomStrategy(), Mark.P1);
         board = new BinaryBoard();
 
 
@@ -28,7 +30,7 @@ public class ComputerPlayerTest {
     @Test
     public void testDoMove() throws Exception {
 
-        assert board.columnHasFreeSpace(player.doMove(board));
+        assertTrue(board.columnHasFreeSpace(player.determineMove(board)));
 
     }
 }

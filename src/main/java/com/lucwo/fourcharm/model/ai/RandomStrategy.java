@@ -3,9 +3,10 @@
  */
 package com.lucwo.fourcharm.model.ai;
 
-import java.util.Random;
-
+import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.board.Board;
+
+import java.util.Random;
 
 /**
  * @author Luce Sandfort and Wouter Timmermans
@@ -18,9 +19,9 @@ public class RandomStrategy implements GameStrategy {
     /*
      * (non-Javadoc)
      * 
-     * @see ft.model.GameStrategy#doMove()
+     * @see ft.model.GameStrategy#determineMove()
      */
-    public int doMove(Board board) {
+    public int determineMove(Board board, Mark mark) {
 
         int col = R_GENERATOR.nextInt(board.getColumns());
 

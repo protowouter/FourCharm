@@ -5,7 +5,7 @@ package com.lucwo.fourcharm.benchmark;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.ComputerPlayer;
-import com.lucwo.fourcharm.model.Game;
+import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.Player;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
@@ -29,16 +29,12 @@ public class RandomBenchmark {
     /**
      * Amount of iterations of the benchmark.
      */
-    public static final int ITERATIONS = 5_000_000;
+    public static final int ITERATIONS = 1_000_000;
     /**
      * How many times the current percentage should be shown.
      */
     public static final int STEP_PERCENTAGE = 10;
 
-    private RandomBenchmark() {
-        super();
-        // Hide the public constructor
-    }
 
     private static int runBenchmark(Class<? extends Board> boardClass)
             throws InstantiationException, IllegalAccessException, InvalidMoveException {
@@ -57,14 +53,40 @@ public class RandomBenchmark {
                 Logger.getGlobal().info(intPercent + "%");
             }
 
-            Game game = new Game(boardClass, new Player[] {
-                new ComputerPlayer(new RandomStrategy()),
-                new ComputerPlayer(new RandomStrategy()) });
+            Player p1 = new ComputerPlayer(new RandomStrategy(), Mark.P1);
+            Player p2 = new ComputerPlayer(new RandomStrategy(), Mark.P2);
+
+            Player current = null;
+
+            int plieCount = 0;
+
+            Board board = boardClass.newInstance();
+
+            boolean finished = false;
+
+            while (current == null || !finished) {
+
+                if (current == p1) {
+                    current = p2;
+                } else if (current == p2) {
+                    current = p1;
+                } else {
+                    current = p1;
+                }
+
+                current.doMove(board);
+                plieCount++;
+
+                finished = board.isFull() || board.hasWon(current.getMark());
+
+
+            }
+
    
-            game.play();
+
             
             gCount++;
-            pCount += game.plieCount();
+            pCount += plieCount;
 
         }
         long endTime = System.currentTimeMillis();

@@ -4,6 +4,7 @@
 package com.lucwo.fourcharm.model.board;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
+import com.lucwo.fourcharm.model.Mark;
 
 import java.util.Arrays;
 import java.util.logging.Logger;
@@ -24,18 +25,6 @@ public class ReferenceBoard extends Board {
      * Amount of spots in the board.
      */
     public static final int SIZE = COLUMNS * ROWS;
-    /**
-     * Value assigned to an empty spot.
-     */
-    public static final int EMPTY = -1;
-    /**
-     * Value assigned to an spot for player1.
-     */
-    public static final int PLAYER1 = 0;
-    /**
-     * Value assigned to an spot for player2.
-     */
-    public static final int PLAYER2 = 1;
 
     // ------------------ Instance variables ----------------
     // Array with moves since the start of the game
@@ -43,7 +32,7 @@ public class ReferenceBoard extends Board {
     // Amount of turns since the start of the game
     private int nplies; 
     // Holds bitboard for every color
-    private int[][] board; 
+    private Mark[][] board;
 
     // --------------------- Constructors -------------------
 
@@ -56,21 +45,25 @@ public class ReferenceBoard extends Board {
         reset();
     }
 
+    private ReferenceBoard(int[] oldMoves, Mark[][] oldBoard, int plieCount) {
+        moves = oldMoves;
+        board = oldBoard;
+        nplies = plieCount;
+    }
+
     // ----------------------- Queries ----------------------
 
     public boolean columnHasFreeSpace(int col) {
 
-        return board[col][ROWS - 1] == EMPTY;
+        return board[col][ROWS - 1] == Mark.EMPTY;
 
     }
 
-    public boolean lastMoveWon() {
-
-        int player = (nplies - 1) & 1;
+    public boolean hasWon(Mark mark) {
 
 
-        return hasLRDiagonal(player) || hasHorizontal(player)
-                || hasRLDiagonal(player) || hasVertical(player);
+        return hasLRDiagonal(mark) || hasHorizontal(mark)
+                || hasRLDiagonal(mark) || hasVertical(mark);
 
     }
 
@@ -96,7 +89,7 @@ public class ReferenceBoard extends Board {
      * . . . . . . @
      */
 
-    private boolean hasLRDiagonal(int player) {
+    private boolean hasLRDiagonal(Mark player) {
 
         boolean diag = false;
 
@@ -124,7 +117,7 @@ public class ReferenceBoard extends Board {
      * @ . . . . . .
      */
 
-    private boolean hasRLDiagonal(int player) {
+    private boolean hasRLDiagonal(Mark player) {
 
 
         boolean diag = false;
@@ -144,7 +137,7 @@ public class ReferenceBoard extends Board {
 
     }
 
-    private boolean hasHorizontal(int player) {
+    private boolean hasHorizontal(Mark player) {
 
         boolean horizontal = false;
 
@@ -161,7 +154,7 @@ public class ReferenceBoard extends Board {
 
     }
 
-    private boolean hasVertical(int player) {
+    private boolean hasVertical(Mark player) {
 
         boolean vertical = false;
 
@@ -179,6 +172,16 @@ public class ReferenceBoard extends Board {
 
     }
 
+    public Mark getMark(int index) {
+
+        return getMark(index / COLUMNS, index % COLUMNS);
+
+    }
+
+    public Mark getMark(int col, int row) {
+        return board[col][row];
+    }
+
     public String toString() {
         StringBuilder repr = new StringBuilder();
 
@@ -193,12 +196,12 @@ public class ReferenceBoard extends Board {
 
         for (int row = ROWS - 1; row >= 0; row--) {
             for (int column = 0; column < COLUMNS; column++) {
-                int player = board[column][row];
-                if (player == PLAYER1) {
+                Mark player = board[column][row];
+                if (player == Mark.P1) {
                     repr.append(" X");
-                } else if (player == PLAYER2) {
+                } else if (player == Mark.P2) {
                     repr.append(" O");
-                } else if (player == EMPTY) {
+                } else if (player == Mark.EMPTY) {
                     repr.append(" .");
                 }
             }
@@ -209,17 +212,13 @@ public class ReferenceBoard extends Board {
     }
 
     public Board deepCopy() {
-        ReferenceBoard boardCopy = new ReferenceBoard();
-        boardCopy.reset();
-        for (int i = 0; i < nplies; i++) {
-            try {
-                boardCopy.makemove(moves[i]);
-            } catch (InvalidMoveException e) {
-                Logger.getGlobal().throwing("ReferenceBoard", "deepCopy", e);
-            }
-            
+
+        Mark[][] newBoard = new Mark[COLUMNS][ROWS];
+        for (int i = 0; i < board.length; i++) {
+            newBoard[i] = Arrays.copyOf(board[i], board[i].length);
         }
-        return boardCopy;
+
+        return new ReferenceBoard(Arrays.copyOf(moves, moves.length), newBoard, nplies);
     }
 
     // ----------------------- Commands ---------------------
@@ -229,13 +228,9 @@ public class ReferenceBoard extends Board {
      * @param col column in which a piece will be placed
      * @requires gets called for the player which current turn it is
      */
-    public void makemove(int col) throws InvalidMoveException {
+    public void makemove(int col, Mark mark) throws InvalidMoveException {
 
         if (columnHasFreeSpace(col)) {
-
-
-            // same as modulo 2 but probably more efficient
-            int player = nplies & 1;
 
             moves[nplies] = col;
 
@@ -246,8 +241,8 @@ public class ReferenceBoard extends Board {
 
 
             for (int i = 0; i < ROWS && needPlacement; i++) {
-                if (board[col][i] == EMPTY) {
-                    board[col][i] = player;
+                if (board[col][i] == Mark.EMPTY) {
+                    board[col][i] = mark;
                     needPlacement = false;
                 }
             }
@@ -261,9 +256,9 @@ public class ReferenceBoard extends Board {
     private void reset() {
         moves = new int[SIZE];
         nplies = 0;
-        board = new int[COLUMNS][ROWS];
+        board = new Mark[COLUMNS][ROWS];
         for (int i = 0; i < COLUMNS; i++) {
-            Arrays.fill(board[i], EMPTY);
+            Arrays.fill(board[i], Mark.EMPTY);
         }
     }
 

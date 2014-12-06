@@ -16,21 +16,27 @@ public class ComputerPlayer implements Player {
 
     private final GameStrategy strategy;
 
+    private Mark mark;
+
     /**
      * Create an new ComputerPlayer using an strategy to do moves on the board.
      * 
      * @param computerStrategy
      *            strategy to be used by this player
      */
-    public ComputerPlayer(GameStrategy computerStrategy) {
-        super();
+    public ComputerPlayer(GameStrategy computerStrategy, Mark theMark) {
 
         strategy = computerStrategy;
+        mark = theMark;
+
 
     }
 
-    public int doMove(Board board) {
-        return strategy.doMove(board);
+    public int determineMove(Board board) {
+        return strategy.determineMove(board, mark);
     }
 
+    public Mark getMark() {
+        return mark;
+    }
 }

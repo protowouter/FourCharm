@@ -7,6 +7,7 @@ package com.lucwo.fourcharm.benchmark;
 import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.ComputerPlayer;
 import com.lucwo.fourcharm.model.Game;
+import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.Player;
 import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
@@ -56,8 +57,8 @@ public class AIBenchmark {
         final int total = ITERATIONS;
         final int step = total / STEP_PERCENTAGE;
 
-        Player smartPlayer = new ComputerPlayer(new NegaMaxStrategy());
-        Player dumbPlayer = new ComputerPlayer(new RandomStrategy());
+        Player smartPlayer = new ComputerPlayer(new NegaMaxStrategy(), Mark.P1);
+        Player dumbPlayer = new ComputerPlayer(new RandomStrategy(), Mark.P2);
 
         boolean switchPlayer = false;
 
@@ -72,10 +73,10 @@ public class AIBenchmark {
             Game game;
 
             if (switchPlayer) {
-                game = new Game(BinaryBoard.class, new Player[]{dumbPlayer, smartPlayer});
+                game = new Game(BinaryBoard.class, dumbPlayer, smartPlayer);
                 switchPlayer = false;
             } else {
-                game = new Game(BinaryBoard.class, new Player[]{smartPlayer, dumbPlayer});
+                game = new Game(BinaryBoard.class, smartPlayer, dumbPlayer);
                 switchPlayer = true;
             }
 

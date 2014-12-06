@@ -7,7 +7,7 @@ import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.ComputerPlayer;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.HumanPlayer;
-import com.lucwo.fourcharm.model.Player;
+import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.board.ReferenceBoard;
 
@@ -37,8 +37,8 @@ class FourCharmTUI implements Observer {
         BufferedReader dis = new BufferedReader(
                 new InputStreamReader(System.in));
 
-        game = new Game(ReferenceBoard.class, new Player[]{new HumanPlayer(dis),
-                new ComputerPlayer(new NegaMaxStrategy())});
+        game = new Game(ReferenceBoard.class, new HumanPlayer(dis, Mark.P1),
+                new ComputerPlayer(new NegaMaxStrategy(), Mark.P2));
 
         game.addObserver(this);
 

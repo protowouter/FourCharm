@@ -4,10 +4,13 @@
 
 package com.lucwo.fourcharm.model.ai;
 
+import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.model.board.Board;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 public class NegaMaxStrategyTest {
 
@@ -27,7 +30,7 @@ public class NegaMaxStrategyTest {
     @Test
     public void testDoMove() throws Exception {
 
-        assert board.columnHasFreeSpace(strat.doMove(board));
+        assertTrue(board.columnHasFreeSpace(strat.determineMove(board, Mark.P1)));
 
 
     }
