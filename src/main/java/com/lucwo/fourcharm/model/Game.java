@@ -3,11 +3,10 @@
  */
 package com.lucwo.fourcharm.model;
 
-import com.google.common.collect.Iterables;
 import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.board.Board;
 
-import java.util.*;
+import java.util.Observable;
 
 /**
  * Models an game of Connect 4.
@@ -17,34 +16,31 @@ import java.util.*;
  */
 public class Game extends Observable {
 
-    private final Iterator<Player> playerIterator;
     private Board board;
     private Player winner;
+    private Player player1;
+    private Player player2;
     private Player current;
 
     /**
      * Create an new Game of connect 4. This constructor accepts an class
      * implementing the interface Board and initializes an new board of the
      * given type.
-     * 
-     * @param boardClass
-     *            Class to use as board implementation
-     * @param players
-     *            An array of player who will take part in this game
+     *
+     * @param boardClass Class to use as board implementation
+     * @param p1 The first player who wil play this game
+     * @param p2 The second player who wil play this game
      * @throws InstantiationException 
      * @throws IllegalAccessException 
      */
-    public Game(Class<? extends Board> boardClass, Player[] players) throws InstantiationException, 
-            IllegalAccessException {
+    public Game(Class<? extends Board> boardClass, Player p1, Player p2)
+            throws InstantiationException, IllegalAccessException {
         super();
 
         initBoard(boardClass);
 
-        List<Player> playerlist = new ArrayList<>();
-
-        Collections.addAll(playerlist, players);
-
-        playerIterator = Iterables.cycle(playerlist).iterator();
+        player1 = p1;
+        player2 = p2;
 
     }
 
@@ -69,7 +65,7 @@ public class Game extends Observable {
         current = null;
 
         while (current == null || !hasFinished()) {
-            current = playerIterator.next();
+            current = nextPlayer();
             current.doMove(board);
             setChanged();
             notifyObservers();
@@ -134,6 +130,20 @@ public class Game extends Observable {
      */
     public Board getBoard() {
         return board.deepCopy();
+    }
+
+    private Player nextPlayer() {
+
+        Player next = player1;
+
+        if (current == player1) {
+            next = player2;
+        } else if (current == player2) {
+            next = player1;
+        }
+
+        return next;
+
     }
 
 }

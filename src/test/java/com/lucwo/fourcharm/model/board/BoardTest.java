@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(value = Parameterized.class)
 public class BoardTest {
@@ -53,7 +54,7 @@ public class BoardTest {
 
         int col = board.getColumns() - 1;
 
-        assert (board.columnHasFreeSpace(col));
+        assertTrue(board.columnHasFreeSpace(col));
 
     }
 
@@ -120,7 +121,7 @@ public class BoardTest {
 
             assertFalse(board.hasWon(mark));
             board.makemove(p1, mark);
-            assert (board.hasWon(mark));
+            assertTrue(board.hasWon(mark));
         }
 
 
@@ -144,7 +145,7 @@ public class BoardTest {
         board.makemove(3, loser);
         board.makemove(3, winner);
 
-        assert board.hasWon(winner);
+        assertTrue(board.hasWon(winner));
     }
 
     @Test
@@ -163,14 +164,14 @@ public class BoardTest {
         board.makemove(3, loser);
         board.makemove(3, winner);
 
-        assert board.hasWon(winner);
+        assertTrue(board.hasWon(winner));
     }
 
     @Test
     public void fullBoardShouldReportFull() throws Exception {
 
         fillBoard();
-        assert (board.isFull());
+        assertTrue(board.isFull());
 
     }
 
@@ -197,36 +198,36 @@ public class BoardTest {
             board.makemove(i, mark);
         }
 
-        assert board.getPlieCount() == moves;
+        assertTrue(board.getPlieCount() == moves);
 
     }
 
     @Test
     public void testGetColumns() throws Exception {
 
-        assert (board.getColumns() > 0);
+        assertTrue(board.getColumns() > 0);
 
     }
 
     @Test
     public void testGetRows() throws Exception {
 
-        assert (board.getRows() > 0);
+        assertTrue(board.getRows() > 0);
 
     }
 
     @Test
     public void testGetPlayers() throws Exception {
 
-        assert board.getPlayers() > 0;
+        assertTrue(board.getPlayers() > 0);
 
     }
 
     @Test
     public void testGetWinStreak() throws Exception {
 
-        assert board.getWinStreak() <= board.getRows();
-        assert board.getWinStreak() <= board.getColumns();
+        assertTrue(board.getWinStreak() <= board.getRows());
+        assertTrue(board.getWinStreak() <= board.getColumns());
 
     }
 
@@ -235,7 +236,7 @@ public class BoardTest {
 
         int spots = board.getColumns() * board.getRows();
 
-        assert board.getSpotCount() == spots;
+        assertTrue(board.getSpotCount() == spots);
 
     }
 

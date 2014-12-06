@@ -73,10 +73,10 @@ public class AIBenchmark {
             Game game;
 
             if (switchPlayer) {
-                game = new Game(BinaryBoard.class, new Player[]{dumbPlayer, smartPlayer});
+                game = new Game(BinaryBoard.class, dumbPlayer, smartPlayer);
                 switchPlayer = false;
             } else {
-                game = new Game(BinaryBoard.class, new Player[]{smartPlayer, dumbPlayer});
+                game = new Game(BinaryBoard.class, smartPlayer, dumbPlayer);
                 switchPlayer = true;
             }
 

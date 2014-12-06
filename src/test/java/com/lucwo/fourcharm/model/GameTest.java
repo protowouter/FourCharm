@@ -9,6 +9,8 @@ import com.lucwo.fourcharm.model.board.ReferenceBoard;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertTrue;
+
 public class GameTest {
 
     static Player p1 = new ComputerPlayer(new RandomStrategy(), Mark.P1);
@@ -18,7 +20,7 @@ public class GameTest {
     @Before
     public void setUp() throws Exception {
 
-        game = new Game(ReferenceBoard.class, new Player[]{p1, p2});
+        game = new Game(ReferenceBoard.class, p1, p2);
 
     }
 
@@ -34,9 +36,9 @@ public class GameTest {
     @Test
     public void testPlieCount() throws Exception {
 
-        assert game.plieCount() == 0;
+        assertTrue(game.plieCount() == 0);
         game.play();
-        assert game.plieCount() != 0;
+        assertTrue(game.plieCount() != 0);
 
     }
 
@@ -47,9 +49,9 @@ public class GameTest {
 
         if (game.hasWinner()) {
             Player winner = game.getWinner();
-            assert winner == p1 || winner == p2;
+            assertTrue(winner == p1 || winner == p2);
         } else {
-            assert game.getWinner() == null;
+            assertTrue(game.getWinner() == null);
         }
 
     }
@@ -58,14 +60,14 @@ public class GameTest {
     public void testHasFinished() throws Exception {
 
         game.play();
-        assert game.hasFinished();
+        assertTrue(game.hasFinished());
 
     }
 
     @Test
     public void testGetBoard() throws Exception {
 
-        assert game.getBoard() != null;
+        assertTrue(game.getBoard() != null);
 
     }
 }

@@ -10,6 +10,8 @@ import com.lucwo.fourcharm.model.board.Board;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertTrue;
+
 public class RandomStrategyTest {
 
     private RandomStrategy strat;
@@ -28,7 +30,7 @@ public class RandomStrategyTest {
     @Test
     public void testDoMove() throws Exception {
 
-        assert board.columnHasFreeSpace(strat.determineMove(board, Mark.P1));
+        assertTrue(board.columnHasFreeSpace(strat.determineMove(board, Mark.P1)));
 
 
     }
