@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,6 +37,11 @@ public class FourCharm extends Application {
         Logger.getGlobal().setLevel(Level.FINEST);
 
         Logger.getGlobal().fine("hallo");
+
+        ConsoleHandler cH = new ConsoleHandler();
+        cH.setLevel(Level.FINEST);
+
+        Logger.getGlobal().addHandler(cH);
 
         FourCharmController fC = new FourCharmController();
 
