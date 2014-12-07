@@ -33,7 +33,9 @@ public abstract class Board {
 
     public abstract Mark getMark(int index);
 
-    public abstract Mark getMark(int col, int row);
+    public Mark getMark(int col, int row) {
+        return getMark(col * row);
+    }
 
     public abstract boolean hasWon(Mark mark);
 

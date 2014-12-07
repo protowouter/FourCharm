@@ -153,12 +153,28 @@ public class BinaryBoard extends Board {
 
     public Mark getMark(int index) {
 
-        return Mark.EMPTY;
+        int col = index / COLUMNS;
+        int row = index % COLUMNS;
+
+        return getInternalMark(col * H1 + row);
+
+
     }
 
-    public Mark getMark(int col, int row) {
-        return getMark(col * row);
+    public Mark getInternalMark(int internalIndex) {
+
+        Mark mark = Mark.EMPTY;
+
+        if ((color[0] & 1L << internalIndex) != 0) {
+            mark = Mark.P1;
+        } else if ((color[1] & 1L << internalIndex) != 0) {
+            mark = Mark.P2;
+        }
+
+        return mark;
+
     }
+
 
 
     private int getPlayerIndex(Mark mark) {
@@ -217,8 +233,8 @@ public class BinaryBoard extends Board {
         for (int h = ROWS - 1; h >= 0; h--) {
             for (int w = h; w < SIZE1; w += H1) {
                 long mask = 1L << w;
-                repr.append(((this.color[0] & mask) != 0) ? " X"
-                        : (((this.color[1] & mask) != 0) ? " O" : " ."));
+                repr.append(((this.color[0] & mask) != 0) ? "X "
+                        : (((this.color[1] & mask) != 0) ? "O " : " .  "));
             }
             repr.append("\n");
         }
