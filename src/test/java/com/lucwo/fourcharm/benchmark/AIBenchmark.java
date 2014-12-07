@@ -62,7 +62,7 @@ public class AIBenchmark {
 
         boolean switchPlayer = false;
 
-        while (gCount < (total + 1)) {
+        while (gCount < total) {
 
             if (((gCount % step) == 0) && (gCount != 0)) {
                 float percent = ((float) gCount / (float) total) * 100;
@@ -128,6 +128,8 @@ public class AIBenchmark {
 
         Logger.getGlobal().info("wins: " + score[0] + "\nties: " + score[1] + "\nlosses: " + score[2]);
         Logger.getGlobal().info("percentage (win + tie): " + percentage + "%");
+
+        NegaMaxStrategy.VALUE_EXECUTOR.shutdown();
 
     }
 }
