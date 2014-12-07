@@ -46,20 +46,22 @@ public class NegaMaxStrategy implements GameStrategy {
         int columns = board.getColumns();
 
         for (int col = 0; col < columns; col++) {
-            try {
-                Board cBoard = board.deepCopy();
-                cBoard.makemove(col, mark);
-                freeColumns++;
-                double value = -negaMax(cBoard, mark.other(), depth - 1);
-                Logger.getGlobal().fine("Move: " + col + " Value: " + value);
-                if (value > bestValue) {
-                    bestMove = col;
-                    bestValue = value;
-                } else if (value == bestValue) {
-                    sameValues++;
+            if (board.columnHasFreeSpace(col)) {
+                try {
+                    Board cBoard = board.deepCopy();
+                    cBoard.makemove(col, mark);
+                    freeColumns++;
+                    double value = -negaMax(cBoard, mark.other(), depth - 1);
+                    Logger.getGlobal().fine("Move: " + col + " Value: " + value);
+                    if (value > bestValue) {
+                        bestMove = col;
+                        bestValue = value;
+                    } else if (value == bestValue) {
+                        sameValues++;
+                    }
+                } catch (InvalidMoveException e) {
+                    Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
                 }
-            } catch (InvalidMoveException e) {
-                Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
             }
         }
 
@@ -84,13 +86,15 @@ public class NegaMaxStrategy implements GameStrategy {
             int columns = board.getColumns();
 
             for (int col = 0; col < columns; col++) {
-                try {
-                    Board childBoard = board.deepCopy();
-                    childBoard.makemove(col, mark);
-                    double tValue = -negaMax(childBoard, mark.other(), depth - 1);
-                    bestValue = Math.max(bestValue, tValue);
-                } catch (InvalidMoveException e) {
-                    Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
+                if (board.columnHasFreeSpace(col)) {
+                    try {
+                        Board childBoard = board.deepCopy();
+                        childBoard.makemove(col, mark);
+                        double tValue = -negaMax(childBoard, mark.other(), depth - 1);
+                        bestValue = Math.max(bestValue, tValue);
+                    } catch (InvalidMoveException e) {
+                        Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
+                    }
                 }
             }
 
@@ -103,19 +107,155 @@ public class NegaMaxStrategy implements GameStrategy {
     }
 
     private double nodeValue(Board board, Mark mark) {
-        // FIXME Write an better evaluation function
 
-        boolean full = board.isFull();
-        boolean won = board.hasWon(mark);
-        double value;
+        int cols = board.getColumns();
+        int rows = board.getRows();
+        double value = 0;
 
-        if (full) {
-            value = 0;
-        } else {
-            value = won ? 1 : -1;
+        int[][] spaceValues = new int[cols][rows];
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                spaceValues[col][row] = horizontalValue(board, mark, col, row) +
+                        verticalValue(board, mark, col, row) +
+                        lRDiagonalValue(board, mark, col, row) +
+                        rLDiagonalValue(board, mark, col, row);
+            }
+        }
+
+        for (int[] vals : spaceValues) {
+            for (int val : vals) {
+                value += val;
+            }
+
+        }
+
+        boolean mWin = board.hasWon(mark);
+        boolean oWin = board.hasWon(mark.other());
+
+        if (mWin) {
+            value = Double.POSITIVE_INFINITY;
+        } else if (oWin) {
+            value = Double.NEGATIVE_INFINITY;
         }
 
         return value;
+    }
+
+    private int horizontalValue(Board board, Mark mark, int vCol, int vRow) {
+
+        int cols = board.getColumns();
+        int streak = board.getWinStreak();
+        int value = 0;
+
+        for (int col = vCol; col < col + streak && col < cols; col++) {
+            switch (board.getMark(col, vRow)) {
+                case EMPTY:
+                    value += 1;
+                    break;
+                case P1:
+                    value = mark == Mark.P1 ? value + 2 : value;
+                    break;
+                case P2:
+                    value = mark == Mark.P2 ? value + 2 : value;
+            }
+        }
+
+        return value;
+
+    }
+
+    private int verticalValue(Board board, Mark mark, int vCol, int vRow) {
+
+        int rows = board.getRows();
+        int streak = board.getWinStreak();
+        int value = 0;
+
+        for (int row = vRow; row < row + streak && row < rows; row++) {
+            switch (board.getMark(vCol, row)) {
+                case EMPTY:
+                    value += 1;
+                    break;
+                case P1:
+                    value = mark == Mark.P1 ? value + 2 : value;
+                    break;
+                case P2:
+                    value = mark == Mark.P2 ? value + 2 : value;
+            }
+        }
+
+        return value;
+
+    }
+
+    /**
+     * Find columns of the following form:
+     * . . . . . . .
+     * . . . . . . .
+     * . . . @ . . .
+     * . . . . @ . .
+     * . . . . . @ .
+     * . . . . . . @
+     */
+
+    private int lRDiagonalValue(Board board, Mark mark, int vCol, int vRow) {
+
+        int rows = board.getRows();
+        int streak = board.getWinStreak();
+        int value = 0;
+
+        for (int col = vCol, row = vRow; col > col - streak && col > 0
+                && row < row + streak && row < rows; col--, row++) {
+            switch (board.getMark(col, row)) {
+                case EMPTY:
+                    value += 1;
+                    break;
+                case P1:
+                    value = mark == Mark.P1 ? value + 2 : value;
+                    break;
+                case P2:
+                    value = mark == Mark.P2 ? value + 2 : value;
+            }
+        }
+
+        return value;
+
+    }
+
+    /**
+     * Find columns of the following form:
+     * . . . . . . .
+     * . . . . . . .
+     * . . . @ . . .
+     * . . @ . . . .
+     * . @ . . . . .
+     *
+     * @ . . . . . .
+     */
+
+    private int rLDiagonalValue(Board board, Mark mark, int vCol, int vRow) {
+
+        int rows = board.getRows();
+        int cols = board.getColumns();
+        int streak = board.getWinStreak();
+        int value = 0;
+
+        for (int col = vCol, row = vRow; col < col + streak && col < cols
+                && row < row + streak && row < rows; col++, row++) {
+            switch (board.getMark(col, row)) {
+                case EMPTY:
+                    value += 1;
+                    break;
+                case P1:
+                    value = mark == Mark.P1 ? value + 2 : value;
+                    break;
+                case P2:
+                    value = mark == Mark.P2 ? value + 2 : value;
+            }
+        }
+
+        return value;
+
     }
 
 }
