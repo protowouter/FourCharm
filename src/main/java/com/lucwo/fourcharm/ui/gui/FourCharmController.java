@@ -120,6 +120,7 @@ public class FourCharmController extends VBox implements Observer {
         try {
             playerInput.write(playerMove.getText() + "\n");
             playerInput.flush();
+            playerMove.clear();
         } catch (IOException e) {
             Logger.getGlobal().throwing("FourCharmController", "parsePlayerMove", e);
         }

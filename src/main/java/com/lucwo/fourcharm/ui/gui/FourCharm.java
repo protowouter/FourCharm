@@ -43,8 +43,6 @@ public class FourCharm extends Application {
 
         stage.setScene(new Scene(fC));
         stage.setTitle("FourCharm");
-        stage.setWidth(300);
-        stage.setHeight(200);
         stage.show();
 
         fC.startGame();
