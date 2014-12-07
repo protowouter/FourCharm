@@ -39,7 +39,7 @@ public class HumanPlayer implements Player {
      */
     public int determineMove(Board board) {
 
-        Logger.getGlobal().info("Voer kolomnummer in: ");
+        Logger.getGlobal().info("Going to parse playerinput");
 
         int move = 0;
 
@@ -50,16 +50,18 @@ public class HumanPlayer implements Player {
             Logger.getGlobal().warning(e.toString());
             Logger.getGlobal().throwing("HumanPlayer", "determineMove", e);
         }
+        Logger.getGlobal().info("Playerinput: " + line);
         if (line == null) {
             determineMove(board);
-        }
-        for (int i = 0; i < line.length(); i++) {
-            int col = line.charAt(i) - '1';
-            if ((col >= 0) && (col < board.getColumns())
-                    && board.columnHasFreeSpace(col)) {
-                move = col;
-            } else {
-                move = determineMove(board);
+        } else {
+            for (int i = 0; i < line.length(); i++) {
+                int col = line.charAt(i) - '1';
+                if ((col >= 0) && (col < board.getColumns())
+                        && board.columnHasFreeSpace(col)) {
+                    move = col;
+                } else {
+                    move = determineMove(board);
+                }
             }
         }
         return move;

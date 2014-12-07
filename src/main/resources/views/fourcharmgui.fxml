@@ -9,21 +9,25 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.FlowPane?>
-<FlowPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-          minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
-          xmlns="http://javafx.com/javafx/8">
+<fx:root xmlns:fx="http://javafx.com/fxml/1" type="VBox" xmlns="http://javafx.com/javafx/8">
     <children>
-        <TextArea maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="362.0"
-                  prefWidth="600.0">
-            <FlowPane.margin>
-                <Insets bottom="5.0"/>
-            </FlowPane.margin>
-        </TextArea>
-        <TextField prefHeight="26.0" prefWidth="525.0" promptText="Enter move">
-            <FlowPane.margin>
-                <Insets left="5.0" right="5.0"/>
-            </FlowPane.margin>
-        </TextField>
-        <Button alignment="CENTER_RIGHT" contentDisplay="TOP" mnemonicParsing="false" text="Button"/>
+        <FlowPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+                  minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
+            <children>
+                <TextArea fx:id="boardTextArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                          prefHeight="362.0" prefWidth="600.0">
+                    <FlowPane.margin>
+                        <Insets bottom="5.0"/>
+                    </FlowPane.margin>
+                </TextArea>
+                <TextField fx:id="playerMove" prefHeight="26.0" prefWidth="525.0" promptText="Enter move">
+                    <FlowPane.margin>
+                        <Insets left="5.0" right="5.0"/>
+                    </FlowPane.margin>
+                </TextField>
+                <Button alignment="CENTER_RIGHT" contentDisplay="TOP" mnemonicParsing="false"
+                        onMouseClicked="#parsePlayerMove" text="Move"/>
+            </children>
+        </FlowPane>
     </children>
-</FlowPane>
+</fx:root>

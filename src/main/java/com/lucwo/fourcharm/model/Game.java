@@ -14,7 +14,7 @@ import java.util.Observable;
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
-public class Game extends Observable {
+public class Game extends Observable implements Runnable {
 
     private Board board;
     private Player winner;
@@ -57,16 +57,20 @@ public class Game extends Observable {
 
     /**
      * Play an game of connect 4 till the game has ended.
-     * @throws InvalidMoveException 
      */
-    public void play() throws InvalidMoveException {
+    public void play() {
 
         notifyObservers();
         current = null;
+        boolean fairplay = true;
 
-        while (current == null || !hasFinished()) {
+        while (fairplay && (current == null || !hasFinished())) {
             current = nextPlayer();
-            current.doMove(board);
+            try {
+                current.doMove(board);
+            } catch (InvalidMoveException e) {
+                fairplay = false;
+            }
             setChanged();
             notifyObservers();
 
@@ -106,12 +110,16 @@ public class Game extends Observable {
 
 
     /**
-     * Returns the winner of the game, if there is a winner
+     * Returns the winner of the game, if there is a winner.
      *
      * @return The Player who won the game, null if there is no winner (yet)
      */
     public Player getWinner() {
         return winner;
+    }
+
+    public Player getCurrent() {
+        return current;
     }
 
     /**
@@ -144,6 +152,10 @@ public class Game extends Observable {
 
         return next;
 
+    }
+
+    public void run() {
+        play();
     }
 
 }
