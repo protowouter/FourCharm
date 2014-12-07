@@ -44,8 +44,8 @@ public class NegaMaxStrategy implements GameStrategy {
 
         double bestValue = Double.NEGATIVE_INFINITY;
         int bestMove = 0;
-        int samevalues = 1;
-        int freecolumns = 0;
+        int sameValues = 1;
+        int freeColumns = 0;
         int columns = board.getColumns();
 
         for (int col = 0; col < columns; col++) {
@@ -53,14 +53,14 @@ public class NegaMaxStrategy implements GameStrategy {
                 try {
                     Board cBoard = board.deepCopy();
                     cBoard.makemove(col, mark);
-                    freecolumns++;
-                    double value = -negaMax(cBoard, mark.other(), depth);
+                    freeColumns++;
+                    double value = -negaMax(cBoard, mark.other(), depth - 1);
                     Logger.getGlobal().fine("Move: " + col + "Value:" + value);
                     if (value > bestValue) {
                         bestMove = col;
                         bestValue = value;
                     } else if (value == bestValue) {
-                        samevalues++;
+                        sameValues++;
                     }
                 } catch (InvalidMoveException e) {
                     Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
@@ -70,15 +70,15 @@ public class NegaMaxStrategy implements GameStrategy {
             }
         }
 
-        return (samevalues == freecolumns) ? rStrat.determineMove(board.deepCopy(), mark)
+        return (sameValues == freeColumns) ? rStrat.determineMove(board.deepCopy(), mark)
                 : bestMove;
 
     }
 
     /**
-     * 
-     * @param board
-     * @param depth
+     *
+     * @param board Board for which the best move has to be determined
+     * @param depth Depth at which will be searched for the best move
      * @throws InvalidMoveException
      * @return The negamax value of the current board state
      */
