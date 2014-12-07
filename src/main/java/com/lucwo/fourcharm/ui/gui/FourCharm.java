@@ -5,10 +5,11 @@
 package com.lucwo.fourcharm.ui.gui;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by woutertimmermans on 27-11-14.
@@ -26,18 +27,27 @@ public class FourCharm extends Application {
 
     // ----------------------- Commands ---------------------
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     public void start(Stage stage) throws Exception {
 
-        ClassLoader classloader = getClass().getClassLoader();
+        Logger.getGlobal().setLevel(Level.FINEST);
 
-        Parent root = FXMLLoader.load(classloader.getResource("views/fourcharmgui.fxml"));
+        Logger.getGlobal().fine("hallo");
 
+        FourCharmController fC = new FourCharmController();
 
-        Scene scene = new Scene(root);
+        fC.setBoardText("Hallo");
 
+        stage.setScene(new Scene(fC));
         stage.setTitle("FourCharm");
-        stage.setScene(scene);
+        stage.setWidth(300);
+        stage.setHeight(200);
         stage.show();
+
+        fC.startGame();
     }
 }
 

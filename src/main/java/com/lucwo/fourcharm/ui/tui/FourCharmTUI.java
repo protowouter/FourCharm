@@ -3,7 +3,6 @@
  */
 package com.lucwo.fourcharm.ui.tui;
 
-import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.ComputerPlayer;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.HumanPlayer;
@@ -78,12 +77,7 @@ class FourCharmTUI implements Observer {
      */
     protected void play() {
 
-        try {
-            game.play();
-        } catch (InvalidMoveException e) {
-            Logger.getGlobal().info("Quitting: someone tried cheating");
-            Logger.getGlobal().throwing("FourCharmTUI", "play", e);
-        }
+        game.play();
 
         // Game Finished
 
