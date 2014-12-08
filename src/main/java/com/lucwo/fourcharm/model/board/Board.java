@@ -42,6 +42,8 @@ public abstract class Board {
     public abstract boolean isFull();
 
     public abstract int getPlieCount();
+
+    public abstract int[] getMoves();
     
     public int getColumns() {
         return COLUMNS;

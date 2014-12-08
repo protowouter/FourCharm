@@ -119,6 +119,10 @@ public class BinaryBoard extends Board {
 
     }
 
+    public int[] getMoves() {
+        return moves;
+    }
+
     private boolean hasLRDiagonal(long newboard) {
 
         long y = newboard & (newboard >> ROWS);

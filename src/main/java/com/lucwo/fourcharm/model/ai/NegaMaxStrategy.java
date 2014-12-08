@@ -7,6 +7,8 @@ import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.board.Board;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,7 +24,7 @@ public class NegaMaxStrategy implements GameStrategy {
      * Default search depth for the NegaMax algorithm.
      */
     public static final int DEF_DEPTH = 5;
-    public static final ExecutorService VALUE_EXECUTOR = Executors.newFixedThreadPool(4);
+    public static final ExecutorService VALUE_EXECUTOR = Executors.newCachedThreadPool();
     private final GameStrategy rStrat = new RandomStrategy();
 
     /*
@@ -46,19 +48,18 @@ public class NegaMaxStrategy implements GameStrategy {
 
         double bestValue = Double.NEGATIVE_INFINITY;
         int bestMove = 0;
-        int sameValues = 1;
-        int freeColumns = 0;
         int columns = board.getColumns();
-        Future<Double>[] vals = new Future[columns];
+        Map<Integer, Future<Double>> vals = new HashMap<>();
+
+
 
         for (int col = 0; col < columns; col++) {
             if (board.columnHasFreeSpace(col)) {
                 try {
                     Board cBoard = board.deepCopy();
                     cBoard.makemove(col, mark);
-                    freeColumns++;
-                    vals[col] = NegaMaxStrategy.VALUE_EXECUTOR.submit(() ->
-                            -negaMax(cBoard, mark.other(), depth - 1));
+                    vals.put(col, NegaMaxStrategy.VALUE_EXECUTOR.submit(() ->
+                            -negaMax(cBoard, mark.other(), depth - 1)));
                 } catch (InvalidMoveException e) {
                     Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
                 }
@@ -66,11 +67,11 @@ public class NegaMaxStrategy implements GameStrategy {
         }
 
         for (int col = 0; col < columns; col++) {
-            if (vals[col] != null) {
+            if (vals.get(col) != null) {
                 double value = 0;
 
                 try {
-                    value = vals[col].get();
+                    value = vals.get(col).get();
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
@@ -78,16 +79,13 @@ public class NegaMaxStrategy implements GameStrategy {
                 if (value > bestValue) {
                     bestMove = col;
                     bestValue = value;
-                } else if (value == bestValue) {
-                    sameValues++;
                 }
 
             }
 
         }
 
-        return (sameValues == freeColumns) ? rStrat.determineMove(board.deepCopy(), mark)
-                : bestMove;
+        return bestMove;
 
     }
 
@@ -161,7 +159,11 @@ public class NegaMaxStrategy implements GameStrategy {
         int streak = board.getWinStreak();
         int value = 0;
 
-        for (int col = vCol; col < col + streak && col < cols; col++) {
+        int startCol = vCol - streak;
+        startCol = startCol < 0 ? 0 : startCol;
+
+
+        for (int col = startCol; col < col + streak && col < cols; col++) {
             switch (board.getMark(col, vRow)) {
                 case P1:
                     value = mark == Mark.P1 ? value + 2 : value;
@@ -185,7 +187,10 @@ public class NegaMaxStrategy implements GameStrategy {
         int streak = board.getWinStreak();
         int value = 0;
 
-        for (int row = vRow; row < row + streak && row < rows; row++) {
+        int startRow = vRow - streak;
+        startRow = startRow < 0 ? 0 : startRow;
+
+        for (int row = startRow; row < row + streak && row < rows; row++) {
             switch (board.getMark(vCol, row)) {
                 case P1:
                     value = mark == Mark.P1 ? value + 2 : value;
@@ -216,11 +221,18 @@ public class NegaMaxStrategy implements GameStrategy {
     private double lRDiagonalValue(Board board, Mark mark, int vCol, int vRow) {
 
         int rows = board.getRows();
+        int cols = board.getColumns();
         int streak = board.getWinStreak();
         int value = 0;
 
-        for (int col = vCol, row = vRow; col > col - streak && col > 0
-                && row < row + streak && row < rows; col--, row++) {
+        int startRow = vRow - streak;
+        startRow = startRow < 0 ? 0 : startRow;
+
+        int startCol = vCol + streak;
+        startCol = startCol > cols - 1 ? cols - 1 : startCol;
+
+        for (int col = startCol, row = startRow; col > vCol - streak && col > 0
+                && row < startRow + streak && row < rows; col--, row++) {
             switch (board.getMark(col, row)) {
                 case P1:
                     value = mark == Mark.P1 ? value + 2 : value;
@@ -255,8 +267,14 @@ public class NegaMaxStrategy implements GameStrategy {
         int streak = board.getWinStreak();
         int value = 0;
 
-        for (int col = vCol, row = vRow; col < col + streak && col < cols
-                && row < row + streak && row < rows; col++, row++) {
+        int startRow = vRow - streak;
+        startRow = startRow < 0 ? 0 : startRow;
+
+        int startCol = vCol - streak;
+        startCol = startCol < 0 ? 0 : startCol;
+
+        for (int col = startCol, row = startRow; col < vCol + streak && col < cols
+                && row < vRow + streak && row < rows; col++, row++) {
             switch (board.getMark(col, row)) {
                 case P1:
                     value = mark == Mark.P1 ? value + 2 : value;

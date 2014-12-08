@@ -77,6 +77,8 @@ class FourCharmTUI implements Observer {
      */
     protected void play() {
 
+        update(game, null);
+
         game.play();
 
         // Game Finished

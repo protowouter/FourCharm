@@ -16,6 +16,7 @@ import com.lucwo.fourcharm.model.board.BinaryBoard;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.logging.Logger;
 
@@ -90,6 +91,10 @@ public class AIBenchmark {
                 if (game.getWinner() == smartPlayer) {
                     wins++;
                 } else {
+                    Logger.getGlobal().info(Integer.toString(game.getBoard().getPlieCount()));
+                    Logger.getGlobal().info(Arrays.toString(game.getBoard().getMoves()));
+                    Logger.getGlobal().info("Player 1: " + (switchPlayer ? dumbPlayer : smartPlayer).toString());
+                    Logger.getGlobal().info("Player 2: " + (!switchPlayer ? dumbPlayer : smartPlayer).toString());
                     loss++;
                 }
             } else {
