@@ -36,11 +36,11 @@ public class AIBenchmark {
     /**
      * Amount of iterations of the benchmark.
      */
-    public static final int ITERATIONS = 100;
+    public static final int ITERATIONS = 10_000;
     /**
      * How many times the current percentage should be shown.
      */
-    public static final int STEP_PERCENTAGE = 10;
+    public static final double STEP_PERCENTAGE = 0.01;
 
 
     private AIBenchmark() {
@@ -53,10 +53,9 @@ public class AIBenchmark {
         int ties = 0;
         int wins = 0;
         int loss = 0;
-        int gCount = 0;
-        int pCount = 0;
+        double gCount = 0;
         final int total = ITERATIONS;
-        final int step = total / STEP_PERCENTAGE;
+        final double step = total * STEP_PERCENTAGE;
 
         Player smartPlayer = new ComputerPlayer(new NegaMaxStrategy(), Mark.P1);
         Player dumbPlayer = new ComputerPlayer(new RandomStrategy(), Mark.P2);
@@ -85,7 +84,6 @@ public class AIBenchmark {
             game.play();
 
             gCount++;
-            pCount += game.plieCount();
 
             if (game.hasWinner()) {
                 if (game.getWinner() == smartPlayer) {

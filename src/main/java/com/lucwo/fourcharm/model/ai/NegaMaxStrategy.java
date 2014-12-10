@@ -23,9 +23,11 @@ public class NegaMaxStrategy implements GameStrategy {
     /**
      * Default search depth for the NegaMax algorithm.
      */
-    public static final int DEF_DEPTH = 5;
+    public static final int DEF_DEPTH = 4;
     public static final ExecutorService VALUE_EXECUTOR = Executors.newCachedThreadPool();
-    private final GameStrategy rStrat = new RandomStrategy();
+    public static final int FOE_POS_VALUE = 0;
+    public static final int FRIENDLY_POS_VALUE = 2;
+    public static final int EMPTY_POS_VALUE = 1;
 
     /*
      * (non-Javadoc)
@@ -49,7 +51,7 @@ public class NegaMaxStrategy implements GameStrategy {
         double bestValue = Double.NEGATIVE_INFINITY;
         int bestMove = 0;
         int columns = board.getColumns();
-        Map<Integer, Future<Double>> vals = new HashMap<>();
+        Map<Integer, Future<Double>> values = new HashMap<>();
 
 
 
@@ -58,7 +60,7 @@ public class NegaMaxStrategy implements GameStrategy {
                 try {
                     Board cBoard = board.deepCopy();
                     cBoard.makemove(col, mark);
-                    vals.put(col, NegaMaxStrategy.VALUE_EXECUTOR.submit(() ->
+                    values.put(col, NegaMaxStrategy.VALUE_EXECUTOR.submit(() ->
                             -negaMax(cBoard, mark.other(), depth - 1)));
                 } catch (InvalidMoveException e) {
                     Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
@@ -67,11 +69,11 @@ public class NegaMaxStrategy implements GameStrategy {
         }
 
         for (int col = 0; col < columns; col++) {
-            if (vals.get(col) != null) {
+            if (values.get(col) != null) {
                 double value = 0;
 
                 try {
-                    value = vals.get(col).get();
+                    value = values.get(col).get();
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
@@ -164,17 +166,7 @@ public class NegaMaxStrategy implements GameStrategy {
 
 
         for (int col = startCol; col < col + streak && col < cols; col++) {
-            switch (board.getMark(col, vRow)) {
-                case P1:
-                    value = mark == Mark.P1 ? value + 2 : value;
-                    break;
-                case P2:
-                    value = mark == Mark.P2 ? value + 2 : value;
-                    break;
-                default:
-                    value += 1;
-                    break;
-            }
+            value += positionValue(board, mark, col, vRow);
         }
 
         return value;
@@ -191,17 +183,7 @@ public class NegaMaxStrategy implements GameStrategy {
         startRow = startRow < 0 ? 0 : startRow;
 
         for (int row = startRow; row < row + streak && row < rows; row++) {
-            switch (board.getMark(vCol, row)) {
-                case P1:
-                    value = mark == Mark.P1 ? value + 2 : value;
-                    break;
-                case P2:
-                    value = mark == Mark.P2 ? value + 2 : value;
-                    break;
-                default:
-                    value += 1;
-                    break;
-            }
+            value += positionValue(board, mark, vCol, row);
         }
 
         return value;
@@ -233,17 +215,7 @@ public class NegaMaxStrategy implements GameStrategy {
 
         for (int col = startCol, row = startRow; col > vCol - streak && col > 0
                 && row < startRow + streak && row < rows; col--, row++) {
-            switch (board.getMark(col, row)) {
-                case P1:
-                    value = mark == Mark.P1 ? value + 2 : value;
-                    break;
-                case P2:
-                    value = mark == Mark.P2 ? value + 2 : value;
-                    break;
-                default:
-                    value += 1;
-                    break;
-            }
+            value += positionValue(board, mark, col, row);
         }
 
         return value;
@@ -275,21 +247,23 @@ public class NegaMaxStrategy implements GameStrategy {
 
         for (int col = startCol, row = startRow; col < vCol + streak && col < cols
                 && row < vRow + streak && row < rows; col++, row++) {
-            switch (board.getMark(col, row)) {
-                case P1:
-                    value = mark == Mark.P1 ? value + 2 : value;
-                    break;
-                case P2:
-                    value = mark == Mark.P2 ? value + 2 : value;
-                    break;
-                default:
-                    value += 1;
-                    break;
-            }
+            value += positionValue(board, mark, col, row);
         }
 
         return value;
 
+    }
+
+    private int positionValue(Board board, Mark mark, int col, int row) {
+        Mark posMark = board.getMark(col, row);
+        int value = FOE_POS_VALUE;
+        if (posMark == mark) {
+            value = FRIENDLY_POS_VALUE;
+        } else if (posMark == Mark.EMPTY) {
+            value = EMPTY_POS_VALUE;
+        }
+
+        return value;
     }
 
 }

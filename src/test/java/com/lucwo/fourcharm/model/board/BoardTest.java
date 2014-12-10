@@ -248,6 +248,16 @@ public class BoardTest {
     }
 
     @Test
+    public void testGetMark() throws Exception {
+        for (int i = 0; i < board.getColumns(); i++) {
+            board.makemove(i, Mark.P1);
+            assertTrue("board.getMark(" + i + ",0) == Mark.P1", board.getMark(i, 0) == Mark.P1);
+            setUp();
+
+        }
+    }
+
+    @Test
     public void testToString() throws Exception {
         String before = board.toString();
         assertFalse(before.equals(""));
