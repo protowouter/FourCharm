@@ -68,12 +68,12 @@ public class FourCharmController extends VBox implements Observer {
             Logger.getGlobal().throwing("FourCharmController", "Constructor", e);
         }
 
-        p1 = new ComputerPlayer(new NegaMaxStrategy(), Mark.P1);
-        p2 = new HumanPlayer(playerReader, Mark.P2);
+        p1 = new HumanPlayer(playerReader, Mark.P1);
+        p2 = new ComputerPlayer(new NegaMaxStrategy(), Mark.P2);
 
 
         try {
-            game = new Game(BinaryBoard.class, p1, p2);
+            game = new Game(BinaryBoard.class, p2, p1);
         } catch (InstantiationException | IllegalAccessException e) {
             Logger.getGlobal().throwing("FourCharmController", "Constructor", e);
         }
@@ -112,6 +112,7 @@ public class FourCharmController extends VBox implements Observer {
     }
 
     public void startGame() throws InvalidMoveException {
+        update(game, null);
         gameThread.start();
     }
 

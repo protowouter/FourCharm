@@ -16,6 +16,7 @@ import com.lucwo.fourcharm.model.board.BinaryBoard;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.logging.Logger;
 
@@ -35,11 +36,11 @@ public class AIBenchmark {
     /**
      * Amount of iterations of the benchmark.
      */
-    public static final int ITERATIONS = 100;
+    public static final int ITERATIONS = 10_000;
     /**
      * How many times the current percentage should be shown.
      */
-    public static final int STEP_PERCENTAGE = 10;
+    public static final double STEP_PERCENTAGE = 0.01;
 
 
     private AIBenchmark() {
@@ -52,17 +53,16 @@ public class AIBenchmark {
         int ties = 0;
         int wins = 0;
         int loss = 0;
-        int gCount = 0;
-        int pCount = 0;
+        double gCount = 0;
         final int total = ITERATIONS;
-        final int step = total / STEP_PERCENTAGE;
+        final double step = total * STEP_PERCENTAGE;
 
         Player smartPlayer = new ComputerPlayer(new NegaMaxStrategy(), Mark.P1);
         Player dumbPlayer = new ComputerPlayer(new RandomStrategy(), Mark.P2);
 
         boolean switchPlayer = false;
 
-        while (gCount < (total + 1)) {
+        while (gCount < total) {
 
             if (((gCount % step) == 0) && (gCount != 0)) {
                 float percent = ((float) gCount / (float) total) * 100;
@@ -84,12 +84,15 @@ public class AIBenchmark {
             game.play();
 
             gCount++;
-            pCount += game.plieCount();
 
             if (game.hasWinner()) {
                 if (game.getWinner() == smartPlayer) {
                     wins++;
                 } else {
+                    Logger.getGlobal().info(Integer.toString(game.getBoard().getPlieCount()));
+                    Logger.getGlobal().info(Arrays.toString(game.getBoard().getMoves()));
+                    Logger.getGlobal().info("Player 1: " + (switchPlayer ? dumbPlayer : smartPlayer).toString());
+                    Logger.getGlobal().info("Player 2: " + (!switchPlayer ? dumbPlayer : smartPlayer).toString());
                     loss++;
                 }
             } else {
@@ -128,6 +131,8 @@ public class AIBenchmark {
 
         Logger.getGlobal().info("wins: " + score[0] + "\nties: " + score[1] + "\nlosses: " + score[2]);
         Logger.getGlobal().info("percentage (win + tie): " + percentage + "%");
+
+        NegaMaxStrategy.VALUE_EXECUTOR.shutdown();
 
     }
 }

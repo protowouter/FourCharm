@@ -109,7 +109,7 @@ public class BinaryBoard extends Board {
 
     public boolean isFull() {
 
-        return nplies >= (SIZE - 1);
+        return nplies >= SIZE;
 
     }
 
@@ -117,6 +117,10 @@ public class BinaryBoard extends Board {
 
         return nplies;
 
+    }
+
+    public int[] getMoves() {
+        return moves;
     }
 
     private boolean hasLRDiagonal(long newboard) {
@@ -153,8 +157,8 @@ public class BinaryBoard extends Board {
 
     public Mark getMark(int index) {
 
-        int col = index / COLUMNS;
-        int row = index % COLUMNS;
+        int col = index / ROWS;
+        int row = index % ROWS;
 
         return getInternalMark(col * H1 + row);
 
@@ -233,8 +237,8 @@ public class BinaryBoard extends Board {
         for (int h = ROWS - 1; h >= 0; h--) {
             for (int w = h; w < SIZE1; w += H1) {
                 long mask = 1L << w;
-                repr.append(((this.color[0] & mask) != 0) ? "X "
-                        : (((this.color[1] & mask) != 0) ? "O " : " .  "));
+                repr.append(((this.color[0] & mask) != 0) ? " X"
+                        : (((this.color[1] & mask) != 0) ? " O" : " ."));
             }
             repr.append("\n");
         }

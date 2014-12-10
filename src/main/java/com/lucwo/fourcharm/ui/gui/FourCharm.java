@@ -36,7 +36,6 @@ public class FourCharm extends Application {
 
         Logger.getGlobal().setLevel(Level.FINEST);
 
-        Logger.getGlobal().fine("hallo");
 
         ConsoleHandler cH = new ConsoleHandler();
         cH.setLevel(Level.FINEST);
@@ -45,7 +44,6 @@ public class FourCharm extends Application {
 
         FourCharmController fC = new FourCharmController();
 
-        fC.setBoardText("Hallo");
 
         stage.setScene(new Scene(fC));
         stage.setTitle("FourCharm");

@@ -8,7 +8,7 @@ import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.HumanPlayer;
 import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
-import com.lucwo.fourcharm.model.board.ReferenceBoard;
+import com.lucwo.fourcharm.model.board.BinaryBoard;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -36,7 +36,7 @@ class FourCharmTUI implements Observer {
         BufferedReader dis = new BufferedReader(
                 new InputStreamReader(System.in));
 
-        game = new Game(ReferenceBoard.class, new HumanPlayer(dis, Mark.P1),
+        game = new Game(BinaryBoard.class, new HumanPlayer(dis, Mark.P1),
                 new ComputerPlayer(new NegaMaxStrategy(), Mark.P2));
 
         game.addObserver(this);
@@ -76,6 +76,8 @@ class FourCharmTUI implements Observer {
      * Start the game.
      */
     protected void play() {
+
+        update(game, null);
 
         game.play();
 

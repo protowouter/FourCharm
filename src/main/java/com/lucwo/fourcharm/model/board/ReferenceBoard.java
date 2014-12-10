@@ -182,6 +182,10 @@ public class ReferenceBoard extends Board {
         return board[col][row];
     }
 
+    public int[] getMoves() {
+        return moves;
+    }
+
     public String toString() {
         StringBuilder repr = new StringBuilder();
 
