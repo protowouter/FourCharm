@@ -14,6 +14,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -48,6 +51,18 @@ class FourCharmTUI implements Observer {
      * @param args none applicable
      */
     public static void main(String[] args) {
+
+        Logger globalLogger = Logger.getGlobal();
+
+        LogManager.getLogManager().reset();
+
+        globalLogger.setLevel(Level.FINEST);
+
+
+        ConsoleHandler cH = new ConsoleHandler();
+        cH.setLevel(Level.FINEST);
+
+        globalLogger.addHandler(cH);
 
         try {
             new FourCharmTUI().play();

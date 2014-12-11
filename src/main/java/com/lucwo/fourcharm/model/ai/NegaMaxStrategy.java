@@ -23,7 +23,7 @@ public class NegaMaxStrategy implements GameStrategy {
     /**
      * Default search depth for the NegaMax algorithm.
      */
-    public static final int DEF_DEPTH = 4;
+    public static final int DEF_DEPTH = 6;
     public static final ExecutorService VALUE_EXECUTOR = Executors.newCachedThreadPool();
     public static final int FOE_POS_VALUE = 0;
     public static final int FRIENDLY_POS_VALUE = 2;
@@ -61,7 +61,7 @@ public class NegaMaxStrategy implements GameStrategy {
                     Board cBoard = board.deepCopy();
                     cBoard.makemove(col, mark);
                     values.put(col, NegaMaxStrategy.VALUE_EXECUTOR.submit(() ->
-                            -negaMax(cBoard, mark.other(), depth - 1)));
+                            -negaMax(cBoard, mark.other(), Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, depth - 1)));
                 } catch (InvalidMoveException e) {
                     Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
                 }
@@ -96,7 +96,7 @@ public class NegaMaxStrategy implements GameStrategy {
      * @param depth Depth at which will be searched for the best move
      * @return The negamax value of the current board state
      */
-    private double negaMax(Board board, Mark mark, int depth) {
+    private double negaMax(Board board, Mark mark, double α, double β, int depth) {
         double value;
 
         if ((depth == 0) || board.isFull() || board.hasWon(mark)) {
@@ -111,8 +111,12 @@ public class NegaMaxStrategy implements GameStrategy {
                     try {
                         Board childBoard = board.deepCopy();
                         childBoard.makemove(col, mark);
-                        double tValue = -negaMax(childBoard, mark.other(), depth - 1);
+                        double tValue = -negaMax(childBoard, mark.other(), -β, -α, depth - 1);
                         bestValue = Math.max(bestValue, tValue);
+                        α = Math.max(α, tValue);
+                        if (α >= β) {
+                            break;
+                        }
                     } catch (InvalidMoveException e) {
                         Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
                     }

@@ -36,7 +36,7 @@ public class AIBenchmark {
     /**
      * Amount of iterations of the benchmark.
      */
-    public static final int ITERATIONS = 10_000;
+    public static final int ITERATIONS = 10000;
     /**
      * How many times the current percentage should be shown.
      */
