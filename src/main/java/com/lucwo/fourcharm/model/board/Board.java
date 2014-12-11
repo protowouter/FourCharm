@@ -65,6 +65,8 @@ public abstract class Board {
         return COLUMNS * ROWS;
     }
 
+    public abstract long positioncode();
+
     /**
      * 
      * @param col

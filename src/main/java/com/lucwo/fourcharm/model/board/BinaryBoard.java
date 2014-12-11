@@ -245,6 +245,12 @@ public class BinaryBoard extends Board {
         return repr.toString();
     }
 
+    public long positioncode() {
+
+        return 2 * color[0] + color[1] + BOTTOM;
+
+    }
+
     public Board deepCopy() {
         int[] moveCopy = Arrays.copyOf(moves, moves.length);
         byte[] heightCopy = Arrays.copyOf(height, height.length);

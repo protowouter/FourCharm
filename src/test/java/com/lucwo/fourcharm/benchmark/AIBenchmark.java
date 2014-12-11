@@ -36,7 +36,7 @@ public class AIBenchmark {
     /**
      * Amount of iterations of the benchmark.
      */
-    public static final int ITERATIONS = 10000;
+    public static final int ITERATIONS = 100;
     /**
      * How many times the current percentage should be shown.
      */
@@ -53,6 +53,7 @@ public class AIBenchmark {
         int ties = 0;
         int wins = 0;
         int loss = 0;
+        int moves = 0;
         double gCount = 0;
         final int total = ITERATIONS;
         final double step = total * STEP_PERCENTAGE;
@@ -84,6 +85,7 @@ public class AIBenchmark {
             game.play();
 
             gCount++;
+            moves += game.plieCount();
 
             if (game.hasWinner()) {
                 if (game.getWinner() == smartPlayer) {
@@ -101,7 +103,7 @@ public class AIBenchmark {
 
         }
 
-        return new int[]{wins, ties, loss};
+        return new int[]{wins, ties, loss, moves};
 
     }
 
@@ -122,6 +124,8 @@ public class AIBenchmark {
         Logger.getGlobal().info("Running Benchmark with "
                 + formatter.format(ITERATIONS) + " iterations");
 
+        long start = System.currentTimeMillis();
+
         int[] score = AIBenchmark.runBenchmark();
 
         double percentage = ((double) (score[0] + score[1]) / ITERATIONS) * 100;
@@ -131,6 +135,9 @@ public class AIBenchmark {
 
         Logger.getGlobal().info("wins: " + score[0] + "\nties: " + score[1] + "\nlosses: " + score[2]);
         Logger.getGlobal().info("percentage (win + tie): " + percentage + "%");
+
+        long duration = System.currentTimeMillis() - start;
+        Logger.getGlobal().info("mps: " + ((double) score[3]) / duration * 1000);
 
         NegaMaxStrategy.VALUE_EXECUTOR.shutdown();
 

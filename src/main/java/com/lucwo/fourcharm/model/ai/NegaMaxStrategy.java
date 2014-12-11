@@ -8,6 +8,7 @@ import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.board.Board;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -23,11 +24,15 @@ public class NegaMaxStrategy implements GameStrategy {
     /**
      * Default search depth for the NegaMax algorithm.
      */
-    public static final int DEF_DEPTH = 6;
+    public static final int DEF_DEPTH = 10;
     public static final ExecutorService VALUE_EXECUTOR = Executors.newCachedThreadPool();
     public static final int FOE_POS_VALUE = 0;
     public static final int FRIENDLY_POS_VALUE = 2;
     public static final int EMPTY_POS_VALUE = 1;
+
+    public static final int POS_TABLE_SIZE = 10_000_000;
+    //public static final SortedMap<Long, TransPosEntry> tPTable = Collections.synchronizedSortedMap(new TreeMap<>());
+    public static final Map<Long, TransPosEntry> tPTable = new Hashtable<>();
 
     /*
      * (non-Javadoc)
@@ -97,11 +102,32 @@ public class NegaMaxStrategy implements GameStrategy {
      * @return The negamax value of the current board state
      */
     private double negaMax(Board board, Mark mark, double α, double β, int depth) {
-        double value;
+        double alphaOrig = α;
+        long posKey = board.positioncode();
+        double value = 0;
+        boolean foundValue = false;
 
-        if ((depth == 0) || board.isFull() || board.hasWon(mark)) {
+        TransPosEntry ttEntry = tPTable.get(posKey % POS_TABLE_SIZE);
+        if (ttEntry != null && ttEntry.key == posKey && ttEntry.depth >= depth) {
+
+            if (ttEntry.flag == Flag.EXACT) {
+                value = ttEntry.value;
+                foundValue = true;
+            } else if (ttEntry.flag == Flag.LOWERBOUND) {
+                α = Math.max(α, ttEntry.value);
+            } else if (ttEntry.flag == Flag.UPPERBOUND) {
+                β = Math.min(β, ttEntry.value);
+            }
+            if (α >= β) {
+                value = ttEntry.value;
+                foundValue = true;
+            }
+
+        }
+
+        if (!foundValue && (depth == 0) || board.isFull() || board.hasWon(mark)) {
             value = nodeValue(board, mark);
-        } else {
+        } else if (!foundValue) {
 
             double bestValue = Double.NEGATIVE_INFINITY;
             int columns = board.getColumns();
@@ -126,6 +152,21 @@ public class NegaMaxStrategy implements GameStrategy {
             value = bestValue;
 
         }
+
+        ttEntry = new TransPosEntry();
+        ttEntry.value = value;
+        if (value <= alphaOrig) {
+            ttEntry.flag = Flag.UPPERBOUND;
+        } else if (value >= β) {
+            ttEntry.flag = Flag.LOWERBOUND;
+        } else {
+            ttEntry.flag = Flag.EXACT;
+        }
+        ttEntry.depth = depth;
+        ttEntry.key = posKey;
+        tPTable.put(posKey % POS_TABLE_SIZE, ttEntry);
+
+
 
         return value;
 
@@ -268,6 +309,36 @@ public class NegaMaxStrategy implements GameStrategy {
         }
 
         return value;
+    }
+
+    enum Flag {
+
+        EXACT, UPPERBOUND, LOWERBOUND
+
+    }
+
+    class TransPosEntry {
+
+        Flag flag;
+        double value;
+        int depth;
+        long key;
+
+        TransPosEntry() {
+
+        }
+
+
+        TransPosEntry(Flag tflag, double tValue, int tDepth, long tKey) {
+
+            flag = tflag;
+            value = tValue;
+            depth = tDepth;
+            key = tKey;
+
+        }
+
+
     }
 
 }
