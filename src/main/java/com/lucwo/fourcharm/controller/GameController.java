@@ -11,7 +11,6 @@ import com.lucwo.fourcharm.model.board.BinaryBoard;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 
 import java.io.BufferedReader;
@@ -32,8 +31,6 @@ public class GameController implements Observer {
     // ------------------ Instance variables ----------------
 
     PipedWriter playerInput;
-    @FXML
-    private TextField playerMove;
     @FXML
     private FlowPane boardPane;
     private Game game;
@@ -95,19 +92,6 @@ public class GameController implements Observer {
     public void startGame() throws InvalidMoveException {
         update(game, null);
         gameThread.start();
-    }
-
-    @FXML
-    protected void parsePlayerMove() {
-        Logger.getGlobal().info("User clicked move");
-        try {
-            playerInput.write(playerMove.getText() + "\n");
-            playerInput.flush();
-            playerMove.clear();
-        } catch (IOException e) {
-            Logger.getGlobal().throwing("FourCharmController", "parsePlayerMove", e);
-        }
-
     }
 
     protected void doPlayerMove(int col) {
