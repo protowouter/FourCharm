@@ -31,8 +31,7 @@ public class NegaMaxStrategy implements GameStrategy {
     public static final int EMPTY_POS_VALUE = 1;
 
     public static final int POS_TABLE_SIZE = 10_000_000;
-    //public static final SortedMap<Long, TransPosEntry> tPTable = Collections.synchronizedSortedMap(new TreeMap<>());
-    public static final Map<Long, TransPosEntry> tPTable = new Hashtable<>();
+    public static final Map<Long, TransPosEntry> TRANS_POS_TABLE = new Hashtable<>();
 
     /*
      * (non-Javadoc)
@@ -101,24 +100,24 @@ public class NegaMaxStrategy implements GameStrategy {
      * @param depth Depth at which will be searched for the best move
      * @return The negamax value of the current board state
      */
-    private double negaMax(Board board, Mark mark, double α, double β, int depth) {
-        double alphaOrig = α;
+    private double negaMax(Board board, Mark mark, double alpha, double beta, int depth) {
+        double alphaOrig = alpha;
         long posKey = board.positioncode();
         double value = 0;
         boolean foundValue = false;
 
-        TransPosEntry ttEntry = tPTable.get(posKey % POS_TABLE_SIZE);
+        TransPosEntry ttEntry = TRANS_POS_TABLE.get(posKey % POS_TABLE_SIZE);
         if (ttEntry != null && ttEntry.key == posKey && ttEntry.depth >= depth) {
 
             if (ttEntry.flag == Flag.EXACT) {
                 value = ttEntry.value;
                 foundValue = true;
-            } else if (ttEntry.flag == Flag.LOWERBOUND) {
-                α = Math.max(α, ttEntry.value);
-            } else if (ttEntry.flag == Flag.UPPERBOUND) {
-                β = Math.min(β, ttEntry.value);
+            } else if (ttEntry.flag == Flag.LOWER_BOUND) {
+                alpha = Math.max(alpha, ttEntry.value);
+            } else if (ttEntry.flag == Flag.UPPER_BOUND) {
+                beta = Math.min(beta, ttEntry.value);
             }
-            if (α >= β) {
+            if (alpha >= beta) {
                 value = ttEntry.value;
                 foundValue = true;
             }
@@ -137,10 +136,10 @@ public class NegaMaxStrategy implements GameStrategy {
                     try {
                         Board childBoard = board.deepCopy();
                         childBoard.makemove(col, mark);
-                        double tValue = -negaMax(childBoard, mark.other(), -β, -α, depth - 1);
+                        double tValue = -negaMax(childBoard, mark.other(), -beta, -alpha, depth - 1);
                         bestValue = Math.max(bestValue, tValue);
-                        α = Math.max(α, tValue);
-                        if (α >= β) {
+                        alpha = Math.max(alpha, tValue);
+                        if (alpha >= beta) {
                             break;
                         }
                     } catch (InvalidMoveException e) {
@@ -156,15 +155,15 @@ public class NegaMaxStrategy implements GameStrategy {
         ttEntry = new TransPosEntry();
         ttEntry.value = value;
         if (value <= alphaOrig) {
-            ttEntry.flag = Flag.UPPERBOUND;
-        } else if (value >= β) {
-            ttEntry.flag = Flag.LOWERBOUND;
+            ttEntry.flag = Flag.UPPER_BOUND;
+        } else if (value >= beta) {
+            ttEntry.flag = Flag.LOWER_BOUND;
         } else {
             ttEntry.flag = Flag.EXACT;
         }
         ttEntry.depth = depth;
         ttEntry.key = posKey;
-        tPTable.put(posKey % POS_TABLE_SIZE, ttEntry);
+        TRANS_POS_TABLE.put(posKey % POS_TABLE_SIZE, ttEntry);
 
 
 
@@ -313,7 +312,7 @@ public class NegaMaxStrategy implements GameStrategy {
 
     enum Flag {
 
-        EXACT, UPPERBOUND, LOWERBOUND
+        EXACT, UPPER_BOUND, LOWER_BOUND
 
     }
 
@@ -323,21 +322,6 @@ public class NegaMaxStrategy implements GameStrategy {
         double value;
         int depth;
         long key;
-
-        TransPosEntry() {
-
-        }
-
-
-        TransPosEntry(Flag tflag, double tValue, int tDepth, long tKey) {
-
-            flag = tflag;
-            value = tValue;
-            depth = tDepth;
-            key = tKey;
-
-        }
-
 
     }
 
