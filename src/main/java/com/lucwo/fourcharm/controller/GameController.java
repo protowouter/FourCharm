@@ -9,10 +9,10 @@ import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import javafx.application.Platform;
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextArea;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.FlowPane;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,25 +33,22 @@ public class GameController implements Observer {
 
     PipedWriter playerInput;
     @FXML
-    private TextArea boardTextArea;
-    @FXML
     private TextField playerMove;
+    @FXML
+    private FlowPane boardPane;
     private Game game;
     private Thread gameThread;
     private Player p1;
     private Player p2;
 
 
-
     // ----------------------- Queries ----------------------
 
-    public StringProperty boardTextProperty() {
-        return boardTextArea.textProperty();
-    }
 
     // ----------------------- Commands ---------------------
 
     public void initialize() {
+
         playerInput = new PipedWriter();
         BufferedReader playerReader = new BufferedReader(new PipedReader());
 
@@ -74,22 +71,16 @@ public class GameController implements Observer {
         game.addObserver(this);
 
         gameThread = new Thread(game);
+
+        initBoardPane();
     }
 
-    public String getBoardText() {
-        return boardTextProperty().get();
-    }
-
-    public void setBoardText(String value) {
-        boardTextProperty().set(value);
-    }
 
     public void update(Observable o, Object arg) {
 
         if (o instanceof Game) {
-            Platform.runLater(() ->
-                            setBoardText(((Game) o).getBoard().toString())
-            );
+            Platform.runLater(() -> {
+            });
 
         }
 
@@ -111,6 +102,23 @@ public class GameController implements Observer {
             Logger.getGlobal().throwing("FourCharmController", "parsePlayerMove", e);
         }
 
+    }
+
+    private void initBoardPane() {
+
+        ClassLoader classloader = getClass().getClassLoader();
+
+
+        FXMLLoader fxmlLoader = new FXMLLoader(classloader.getResource("views/board.fxml"));
+
+        try {
+            fxmlLoader.load();
+            boardPane.getChildren().add(fxmlLoader.getRoot());
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
+
+        game.addObserver(fxmlLoader.getController());
     }
 
 }
