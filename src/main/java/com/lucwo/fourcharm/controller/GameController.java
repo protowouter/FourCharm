@@ -40,6 +40,7 @@ public class GameController implements Observer {
     private Thread gameThread;
     private Player p1;
     private Player p2;
+    private BoardController boardController;
 
 
     // ----------------------- Queries ----------------------
@@ -80,6 +81,11 @@ public class GameController implements Observer {
 
         if (o instanceof Game) {
             Platform.runLater(() -> {
+                if (game.getCurrent() instanceof HumanPlayer) {
+                    boardController.enableSpaces();
+                } else {
+                    boardController.disableSpaces();
+                }
             });
 
         }
@@ -104,6 +110,14 @@ public class GameController implements Observer {
 
     }
 
+    protected void doPlayerMove(int col) {
+        try {
+            playerInput.write(col + "\n");
+        } catch (IOException e) {
+            Logger.getGlobal().throwing("FourCharmController", "doPlayerMove", e);
+        }
+    }
+
     private void initBoardPane() {
 
         ClassLoader classloader = getClass().getClassLoader();
@@ -114,9 +128,13 @@ public class GameController implements Observer {
         try {
             fxmlLoader.load();
             boardPane.getChildren().add(fxmlLoader.getRoot());
+            boardController = fxmlLoader.getController();
+            boardController.setGameController(this);
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+
+        ((BoardController) fxmlLoader.getController()).initBoard(game.getBoard());
 
         game.addObserver(fxmlLoader.getController());
     }
