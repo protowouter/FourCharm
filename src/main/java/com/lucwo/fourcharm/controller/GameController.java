@@ -11,10 +11,8 @@ import com.lucwo.fourcharm.model.board.BinaryBoard;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,7 +27,7 @@ import java.util.logging.Logger;
  */
 
 
-public class GameController extends VBox implements Observer {
+public class GameController implements Observer {
 
     // ------------------ Instance variables ----------------
 
@@ -44,21 +42,16 @@ public class GameController extends VBox implements Observer {
     private Player p2;
 
 
-    // --------------------- Constructors -------------------
 
+    // ----------------------- Queries ----------------------
 
-    public GameController() {
-        ClassLoader classloader = getClass().getClassLoader();
-        FXMLLoader fxmlLoader = new FXMLLoader(classloader.getResource("views/game.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
+    public StringProperty boardTextProperty() {
+        return boardTextArea.textProperty();
+    }
 
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
+    // ----------------------- Commands ---------------------
 
+    public void initialize() {
         playerInput = new PipedWriter();
         BufferedReader playerReader = new BufferedReader(new PipedReader());
 
@@ -82,15 +75,6 @@ public class GameController extends VBox implements Observer {
 
         gameThread = new Thread(game);
     }
-
-
-    // ----------------------- Queries ----------------------
-
-    public StringProperty boardTextProperty() {
-        return boardTextArea.textProperty();
-    }
-
-    // ----------------------- Commands ---------------------
 
     public String getBoardText() {
         return boardTextProperty().get();

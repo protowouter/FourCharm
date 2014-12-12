@@ -2,9 +2,8 @@
  * Copyright (c) 2014. Luce Sandfort and Wouter Timmermans
  */
 
-package com.lucwo.fourcharm.ui.tui;
+package com.lucwo.fourcharm.view;
 
-import com.lucwo.fourcharm.view.FourCharmTUI;
 import org.junit.Before;
 import org.junit.Test;
 
