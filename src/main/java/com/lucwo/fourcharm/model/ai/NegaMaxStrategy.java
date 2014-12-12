@@ -101,28 +101,17 @@ public class NegaMaxStrategy implements GameStrategy {
      * @return The negamax value of the current board state
      */
     private double negaMax(Board board, Mark mark, double alpha, double beta, int depth) {
-        double alphaOrig = alpha;
+        double newAlpha = alpha;
+        double newBeta = beta;
         long posKey = board.positioncode();
         double value = 0;
         boolean foundValue = false;
 
-        TransPosEntry ttEntry = TRANS_POS_TABLE.get(posKey % POS_TABLE_SIZE);
-        if (ttEntry != null && ttEntry.key == posKey && ttEntry.depth >= depth) {
-
-            if (ttEntry.flag == Flag.EXACT) {
-                value = ttEntry.value;
-                foundValue = true;
-            } else if (ttEntry.flag == Flag.LOWER_BOUND) {
-                alpha = Math.max(alpha, ttEntry.value);
-            } else if (ttEntry.flag == Flag.UPPER_BOUND) {
-                beta = Math.min(beta, ttEntry.value);
-            }
-            if (alpha >= beta) {
-                value = ttEntry.value;
-                foundValue = true;
-            }
-
-        }
+        TransPosEntryLookup transPosEntryLookup = new TransPosEntryLookup(depth, newAlpha, newBeta, posKey, value, foundValue).invoke();
+        foundValue = transPosEntryLookup.isFoundValue();
+        value = transPosEntryLookup.getValue();
+        newBeta = transPosEntryLookup.getNewBeta();
+        newAlpha = transPosEntryLookup.getNewAlpha();
 
         if (!foundValue && (depth == 0) || board.isFull() || board.hasWon(mark)) {
             value = nodeValue(board, mark);
@@ -136,10 +125,10 @@ public class NegaMaxStrategy implements GameStrategy {
                     try {
                         Board childBoard = board.deepCopy();
                         childBoard.makemove(col, mark);
-                        double tValue = -negaMax(childBoard, mark.other(), -beta, -alpha, depth - 1);
+                        double tValue = -negaMax(childBoard, mark.other(), -newBeta, -newAlpha, depth - 1);
                         bestValue = Math.max(bestValue, tValue);
-                        alpha = Math.max(alpha, tValue);
-                        if (alpha >= beta) {
+                        newAlpha = Math.max(newAlpha, tValue);
+                        if (newAlpha >= newBeta) {
                             break;
                         }
                     } catch (InvalidMoveException e) {
@@ -152,11 +141,21 @@ public class NegaMaxStrategy implements GameStrategy {
 
         }
 
+        addTransPosEntry(depth, newAlpha, newBeta, posKey, value);
+
+
+
+        return value;
+
+    }
+
+    private void addTransPosEntry(int depth, double newAlpha, double newBeta, long posKey, double value) {
+        TransPosEntry ttEntry;
         ttEntry = new TransPosEntry();
         ttEntry.value = value;
-        if (value <= alphaOrig) {
+        if (value <= newAlpha) {
             ttEntry.flag = Flag.UPPER_BOUND;
-        } else if (value >= beta) {
+        } else if (value >= newBeta) {
             ttEntry.flag = Flag.LOWER_BOUND;
         } else {
             ttEntry.flag = Flag.EXACT;
@@ -164,11 +163,6 @@ public class NegaMaxStrategy implements GameStrategy {
         ttEntry.depth = depth;
         ttEntry.key = posKey;
         TRANS_POS_TABLE.put(posKey % POS_TABLE_SIZE, ttEntry);
-
-
-
-        return value;
-
     }
 
     private double nodeValue(Board board, Mark mark) {
@@ -325,4 +319,58 @@ public class NegaMaxStrategy implements GameStrategy {
 
     }
 
+    private class TransPosEntryLookup {
+        private int depth;
+        private double newAlpha;
+        private double newBeta;
+        private long posKey;
+        private double value;
+        private boolean foundValue;
+
+        public TransPosEntryLookup(int depth, double newAlpha, double newBeta, long posKey, double value, boolean foundValue) {
+            this.depth = depth;
+            this.newAlpha = newAlpha;
+            this.newBeta = newBeta;
+            this.posKey = posKey;
+            this.value = value;
+            this.foundValue = foundValue;
+        }
+
+        public double getNewAlpha() {
+            return newAlpha;
+        }
+
+        public double getNewBeta() {
+            return newBeta;
+        }
+
+        public double getValue() {
+            return value;
+        }
+
+        public boolean isFoundValue() {
+            return foundValue;
+        }
+
+        public TransPosEntryLookup invoke() {
+            TransPosEntry ttEntry = TRANS_POS_TABLE.get(posKey % POS_TABLE_SIZE);
+            if (ttEntry != null && ttEntry.key == posKey && ttEntry.depth >= depth) {
+
+                if (ttEntry.flag == Flag.EXACT) {
+                    value = ttEntry.value;
+                    foundValue = true;
+                } else if (ttEntry.flag == Flag.LOWER_BOUND) {
+                    newAlpha = Math.max(newAlpha, ttEntry.value);
+                } else if (ttEntry.flag == Flag.UPPER_BOUND) {
+                    newBeta = Math.min(newBeta, ttEntry.value);
+                }
+                if (newAlpha >= newBeta) {
+                    value = ttEntry.value;
+                    foundValue = true;
+                }
+
+            }
+            return this;
+        }
+    }
 }
