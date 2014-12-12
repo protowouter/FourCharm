@@ -25,7 +25,7 @@ public class MTDfStrategy implements GameStrategy {
     private static final int MAX_DURATION = 60000;
 
     // ------------------ Instance variables ----------------
-    private static long start;
+    private long start;
     private Double prevValue;
     private NegaMaxStrategy nega;
 
@@ -107,12 +107,12 @@ public class MTDfStrategy implements GameStrategy {
             for (int d = 1; d <= MAX_DEPTH && System.currentTimeMillis() < start + MAX_DURATION; d = d + 2) {
                 final int lamD = d;
                 final double lBeta = beta;
-                FutureTask<Double> guesValue = new FutureTask<>(() -> nega.negaMax(board, mark, lBeta - 1, lBeta, lamD));
+                FutureTask<Double> guessValue = new FutureTask<>(() -> nega.negaMax(board, mark, lBeta - 1, lBeta, lamD));
                 try {
-                    VALUE_EXECUTOR.submit(guesValue);
-                    guess = guesValue.get((start + MAX_DURATION) - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+                    VALUE_EXECUTOR.submit(guessValue);
+                    guess = guessValue.get((start + MAX_DURATION) - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
                 } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    guesValue.cancel(true);
+                    guessValue.cancel(true);
                 }
             }
 

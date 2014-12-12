@@ -112,24 +112,25 @@ public class NegaMaxStrategy implements GameStrategy {
             value = nodeValue(board, mark);
         } else if (!foundValue) {
 
-            NegaMaxValue negaMaxCalc = new NegaMaxValue(board, mark, depth, newAlpha, newBeta).calculate();
+            NegaMaxCalculator negaMaxCalc = new NegaMaxCalculator(board, mark, depth, newAlpha, newBeta).calculate();
             newAlpha = negaMaxCalc.getNewAlpha();
             value = negaMaxCalc.getValue();
 
         }
 
-        addTransPosEntry(depth, newAlpha, newBeta, posKey, value);
+        // Deze alpha hier MOET de originele alpha zijn
+        addTransPosEntry(depth, alpha, newBeta, posKey, value);
 
 
         return value;
 
     }
 
-    private void addTransPosEntry(int depth, double newAlpha, double newBeta, long posKey, double value) {
+    private void addTransPosEntry(int depth, double alphaOrig, double newBeta, long posKey, double value) {
         TransPosEntry ttEntry;
         ttEntry = new TransPosEntry();
         ttEntry.value = value;
-        if (value <= newAlpha) {
+        if (value <= alphaOrig) {
             ttEntry.flag = Flag.UPPER_BOUND;
         } else if (value >= newBeta) {
             ttEntry.flag = Flag.LOWER_BOUND;
@@ -350,7 +351,7 @@ public class NegaMaxStrategy implements GameStrategy {
         }
     }
 
-    private class NegaMaxValue {
+    private class NegaMaxCalculator {
         private Board board;
         private Mark mark;
         private int depth;
@@ -358,7 +359,7 @@ public class NegaMaxStrategy implements GameStrategy {
         private double newBeta;
         private double value;
 
-        public NegaMaxValue(Board board, Mark mark, int depth, double newAlpha, double newBeta) {
+        public NegaMaxCalculator(Board board, Mark mark, int depth, double newAlpha, double newBeta) {
             this.board = board;
             this.mark = mark;
             this.depth = depth;
@@ -374,7 +375,7 @@ public class NegaMaxStrategy implements GameStrategy {
             return value;
         }
 
-        public NegaMaxValue calculate() {
+        public NegaMaxCalculator calculate() {
             double bestValue = Double.NEGATIVE_INFINITY;
             int columns = board.getColumns();
 
