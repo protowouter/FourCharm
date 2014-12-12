@@ -58,7 +58,6 @@ public class NegaMaxStrategy implements GameStrategy {
         Map<Integer, Future<Double>> values = new HashMap<>();
 
 
-
         for (int col = 0; col < columns; col++) {
             if (board.columnHasFreeSpace(col)) {
                 try {
@@ -67,7 +66,7 @@ public class NegaMaxStrategy implements GameStrategy {
                     values.put(col, NegaMaxStrategy.VALUE_EXECUTOR.submit(() ->
                             -negaMax(cBoard, mark.other(), Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, depth - 1)));
                 } catch (InvalidMoveException e) {
-                    Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
+                    Logger.getGlobal().throwing(getClass().toString(), "negaMax", e);
                 }
             }
         }
@@ -79,7 +78,7 @@ public class NegaMaxStrategy implements GameStrategy {
                 try {
                     value = values.get(col).get();
                 } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
+                    Logger.getGlobal().throwing(getClass().toString(), "determineMove", e);
                 }
                 Logger.getGlobal().fine("Move: " + col + " Value: " + value);
                 if (value > bestValue) {
@@ -110,39 +109,20 @@ public class NegaMaxStrategy implements GameStrategy {
         TransPosEntryLookup transPosEntryLookup = new TransPosEntryLookup(depth, newAlpha, newBeta, posKey, value, foundValue).invoke();
         foundValue = transPosEntryLookup.isFoundValue();
         value = transPosEntryLookup.getValue();
-        newBeta = transPosEntryLookup.getNewBeta();
-        newAlpha = transPosEntryLookup.getNewAlpha();
+        newBeta = transPosEntryLookup.getBeta();
+        newAlpha = transPosEntryLookup.getAlpha();
 
         if (!foundValue && (depth == 0) || board.isFull() || board.hasWon(mark)) {
             value = nodeValue(board, mark);
         } else if (!foundValue) {
 
-            double bestValue = Double.NEGATIVE_INFINITY;
-            int columns = board.getColumns();
-
-            for (int col = 0; col < columns; col++) {
-                if (board.columnHasFreeSpace(col)) {
-                    try {
-                        Board childBoard = board.deepCopy();
-                        childBoard.makemove(col, mark);
-                        double tValue = -negaMax(childBoard, mark.other(), -newBeta, -newAlpha, depth - 1);
-                        bestValue = Math.max(bestValue, tValue);
-                        newAlpha = Math.max(newAlpha, tValue);
-                        if (newAlpha >= newBeta) {
-                            break;
-                        }
-                    } catch (InvalidMoveException e) {
-                        Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
-                    }
-                }
-            }
-
-            value = bestValue;
+            NegaMaxValue negaMaxCalc = new NegaMaxValue(board, mark, depth, newAlpha, newBeta).calculate();
+            newAlpha = negaMaxCalc.getNewAlpha();
+            value = negaMaxCalc.getValue();
 
         }
 
         addTransPosEntry(depth, newAlpha, newBeta, posKey, value);
-
 
 
         return value;
@@ -321,27 +301,27 @@ public class NegaMaxStrategy implements GameStrategy {
 
     private class TransPosEntryLookup {
         private int depth;
-        private double newAlpha;
-        private double newBeta;
+        private double alpha;
+        private double beta;
         private long posKey;
         private double value;
         private boolean foundValue;
 
         public TransPosEntryLookup(int depth, double newAlpha, double newBeta, long posKey, double value, boolean foundValue) {
             this.depth = depth;
-            this.newAlpha = newAlpha;
-            this.newBeta = newBeta;
+            this.alpha = newAlpha;
+            this.beta = newBeta;
             this.posKey = posKey;
             this.value = value;
             this.foundValue = foundValue;
         }
 
-        public double getNewAlpha() {
-            return newAlpha;
+        public double getAlpha() {
+            return alpha;
         }
 
-        public double getNewBeta() {
-            return newBeta;
+        public double getBeta() {
+            return beta;
         }
 
         public double getValue() {
@@ -360,16 +340,69 @@ public class NegaMaxStrategy implements GameStrategy {
                     value = ttEntry.value;
                     foundValue = true;
                 } else if (ttEntry.flag == Flag.LOWER_BOUND) {
-                    newAlpha = Math.max(newAlpha, ttEntry.value);
+                    alpha = Math.max(alpha, ttEntry.value);
                 } else if (ttEntry.flag == Flag.UPPER_BOUND) {
-                    newBeta = Math.min(newBeta, ttEntry.value);
+                    beta = Math.min(beta, ttEntry.value);
                 }
-                if (newAlpha >= newBeta) {
+                if (alpha >= beta) {
                     value = ttEntry.value;
                     foundValue = true;
                 }
 
             }
+            return this;
+        }
+    }
+
+    private class NegaMaxValue {
+        private Board board;
+        private Mark mark;
+        private int depth;
+        private double newAlpha;
+        private double newBeta;
+        private double value;
+
+        public NegaMaxValue(Board board, Mark mark, int depth, double newAlpha, double newBeta) {
+            this.board = board;
+            this.mark = mark;
+            this.depth = depth;
+            this.newAlpha = newAlpha;
+            this.newBeta = newBeta;
+        }
+
+        public double getNewAlpha() {
+            return newAlpha;
+        }
+
+        public double getValue() {
+            return value;
+        }
+
+        public NegaMaxValue calculate() {
+            double bestValue = Double.NEGATIVE_INFINITY;
+            int columns = board.getColumns();
+
+            try {
+
+                boolean searching = true;
+                for (int col = 0; searching && col < columns; col++) {
+                    if (board.columnHasFreeSpace(col)) {
+
+                        Board childBoard = board.deepCopy();
+                        childBoard.makemove(col, mark);
+                        double tValue = -negaMax(childBoard, mark.other(), -newBeta, -newAlpha, depth - 1);
+                        bestValue = Math.max(bestValue, tValue);
+                        newAlpha = Math.max(newAlpha, tValue);
+
+                        searching = newAlpha <= newBeta;
+
+                    }
+                }
+            } catch (InvalidMoveException e) {
+                Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
+            }
+
+            value = bestValue;
             return this;
         }
     }
