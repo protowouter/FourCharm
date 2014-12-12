@@ -10,10 +10,7 @@ import com.lucwo.fourcharm.model.board.Board;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.logging.Logger;
 
 /**
@@ -31,7 +28,7 @@ public class NegaMaxStrategy implements GameStrategy {
     public static final int EMPTY_POS_VALUE = 1;
 
     public static final int POS_TABLE_SIZE = 10_000_000;
-    public static final Map<Long, TransPosEntry> TRANS_POS_TABLE = new Hashtable<>();
+    public static final Map<Long, TransPosEntry> TRANS_POS_TABLE = new ConcurrentHashMap<>(POS_TABLE_SIZE);
 
     /*
      * (non-Javadoc)
@@ -99,7 +96,7 @@ public class NegaMaxStrategy implements GameStrategy {
      * @param depth Depth at which will be searched for the best move
      * @return The negamax value of the current board state
      */
-    private double negaMax(Board board, Mark mark, double alpha, double beta, int depth) {
+    public double negaMax(Board board, Mark mark, double alpha, double beta, int depth) {
         double newAlpha = alpha;
         double newBeta = beta;
         long posKey = board.positioncode();

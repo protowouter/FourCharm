@@ -6,6 +6,7 @@ package com.lucwo.fourcharm.ui.gui;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.*;
+import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import javafx.application.Platform;
@@ -69,7 +70,7 @@ public class FourCharmController extends VBox implements Observer {
         }
 
         p1 = new HumanPlayer(playerReader, Mark.P1);
-        p2 = new ComputerPlayer(new NegaMaxStrategy(), Mark.P2);
+        p2 = new ComputerPlayer(new MTDfStrategy(), Mark.P2);
 
 
         try {
