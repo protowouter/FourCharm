@@ -22,13 +22,12 @@ public class MTDfStrategy implements GameStrategy {
 
     public static final ExecutorService VALUE_EXECUTOR = Executors.newCachedThreadPool();
     private static final int MAX_DEPTH = 11;
-    private static final int MAX_DURATION = 10000;
+    private static final int MAX_DURATION = 60000;
 
     // ------------------ Instance variables ----------------
-
+    private static long start;
     private Double prevValue;
     private NegaMaxStrategy nega;
-    private static long start;
 
     // --------------------- Constructors -------------------
 
@@ -105,7 +104,7 @@ public class MTDfStrategy implements GameStrategy {
 
             }
 
-            for (int d = 1; d <= MAX_DEPTH && System.currentTimeMillis() < start + MAX_DURATION; d++) {
+            for (int d = 1; d <= MAX_DEPTH && System.currentTimeMillis() < start + MAX_DURATION; d = d + 2) {
                 final int lamD = d;
                 final double lBeta = beta;
                 FutureTask<Double> guesValue = new FutureTask<>(() -> nega.negaMax(board, mark, lBeta - 1, lBeta, lamD));
