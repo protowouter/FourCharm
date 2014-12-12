@@ -2,7 +2,7 @@
  * Copyright (c) 2014. Luce Sandfort and Wouter Timmermans
  */
 
-package com.lucwo.fourcharm.ui.gui;
+package com.lucwo.fourcharm.controller;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -42,7 +42,7 @@ public class FourCharm extends Application {
 
         Logger.getGlobal().addHandler(cH);
 
-        FourCharmController fC = new FourCharmController();
+        GameController fC = new GameController();
 
 
         stage.setScene(new Scene(fC));

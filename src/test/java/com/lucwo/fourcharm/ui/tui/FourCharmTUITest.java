@@ -4,6 +4,7 @@
 
 package com.lucwo.fourcharm.ui.tui;
 
+import com.lucwo.fourcharm.view.FourCharmTUI;
 import org.junit.Before;
 import org.junit.Test;
 

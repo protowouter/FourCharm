@@ -1,14 +1,13 @@
 /*
  * Copyright (c) 2014. Luce Sandfort and Wouter Timmermans
  */
-package com.lucwo.fourcharm.ui.tui;
+package com.lucwo.fourcharm.view;
 
 import com.lucwo.fourcharm.model.ComputerPlayer;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.HumanPlayer;
 import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
-import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 
 import java.io.BufferedReader;

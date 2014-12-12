@@ -2,12 +2,11 @@
  * Copyright (c) 2014. Luce Sandfort and Wouter Timmermans
  */
 
-package com.lucwo.fourcharm.ui.gui;
+package com.lucwo.fourcharm.controller;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
-import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
@@ -30,7 +29,7 @@ import java.util.logging.Logger;
  */
 
 
-public class FourCharmController extends VBox implements Observer {
+public class GameController extends VBox implements Observer {
 
     // ------------------ Instance variables ----------------
 
@@ -48,9 +47,9 @@ public class FourCharmController extends VBox implements Observer {
     // --------------------- Constructors -------------------
 
 
-    public FourCharmController() {
+    public GameController() {
         ClassLoader classloader = getClass().getClassLoader();
-        FXMLLoader fxmlLoader = new FXMLLoader(classloader.getResource("views/fourcharmgui.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(classloader.getResource("views/game.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
