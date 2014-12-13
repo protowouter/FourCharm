@@ -26,6 +26,6 @@
         <Label text="Player 1" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
         <Label text="Player 2" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
         <Button fx:id="playButton" mnemonicParsing="false" text="Play" GridPane.halignment="CENTER"
-                GridPane.rowIndex="3"/>
+                GridPane.rowIndex="3" onMouseClicked="#startNewGame"/>
     </children>
 </GridPane>

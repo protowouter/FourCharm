@@ -50,7 +50,7 @@ public class FourCharm extends Application {
 
         Pane root = (Pane) fourCharmFactory.getFourCharmPresenter().getView();
 
-        stage.setScene(new Scene(root));
+        stage.setScene(new Scene(root, 1000, 1000));
         stage.setTitle("FourCharm");
         stage.show();
     }

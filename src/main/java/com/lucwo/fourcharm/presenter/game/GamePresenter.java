@@ -4,7 +4,6 @@
 
 package com.lucwo.fourcharm.presenter.game;
 
-import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
@@ -117,7 +116,7 @@ public class GamePresenter implements Observer {
 
     }
 
-    public void startGame() throws InvalidMoveException {
+    public void startGame() {
         update(game, null);
         gameThread.start();
     }
@@ -135,7 +134,7 @@ public class GamePresenter implements Observer {
         ClassLoader classloader = getClass().getClassLoader();
 
 
-        FXMLLoader fxmlLoader = new FXMLLoader(classloader.getResource("views/show.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(classloader.getResource("views/board/show.fxml"));
 
         try {
             fxmlLoader.load();

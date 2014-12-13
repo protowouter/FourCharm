@@ -4,7 +4,6 @@
 
 package com.lucwo.fourcharm.presenter;
 
-import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.presenter.game.GamePresenter;
 import com.lucwo.fourcharm.presenter.game.NewGamePresenter;
 import javafx.fxml.FXML;
@@ -35,8 +34,8 @@ public class FourCharmPresenter {
         newGamePresenter = newNewGamePresenter;
     }
 
-    public void setGamePresenter(GamePresenter newGamePresenter) {
-        gamePresenter = newGamePresenter;
+    public void setGamePresenter(GamePresenter gPresenter) {
+        gamePresenter = gPresenter;
     }
 
 
@@ -44,8 +43,9 @@ public class FourCharmPresenter {
         contentArea.setCenter(newGamePresenter.getView());
     }
 
-    public void showGame(Game game) {
-        gamePresenter.setGame(game);
+    public void showGame() {
+        gamePresenter.showGame();
+        gamePresenter.startGame();
         contentArea.setCenter(gamePresenter.getView());
     }
 

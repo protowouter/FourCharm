@@ -17,12 +17,6 @@ import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
-
-/**
- * Created by woutertimmermans on 12-12-14.
- */
-
-
 public class BoardPresenter implements Observer {
 
 
@@ -47,8 +41,8 @@ public class BoardPresenter implements Observer {
 
 // ----------------------- Commands ---------------------
 
-    public void setGamePresenter(GamePresenter gamePresenter) {
-        this.gamePresenter = gamePresenter;
+    public void setGamePresenter(GamePresenter newGamePresenter) {
+        this.gamePresenter = newGamePresenter;
     }
 
     public void update(Observable o, Object arg) {
@@ -70,7 +64,7 @@ public class BoardPresenter implements Observer {
 
         for (int col = 0; col < board.getColumns(); col++) {
             for (int row = 0; row < board.getRows(); row++) {
-                FXMLLoader fxmlLoader = new FXMLLoader(classloader.getResource("views/show.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(classloader.getResource("views/space/show.fxml"));
 
                 try {
                     fxmlLoader.load();

@@ -12,9 +12,13 @@ import javafx.fxml.FXMLLoader;
 import java.io.IOException;
 
 public class FourCharmFactory {
+
+    // ------------------ Instance variables ----------------
     private FourCharmPresenter fourCharmPresenter;
     private NewGamePresenter newGamePresenter;
     private GamePresenter gamePresenter;
+
+    // ----------------------- Commands ---------------------
 
     public FourCharmPresenter getFourCharmPresenter() {
         if (fourCharmPresenter == null) {
@@ -38,6 +42,7 @@ public class FourCharmFactory {
                 FXMLLoader loader = new FXMLLoader();
                 loader.load(getClass().getClassLoader().getResourceAsStream("views/game/new.fxml"));
                 newGamePresenter = loader.getController();
+                newGamePresenter.setFourcharmPresenter(fourCharmPresenter);
             } catch (IOException e) {
                 throw new RuntimeException("Unable to load new.fxml", e);
             }
@@ -63,11 +68,4 @@ public class FourCharmFactory {
 }
 
 
-// ------------------ Instance variables ----------------
-
-// --------------------- Constructors -------------------
-
-// ----------------------- Queries ----------------------
-
-// ----------------------- Commands ---------------------
 

@@ -6,6 +6,7 @@ package com.lucwo.fourcharm.presenter.game;
 
 
 import com.lucwo.fourcharm.model.Player;
+import com.lucwo.fourcharm.presenter.FourCharmPresenter;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -25,6 +26,8 @@ public class NewGamePresenter {
     @FXML
     private Button playButton;
 
+    private FourCharmPresenter fourCharmPresenter;
+
 
     // --------------------- Constructors -------------------
 
@@ -36,4 +39,15 @@ public class NewGamePresenter {
     }
 
     // ----------------------- Commands ---------------------
+
+    public void startNewGame() {
+
+        fourCharmPresenter.showGame();
+
+    }
+
+    public void setFourcharmPresenter(FourCharmPresenter newFourCharmPresenter) {
+        fourCharmPresenter = newFourCharmPresenter;
+    }
+
 }
