@@ -245,7 +245,7 @@ public class BinaryBoard extends Board {
         return repr.toString();
     }
 
-    public long positioncode() {
+    public long positionCode() {
 
         return 2 * color[0] + color[1] + BOTTOM;
 

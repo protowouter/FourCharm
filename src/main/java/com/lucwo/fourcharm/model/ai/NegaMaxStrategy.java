@@ -29,6 +29,10 @@ public class NegaMaxStrategy implements GameStrategy {
     public static final int POS_TABLE_SIZE = 10_000_000;
     public static final Map<Long, TransPosEntry> TRANS_POS_TABLE = new ConcurrentHashMap<>(POS_TABLE_SIZE);
 
+    private final Object counterLock = new Object();
+
+    private long nodeCounter;
+
     /*
      * (non-Javadoc)
      * 
@@ -47,6 +51,8 @@ public class NegaMaxStrategy implements GameStrategy {
      * @return The best move according to the negamax algorithm.
      */
     public int determineMove(Board board, Mark mark, int depth) {
+
+        nodeCounter = 0;
 
         double bestValue = Double.NEGATIVE_INFINITY;
         int bestMove = 0;
@@ -86,6 +92,8 @@ public class NegaMaxStrategy implements GameStrategy {
 
         }
 
+        Logger.getGlobal().info("Calculated nodes: " + nodeCounter);
+
         return bestMove;
 
     }
@@ -95,54 +103,89 @@ public class NegaMaxStrategy implements GameStrategy {
      * @param depth Depth at which will be searched for the best move
      * @return The negamax value of the current board state
      */
-    public double negaMax(Board board, Mark mark, double alpha, double beta, int depth) {
-        double newAlpha = alpha;
-        double newBeta = beta;
-        long posKey = board.positioncode();
+    public double negaMax(Board board, Mark mark, double alphaOrig, double betaOrig, int depth) {
+        double alpha = alphaOrig;
+        double beta = betaOrig;
+        long posKey = board.positionCode();
         double value = 0;
         boolean foundValue = false;
 
-        TransPosEntryLookup transPosEntryLookup = new TransPosEntryLookup(depth, newAlpha, newBeta, posKey, value, foundValue).invoke();
-        foundValue = transPosEntryLookup.isFoundValue();
-        value = transPosEntryLookup.getValue();
-        newBeta = transPosEntryLookup.getBeta();
-        newAlpha = transPosEntryLookup.getAlpha();
+        TransPosEntry ttEntry = TRANS_POS_TABLE.get(posKey % POS_TABLE_SIZE);
+        if (ttEntry != null && ttEntry.key == posKey && ttEntry.depth >= depth) {
 
-        if (!foundValue && (depth == 0) || board.isFull() || board.hasWon(mark)) {
-            value = nodeValue(board, mark);
-        } else if (!foundValue) {
-
-            NegaMaxCalculator negaMaxCalc = new NegaMaxCalculator(board, mark, depth, newAlpha, newBeta).calculate();
-            newAlpha = negaMaxCalc.getNewAlpha();
-            value = negaMaxCalc.getValue();
+            if (ttEntry.flag == Flag.EXACT) {
+                value = ttEntry.value;
+                foundValue = true;
+            } else if (ttEntry.flag == Flag.LOWER_BOUND) {
+                alpha = Math.max(alpha, ttEntry.value);
+            } else if (ttEntry.flag == Flag.UPPER_BOUND) {
+                beta = Math.min(beta, ttEntry.value);
+            }
+            if (alpha >= beta) {
+                value = ttEntry.value;
+                foundValue = true;
+            }
 
         }
 
-        // Deze alpha hier MOET de originele alpha zijn
-        addTransPosEntry(depth, alpha, newBeta, posKey, value);
+        if (!foundValue) {
+            if (depth == 0 || board.isFull() || board.hasWon(mark)) {
+                value = nodeValue(board, mark);
+            } else {
+
+                double bestValue = Double.NEGATIVE_INFINITY;
+                int columns = board.getColumns();
+
+                try {
+
+                    boolean searching = true;
+                    for (int col = 0; searching && col < columns; col++) {
+                        if (board.columnHasFreeSpace(col)) {
+
+                            Board childBoard = board.deepCopy();
+                            childBoard.makemove(col, mark);
+                            double tValue = -negaMax(childBoard, mark.other(), -beta, -alpha, depth - 1);
+                            bestValue = Math.max(bestValue, tValue);
+                            alpha = Math.max(alpha, tValue);
+
+                            searching = alpha < beta;
+
+                        }
+                    }
+                } catch (InvalidMoveException e) {
+                    Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
+                }
+
+                value = bestValue;
+
+                ttEntry = new TransPosEntry();
+                ttEntry.value = value;
+                if (value <= alphaOrig) {
+                    ttEntry.flag = Flag.UPPER_BOUND;
+                } else if (value >= beta) {
+                    ttEntry.flag = Flag.LOWER_BOUND;
+                } else {
+                    ttEntry.flag = Flag.EXACT;
+                }
+                ttEntry.depth = depth;
+                ttEntry.key = posKey;
+                TRANS_POS_TABLE.put(posKey % POS_TABLE_SIZE, ttEntry);
+
+            }
+        }
+
+
 
 
         return value;
 
     }
 
-    private void addTransPosEntry(int depth, double alphaOrig, double newBeta, long posKey, double value) {
-        TransPosEntry ttEntry;
-        ttEntry = new TransPosEntry();
-        ttEntry.value = value;
-        if (value <= alphaOrig) {
-            ttEntry.flag = Flag.UPPER_BOUND;
-        } else if (value >= newBeta) {
-            ttEntry.flag = Flag.LOWER_BOUND;
-        } else {
-            ttEntry.flag = Flag.EXACT;
-        }
-        ttEntry.depth = depth;
-        ttEntry.key = posKey;
-        TRANS_POS_TABLE.put(posKey % POS_TABLE_SIZE, ttEntry);
-    }
-
     private double nodeValue(Board board, Mark mark) {
+
+        synchronized (counterLock) {
+            nodeCounter++;
+        }
 
 
         int cols = board.getColumns();
@@ -294,113 +337,5 @@ public class NegaMaxStrategy implements GameStrategy {
         int depth;
         long key;
 
-    }
-
-    private class TransPosEntryLookup {
-        private int depth;
-        private double alpha;
-        private double beta;
-        private long posKey;
-        private double value;
-        private boolean foundValue;
-
-        public TransPosEntryLookup(int depth, double newAlpha, double newBeta, long posKey, double value, boolean foundValue) {
-            this.depth = depth;
-            this.alpha = newAlpha;
-            this.beta = newBeta;
-            this.posKey = posKey;
-            this.value = value;
-            this.foundValue = foundValue;
-        }
-
-        public double getAlpha() {
-            return alpha;
-        }
-
-        public double getBeta() {
-            return beta;
-        }
-
-        public double getValue() {
-            return value;
-        }
-
-        public boolean isFoundValue() {
-            return foundValue;
-        }
-
-        public TransPosEntryLookup invoke() {
-            TransPosEntry ttEntry = TRANS_POS_TABLE.get(posKey % POS_TABLE_SIZE);
-            if (ttEntry != null && ttEntry.key == posKey && ttEntry.depth >= depth) {
-
-                if (ttEntry.flag == Flag.EXACT) {
-                    value = ttEntry.value;
-                    foundValue = true;
-                } else if (ttEntry.flag == Flag.LOWER_BOUND) {
-                    alpha = Math.max(alpha, ttEntry.value);
-                } else if (ttEntry.flag == Flag.UPPER_BOUND) {
-                    beta = Math.min(beta, ttEntry.value);
-                }
-                if (alpha >= beta) {
-                    value = ttEntry.value;
-                    foundValue = true;
-                }
-
-            }
-            return this;
-        }
-    }
-
-    private class NegaMaxCalculator {
-        private Board board;
-        private Mark mark;
-        private int depth;
-        private double newAlpha;
-        private double newBeta;
-        private double value;
-
-        public NegaMaxCalculator(Board board, Mark mark, int depth, double newAlpha, double newBeta) {
-            this.board = board;
-            this.mark = mark;
-            this.depth = depth;
-            this.newAlpha = newAlpha;
-            this.newBeta = newBeta;
-        }
-
-        public double getNewAlpha() {
-            return newAlpha;
-        }
-
-        public double getValue() {
-            return value;
-        }
-
-        public NegaMaxCalculator calculate() {
-            double bestValue = Double.NEGATIVE_INFINITY;
-            int columns = board.getColumns();
-
-            try {
-
-                boolean searching = true;
-                for (int col = 0; searching && col < columns; col++) {
-                    if (board.columnHasFreeSpace(col)) {
-
-                        Board childBoard = board.deepCopy();
-                        childBoard.makemove(col, mark);
-                        double tValue = -negaMax(childBoard, mark.other(), -newBeta, -newAlpha, depth - 1);
-                        bestValue = Math.max(bestValue, tValue);
-                        newAlpha = Math.max(newAlpha, tValue);
-
-                        searching = newAlpha <= newBeta;
-
-                    }
-                }
-            } catch (InvalidMoveException e) {
-                Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
-            }
-
-            value = bestValue;
-            return this;
-        }
     }
 }

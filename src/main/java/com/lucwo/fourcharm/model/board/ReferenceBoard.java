@@ -225,7 +225,7 @@ public class ReferenceBoard extends Board {
         return new ReferenceBoard(Arrays.copyOf(moves, moves.length), newBoard, nplies);
     }
 
-    public long positioncode() {
+    public long positionCode() {
 
         return 0;
 
