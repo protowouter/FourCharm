@@ -167,6 +167,8 @@ public class BinaryBoard extends Board {
 
     public Mark getInternalMark(int internalIndex) {
 
+        //TODO it is assumed here that the first mark to make a move is always P1;
+
         Mark mark = Mark.EMPTY;
 
         if ((color[0] & 1L << internalIndex) != 0) {
