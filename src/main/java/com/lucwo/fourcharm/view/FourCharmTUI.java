@@ -7,7 +7,7 @@ import com.lucwo.fourcharm.model.ComputerPlayer;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.HumanPlayer;
 import com.lucwo.fourcharm.model.Mark;
-import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
+import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 
 import java.io.BufferedReader;
@@ -39,8 +39,8 @@ class FourCharmTUI implements Observer {
         BufferedReader dis = new BufferedReader(
                 new InputStreamReader(System.in));
 
-        game = new Game(BinaryBoard.class, new HumanPlayer(dis, Mark.P1),
-                new ComputerPlayer(new NegaMaxStrategy(), Mark.P2));
+        game = new Game(BinaryBoard.class, new ComputerPlayer(new MTDfStrategy(), Mark.P1),
+                new HumanPlayer(dis, Mark.P2));
 
         game.addObserver(this);
 

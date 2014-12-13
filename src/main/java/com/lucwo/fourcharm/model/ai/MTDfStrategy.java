@@ -21,7 +21,8 @@ import java.util.logging.Logger;
 public class MTDfStrategy implements GameStrategy {
 
     public static final ExecutorService VALUE_EXECUTOR = Executors.newCachedThreadPool();
-    private static final int MAX_DEPTH = 11;
+    private static final int MAX_DEPTH = 12;
+    private static final int DEPTH_STEP = 2;
     private static final int MAX_DURATION = 60000;
 
     // ------------------ Instance variables ----------------
@@ -44,6 +45,7 @@ public class MTDfStrategy implements GameStrategy {
     @Override
     public int determineMove(Board board, Mark mark) {
         start = System.currentTimeMillis();
+        nega.resetCounter();
 
         double bestValue = Double.NEGATIVE_INFINITY;
         int bestMove = 0;
@@ -57,7 +59,7 @@ public class MTDfStrategy implements GameStrategy {
                     Board cBoard = board.deepCopy();
                     cBoard.makemove(col, mark);
                     values.put(col, VALUE_EXECUTOR.submit(() ->
-                            -mtdf(cBoard, mark.other())));
+                            -mtdf(cBoard, mark.other(), MAX_DEPTH - 1)));
                 } catch (InvalidMoveException e) {
                     Logger.getGlobal().throwing(getClass().toString(), "determineMove", e);
                 }
@@ -83,12 +85,14 @@ public class MTDfStrategy implements GameStrategy {
 
         }
 
+        Logger.getGlobal().info("Evaluated nodes: " + nega.getCounter());
+
         prevValue = bestValue;
 
         return bestMove;
     }
 
-    private double mtdf(Board board, Mark mark) {
+    private double mtdf(Board board, Mark mark, int depth) {
         double guess = prevValue;
 
         double upperBound = Double.POSITIVE_INFINITY;
@@ -104,19 +108,14 @@ public class MTDfStrategy implements GameStrategy {
 
             }
 
-            for (int d = 1; d <= MAX_DEPTH && System.currentTimeMillis() < start + MAX_DURATION; d = d + 2) {
-                final int lamD = d;
-                final double lBeta = beta;
-                FutureTask<Double> guessValue = new FutureTask<>(() -> nega.negaMax(board, mark, lBeta - 1, lBeta, lamD));
-                try {
-                    VALUE_EXECUTOR.submit(guessValue);
-                    guess = guessValue.get((start + MAX_DURATION) - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
-                } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    guessValue.cancel(true);
-                }
+            final double lBeta = beta;
+            FutureTask<Double> guessValue = new FutureTask<>(() -> nega.negaMax(board, mark, lBeta - 1, lBeta, depth));
+            try {
+                VALUE_EXECUTOR.submit(guessValue);
+                guess = guessValue.get((start + MAX_DURATION) - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                guessValue.cancel(true);
             }
-
-
 
 
             if (guess < beta) {
@@ -124,7 +123,6 @@ public class MTDfStrategy implements GameStrategy {
             } else {
                 lowerBound = guess;
             }
-
 
 
         }

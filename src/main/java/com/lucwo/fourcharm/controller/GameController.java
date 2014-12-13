@@ -6,7 +6,7 @@ package com.lucwo.fourcharm.controller;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.*;
-import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
+import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -56,12 +56,13 @@ public class GameController implements Observer {
             Logger.getGlobal().throwing("FourCharmController", "Constructor", e);
         }
 
-        p1 = new HumanPlayer(playerReader, Mark.P1);
-        p2 = new ComputerPlayer(new NegaMaxStrategy(), Mark.P2);
+        p1 = new ComputerPlayer(new MTDfStrategy(), Mark.P1);
+        p2 = new HumanPlayer(playerReader, Mark.P2);
+
 
 
         try {
-            game = new Game(BinaryBoard.class, p2, p1);
+            game = new Game(BinaryBoard.class, p1, p2);
         } catch (InstantiationException | IllegalAccessException e) {
             Logger.getGlobal().throwing("FourCharmController", "Constructor", e);
         }

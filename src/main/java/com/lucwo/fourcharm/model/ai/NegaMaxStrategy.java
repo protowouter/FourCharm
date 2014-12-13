@@ -20,7 +20,7 @@ public class NegaMaxStrategy implements GameStrategy {
     /**
      * Default search depth for the NegaMax algorithm.
      */
-    public static final int DEF_DEPTH = 6;
+    public static final int DEF_DEPTH = 12;
     public static final ExecutorService VALUE_EXECUTOR = Executors.newCachedThreadPool();
     public static final int FOE_POS_VALUE = 0;
     public static final int FRIENDLY_POS_VALUE = 2;
@@ -28,8 +28,6 @@ public class NegaMaxStrategy implements GameStrategy {
 
     public static final int POS_TABLE_SIZE = 10_000_000;
     public static final Map<Long, TransPosEntry> TRANS_POS_TABLE = new ConcurrentHashMap<>(POS_TABLE_SIZE);
-
-    private final Object counterLock = new Object();
 
     private long nodeCounter;
 
@@ -183,9 +181,7 @@ public class NegaMaxStrategy implements GameStrategy {
 
     private double nodeValue(Board board, Mark mark) {
 
-        synchronized (counterLock) {
-            nodeCounter++;
-        }
+        upCounter();
 
 
         int cols = board.getColumns();
@@ -322,6 +318,18 @@ public class NegaMaxStrategy implements GameStrategy {
         }
 
         return value;
+    }
+
+    public synchronized void upCounter() {
+        nodeCounter++;
+    }
+
+    public long getCounter() {
+        return nodeCounter;
+    }
+
+    public void resetCounter() {
+        nodeCounter = 0;
     }
 
     enum Flag {
