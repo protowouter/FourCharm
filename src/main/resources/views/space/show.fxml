@@ -8,4 +8,4 @@
 <?import javafx.scene.control.Button?>
 <Button xmlns:fx="http://javafx.com/fxml/1" fx:id="spaceButton" mnemonicParsing="false" onMouseClicked="#processClick"
         prefHeight="100.0" prefWidth="100.0" xmlns="http://javafx.com/javafx/8"
-        fx:controller="com.lucwo.fourcharm.controller.SpaceController"/>
+        fx:controller="com.lucwo.fourcharm.presenter.space.SpacePresenter"/>

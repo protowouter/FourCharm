@@ -7,5 +7,5 @@
 <?import javafx.scene.layout.GridPane?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="spacesPane" maxHeight="-Infinity" maxWidth="-Infinity"
           minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8"
-          fx:controller="com.lucwo.fourcharm.controller.BoardController">
+          fx:controller="com.lucwo.fourcharm.presenter.board.BoardPresenter">
 </GridPane>

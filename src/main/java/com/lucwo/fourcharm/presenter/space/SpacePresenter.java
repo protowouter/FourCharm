@@ -2,27 +2,21 @@
  * Copyright (c) 2014. Luce Sandfort and Wouter Timmermans
  */
 
-package com.lucwo.fourcharm.controller;
+package com.lucwo.fourcharm.presenter.space;
 
 import com.lucwo.fourcharm.model.Mark;
+import com.lucwo.fourcharm.presenter.board.BoardPresenter;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-/**
- * Created by woutertimmermans on 12-12-14.
- */
-
-
-
-
-public class SpaceController {
+public class SpacePresenter {
 
     // ------------------ Instance variables ----------------
 
     @FXML
     private Button spaceButton;
     private Mark mark;
-    private BoardController boardController;
+    private BoardPresenter boardPresenter;
 
     private int col;
 
@@ -30,15 +24,15 @@ public class SpaceController {
 
     // ----------------------- Queries ----------------------
 
-    public BoardController getBoardController() {
-        return boardController;
+    public BoardPresenter getBoardPresenter() {
+        return boardPresenter;
     }
 
 
     // ----------------------- Commands ---------------------
 
-    public void setBoardController(BoardController boardController) {
-        this.boardController = boardController;
+    public void setBoardPresenter(BoardPresenter boardPresenter) {
+        this.boardPresenter = boardPresenter;
     }
 
     public void setMark(Mark m) {
@@ -49,8 +43,8 @@ public class SpaceController {
     @FXML
     protected void processClick() {
 
-        boardController.disableSpaces();
-        boardController.getGameController().doPlayerMove(col);
+        boardPresenter.disableSpaces();
+        boardPresenter.getGamePresenter().doPlayerMove(col);
 
     }
 

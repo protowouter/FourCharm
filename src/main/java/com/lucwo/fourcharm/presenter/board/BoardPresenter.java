@@ -2,10 +2,12 @@
  * Copyright (c) 2014. Luce Sandfort and Wouter Timmermans
  */
 
-package com.lucwo.fourcharm.controller;
+package com.lucwo.fourcharm.presenter.board;
 
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.board.Board;
+import com.lucwo.fourcharm.presenter.game.GamePresenter;
+import com.lucwo.fourcharm.presenter.space.SpacePresenter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +23,7 @@ import java.util.Observer;
  */
 
 
-public class BoardController implements Observer {
+public class BoardPresenter implements Observer {
 
 
 // ------------------ Instance variables ----------------
@@ -30,23 +32,23 @@ public class BoardController implements Observer {
     @FXML
     private GridPane spacesPane;
 
-    private SpaceController[][] spaces;
+    private SpacePresenter[][] spaces;
 
-    private GameController gameController;
+    private GamePresenter gamePresenter;
 
 
 // --------------------- Constructors -------------------
 
 // ----------------------- Queries ----------------------
 
-    public GameController getGameController() {
-        return gameController;
+    public GamePresenter getGamePresenter() {
+        return gamePresenter;
     }
 
 // ----------------------- Commands ---------------------
 
-    public void setGameController(GameController gameController) {
-        this.gameController = gameController;
+    public void setGamePresenter(GamePresenter gamePresenter) {
+        this.gamePresenter = gamePresenter;
     }
 
     public void update(Observable o, Object arg) {
@@ -60,7 +62,7 @@ public class BoardController implements Observer {
 
     public void initBoard(Board board) {
 
-        spaces = new SpaceController[board.getColumns()][board.getRows()];
+        spaces = new SpacePresenter[board.getColumns()][board.getRows()];
 
         spacesPane.getChildren().removeAll();
 
@@ -68,14 +70,14 @@ public class BoardController implements Observer {
 
         for (int col = 0; col < board.getColumns(); col++) {
             for (int row = 0; row < board.getRows(); row++) {
-                FXMLLoader fxmlLoader = new FXMLLoader(classloader.getResource("views/space.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(classloader.getResource("views/show.fxml"));
 
                 try {
                     fxmlLoader.load();
                     spacesPane.add(fxmlLoader.getRoot(), col, board.getRows() - row);
                     spaces[col][row] = fxmlLoader.getController();
                     spaces[col][row].setMark(board.getMark(col, row));
-                    spaces[col][row].setBoardController(this);
+                    spaces[col][row].setBoardPresenter(this);
                     spaces[col][row].setCol(col + 1);
                 } catch (IOException exception) {
                     throw new RuntimeException(exception);
@@ -97,16 +99,16 @@ public class BoardController implements Observer {
     }
 
     public void disableSpaces() {
-        for (SpaceController[] sAr : spaces) {
-            for (SpaceController sContr : sAr) {
+        for (SpacePresenter[] sAr : spaces) {
+            for (SpacePresenter sContr : sAr) {
                 sContr.disable();
             }
         }
     }
 
     public void enableSpaces() {
-        for (SpaceController[] sAr : spaces) {
-            for (SpaceController sContr : sAr) {
+        for (SpacePresenter[] sAr : spaces) {
+            for (SpacePresenter sContr : sAr) {
                 sContr.enable();
             }
         }
