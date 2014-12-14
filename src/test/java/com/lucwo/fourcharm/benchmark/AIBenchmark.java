@@ -59,8 +59,10 @@ public class AIBenchmark {
         final int total = ITERATIONS;
         final double step = total * STEP_PERCENTAGE;
 
-        Player smartPlayer = new ComputerPlayer(new MTDfStrategy(), Mark.P1);
-        Player dumbPlayer = new ComputerPlayer(new RandomStrategy(), Mark.P2);
+        Player smartPlayer1 = new ComputerPlayer(new MTDfStrategy(), Mark.P1);
+        Player smartPlayer2 = new ComputerPlayer(new MTDfStrategy(), Mark.P2);
+        Player dumbPlayer1 = new ComputerPlayer(new RandomStrategy(), Mark.P1);
+        Player dumbPlayer2 = new ComputerPlayer(new RandomStrategy(), Mark.P2);
 
         boolean switchPlayer = false;
 
@@ -75,10 +77,10 @@ public class AIBenchmark {
             Game game;
 
             if (switchPlayer) {
-                game = new Game(BinaryBoard.class, dumbPlayer, smartPlayer);
+                game = new Game(BinaryBoard.class, dumbPlayer1, smartPlayer2);
                 switchPlayer = false;
             } else {
-                game = new Game(BinaryBoard.class, smartPlayer, dumbPlayer);
+                game = new Game(BinaryBoard.class, smartPlayer1, dumbPlayer2);
                 switchPlayer = true;
             }
 
@@ -89,17 +91,19 @@ public class AIBenchmark {
             moves += game.plieCount();
 
             if (game.hasWinner()) {
-                if (game.getWinner() == smartPlayer) {
+                if (game.getWinner() == smartPlayer1 || game.getWinner() == smartPlayer2) {
                     wins++;
                 } else {
                     Logger.getGlobal().info(Integer.toString(game.getBoard().getPlieCount()));
                     Logger.getGlobal().info(Arrays.toString(game.getBoard().getMoves()));
-                    Logger.getGlobal().info("Player 1: " + (switchPlayer ? dumbPlayer : smartPlayer).toString());
-                    Logger.getGlobal().info("Player 2: " + (!switchPlayer ? dumbPlayer : smartPlayer).toString());
+                    Logger.getGlobal().info("Player 1: " + (switchPlayer ? dumbPlayer1 : smartPlayer1).toString());
+                    Logger.getGlobal().info("Player 2: " + (!switchPlayer ? dumbPlayer1 : smartPlayer1).toString());
+                    Logger.getGlobal().info(game.getBoard().toString());
                     loss++;
                 }
             } else {
                 ties++;
+                Logger.getGlobal().info("Tie: " + game.getBoard().toString());
             }
 
         }

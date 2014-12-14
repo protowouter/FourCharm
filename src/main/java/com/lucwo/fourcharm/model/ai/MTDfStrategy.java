@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class MTDfStrategy implements GameStrategy {
 
     public static final ExecutorService VALUE_EXECUTOR = Executors.newCachedThreadPool();
-    private static final int MAX_DEPTH = 12;
+    private static final int MAX_DEPTH = 8;
     private static final int DEPTH_STEP = 2;
     private static final int MAX_DURATION = 60000;
 
@@ -85,7 +85,7 @@ public class MTDfStrategy implements GameStrategy {
 
         }
 
-        Logger.getGlobal().info("Evaluated nodes: " + nega.getCounter());
+        Logger.getGlobal().fine("Evaluated nodes: " + nega.getCounter());
 
         prevValue = bestValue;
 

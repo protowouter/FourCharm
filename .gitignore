@@ -2,8 +2,11 @@
 
 /doc/
 /target/
+
 /.DS_Store
 
 
 *.iml
 .idea
+
+*.log
