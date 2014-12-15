@@ -8,10 +8,16 @@ import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.presenter.board.BoardPresenter;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 
 public class SpacePresenter {
 
     // ------------------ Instance variables ----------------
+
+    private static final double PIECE_RADIUS = 100;
 
     @FXML
     private Button spaceButton;
@@ -37,7 +43,19 @@ public class SpacePresenter {
 
     public void setMark(Mark m) {
         mark = m;
-        spaceButton.textProperty().setValue(m.toString());
+
+        if (m == Mark.P1) {
+            spaceButton.textProperty().setValue("");
+            spaceButton.setBackground(new Background(new BackgroundFill(Color.YELLOW, new CornerRadii(PIECE_RADIUS), null)));
+        } else if (m == Mark.P2) {
+            spaceButton.textProperty().setValue("");
+            spaceButton.setBackground(new Background(new BackgroundFill(Color.BLUE, new CornerRadii(PIECE_RADIUS), null)));
+        } else {
+            spaceButton.textProperty().setValue(m.toString());
+        }
+
+
+
     }
 
     @FXML
