@@ -13,17 +13,12 @@ import java.util.Map;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
-/**
- * Created by woutertimmermans on 12-12-14.
- */
-
-
 public class MTDfStrategy implements GameStrategy {
 
     public static final ExecutorService VALUE_EXECUTOR = Executors.newCachedThreadPool();
-    private static final int MAX_DEPTH = 8;
+    private static final int MAX_DEPTH = 10;
     private static final int DEPTH_STEP = 2;
-    private static final int MAX_DURATION = 60000;
+    private static final int MAX_DURATION = 100_000;
 
     // ------------------ Instance variables ----------------
     private long start;
@@ -48,7 +43,7 @@ public class MTDfStrategy implements GameStrategy {
         nega.resetCounter();
 
         double bestValue = Double.NEGATIVE_INFINITY;
-        int bestMove = 0;
+        int bestMove = -1;
         int columns = board.getColumns();
         Map<Integer, Future<Double>> values = new HashMap<>();
 
@@ -86,8 +81,13 @@ public class MTDfStrategy implements GameStrategy {
         }
 
         Logger.getGlobal().fine("Evaluated nodes: " + nega.getCounter());
+        Logger.getGlobal().fine("Best move: " + bestMove);
 
         prevValue = bestValue;
+
+        if (bestMove == -1) {
+            bestMove = new RandomStrategy().determineMove(board, mark);
+        }
 
         return bestMove;
     }

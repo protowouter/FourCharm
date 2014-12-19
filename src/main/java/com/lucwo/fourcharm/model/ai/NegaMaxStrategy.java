@@ -20,7 +20,7 @@ public class NegaMaxStrategy implements GameStrategy {
     /**
      * Default search depth for the NegaMax algorithm.
      */
-    public static final int DEF_DEPTH = 8;
+    public static final int DEF_DEPTH = 10;
     public static final ExecutorService VALUE_EXECUTOR = Executors.newCachedThreadPool();
     public static final int FOE_POS_VALUE = 0;
     public static final int FRIENDLY_POS_VALUE = 2;
@@ -53,7 +53,7 @@ public class NegaMaxStrategy implements GameStrategy {
         nodeCounter = 0;
 
         double bestValue = Double.NEGATIVE_INFINITY;
-        int bestMove = 0;
+        int bestMove = -1;
         int columns = board.getColumns();
         Map<Integer, Future<Double>> values = new HashMap<>();
 
@@ -91,6 +91,11 @@ public class NegaMaxStrategy implements GameStrategy {
         }
 
         Logger.getGlobal().fine("Calculated nodes: " + nodeCounter);
+        Logger.getGlobal().fine("Best move: " + bestMove);
+
+        if (bestMove == -1) {
+            bestMove = new RandomStrategy().determineMove(board, mark);
+        }
 
         return bestMove;
 

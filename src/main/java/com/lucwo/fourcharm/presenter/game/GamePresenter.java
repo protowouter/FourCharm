@@ -6,6 +6,7 @@ package com.lucwo.fourcharm.presenter.game;
 
 import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
+import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.presenter.board.BoardPresenter;
 import javafx.application.Platform;
@@ -84,7 +85,7 @@ public class GamePresenter implements Observer {
         }
 
         p1 = new ComputerPlayer(new MTDfStrategy(), Mark.P1);
-        p2 = new HumanPlayer(playerReader, Mark.P2);
+        p2 = new ComputerPlayer(new NegaMaxStrategy(), Mark.P2);
 
 
         try {

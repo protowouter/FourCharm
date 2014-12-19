@@ -7,6 +7,7 @@ import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.board.Board;
 
 import java.util.Observable;
+import java.util.logging.Logger;
 
 /**
  * Models an game of Connect 4.
@@ -68,6 +69,7 @@ public class Game extends Observable implements Runnable {
             current = nextPlayer();
             try {
                 current.doMove(board);
+                Logger.getGlobal().finer(board.toString());
             } catch (InvalidMoveException e) {
                 fairplay = false;
             }
@@ -81,6 +83,8 @@ public class Game extends Observable implements Runnable {
             setChanged();
             notifyObservers();
         }
+
+        Logger.getGlobal().fine("Game ended, winner: " + winner);
 
     }
 
