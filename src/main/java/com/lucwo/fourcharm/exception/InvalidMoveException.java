@@ -1,6 +1,7 @@
 /*
- * Copyright (c) 2014. Luce Sandfort and Wouter Timmermans
+ * Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
  */
+
 package com.lucwo.fourcharm.exception;
 
 /**

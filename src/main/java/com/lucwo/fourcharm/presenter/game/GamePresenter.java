@@ -1,11 +1,10 @@
 /*
- * Copyright (c) 2014. Luce Sandfort and Wouter Timmermans
+ * Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
  */
 
 package com.lucwo.fourcharm.presenter.game;
 
 import com.lucwo.fourcharm.model.*;
-import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.presenter.board.BoardPresenter;
