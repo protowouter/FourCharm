@@ -4,7 +4,7 @@
 
 package com.lucwo.fourcharm.server;
 
-import nl.woutertimmermans.inf3.c4prot.C4Lobby;
+import nl.woutertimmermans.connect4.protocol.C4Lobby;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;

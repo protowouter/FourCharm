@@ -139,7 +139,7 @@
             <version>1.1.5</version>
         </dependency>
         <dependency>
-            <groupId>nl.woutertimmermans</groupId>
+            <groupId>nl.woutertimmermans.connect4</groupId>
             <artifactId>c4-protocol</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>

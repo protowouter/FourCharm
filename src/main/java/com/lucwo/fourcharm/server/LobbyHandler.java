@@ -4,10 +4,11 @@
 
 package com.lucwo.fourcharm.server;
 
-import nl.woutertimmermans.inf3.c4prot.C4Color;
-import nl.woutertimmermans.inf3.c4prot.C4Lobby;
-import nl.woutertimmermans.inf3.c4prot.C4Player;
-import nl.woutertimmermans.inf3.c4prot.C4Session;
+
+import nl.woutertimmermans.connect4.protocol.C4Color;
+import nl.woutertimmermans.connect4.protocol.C4Lobby;
+import nl.woutertimmermans.connect4.protocol.C4Player;
+import nl.woutertimmermans.connect4.protocol.C4Session;
 import org.apache.thrift.TException;
 
 import java.util.List;

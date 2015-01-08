@@ -4,8 +4,8 @@
 
 package com.lucwo.fourcharm.client;
 
-import nl.woutertimmermans.inf3.c4prot.C4Lobby;
-import nl.woutertimmermans.inf3.c4prot.C4Session;
+import nl.woutertimmermans.connect4.protocol.C4Lobby;
+import nl.woutertimmermans.connect4.protocol.C4Session;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
