@@ -1,6 +1,7 @@
 /*
- * Copyright (c) 2014. Luce Sandfort and Wouter Timmermans
+ * Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
  */
+
 package com.lucwo.fourcharm.model.ai;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
@@ -20,7 +21,7 @@ public class NegaMaxStrategy implements GameStrategy {
     /**
      * Default search depth for the NegaMax algorithm.
      */
-    public static final int DEF_DEPTH = 10;
+    public static final int DEF_DEPTH = 12;
     public static final ExecutorService VALUE_EXECUTOR = Executors.newCachedThreadPool();
     public static final int FOE_POS_VALUE = 0;
     public static final int FRIENDLY_POS_VALUE = 2;

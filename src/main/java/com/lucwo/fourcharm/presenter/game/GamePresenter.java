@@ -1,11 +1,10 @@
 /*
- * Copyright (c) 2014. Luce Sandfort and Wouter Timmermans
+ * Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
  */
 
 package com.lucwo.fourcharm.presenter.game;
 
 import com.lucwo.fourcharm.model.*;
-import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.presenter.board.BoardPresenter;
@@ -84,8 +83,8 @@ public class GamePresenter implements Observer {
             Logger.getGlobal().throwing("FourCharmController", "Constructor", e);
         }
 
-        p1 = new ComputerPlayer(new MTDfStrategy(), Mark.P1);
-        p2 = new ComputerPlayer(new NegaMaxStrategy(), Mark.P2);
+        p1 = new ComputerPlayer(new NegaMaxStrategy(), Mark.P1);
+        p2 = new HumanPlayer(playerReader, Mark.P2);
 
 
         try {
