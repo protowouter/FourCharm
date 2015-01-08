@@ -8,7 +8,6 @@ import nl.woutertimmermans.inf3.c4prot.C4Lobby;
 import nl.woutertimmermans.inf3.c4prot.C4Session;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TJSONProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
@@ -27,8 +26,8 @@ public class C4Client {
 // ----------------------- Commands ---------------------
 
     public static void main(String[] args) {
-            TTransport transport;
-            transport = new TSocket("localhost", 9090);
+        TTransport transport;
+        transport = new TSocket("localhost", 9090);
         try {
             transport.open();
         } catch (TTransportException e) {
