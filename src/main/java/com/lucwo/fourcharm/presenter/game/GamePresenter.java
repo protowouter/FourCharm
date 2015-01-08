@@ -84,8 +84,8 @@ public class GamePresenter implements Observer {
             Logger.getGlobal().throwing("FourCharmController", "Constructor", e);
         }
 
-        p1 = new ComputerPlayer(new MTDfStrategy(), Mark.P1);
-        p2 = new ComputerPlayer(new NegaMaxStrategy(), Mark.P2);
+        p1 = new ComputerPlayer(new NegaMaxStrategy(), Mark.P1);
+        p2 = new HumanPlayer(playerReader, Mark.P2);
 
 
         try {
