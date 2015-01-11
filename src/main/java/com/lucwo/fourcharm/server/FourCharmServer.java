@@ -4,47 +4,95 @@
 
 package com.lucwo.fourcharm.server;
 
-import nl.woutertimmermans.connect4.protocol.C4Lobby;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.server.TServer;
-import org.apache.thrift.server.TSimpleServer;
-import org.apache.thrift.transport.TServerSocket;
-import org.apache.thrift.transport.TServerTransport;
-import org.apache.thrift.transport.TTransportException;
+
+import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import nl.woutertimmermans.connect4.protocol.fgroup.CoreClient;
+import nl.woutertimmermans.connect4.protocol.fgroup.CoreServer;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Logger;
 
 public class FourCharmServer {
 
-    public static C4Lobby.Processor processor;
-    public static LobbyHandler handler;
-
-// ------------------ Instance variables ----------------
-
-
-
-// --------------------- Constructors -------------------
-
-// ----------------------- Queries ----------------------
-
-// ----------------------- Commands ---------------------
-
-
     public static void main(String[] args) {
+
+        Logger.getGlobal().info("Starting Fourcharm server");
+
         try {
-            handler = new LobbyHandler();
-            processor = new C4Lobby.Processor(handler);
-            TServerTransport serverTransport = new TServerSocket(9090);
-            TServer.AbstractServerArgs sargs = new TServer.Args(serverTransport).processor(processor);
-            sargs.protocolFactory(new TBinaryProtocol.Factory());
-            TServer server = new TSimpleServer(sargs);
+            ServerSocket ss = new ServerSocket(8080);
+            while (true) {
+                Socket sock = ss.accept();
+                Runnable handler = new Runnable() {
+                    @Override
+                    public void run() {
+                        handleClient(sock);
+                    }
+                };
 
-            // Use this for a multithreaded server
-            // TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTransport).processor(processor));
+                new Thread(handler).start();
 
-            System.out.println("Starting the simple server...");
-            server.serve();
-        } catch (TTransportException e) {
-            e.printStackTrace();
+
+            }
+        } catch (IOException e) {
+            Logger.getGlobal().throwing("FourCharmServer", "main", e);
         }
+
+        Logger.getGlobal().info("Shutting down Fourcharm server");
+
+
     }
+
+    public static void handleClient(Socket sock) {
+
+        final String m_name = "handleClient";
+
+        BufferedWriter out = null;
+        BufferedReader in = null;
+        try {
+            out = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()));
+            in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+        } catch (IOException e) {
+            Logger.getGlobal().throwing("FourCharmServer", m_name, e);
+        }
+
+        CoreClient.Client clientClient = new CoreClient.Client(out);
+
+        CoreServerHandler handler = new CoreServerHandler(clientClient);
+        CoreServer.Processor processor = new CoreServer.Processor<>(handler);
+
+        try {
+            String input = in.readLine();
+            while (input != null) {
+                Logger.getGlobal().info("Processing input " + input);
+                try {
+                    boolean processed = processor.process(input);
+                    if (!processed) {
+                        Logger.getGlobal().warning("This command is not recognized");
+                        clientClient.error(7);
+                    }
+                } catch (C4Exception e) {
+
+                    Logger.getGlobal().info("Throwing exception " + e.getMessage());
+                    clientClient.error(e.getErrorCode());
+
+                }
+                input = in.readLine();
+            }
+
+        } catch (IOException e) {
+            Logger.getGlobal().throwing("FourCharmServer", m_name, e);
+        } finally {
+            try {
+                sock.close();
+            } catch (IOException e) {
+                Logger.getGlobal().throwing("FourCharmServer", m_name, e);
+            }
+        }
+
+
+    }
+
 
 }
