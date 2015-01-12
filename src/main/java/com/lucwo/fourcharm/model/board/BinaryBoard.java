@@ -20,7 +20,7 @@ public class BinaryBoard extends Board {
     /**
      * Amount of players in a game of Connect4
      */
-    static final int PLAYERS = 2;
+    private static final int PLAYERS = 2;
     /**
      * The multiple of the index for the first row of each column.
      */
@@ -183,17 +183,17 @@ public class BinaryBoard extends Board {
 
     }
 
-
-
-    private int getPlayerIndex(Mark mark) {
-        int pI = -1;
-        if (mark == Mark.P1) {
-            pI = 0;
-        } else if (mark == Mark.P2) {
-            pI = 1;
+    private int getPlayerIndex(Mark m) {
+        int result;
+        switch (m) {
+            case P1:
+                result = 0;
+                break;
+            default:
+                result = 1;
+                break;
         }
-
-        return pI;
+        return result;
     }
 
     /**
@@ -205,9 +205,7 @@ public class BinaryBoard extends Board {
 
 
         if (col < COLUMNS && columnHasFreeSpace(col)) {
-            // same as modulo 2 but probably more efficient
-            int player = nplies & 1;
-
+            int player = getPlayerIndex(mark);
 
             moves[nplies] = col;
 

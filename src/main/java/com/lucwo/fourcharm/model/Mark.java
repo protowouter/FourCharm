@@ -4,10 +4,6 @@
 
 package com.lucwo.fourcharm.model;
 
-/**
- * Created by woutertimmermans on 05-12-14.
- */
-
 public enum Mark {
 
     P1, P2, EMPTY;
