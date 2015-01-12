@@ -175,7 +175,7 @@ public class ReferenceBoard extends Board {
 
     public Mark getMark(int index) {
 
-        return getMark(index / COLUMNS, index % COLUMNS);
+        return getMark(index / ROWS, index % ROWS);
 
     }
 
@@ -241,7 +241,7 @@ public class ReferenceBoard extends Board {
      */
     public void makemove(int col, Mark mark) throws InvalidMoveException {
 
-        if (columnHasFreeSpace(col)) {
+        if (col < COLUMNS && columnHasFreeSpace(col)) {
 
             moves[nplies] = col;
 
