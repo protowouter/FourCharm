@@ -109,7 +109,7 @@ public class Game extends Observable implements Runnable {
      * @return true if a player has won the game; otherwise false
      */
     public boolean hasWinner() {
-        return board.hasWon(current.getMark());
+        return current != null && board.hasWon(current.getMark());
     }
 
 

@@ -32,6 +32,16 @@ public class NegaMaxStrategy implements GameStrategy {
 
     private long nodeCounter;
 
+    private int searchDept;
+
+    public NegaMaxStrategy() {
+        this(DEF_DEPTH);
+    }
+
+    public NegaMaxStrategy(int depth) {
+        searchDept = depth;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -39,7 +49,7 @@ public class NegaMaxStrategy implements GameStrategy {
      */
     @Override
     public int determineMove(Board board, Mark mark) {
-        return determineMove(board.deepCopy(), mark, DEF_DEPTH);
+        return determineMove(board.deepCopy(), mark, searchDept);
     }
 
     /**

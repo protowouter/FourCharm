@@ -8,7 +8,6 @@ import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.Mark;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 /**
@@ -229,7 +228,22 @@ public class ReferenceBoard extends Board {
 
     public long positionCode() {
 
-        return Objects.hashCode(board);
+        long result = 0;
+        long p1Sum = 0;
+        long p2Sum = 0;
+
+        for (int i = 0; i < SIZE; i++) {
+            Mark m = getMark(i);
+            long value = 1L << i;
+            if (m == Mark.P1) {
+                p1Sum += value;
+            } else if (m == Mark.P2) {
+                p2Sum += value;
+            }
+        }
+
+        return 2 * p1Sum + p2Sum;
+
 
     }
 

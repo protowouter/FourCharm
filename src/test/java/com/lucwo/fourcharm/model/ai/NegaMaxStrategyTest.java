@@ -14,6 +14,8 @@ import static org.junit.Assert.assertTrue;
 
 public class NegaMaxStrategyTest {
 
+    public static int NEGA_DEPT = 6;
+
     private NegaMaxStrategy strat;
     private Board board;
 
@@ -21,7 +23,7 @@ public class NegaMaxStrategyTest {
     @Before
     public void setUp() throws Exception {
 
-        strat = new NegaMaxStrategy();
+        strat = new NegaMaxStrategy(NEGA_DEPT);
         board = new BinaryBoard();
 
 
