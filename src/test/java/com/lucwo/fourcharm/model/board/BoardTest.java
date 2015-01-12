@@ -88,6 +88,7 @@ public class BoardTest {
             Mark mark = Mark.P1;
             for (int col = 0; col < columns; col++) {
                 int i;
+                //Verhoog met 2 aangezien hij steeds 2 moves maakt.
                 for (i = 0; i < rows; i = i + 2) {
                     board.makemove(col, mark);
                     board.makemove(col, mark);
@@ -282,6 +283,7 @@ public class BoardTest {
     public void testDeepCopy() throws Exception {
 
         assertFalse(board == board.deepCopy());
+        assertTrue(board.equals(board.deepCopy()));
 
     }
 
@@ -331,7 +333,7 @@ public class BoardTest {
         long positie1 = board.positionCode();
         setUp();
 
-        board.makemove(col,Mark.P1);
+        board.makemove(col, Mark.P1);
         long positie2 = board.positionCode();
         assertTrue(positie1 == positie2);
     }
