@@ -34,7 +34,7 @@ public class BoardTest {
     @Parameterized.Parameters
     public static Collection boardClasses() {
 
-        Collection retCol = new ArrayList();
+        Collection<Class[]> retCol = new ArrayList<>();
         retCol.add(new Class[]{ReferenceBoard.class});
         retCol.add(new Class[]{BinaryBoard.class});
 
