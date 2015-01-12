@@ -76,7 +76,6 @@ public class Game extends Observable implements Runnable {
             }
             setChanged();
             notifyObservers();
-
         }
 
         if (hasWinner()) {
