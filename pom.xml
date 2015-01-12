@@ -13,7 +13,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.2</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -141,7 +141,7 @@
         <dependency>
             <groupId>nl.woutertimmermans.connect4</groupId>
             <artifactId>c4-protocol</artifactId>
-            <version>0.1</version>
+            <version>0.2</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
