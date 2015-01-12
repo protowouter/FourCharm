@@ -217,13 +217,6 @@ public class BoardTest {
     }
 
     @Test
-    public void testGetPlayers() throws Exception {
-
-        assertTrue(board.getPlayers() > 0);
-
-    }
-
-    @Test
     public void testGetWinStreak() throws Exception {
 
         assertTrue(board.getWinStreak() <= board.getRows());
