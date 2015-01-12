@@ -10,6 +10,7 @@ import com.lucwo.fourcharm.model.board.Board;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class ComputerPlayerTest {
@@ -32,5 +33,10 @@ public class ComputerPlayerTest {
 
         assertTrue(board.columnHasFreeSpace(player.determineMove(board)));
 
+    }
+
+    @Test
+    public void testGetMark() throws Exception {
+        assertNull(player.getMark());
     }
 }

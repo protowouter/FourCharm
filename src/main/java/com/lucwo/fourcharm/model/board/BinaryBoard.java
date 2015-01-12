@@ -18,10 +18,13 @@ import java.util.Arrays;
  */
 public class BinaryBoard extends Board {
     /**
+     * Amount of players in a game of Connect4
+     */
+    static final int PLAYERS = 2;
+    /**
      * The multiple of the index for the first row of each column.
      */
     private static final int H1 = ROWS + 1;
-
     private static final int H2 = ROWS + 2;
     /**
      * Amount of spaces in the board.
@@ -36,16 +39,14 @@ public class BinaryBoard extends Board {
      * As much one's as there are spots in the grid and the top row.
      */
     private static final long ALL1 = (1L << SIZE1) - 1L;
-
     private static final int COL1 = (1 << H1) - 1;
-
     private static final long BOTTOM = ALL1 / COL1;
     /**
      * Bitmask for detecting overflows in columns.
      */
     private static final long TOP = BOTTOM << ROWS;
-
     // Array with moves since the start of the game
+    // TODO: move this to the game class
     private final int[] moves;
     // Array with the index of lowest free sqaure
     // for every column; assumes SIZE < 128
@@ -56,7 +57,7 @@ public class BinaryBoard extends Board {
     private int nplies;
 
     /**
-     * Make an new BinaryBoard and reset it to default settings.
+     * Make a new BinaryBoard and reset it to default settings.
      */
     public BinaryBoard() {
         super();

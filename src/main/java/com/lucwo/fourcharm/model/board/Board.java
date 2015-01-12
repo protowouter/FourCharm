@@ -22,10 +22,6 @@ public abstract class Board {
      */
     static final int ROWS = 6;
     /**
-     * Amount of players.
-     */
-    static final int PLAYERS = 2;
-    /**
      * Amount of pieces in a row a player has to have to win.
      */
     static final int WIN_STREAK = 4;
@@ -42,26 +38,44 @@ public abstract class Board {
 
     public abstract boolean isFull();
 
+
+    //TODO: pliecount belongs in Game
     public abstract int getPlieCount();
 
+    //TODO: pliecount belongs in Game
     public abstract int[] getMoves();
-    
+
+
+    /**
+     * @return The amount of columns of this board.
+     * @ensures result > 0 && result >= getWinStreak()
+     */
     public int getColumns() {
         return COLUMNS;
     }
-    
+
+    /**
+     * @return The amount of rows of this board.
+     * @ensures result > 0 && result >= getWinStreak()
+     */
     public int getRows() {
         return ROWS;
     }
-    
-    public int getPlayers() {
-        return PLAYERS;
-    }
-    
+
+
+    /**
+     * @return The amount of rows of this board.
+     * @ensures result > 0 && result <= getColumns() && result <= getRows()
+     */
     public int getWinStreak() {
         return WIN_STREAK;
     }
-    
+
+
+    /**
+     * @return The amount of spots of this board
+     * @ensures result > 0 && result == getColumns() * getRows()
+     */
     public int getSpotCount() {
         return COLUMNS * ROWS;
     }
@@ -71,14 +85,14 @@ public abstract class Board {
     /**
      * 
      * @param col
-     * @throws InvalidMoveException when an invalid move is entered
+     * @throws InvalidMoveException when a invalid move is entered
      * @requires gets called for the player which current turn it is
      */
 
     public abstract void makemove(int col, Mark mark) throws InvalidMoveException;
 
     /**
-     * Returns an deepcopy of the board.
+     * Returns a deepcopy of the board.
      * 
      * @return deepcopy of this board
      */
