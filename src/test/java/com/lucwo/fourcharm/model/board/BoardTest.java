@@ -287,7 +287,7 @@ public class BoardTest {
 
     @Test
     public void testGetMark() throws Exception {
-        for (int i = 0; i < board.getColumns(); i++) {
+        for (int i = 0; i < board.getRows(); i++) {
             assertTrue(board.getMark(i) == Mark.EMPTY);
             board.makemove(i, Mark.P1);
             assertTrue("board.getMark(" + i + ",0) == Mark.P1", board.getMark(i, 0) == Mark.P1);
@@ -298,7 +298,7 @@ public class BoardTest {
 
     @Test
     public void testGetOtherMark() throws Exception {
-        for (int i = 0; i < board.getColumns(); i++) {
+        for (int i = 0; i < board.getRows(); i++) {
             assertTrue(board.getMark(i) == Mark.EMPTY);
             board.makemove(i, Mark.P2);
             assertTrue("board.getMark(" + i + ",0) == Mark.P2", board.getMark(i, 0) == Mark.P2);
