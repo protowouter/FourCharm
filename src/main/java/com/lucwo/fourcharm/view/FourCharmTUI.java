@@ -83,7 +83,7 @@ class FourCharmTUI implements Observer {
     public void update(Observable o, Object arg) {
         Logger.getGlobal().finer("Tui is getting message from: " + o.toString());
         if (o instanceof Game) {
-            Logger.getGlobal().info(((Game) o).getBoard().toString());
+            System.out.println(((Game) o).getBoard().toString());
         }
 
     }
@@ -99,12 +99,12 @@ class FourCharmTUI implements Observer {
 
         // Game Finished
 
-        Logger.getGlobal().info(game.getBoard().toString());
+        System.out.println(game.getBoard().toString());
 
         if (game.hasWinner()) {
-            Logger.getGlobal().info(game.getWinner().toString() + " Won");
+            System.out.println(game.getWinner().toString() + " Won");
         } else {
-            Logger.getGlobal().info("The game is a tie");
+            System.out.println("The game is a tie");
         }
 
 
