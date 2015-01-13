@@ -4,6 +4,7 @@
 
 package com.lucwo.fourcharm.server;
 
+import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreServer;
@@ -26,6 +27,16 @@ public class CoreServerHandler implements CoreServer.Iface {
     public void join(String pName, int gNumber, Set<String> exts) throws ParameterFormatException {
         Logger.getGlobal().info("Received join for user " + pName);
         client.accept(23, new HashSet<>());
+    }
+
+    @Override
+    public void ready() throws C4Exception {
+
+    }
+
+    @Override
+    public void doMove(int col) throws C4Exception {
+
     }
 
 // ------------------ Instance variables ----------------
