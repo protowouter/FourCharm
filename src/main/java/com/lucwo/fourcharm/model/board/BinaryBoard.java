@@ -22,7 +22,7 @@ public class BinaryBoard extends Board {
      */
     private static final int PLAYERS = 2;
     /**
-     * The multiple of the index for the first row of each column.
+     * The multiplier of the index for the first row of each column.
      */
     private static final int H1 = ROWS + 1;
     private static final int H2 = ROWS + 2;
