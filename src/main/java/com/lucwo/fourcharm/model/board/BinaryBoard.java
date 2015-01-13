@@ -18,7 +18,7 @@ import java.util.Arrays;
  */
 public class BinaryBoard extends Board {
     /**
-     * Amount of players in a game of Connect4
+     * Amount of players in a game of Connect4.
      */
     private static final int PLAYERS = 2;
     /**
@@ -48,7 +48,7 @@ public class BinaryBoard extends Board {
     // Array with moves since the start of the game
     // TODO: move this to the game class
     private final int[] moves;
-    // Array with the index of lowest free sqaure
+    // Array with the index of lowest free square
     // for every column; assumes SIZE < 128
     private final byte[] height;
     // Holds bitboard for every color
@@ -88,14 +88,15 @@ public class BinaryBoard extends Board {
 
     public boolean columnHasFreeSpace(int col) {
 
-        return isLegalBoard(color[nplies & 1] | (1L << height[col]));
+        return isLegalBoard(color[0] | (1L << height[col])) &&
+                isLegalBoard(color[1] | (1L << height[col]));
 
     }
 
-    private boolean isLegalBoard(long newboard) {
+    private boolean isLegalBoard(long newBoard) {
 
-        // Checks wether no columns have overflown
-        return (newboard & TOP) == 0;
+        // Checks whether no columns have overflown
+        return (newBoard & TOP) == 0;
 
 
     }
@@ -125,33 +126,33 @@ public class BinaryBoard extends Board {
         return moves;
     }
 
-    private boolean hasLRDiagonal(long newboard) {
+    private boolean hasLRDiagonal(long newBoard) {
 
-        long y = newboard & (newboard >> ROWS);
+        long y = newBoard & (newBoard >> ROWS);
 
         return (y & (y >> (2 * ROWS))) != 0;
 
     }
 
-    private boolean hasRLDiagonal(long newboard) {
+    private boolean hasRLDiagonal(long newBoard) {
 
-        long y = newboard & (newboard >> H2);
+        long y = newBoard & (newBoard >> H2);
 
         return (y & (y >> (2 * H2))) != 0;
 
     }
 
-    private boolean hasHorizontal(long newboard) {
+    private boolean hasHorizontal(long newBoard) {
 
-        long y = newboard & (newboard >> H1);
+        long y = newBoard & (newBoard >> H1);
 
         return (y & (y >> (2 * H1))) != 0;
 
     }
 
-    private boolean hasVertical(long newboard) {
+    private boolean hasVertical(long newBoard) {
 
-        long y = newboard & (newboard >> 1);
+        long y = newBoard & (newBoard >> 1);
 
         return (y & (y >> 2)) != 0;
 
@@ -167,9 +168,7 @@ public class BinaryBoard extends Board {
 
     }
 
-    public Mark getInternalMark(int internalIndex) {
-
-        //TODO it is assumed here that the first mark to make a move is always P1;
+    private Mark getInternalMark(int internalIndex) {
 
         Mark mark = Mark.EMPTY;
 
@@ -184,22 +183,16 @@ public class BinaryBoard extends Board {
     }
 
     private int getPlayerIndex(Mark m) {
-        int result;
-        switch (m) {
-            case P1:
-                result = 0;
-                break;
-            default:
-                result = 1;
-                break;
+        int result = -1;
+        if (m == Mark.P1) {
+            result = 0;
+        } else if (m == Mark.P2) {
+            result = 1;
         }
         return result;
     }
 
-    /**
-     * @param col
-     * @requires gets called for the player which current turn it is
-     */
+
     @Override
     public void makemove(int col, Mark mark) throws InvalidMoveException {
 
