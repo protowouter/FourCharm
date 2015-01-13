@@ -11,13 +11,16 @@ import java.util.Observable;
 import java.util.logging.Logger;
 
 /**
- * Models an game of Connect 4.
- * 
+ * The Game class models a game of Connect4. This class makes use of Observable
+ * and Runnable. Furthermore this class uses the Board class in the constructor,
+ * so a new board will be made for this specific game. Using these classes and
+ * interfaces, the main priority of this Game class is to create, play and end
+ * a game of Connect4.
+ *
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
 public class Game extends Observable implements Runnable {
-
     private Board board;
     private Player winner;
     private Player player1;
@@ -162,5 +165,8 @@ public class Game extends Observable implements Runnable {
         play();
     }
 
+    public void hoi() {
+        int i;
+    }
 
 }

@@ -13,6 +13,13 @@ import java.util.Map;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
+/**
+ * This MTDfStrategy class makes use of the interface GameStrategy. This
+ * is a specific strategy a computer player (ComputerPlayer class) can use.
+ * So this class is responsible for giving the computer player brains. This
+ * way the computer player can think ahead and foresee certain moves.
+ */
+
 public class MTDfStrategy implements GameStrategy {
 
     public static final ExecutorService VALUE_EXECUTOR = Executors.newCachedThreadPool();

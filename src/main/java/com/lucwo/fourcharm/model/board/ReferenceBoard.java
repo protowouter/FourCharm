@@ -11,9 +11,10 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 /**
- * Class for modeling an board for the game connect four. This class's
+ * Class for modeling a board for the game connect four. This class's
  * responsibility is to keep the state of the board. This is the reference
- * implementation implemented using an 2D array
+ * implementation implemented using an 2D array. This class makes use of
+ * the Board class.
  * 
  * @author Luce Sandfort and Wouter Timmermans
  *

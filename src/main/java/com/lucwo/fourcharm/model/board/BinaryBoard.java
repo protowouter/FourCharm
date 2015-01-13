@@ -12,7 +12,8 @@ import java.util.Arrays;
 /**
  * Class for modeling an board for the game connect four. This class's
  * responsibility is to keep the state of the board. For efficiency reasons the
- * board state is implemented in an array of 2 longs
+ * board state is implemented in an array of 2 longs. This class makes use of
+ * the Board class to achieve its responsibilities.
  *
  * @author Luce Sandfort and Wouter Timmermans
  */

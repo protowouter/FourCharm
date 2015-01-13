@@ -14,6 +14,11 @@ import java.util.concurrent.*;
 import java.util.logging.Logger;
 
 /**
+ * The NegaMaxStrategy class implements the GameStrategy interface. This combination
+ * is used by the ComputerPlayer class to make the computer player 'smart' and to make
+ * the computer player able to win games by foreseeing moves. The algorithm used by the
+ * NegaMaxStrategy class is the NegaMax algorithm.
+ *
  * @author Luce Sandfort and Wouter Timmermans
  */
 public class NegaMaxStrategy implements GameStrategy {

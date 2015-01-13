@@ -11,6 +11,12 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
+ * The HumanPlayer class 'makes' a human player. To play a game of
+ * Connect4 as a human, the Game class makes use of the interface
+ * Player. The HumanPlayer class implements Player. The main priority
+ * of this class is get the input of the human player to the board.
+ *
+ *
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
