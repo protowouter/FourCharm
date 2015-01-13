@@ -21,7 +21,6 @@ import com.lucwo.fourcharm.model.board.Board;
 public class LocalAIPlayer implements Player {
 
     private final GameStrategy strategy;
-
     private Mark mark;
 
     /**
@@ -42,7 +41,16 @@ public class LocalAIPlayer implements Player {
         return strategy.determineMove(board, mark);
     }
 
+    @Override
+    public String getName() {
+        return strategy.getClass().getSimpleName();
+    }
+
     public Mark getMark() {
         return mark;
+    }
+
+    public String toString() {
+        return getMark() + ": " + getClass().getSimpleName() + " " + getName();
     }
 }

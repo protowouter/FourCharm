@@ -84,7 +84,7 @@ public class GamePresenter implements Observer {
         }
 
         p1 = new LocalAIPlayer(new NegaMaxStrategy(), Mark.P1);
-        p2 = new ASyncPlayer(playerReader, Mark.P2);
+        p2 = new ASyncPlayer(null, null, Mark.P2);
 
 
         try {

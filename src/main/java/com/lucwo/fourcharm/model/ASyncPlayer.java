@@ -6,10 +6,6 @@ package com.lucwo.fourcharm.model;
 
 import com.lucwo.fourcharm.model.board.Board;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.logging.Logger;
-
 /**
  * The ASyncPlayer class 'makes' a human player. To play a game of
  * Connect4 as a human, the Game class makes use of the interface
@@ -22,8 +18,9 @@ import java.util.logging.Logger;
  */
 public class ASyncPlayer implements Player {
 
-    private final BufferedReader reader;
     private final Mark mark;
+    private MoveRequestable moveRequester;
+    private String name;
 
     /**
      * Create an new humanplayer given an way to communicate with the player.
@@ -31,11 +28,11 @@ public class ASyncPlayer implements Player {
      * @param inputReader
      *            Reader from which the human input can be parsed
      */
-    public ASyncPlayer(BufferedReader inputReader, Mark themark) {
+    public ASyncPlayer(String namePie, MoveRequestable moveReq, Mark themark) {
         super();
-
-        reader = inputReader;
         mark = themark;
+        moveRequester = moveReq;
+        name = namePie;
 
     }
 
@@ -46,36 +43,21 @@ public class ASyncPlayer implements Player {
      */
     public int determineMove(Board board) {
 
-        Logger.getGlobal().info("Going to parse playerinput");
 
-        int move = 0;
+        return moveRequester.requestMove();
 
-        String line = "";
-        try {
-            line = reader.readLine();
-        } catch (IOException e) {
-            Logger.getGlobal().warning(e.toString());
-            Logger.getGlobal().throwing("ASyncPlayer", "determineMove", e);
-        }
-        Logger.getGlobal().info("Playerinput: " + line);
-        if (line == null) {
-            determineMove(board);
-        } else {
-            for (int i = 0; i < line.length(); i++) {
-                int col = line.charAt(i) - '1';
-                if ((col >= 0) && (col < board.getColumns())
-                        && board.columnHasFreeSpace(col)) {
-                    move = col;
-                } else {
-                    move = determineMove(board);
-                }
-            }
-        }
-        return move;
     }
 
     public Mark getMark() {
         return mark;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String toString() {
+        return getMark() + ": " + getClass().getSimpleName() + " " + getName();
     }
 
 }
