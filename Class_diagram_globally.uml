@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.lucwo.fourcharm.model.board.Board</OriginalElement>
+  <nodes>
+    <node x="1309.0" y="625.0">com.lucwo.fourcharm.model.board.BinaryBoard</node>
+    <node x="210.0" y="65.0">com.lucwo.fourcharm.presenter.FourCharmFactory</node>
+    <node x="-9.0" y="-15.0">com.lucwo.fourcharm.FourCharm</node>
+    <node x="1282.5" y="745.0">com.lucwo.fourcharm.exception.InvalidMoveException</node>
+    <node x="1093.0" y="225.0">com.lucwo.fourcharm.model.ai.NegaMaxStrategy</node>
+    <node x="406.5" y="65.0">com.lucwo.fourcharm.presenter.game.NewGamePresenter</node>
+    <node x="895.5" y="345.0">com.lucwo.fourcharm.model.ai.RandomStrategy</node>
+    <node x="659.0" y="145.0">com.lucwo.fourcharm.presenter.game.GamePresenter</node>
+    <node x="1689.0" y="825.0">com.lucwo.fourcharm.model.Mark</node>
+    <node x="-31.5" y="985.0">com.lucwo.fourcharm.server.CoreServerHandler</node>
+    <node x="1859.0" y="145.0">com.lucwo.fourcharm.presenter.board.BoardPresenter</node>
+    <node x="1104.0" y="345.0">com.lucwo.fourcharm.model.ai.MTDfStrategy</node>
+    <node x="1526.5" y="625.0">com.lucwo.fourcharm.model.board.Board</node>
+    <node x="665.5" y="505.0">com.lucwo.fourcharm.model.HumanPlayer</node>
+    <node x="1858.0" y="825.0">com.lucwo.fourcharm.presenter.space.SpacePresenter</node>
+    <node x="1526.5" y="505.0">com.lucwo.fourcharm.model.Game</node>
+    <node x="643.5" y="-15.0">com.lucwo.fourcharm.presenter.FourCharmPresenter</node>
+    <node x="1101.0" y="505.0">com.lucwo.fourcharm.view.FourCharmTUI</node>
+    <node x="-28.0" y="1105.0">com.lucwo.fourcharm.server.FourCharmServer</node>
+    <node x="1097.5" y="825.0">com.lucwo.fourcharm.model.ComputerPlayer</node>
+    <node x="1497.5" y="745.0">com.lucwo.fourcharm.model.board.ReferenceBoard</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.lucwo.fourcharm.view.FourCharmTUI" target="com.lucwo.fourcharm.model.HumanPlayer">
+      <point x="-59.0" y="0.0" />
+      <point x="54.5" y="0.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.presenter.FourCharmFactory" target="com.lucwo.fourcharm.presenter.FourCharmPresenter">
+      <point x="0.0" y="-15.0" />
+      <point x="280.0" y="0.0" />
+      <point x="-76.5" y="0.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.model.ComputerPlayer" target="com.lucwo.fourcharm.model.Mark">
+      <point x="62.5" y="0.0" />
+      <point x="-31.0" y="0.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.model.ai.MTDfStrategy" target="com.lucwo.fourcharm.model.ai.RandomStrategy">
+      <point x="-56.0" y="0.0" />
+      <point x="64.5" y="0.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.presenter.FourCharmPresenter" target="com.lucwo.fourcharm.presenter.game.GamePresenter">
+      <point x="0.0" y="15.0" />
+      <point x="0.0" y="-15.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.model.board.ReferenceBoard" target="com.lucwo.fourcharm.exception.InvalidMoveException">
+      <point x="-62.5" y="0.0" />
+      <point x="77.5" y="0.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.presenter.board.BoardPresenter" target="com.lucwo.fourcharm.presenter.space.SpacePresenter">
+      <point x="0.0" y="15.0" />
+      <point x="0.0" y="-15.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.model.ai.NegaMaxStrategy" target="com.lucwo.fourcharm.model.ai.RandomStrategy">
+      <point x="-67.0" y="0.0" />
+      <point x="960.0" y="240.0" />
+      <point x="0.0" y="-15.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.presenter.game.NewGamePresenter" target="com.lucwo.fourcharm.presenter.FourCharmPresenter">
+      <point x="0.0" y="-15.0" />
+      <point x="480.0" y="10.0" />
+      <point x="-76.5" y="10.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.model.board.ReferenceBoard" target="com.lucwo.fourcharm.model.board.Board">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.view.FourCharmTUI" target="com.lucwo.fourcharm.model.Game">
+      <point x="59.0" y="0.0" />
+      <point x="-33.5" y="0.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.presenter.game.GamePresenter" target="com.lucwo.fourcharm.model.Game">
+      <point x="61.0" y="5.0" />
+      <point x="1560.0" y="165.0" />
+      <point x="0.0" y="-15.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.presenter.game.GamePresenter" target="com.lucwo.fourcharm.presenter.board.BoardPresenter">
+      <point x="61.0" y="0.0" />
+      <point x="-61.0" y="0.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.model.board.ReferenceBoard" target="com.lucwo.fourcharm.model.Mark">
+      <point x="62.5" y="0.0" />
+      <point x="1720.0" y="760.0" />
+      <point x="0.0" y="-15.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.presenter.FourCharmFactory" target="com.lucwo.fourcharm.presenter.game.NewGamePresenter">
+      <point x="70.0" y="0.0" />
+      <point x="-73.5" y="0.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.presenter.space.SpacePresenter" target="com.lucwo.fourcharm.model.Mark">
+      <point x="-62.0" y="0.0" />
+      <point x="31.0" y="0.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.presenter.game.GamePresenter" target="com.lucwo.fourcharm.model.HumanPlayer">
+      <point x="0.0" y="15.0" />
+      <point x="0.0" y="-15.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.model.HumanPlayer" target="com.lucwo.fourcharm.model.Mark">
+      <point x="0.0" y="15.0" />
+      <point x="720.0" y="920.0" />
+      <point x="1720.0" y="920.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.view.FourCharmTUI" target="com.lucwo.fourcharm.model.ComputerPlayer">
+      <point x="0.0" y="15.0" />
+      <point x="0.0" y="-15.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.view.FourCharmTUI" target="com.lucwo.fourcharm.model.ai.MTDfStrategy">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.model.board.BinaryBoard" target="com.lucwo.fourcharm.model.board.Board">
+      <point x="51.0" y="0.0" />
+      <point x="-33.5" y="0.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.model.Game" target="com.lucwo.fourcharm.model.board.Board">
+      <point x="0.0" y="15.0" />
+      <point x="0.0" y="-15.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.presenter.board.BoardPresenter" target="com.lucwo.fourcharm.presenter.game.GamePresenter">
+      <point x="0.0" y="-15.0" />
+      <point x="1920.0" y="80.0" />
+      <point x="760.0" y="80.0" />
+      <point x="40.0" y="-15.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.model.ai.MTDfStrategy" target="com.lucwo.fourcharm.model.ai.NegaMaxStrategy">
+      <point x="56.0" y="0.0" />
+      <point x="1280.0" y="360.0" />
+      <point x="1280.0" y="240.0" />
+      <point x="67.0" y="0.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.presenter.game.GamePresenter" target="com.lucwo.fourcharm.model.ai.NegaMaxStrategy">
+      <point x="61.0" y="7.5" />
+      <point x="1160.0" y="167.5" />
+      <point x="0.0" y="-15.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.FourCharm" target="com.lucwo.fourcharm.presenter.FourCharmFactory">
+      <point x="49.0" y="0.0" />
+      <point x="240.0" y="0.0" />
+      <point x="-40.0" y="-15.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.presenter.FourCharmFactory" target="com.lucwo.fourcharm.presenter.game.GamePresenter">
+      <point x="0.0" y="15.0" />
+      <point x="280.0" y="160.0" />
+      <point x="-61.0" y="0.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.model.board.BinaryBoard" target="com.lucwo.fourcharm.exception.InvalidMoveException">
+      <point x="0.0" y="15.0" />
+      <point x="0.0" y="-15.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.presenter.space.SpacePresenter" target="com.lucwo.fourcharm.presenter.board.BoardPresenter">
+      <point x="62.0" y="0.0" />
+      <point x="2040.0" y="840.0" />
+      <point x="2040.0" y="160.0" />
+      <point x="61.0" y="0.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.presenter.FourCharmPresenter" target="com.lucwo.fourcharm.presenter.game.NewGamePresenter">
+      <point x="-40.0" y="15.0" />
+      <point x="680.0" y="80.0" />
+      <point x="73.5" y="0.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.server.FourCharmServer" target="com.lucwo.fourcharm.server.CoreServerHandler">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.lucwo.fourcharm.presenter.game.GamePresenter" target="com.lucwo.fourcharm.model.ComputerPlayer">
+      <point x="61.0" y="10.0" />
+      <point x="840.0" y="170.0" />
+      <point x="840.0" y="840.0" />
+      <point x="-62.5" y="0.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.5000000000000001" x="436.9999999999998" y="465.9999999999999" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>public</VISIBILITY>
+</Diagram>
+

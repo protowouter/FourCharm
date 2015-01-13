@@ -5,7 +5,10 @@
 package com.lucwo.fourcharm.exception;
 
 /**
- * Exception that gets thrown when an invalid is attempted to be made.
+ * Exception that gets thrown when an invalid move is attempted to be made.
+ * This class extends the normal Exception class and is used by the Board
+ * class, because there moves are made.
+ *
  * @author Luce Sandfort and Wouter Timmermans
  *
  */

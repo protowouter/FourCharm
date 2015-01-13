@@ -9,7 +9,11 @@ import com.lucwo.fourcharm.model.Mark;
 
 /**
  * The Board class Models a gameboard for the game of Connect4 and provides facilities for making moves and checking
- * if a player has won.
+ * if a player has won. BinaryBoard and ReferenceBoard extend the Board class.This class makes use of the
+ * InvalidMoveException class which extends Exception. Before making a move, the Board class will check if the move
+ * if allowed or not. It will throw the InvalidMoveException if a move is not valid.
+ *
+ *
  * The board positions are numbered as follows:
  * <pre>
  *       1  2  3  4  5  6  7
@@ -21,6 +25,7 @@ import com.lucwo.fourcharm.model.Mark;
  *   2 |01|07|13|19|25|31|37|
  *   1 |00|06|12|18|24|30|36|
  * </pre>
+ *
  * @author Luce Sandfort and Wouter Timmermans
  */
 public abstract class Board {

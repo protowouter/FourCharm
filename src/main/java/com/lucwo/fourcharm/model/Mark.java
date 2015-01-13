@@ -4,6 +4,14 @@
 
 package com.lucwo.fourcharm.model;
 
+/**
+ * The Mark enums responsibility is to switch the current player
+ * and the next player by using the method 'other()'. This way
+ * the first player is allowed to go first, and the other player
+ * will go second. It doesn't matter which player is player 1. The
+ * other player will always be player 2.
+ */
+
 public enum Mark {
 
     P1, P2, EMPTY;
