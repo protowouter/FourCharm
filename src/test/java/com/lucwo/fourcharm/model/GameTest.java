@@ -13,8 +13,8 @@ import static org.junit.Assert.*;
 
 public class GameTest {
 
-    static Player p1 = new ComputerPlayer(new RandomStrategy(), Mark.P1);
-    static Player p2 = new ComputerPlayer(new RandomStrategy(), Mark.P2);
+    static Player p1 = new LocalAIPlayer(new RandomStrategy(), Mark.P1);
+    static Player p2 = new LocalAIPlayer(new RandomStrategy(), Mark.P2);
     Game game;
 
     @Before

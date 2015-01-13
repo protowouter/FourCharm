@@ -13,15 +13,15 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ComputerPlayerTest {
+public class LocalAIPlayerTest {
 
-    ComputerPlayer player;
+    LocalAIPlayer player;
     Board board;
 
     @Before
     public void setUp() throws Exception {
 
-        player = new ComputerPlayer(new RandomStrategy(), Mark.P1);
+        player = new LocalAIPlayer(new RandomStrategy(), Mark.P1);
         board = new BinaryBoard();
 
 

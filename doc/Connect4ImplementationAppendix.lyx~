@@ -597,12 +597,11 @@ This says as much as set an one at the bit index of the board position
 \end_layout
 
 \begin_layout Subsection
-Detection column overflow
+Detecting column overflow
 \end_layout
 
 \begin_layout Standard
-To detect an overflow of an column the board representation long gets anned
- with TOP
+The 'AND' operator is used on the long for the player and TOP.
 \end_layout
 
 \begin_layout Standard
@@ -617,10 +616,17 @@ color[player]\: AND\: TOP
 \end_layout
 
 \begin_layout Standard
-As can be seen in the numbering of board positions, there is an gap of one
- between top spot of an column and the lowest spot of the following column.
- The bits with these index have been set to one in TOP.
- 
+As can be seen in the numbering of board positions, there is a gap of one
+ between the index of the top spot of a column and the index of the lowest
+ spot of the following column.
+ The bits with these indexes have been set to 1 in TOP.
+ For a valid board this operation always return 0.
+ If however one of the columns overflowed, this operation returns 1.
+ Therefore it is simply tested if this operation returns 0;
+\end_layout
+
+\begin_layout Standard
+
 \end_layout
 
 \end_body

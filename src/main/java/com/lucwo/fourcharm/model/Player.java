@@ -27,6 +27,8 @@ public interface Player {
         board.makemove(determineMove(board), getMark());
     }
 
+    public String getName();
+
     public Mark getMark();
 
 }

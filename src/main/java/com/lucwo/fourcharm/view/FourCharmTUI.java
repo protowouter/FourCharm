@@ -4,14 +4,12 @@
 
 package com.lucwo.fourcharm.view;
 
-import com.lucwo.fourcharm.model.ComputerPlayer;
-import com.lucwo.fourcharm.model.Game;
-import com.lucwo.fourcharm.model.HumanPlayer;
-import com.lucwo.fourcharm.model.Mark;
-import com.lucwo.fourcharm.model.ai.MTDfStrategy;
+import com.lucwo.fourcharm.model.*;
+import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Observable;
 import java.util.Observer;
@@ -24,24 +22,25 @@ import java.util.logging.Logger;
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
-class FourCharmTUI implements Observer {
+class FourCharmTUI implements Observer, MoveRequestable {
     
     
     
     // ------------------ Instance variables ----------------
 
     private final Game game;
+    private BufferedReader reader;
     
     // --------------------- Constructors -------------------
 
     protected FourCharmTUI() throws InstantiationException, IllegalAccessException {
         super();
 
-        BufferedReader dis = new BufferedReader(
+        reader = new BufferedReader(
                 new InputStreamReader(System.in));
 
-        game = new Game(BinaryBoard.class, new ComputerPlayer(new MTDfStrategy(), Mark.P1),
-                new HumanPlayer(dis, Mark.P2));
+        game = new Game(BinaryBoard.class, new LocalAIPlayer(new NegaMaxStrategy(10), Mark.P1),
+                new ASyncPlayer("Wouter", this, Mark.P2));
 
         game.addObserver(this);
 
@@ -57,11 +56,11 @@ class FourCharmTUI implements Observer {
 
         LogManager.getLogManager().reset();
 
-        globalLogger.setLevel(Level.FINEST);
+        globalLogger.setLevel(Level.INFO);
 
 
         ConsoleHandler cH = new ConsoleHandler();
-        cH.setLevel(Level.FINEST);
+        cH.setLevel(Level.INFO);
 
         globalLogger.addHandler(cH);
 
@@ -111,4 +110,33 @@ class FourCharmTUI implements Observer {
 
     }
 
+    @Override
+    public int requestMove() {
+        System.out.println("Please enter move:");
+
+        int move = 0;
+
+        String line = "";
+        try {
+            line = reader.readLine();
+        } catch (IOException e) {
+            Logger.getGlobal().warning(e.toString());
+            Logger.getGlobal().throwing("ASyncPlayer", "determineMove", e);
+        }
+        Logger.getGlobal().info("Playerinput: " + line);
+        if (line == null) {
+            requestMove();
+        } else {
+            for (int i = 0; i < line.length(); i++) {
+                int col = line.charAt(i) - '1';
+                if ((col >= 0) && (col < game.getBoard().getColumns())
+                        && game.getBoard().columnHasFreeSpace(col)) {
+                    move = col;
+                } else {
+                    move = requestMove();
+                }
+            }
+        }
+        return move;
+    }
 }

@@ -6,7 +6,7 @@ package com.lucwo.fourcharm.cucumber;
 
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
-import com.lucwo.fourcharm.model.ComputerPlayer;
+import com.lucwo.fourcharm.model.LocalAIPlayer;
 import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
@@ -27,7 +27,7 @@ import static org.junit.Assert.fail;
 public class BoardStateSteps {
 
     private static final String TODO = "Not yet implemented";
-    private static final ComputerPlayer cP = new ComputerPlayer(new RandomStrategy(), Mark.P1);
+    private static final LocalAIPlayer cP = new LocalAIPlayer(new RandomStrategy(), Mark.P1);
     private Board binBoard;
     private Board refBoard;
     

@@ -83,8 +83,8 @@ public class GamePresenter implements Observer {
             Logger.getGlobal().throwing("FourCharmController", "Constructor", e);
         }
 
-        p1 = new ComputerPlayer(new NegaMaxStrategy(), Mark.P1);
-        p2 = new HumanPlayer(playerReader, Mark.P2);
+        p1 = new LocalAIPlayer(new NegaMaxStrategy(), Mark.P1);
+        p2 = new ASyncPlayer(null, null, Mark.P2);
 
 
         try {
@@ -105,7 +105,7 @@ public class GamePresenter implements Observer {
 
         if (o instanceof Game) {
             Platform.runLater(() -> {
-                if (game.getCurrent() instanceof HumanPlayer) {
+                if (game.getCurrent() instanceof ASyncPlayer) {
                     boardPresenter.enableSpaces();
                 } else {
                     boardPresenter.disableSpaces();

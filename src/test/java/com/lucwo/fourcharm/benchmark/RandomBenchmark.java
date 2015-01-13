@@ -5,7 +5,7 @@
 package com.lucwo.fourcharm.benchmark;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
-import com.lucwo.fourcharm.model.ComputerPlayer;
+import com.lucwo.fourcharm.model.LocalAIPlayer;
 import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.Player;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
@@ -54,8 +54,8 @@ public class RandomBenchmark {
                 Logger.getGlobal().info(intPercent + "%");
             }
 
-            Player p1 = new ComputerPlayer(new RandomStrategy(), Mark.P1);
-            Player p2 = new ComputerPlayer(new RandomStrategy(), Mark.P2);
+            Player p1 = new LocalAIPlayer(new RandomStrategy(), Mark.P1);
+            Player p2 = new LocalAIPlayer(new RandomStrategy(), Mark.P2);
 
             Player current = null;
 

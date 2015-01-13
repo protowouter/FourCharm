@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 /**
  * This MTDfStrategy class makes use of the interface GameStrategy. This
- * is a specific strategy a computer player (ComputerPlayer class) can use.
+ * is a specific strategy a computer player (LocalAIPlayer class) can use.
  * So this class is responsible for giving the computer player brains. This
  * way the computer player can think ahead and foresee certain moves.
  */
