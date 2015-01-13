@@ -6,12 +6,11 @@ package com.lucwo.fourcharm.view;
 
 import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
-import com.lucwo.fourcharm.model.board.BinaryBoard;
+import com.lucwo.fourcharm.model.board.ReferenceBoard;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -26,43 +25,50 @@ class FourCharmTUI implements Observer, MoveRequestable {
 
     // ------------------ Instance variables ----------------
 
-    private final Game game;
-    private BufferedReader reader;
+    private Game game;
+    private Scanner nameScanner;
     private boolean running;
+    private BlockingQueue<Integer> rij;
+    private boolean gameOn;
     
     // --------------------- Constructors -------------------
 
+    /**
+     * Constructor
+     *
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     protected FourCharmTUI() throws InstantiationException, IllegalAccessException {
         super();
 
-        reader = new BufferedReader(
-                new InputStreamReader(System.in));
-
-        game = new Game(BinaryBoard.class, new LocalAIPlayer(new NegaMaxStrategy(10), Mark.P1),
-                new ASyncPlayer("Wouter", this, Mark.P2));
-
-        game.addObserver(this);
+        nameScanner = new Scanner(System.in);
+        rij = new LinkedBlockingQueue<>(1);
+        gameOn = true;
+        running = true;
     }
 
     /**
+     * The main method of the FourCharmTui.
      * @param args none applicable
      */
     public static void main(String[] args) {
 
         Logger globalLogger = Logger.getGlobal();
         LogManager.getLogManager().reset();
-        globalLogger.setLevel(Level.INFO);
+        globalLogger.setLevel(Level.FINE);
 
         ConsoleHandler cH = new ConsoleHandler();
-        cH.setLevel(Level.INFO);
+        cH.setLevel(Level.FINE);
 
         globalLogger.addHandler(cH);
 
         try {
-            new FourCharmTUI().play();
+            new FourCharmTUI().run();
         } catch (InstantiationException | IllegalAccessException e) {
             Logger.getGlobal().throwing("FourCharmTUI", "main", e);
         }
+
 
 
     }
@@ -71,7 +77,6 @@ class FourCharmTUI implements Observer, MoveRequestable {
 
     /**
      * Reads the command and places it in an array.
-     *
      * @param commandString the command in string format
      */
     private void parseCommand(String commandString) {
@@ -92,7 +97,6 @@ class FourCharmTUI implements Observer, MoveRequestable {
 
     /**
      * Checks if the given command is valid.
-     *
      * @param commandString the command in string format
      * @param args          the amount of commands
      */
@@ -119,8 +123,23 @@ class FourCharmTUI implements Observer, MoveRequestable {
      */
     private void executeCommand(Command command, String[] args) {
         switch (command) {
+            //Start new game if true
+            case YES:
+                if (!gameOn) {
+                    startGame();
+                }
+                break;
             //Use the chat function
             case CHAT:
+                break;
+            //Make a move
+            case MOVE:
+                int moove = Integer.parseInt(args[0]) - 1;
+                try {
+                    rij.put(moove);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 break;
             //Ask for a hint in the current game.
             case HINT:
@@ -171,91 +190,119 @@ class FourCharmTUI implements Observer, MoveRequestable {
     }
 
     /**
-     *
+     * Updates everything, like omg.
      * @param o
-     * @param arg
+     * @param arg het object
      */
     @Override
     public void update(Observable o, Object arg) {
         Logger.getGlobal().finer("Tui is getting message from: " + o.toString());
         if (o instanceof Game) {
-            System.out.println(((Game) o).getBoard().toString());
-        }
+            Game newGame = (Game) o;
+            System.out.println((newGame).getBoard().toString());
+            if (newGame.hasFinished()) {
+                showMessage("The game has finished. ");
+                gameOn = false;
+                if (newGame.hasWinner()) {
+                    showMessage("The winner is " + newGame.getWinner());
+                }
+                showMessage("Would you like to play a new game? [yes/exit]");
+                if (nameScanner.hasNextLine()) {
+                    if (nameScanner.nextLine().equals("Yes")) {
+                        startGame();
+                    }
+                }
 
-    }
-    
-    /**
-     * Start the game.
-     */
-    protected void play() {
 
-        while (running) {
-            update(game, null);
-            game.play();
-
-            // Game Finished
-            System.out.println(game.getBoard().toString());
-
-            if (game.hasWinner()) {
-                System.out.println(game.getWinner().toString() + " Won");
-            } else {
-                System.out.println("The game is a tie");
             }
         }
 
+    }
+
+    /**
+     * Run the game.
+     */
+    protected void run() {
+        showMessage("Welcome to FourCharm Connect4.");
+        startGame();
+
+
+        while (running && nameScanner.hasNextLine()) {
+            parseCommand(nameScanner.nextLine());
+
+        }
+
+        game.stop();
+        try {
+            rij.put(0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
     /**
-     *
+     * Starts the game.
+     */
+    private void startGame() {
+        String name = "";
+        showMessage("Please enter your name");
+
+        if (nameScanner.hasNextLine()) {
+            name = nameScanner.nextLine();
+            showMessage("Welcome " + name);
+        }
+
+        Player player1 = new ASyncPlayer(name, this, Mark.P1);
+        Player player2 = new LocalAIPlayer(new NegaMaxStrategy(10), Mark.P2);
+
+        try {
+            game = new Game(ReferenceBoard.class, player1, player2);
+            game.addObserver(this);
+
+            new Thread(game).start();
+
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Asks for a move and puts this move in the queue.
      * @return the requested move
      */
     @Override
     public int requestMove() {
-        System.out.println("Please enter move:");
-
-        int move = 0;
-
-        String line = "";
+        showMessage("It's your turn now! Please make a move by using command 'move [number]'");
+        int column = -1;
         try {
-            line = reader.readLine();
-        } catch (IOException e) {
-            Logger.getGlobal().warning(e.toString());
-            Logger.getGlobal().throwing("ASyncPlayer", "determineMove", e);
+            column = rij.take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        Logger.getGlobal().info("Playerinput: " + line);
-        if (line == null) {
-            requestMove();
-        } else {
-            for (int i = 0; i < line.length(); i++) {
-                int col = line.charAt(i) - '1';
-                if ((col >= 0) && (col < game.getBoard().getColumns())
-                        && game.getBoard().columnHasFreeSpace(col)) {
-                    move = col;
-                } else {
-                    move = requestMove();
-                }
-            }
-        }
-        return move;
+        return column;
     }
 
     /**
-     * Enum class that 'holds' the commands.
+     * Enum class that 'holds' the commands of the Connect4 game.
      */
     private enum Command {
-        CHAT(new String[0]),
+        CHAT(new String[]{"Chatmessage"}),
         HINT(new String[0]),
         EXIT(new String[0]),
-        CHALLENGE(new String[0]),
+        CHALLENGE(new String[]{"Player name"}),
         HELP(new String[0]),
-        LIST_PLAYERS(new String[0]);
+        MOVE(new String[]{"The column"}),
+        LIST_PLAYERS(new String[0]),
+        YES(new String[0]);
 
 
-        String[] commandNames;
+        String[] parameterNames;
 
         Command(String[] cNames) {
-            commandNames = cNames;
+            parameterNames = cNames;
         }
 
         /**
@@ -276,7 +323,7 @@ class FourCharmTUI implements Observer, MoveRequestable {
          * @return an integer with the total amount of arguments
          */
         public int argCount() {
-            return commandNames.length;
+            return parameterNames.length;
         }
 
         /**
@@ -284,7 +331,7 @@ class FourCharmTUI implements Observer, MoveRequestable {
          */
         public String argDesc() {
             String desc = "";
-            for (String arg : commandNames) {
+            for (String arg : parameterNames) {
                 desc += "[" + arg + "]";
             }
 

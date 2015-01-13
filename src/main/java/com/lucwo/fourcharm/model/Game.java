@@ -26,6 +26,7 @@ public class Game extends Observable implements Runnable {
     private Player player1;
     private Player player2;
     private Player current;
+    private boolean running;
 
     /**
      * Create an new Game of connect 4. This constructor accepts an class
@@ -46,7 +47,7 @@ public class Game extends Observable implements Runnable {
 
         player1 = p1;
         player2 = p2;
-
+        running = true;
     }
 
     /**
@@ -69,7 +70,9 @@ public class Game extends Observable implements Runnable {
         current = null;
         boolean fairplay = true;
 
-        while (fairplay && (current == null || !hasFinished())) {
+        while (running && fairplay && (current == null || !hasFinished())) {
+            setChanged();
+            notifyObservers();
             current = nextPlayer();
             try {
                 current.doMove(board);
@@ -77,8 +80,7 @@ public class Game extends Observable implements Runnable {
             } catch (InvalidMoveException e) {
                 fairplay = false;
             }
-            setChanged();
-            notifyObservers();
+
         }
 
         if (hasWinner()) {
@@ -165,8 +167,8 @@ public class Game extends Observable implements Runnable {
         play();
     }
 
-    public void hoi() {
-        int i;
+    public void stop() {
+        running = false;
     }
 
 }
