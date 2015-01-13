@@ -102,12 +102,12 @@ class FourCharmTUI implements Observer, MoveRequestable {
             if (args.length == command.argCount()) {
                 executeCommand(command, args);
             } else {
-                showError("The command " + +command.toString()
+                showError("The command " + command.toString()
                         + " requires " + command.argCount()
                         + " parameters. You gave " + args.length + ".");
             }
         } else {
-            showError("This command has no power here! Muwhahah!");
+            showError("This command has no power here!");
         }
     }
 
@@ -145,7 +145,6 @@ class FourCharmTUI implements Observer, MoveRequestable {
 
     /**
      * Shows the given message.
-     *
      * @param message the given message
      */
     private void showMessage(String message) {
@@ -164,7 +163,6 @@ class FourCharmTUI implements Observer, MoveRequestable {
 
     /**
      * Shows the (error) message.
-     *
      * @param message the (error) message
      */
     public void showError(String message) {
