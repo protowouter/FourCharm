@@ -5,8 +5,8 @@
 package com.lucwo.fourcharm.benchmark;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
-import com.lucwo.fourcharm.model.ComputerPlayer;
 import com.lucwo.fourcharm.model.Game;
+import com.lucwo.fourcharm.model.LocalAIPlayer;
 import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.Player;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
@@ -59,10 +59,10 @@ public class AIBenchmark {
         final int total = ITERATIONS;
         final double step = total * STEP_PERCENTAGE;
 
-        Player smartPlayer1 = new ComputerPlayer(new MTDfStrategy(), Mark.P1);
-        Player smartPlayer2 = new ComputerPlayer(new MTDfStrategy(), Mark.P2);
-        Player dumbPlayer1 = new ComputerPlayer(new RandomStrategy(), Mark.P1);
-        Player dumbPlayer2 = new ComputerPlayer(new RandomStrategy(), Mark.P2);
+        Player smartPlayer1 = new LocalAIPlayer(new MTDfStrategy(), Mark.P1);
+        Player smartPlayer2 = new LocalAIPlayer(new MTDfStrategy(), Mark.P2);
+        Player dumbPlayer1 = new LocalAIPlayer(new RandomStrategy(), Mark.P1);
+        Player dumbPlayer2 = new LocalAIPlayer(new RandomStrategy(), Mark.P2);
 
         boolean switchPlayer = false;
 

@@ -4,11 +4,11 @@
 
 package com.lucwo.fourcharm.view;
 
-import com.lucwo.fourcharm.model.ComputerPlayer;
+import com.lucwo.fourcharm.model.ASyncPlayer;
 import com.lucwo.fourcharm.model.Game;
-import com.lucwo.fourcharm.model.HumanPlayer;
+import com.lucwo.fourcharm.model.LocalAIPlayer;
 import com.lucwo.fourcharm.model.Mark;
-import com.lucwo.fourcharm.model.ai.MTDfStrategy;
+import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 
 import java.io.BufferedReader;
@@ -40,8 +40,8 @@ class FourCharmTUI implements Observer {
         BufferedReader dis = new BufferedReader(
                 new InputStreamReader(System.in));
 
-        game = new Game(BinaryBoard.class, new ComputerPlayer(new MTDfStrategy(), Mark.P1),
-                new HumanPlayer(dis, Mark.P2));
+        game = new Game(BinaryBoard.class, new LocalAIPlayer(new NegaMaxStrategy(), Mark.P1),
+                new ASyncPlayer(dis, Mark.P2));
 
         game.addObserver(this);
 
@@ -57,11 +57,11 @@ class FourCharmTUI implements Observer {
 
         LogManager.getLogManager().reset();
 
-        globalLogger.setLevel(Level.FINEST);
+        globalLogger.setLevel(Level.INFO);
 
 
         ConsoleHandler cH = new ConsoleHandler();
-        cH.setLevel(Level.FINEST);
+        cH.setLevel(Level.INFO);
 
         globalLogger.addHandler(cH);
 

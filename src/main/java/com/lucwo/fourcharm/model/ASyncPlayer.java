@@ -11,16 +11,16 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
- * The HumanPlayer class 'makes' a human player. To play a game of
+ * The ASyncPlayer class 'makes' a human player. To play a game of
  * Connect4 as a human, the Game class makes use of the interface
- * Player. The HumanPlayer class implements Player. The main priority
+ * Player. The ASyncPlayer class implements Player. The main priority
  * of this class is get the input of the human player to the board.
  *
  *
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
-public class HumanPlayer implements Player {
+public class ASyncPlayer implements Player {
 
     private final BufferedReader reader;
     private final Mark mark;
@@ -31,7 +31,7 @@ public class HumanPlayer implements Player {
      * @param inputReader
      *            Reader from which the human input can be parsed
      */
-    public HumanPlayer(BufferedReader inputReader, Mark themark) {
+    public ASyncPlayer(BufferedReader inputReader, Mark themark) {
         super();
 
         reader = inputReader;
@@ -55,7 +55,7 @@ public class HumanPlayer implements Player {
             line = reader.readLine();
         } catch (IOException e) {
             Logger.getGlobal().warning(e.toString());
-            Logger.getGlobal().throwing("HumanPlayer", "determineMove", e);
+            Logger.getGlobal().throwing("ASyncPlayer", "determineMove", e);
         }
         Logger.getGlobal().info("Playerinput: " + line);
         if (line == null) {

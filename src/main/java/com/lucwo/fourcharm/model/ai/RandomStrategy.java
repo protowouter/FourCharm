@@ -11,7 +11,7 @@ import java.util.Random;
 
 /**
  * The RandomStrategy class implements GameStrategy and is another way
- * to make the computer player of the ComputerPlayer class 'smarter'.
+ * to make the computer player of the LocalAIPlayer class 'smarter'.
  * Well, maybe not exactly smarter because the strategy is random, so
  * it will be luck to win a game (or not if you lose).
  *

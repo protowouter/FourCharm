@@ -7,7 +7,7 @@ package com.lucwo.fourcharm.model;
 import org.junit.Before;
 import org.junit.Test;
 
-public class HumanPlayerTest {
+public class ASyncPlayerTest {
 
     @Before
     public void setUp() throws Exception {
