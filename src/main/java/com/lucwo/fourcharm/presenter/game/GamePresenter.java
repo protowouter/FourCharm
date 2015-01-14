@@ -87,11 +87,7 @@ public class GamePresenter implements Observer {
         p2 = new ASyncPlayer(null, null, Mark.P2);
 
 
-        try {
-            game = new Game(BinaryBoard.class, p1, p2);
-        } catch (InstantiationException | IllegalAccessException e) {
-            Logger.getGlobal().throwing("FourCharmController", "Constructor", e);
-        }
+        game = new Game(BinaryBoard.class, p1, p2);
 
         game.addObserver(this);
 
@@ -141,8 +137,8 @@ public class GamePresenter implements Observer {
             boardPane.getChildren().add(fxmlLoader.getRoot());
             boardPresenter = fxmlLoader.getController();
             boardPresenter.setGamePresenter(this);
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
+        } catch (IOException e) {
+            Logger.getGlobal().throwing(this.getClass().getSimpleName(), "initBoardPane", e);
         }
 
         ((BoardPresenter) fxmlLoader.getController()).initBoard(game.getBoard());

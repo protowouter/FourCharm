@@ -26,6 +26,7 @@ public class Game extends Observable implements Runnable {
     private Player player1;
     private Player player2;
     private Player current;
+    private boolean running;
 
     /**
      * Create an new Game of connect 4. This constructor accepts an class
@@ -35,29 +36,29 @@ public class Game extends Observable implements Runnable {
      * @param boardClass Class to use as board implementation
      * @param p1 The first player who wil play this game
      * @param p2 The second player who wil play this game
-     * @throws InstantiationException 
-     * @throws IllegalAccessException 
      */
-    public Game(Class<? extends Board> boardClass, Player p1, Player p2)
-            throws InstantiationException, IllegalAccessException {
+    public Game(Class<? extends Board> boardClass, Player p1, Player p2) {
         super();
 
         initBoard(boardClass);
 
         player1 = p1;
         player2 = p2;
-
+        running = true;
     }
 
     /**
      * @param boardClass
      *            Class to use as board implementation
      */
-    private void initBoard(Class<? extends Board> boardClass) throws InstantiationException, 
-        IllegalAccessException {
+    private void initBoard(Class<? extends Board> boardClass) {
 
-        board = boardClass.newInstance();
-      
+        try {
+            board = boardClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            Logger.getGlobal().throwing("Game", "initBoard", e);
+        }
+
     }
 
     /**
@@ -69,7 +70,9 @@ public class Game extends Observable implements Runnable {
         current = null;
         boolean fairplay = true;
 
-        while (fairplay && (current == null || !hasFinished())) {
+        while (running && fairplay && (current == null || !hasFinished())) {
+            setChanged();
+            notifyObservers();
             current = nextPlayer();
             try {
                 current.doMove(board);
@@ -77,8 +80,7 @@ public class Game extends Observable implements Runnable {
             } catch (InvalidMoveException e) {
                 fairplay = false;
             }
-            setChanged();
-            notifyObservers();
+
         }
 
         if (hasWinner()) {
@@ -165,8 +167,8 @@ public class Game extends Observable implements Runnable {
         play();
     }
 
-    public void hoi() {
-        int i;
+    public void stop() {
+        running = false;
     }
 
 }
