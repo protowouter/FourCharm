@@ -44,6 +44,11 @@ public class ClientHandler implements CoreServer.Iface {
         // TODO: Implement
     }
 
+    public CoreClient.Client getClient() {
+        return client;
+    }
+
+
 // ----------------------- Commands ---------------------
 
     /**

@@ -67,9 +67,9 @@ public abstract class ClientGroup {
     public abstract void join(ClientHandler client, String pName, int gNumber,
                               Set<String> exts) throws C4Exception;
 
-    public abstract void doMove(ClientHandler client, int col);
+    public abstract void doMove(ClientHandler client, int col) throws C4Exception;
 
-    public abstract void ready(ClientHandler client);
+    public abstract void ready(ClientHandler client) throws C4Exception;
 
 
 }
