@@ -6,7 +6,9 @@ package com.lucwo.fourcharm.server;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -16,41 +18,41 @@ import java.util.Set;
 
 public abstract class ClientGroup {
 
+    private Map<String, ClientHandler> clientCollection;
+
     public ClientGroup() {
-        // TODO: Implement
+        clientCollection = new HashMap<>();
     }
 
 
     /**
      * Adds a ClientHandler to this collection of Clients and informs the
      * ClientHandler of this change.
-     *
      * @param client the ClientHandler that will be added.
      */
     public void addHandler(ClientHandler client) {
-        // TODO: Implement
+        clientCollection.put(client.getName(), client);
+        client.setClientGroup(this);
     }
 
 
     /**
      * Removes a ClientHandler from this collection of Clients and informs the
      * ClientHandler of this change.
-     *
      * @param client the Clienthandler that will be removed.
      */
     public void removeHandler(ClientHandler client) {
-        // TODO: Implement
+        clientCollection.remove(client.getName());
+        client.setClientGroup(null);
     }
 
 
     /**
-     * Returns an {@link java.util.Iterator} over the Collection of ClientHandler
-     *
-     * @return
+     * Returns an {@link java.util.Iterator} over the Collection of ClientHandler.
+     * @return an iterator over the clients in this group.
      */
     public Iterator<ClientHandler> getClients() {
-        // TODO: Implement
-        return null;
+        return clientCollection.values().iterator();
     }
 
     /**
@@ -62,7 +64,8 @@ public abstract class ClientGroup {
      * @param gNumber Group number
      * @param exts    Set of extensions supported
      */
-    public abstract void join(ClientHandler client, String pName, int gNumber, Set<String> exts) throws C4Exception;
+    public abstract void join(ClientHandler client, String pName, int gNumber,
+                              Set<String> exts) throws C4Exception;
 
     public abstract void doMove(ClientHandler client, int col);
 

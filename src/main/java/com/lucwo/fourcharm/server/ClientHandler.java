@@ -29,7 +29,6 @@ public class ClientHandler implements CoreServer.Iface {
 
     /**
      * Returns the name of this ClientHandler.
-     *
      * @return the name of this ClientHandler
      */
     public String getName() {
@@ -39,7 +38,6 @@ public class ClientHandler implements CoreServer.Iface {
 
     /**
      * Sets the name of this ClientHandler.
-     *
      * @param name the name of the ClientHandler
      */
     public void setName(String name) {
@@ -50,7 +48,6 @@ public class ClientHandler implements CoreServer.Iface {
 
     /**
      * Returns the ClientGroup of this ClientHandler.
-     *
      * @return the ClientGroup of this ClientHandler
      */
     public ClientGroup getClientGroup() {
@@ -60,7 +57,6 @@ public class ClientHandler implements CoreServer.Iface {
 
     /**
      * Sets the ClientGroup of this ClientHandler.
-     *
      * @param cG The clientgroup this ClientHandler will belong to.
      */
     public void setClientGroup(ClientGroup cG) {
