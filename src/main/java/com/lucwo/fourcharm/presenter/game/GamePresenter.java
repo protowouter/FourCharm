@@ -14,10 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.FlowPane;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PipedReader;
-import java.io.PipedWriter;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.BlockingQueue;
@@ -25,7 +22,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
 
-public class GamePresenter implements Observer {
+public class GamePresenter implements Observer, MoveRequestable {
 
     // ------------------ Instance variables ----------------
 
@@ -76,18 +73,10 @@ public class GamePresenter implements Observer {
     }
 
     public void showGame() {
-        playerInput = new PipedWriter();
         playerMoves = new LinkedBlockingQueue<>();
-        BufferedReader playerReader = new BufferedReader(new PipedReader());
-
-        try {
-            playerReader = new BufferedReader(new PipedReader(playerInput));
-        } catch (IOException e) {
-            Logger.getGlobal().throwing("FourCharmController", "Constructor", e);
-        }
 
         p1 = new LocalAIPlayer(new NegaMaxStrategy(), Mark.P1);
-        p2 = new ASyncPlayer("To be Implemented", null, Mark.P2);
+        p2 = new ASyncPlayer("To be Implemented", this, Mark.P2);
 
 
         game = new Game(BinaryBoard.class, p1, p2);
@@ -122,8 +111,8 @@ public class GamePresenter implements Observer {
 
     public void doPlayerMove(int col) {
         try {
-            playerInput.write(col + "\n");
-        } catch (IOException e) {
+            playerMoves.put(col);
+        } catch (InterruptedException e) {
             Logger.getGlobal().throwing("FourCharmController", "doPlayerMove", e);
         }
     }
@@ -149,4 +138,14 @@ public class GamePresenter implements Observer {
         game.addObserver(fxmlLoader.getController());
     }
 
+    @Override
+    public int requestMove() {
+        int result = -1;
+        try {
+            result = playerMoves.take();
+        } catch (InterruptedException e) {
+            Logger.getGlobal().throwing(this.getClass().getSimpleName(), "requestMove", e);
+        }
+        return result;
+    }
 }
