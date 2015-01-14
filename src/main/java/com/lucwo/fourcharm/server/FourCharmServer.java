@@ -59,7 +59,7 @@ public class FourCharmServer {
 
         CoreClient.Client clientClient = new CoreClient.Client(out);
 
-        CoreServerHandler handler = new CoreServerHandler(clientClient);
+        ClientHandler handler = new ClientHandler(clientClient);
         CoreServer.Processor processor = new CoreServer.Processor<>(handler);
 
         try {
