@@ -67,6 +67,7 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
         try {
             String input = in.readLine();
             while (in != null) {
+                Logger.getGlobal().info("Processing input " + input);
                 processor.process(input);
                 input = in.readLine();
 

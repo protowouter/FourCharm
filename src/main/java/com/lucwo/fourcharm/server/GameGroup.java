@@ -31,8 +31,6 @@ public class GameGroup extends ClientGroup {
 
     // --------------------- Constructors -------------------
     public GameGroup(ClientHandler client1, ClientHandler client2) {
-        addHandler(client1);
-        addHandler(client2);
         MoveQueue p1Queue = new MoveQueue(client1);
         MoveQueue p2Queue = new MoveQueue(client2);
         moveQueues = new HashMap<>();
