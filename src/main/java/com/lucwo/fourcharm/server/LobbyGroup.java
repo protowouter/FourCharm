@@ -50,7 +50,7 @@ public class LobbyGroup extends ClientGroup {
     @Override
     public void doMove(ClientHandler client, int col) throws C4Exception {
 
-        throw new InvalidCommandError("You are not allowed to use this command now.")
+        throw new InvalidCommandError("You are not allowed to use this command now.");
     }
 
     /**
@@ -68,12 +68,11 @@ public class LobbyGroup extends ClientGroup {
         } else if (readyClient == client) {
             throw new InvalidCommandError("You are already waiting and not allowed to play against yourself. " +
                     "Please be patient.");
-        } else if (readyClient != client) {
+        } else {
             new GameGroup(readyClient, client);
         }
 
     }
-
 
 
 }

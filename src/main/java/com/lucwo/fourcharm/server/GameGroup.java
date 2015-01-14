@@ -39,7 +39,8 @@ public class GameGroup extends ClientGroup {
         moveQueues.put(client1, p1Queue);
         moveQueues.put(client2, p2Queue);
 
-        game = new Game(BinaryBoard.class, new ASyncPlayer(client1.getName(), p1Queue, Mark.P1));
+        game = new Game(BinaryBoard.class, new ASyncPlayer(client1.getName(), p1Queue, Mark.P1),
+                new ASyncPlayer(client2.getName(), p2Queue, Mark.P2));
     }
 
 // ----------------------- Queries ----------------------

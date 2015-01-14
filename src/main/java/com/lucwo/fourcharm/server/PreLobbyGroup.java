@@ -14,7 +14,13 @@ public class PreLobbyGroup extends ClientGroup {
 
     // ------------------ Instance variables ----------------
 
+    ClientGroup lobby;
+
     // --------------------- Constructors -------------------
+
+    public PreLobbyGroup(ClientGroup lob) {
+        lobby = lob;
+    }
 
     // ----------------------- Queries ----------------------
 
@@ -33,7 +39,9 @@ public class PreLobbyGroup extends ClientGroup {
     public void join(ClientHandler client, String pName, int gNumber,
                      Set<String> exts) throws C4Exception {
         //TODO: Check dat de naam niet al bestaat in de server.
+        client.setName(pName);
         client.getClient().accept(gNumber, exts);
+        lobby.addHandler(client);
     }
 
     /**

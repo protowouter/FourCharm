@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 
 public class FourCharmServer {
 
+    private static ClientGroup preLobby = new PreLobbyGroup(new LobbyGroup());
+
     public static void main(String[] args) {
 
         Logger.getGlobal().info("Starting Fourcharm server");
@@ -60,6 +62,7 @@ public class FourCharmServer {
         CoreClient.Client clientClient = new CoreClient.Client(out);
 
         ClientHandler handler = new ClientHandler(clientClient);
+        preLobby.addHandler(handler);
         CoreServer.Processor processor = new CoreServer.Processor<>(handler);
 
         try {

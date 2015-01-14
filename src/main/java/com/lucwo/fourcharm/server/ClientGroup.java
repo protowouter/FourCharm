@@ -31,6 +31,10 @@ public abstract class ClientGroup {
      * @param client the ClientHandler that will be added.
      */
     public void addHandler(ClientHandler client) {
+        ClientGroup clientGroup = client.getClientGroup();
+        if (clientGroup != null) {
+            clientGroup.removeHandler(client);
+        }
         clientCollection.put(client.getName(), client);
         client.setClientGroup(this);
     }
