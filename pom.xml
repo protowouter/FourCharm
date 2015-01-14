@@ -38,7 +38,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.lucwo.fourcharm.FourCharm</mainClass>
+                            <mainClass>com.lucwo.fourcharm.view.FourCharmGUI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -59,7 +59,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.lucwo.fourcharm.FourCharm</mainClass>
+                            <mainClass>com.lucwo.fourcharm.view.FourCharmGUI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

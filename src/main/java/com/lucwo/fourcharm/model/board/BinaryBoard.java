@@ -198,7 +198,7 @@ public class BinaryBoard extends Board {
     public void makemove(int col, Mark mark) throws InvalidMoveException {
 
 
-        if (col < COLUMNS && columnHasFreeSpace(col)) {
+        if (col >= 0 && col < COLUMNS && columnHasFreeSpace(col)) {
             int player = getPlayerIndex(mark);
 
             moves[nplies] = col;

@@ -2,7 +2,7 @@
  * Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
  */
 
-package com.lucwo.fourcharm;
+package com.lucwo.fourcharm.view;
 
 import com.lucwo.fourcharm.presenter.FourCharmFactory;
 import javafx.application.Application;
@@ -14,7 +14,7 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class FourCharm extends Application {
+public class FourCharmGUI extends Application {
 
     // ---------------- Instance Variables ------------------
 
@@ -23,7 +23,7 @@ public class FourCharm extends Application {
 
     // --------------------- Constructors -------------------
 
-    public FourCharm() {
+    public FourCharmGUI() {
 
 
         fourCharmFactory = new FourCharmFactory();
@@ -51,7 +51,7 @@ public class FourCharm extends Application {
         Pane root = (Pane) fourCharmFactory.getFourCharmPresenter().getView();
 
         stage.setScene(new Scene(root, 1000, 1000));
-        stage.setTitle("FourCharm");
+        stage.setTitle("FourCharmGUI");
         stage.show();
     }
 }
