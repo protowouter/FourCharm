@@ -31,16 +31,19 @@ public class GameGroup extends ClientGroup {
 
     // --------------------- Constructors -------------------
     public GameGroup(ClientHandler client1, ClientHandler client2) {
-        player1 = client1;
-        player2 = client2;
-        MoveQueue p1Queue = new MoveQueue();
-        MoveQueue p2Queue = new MoveQueue();
+        addHandler(client1);
+        addHandler(client2);
+        MoveQueue p1Queue = new MoveQueue(client1);
+        MoveQueue p2Queue = new MoveQueue(client2);
         moveQueues = new HashMap<>();
         moveQueues.put(client1, p1Queue);
         moveQueues.put(client2, p2Queue);
 
         game = new Game(BinaryBoard.class, new ASyncPlayer(client1.getName(), p1Queue, Mark.P1),
                 new ASyncPlayer(client2.getName(), p2Queue, Mark.P2));
+        client1.getClient().startGame(client1.getName(), client2.getName());
+        client2.getClient().startGame(client1.getName(), client2.getName());
+        new Thread(game).start();
     }
 
 // ----------------------- Queries ----------------------
@@ -67,6 +70,9 @@ public class GameGroup extends ClientGroup {
 
         try {
             moveQueues.get(client).getQueue().add(col);
+            for (ClientHandler c : getClients()) {
+                c.getClient().doneMove(client.getName(), col);
+            }
         } catch (IllegalStateException e) {
             throw new InvalidMoveError("You are not allowed to make a move right now");
         }
@@ -93,10 +99,12 @@ public class GameGroup extends ClientGroup {
         // ---------------- Instantie variabelen ------------------
 
         private BlockingQueue<Integer> rij;
+        private ClientHandler client;
 
         // ---------------- Constructor ---------------------------
 
-        public MoveQueue() {
+        public MoveQueue(ClientHandler c) {
+            client = c;
             rij = new LinkedBlockingQueue<>(1);
         }
 
@@ -111,6 +119,8 @@ public class GameGroup extends ClientGroup {
          */
         @Override
         public int requestMove() {
+
+            client.getClient().requestMove(client.getName());
 
             int column = -1;
             try {

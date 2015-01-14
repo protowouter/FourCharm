@@ -6,8 +6,8 @@ package com.lucwo.fourcharm.server;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -55,8 +55,8 @@ public abstract class ClientGroup {
      * Returns an {@link java.util.Iterator} over the Collection of ClientHandler.
      * @return an iterator over the clients in this group.
      */
-    public Iterator<ClientHandler> getClients() {
-        return clientCollection.values().iterator();
+    public Collection<ClientHandler> getClients() {
+        return clientCollection.values();
     }
 
     /**

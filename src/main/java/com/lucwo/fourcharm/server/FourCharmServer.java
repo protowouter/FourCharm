@@ -6,34 +6,48 @@ package com.lucwo.fourcharm.server;
 
 
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreServer;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.logging.Logger;
 
 public class FourCharmServer {
 
-    private static ClientGroup preLobby = new PreLobbyGroup(new LobbyGroup());
+    private ClientGroup lobby;
+    private ClientGroup preLobby;
+    private Collection<ClientGroup> games;
+    private boolean running;
+
+    public FourCharmServer(int port) {
+        lobby = new LobbyGroup();
+        preLobby = new PreLobbyGroup(lobby);
+        games = new ArrayList<>();
+        running = true;
+        startServer(port);
+    }
 
     public static void main(String[] args) {
+
+        new FourCharmServer(8080);
+
+
+    }
+
+    public void startServer(int port) {
 
         Logger.getGlobal().info("Starting Fourcharm server");
 
         try {
-            ServerSocket ss = new ServerSocket(8080);
-            while (true) {
+            ServerSocket ss = new ServerSocket(port);
+            while (running) {
                 Socket sock = ss.accept();
-                Runnable handler = new Runnable() {
-                    @Override
-                    public void run() {
-                        handleClient(sock);
-                    }
-                };
-
-                new Thread(handler).start();
+                new Thread(() -> handleClient(sock)).start();
 
 
             }
@@ -43,10 +57,13 @@ public class FourCharmServer {
 
         Logger.getGlobal().info("Shutting down Fourcharm server");
 
-
     }
 
-    public static void handleClient(Socket sock) {
+    public void stop() {
+        running = false;
+    }
+
+    public void handleClient(Socket sock) {
 
         final String m_name = "handleClient";
 
@@ -73,7 +90,7 @@ public class FourCharmServer {
                     boolean processed = processor.process(input);
                     if (!processed) {
                         Logger.getGlobal().warning("This command is not recognized");
-                        clientClient.error(7);
+                        clientClient.error(new InvalidCommandError("").getErrorCode());
                     }
                 } catch (C4Exception e) {
 
@@ -94,6 +111,10 @@ public class FourCharmServer {
             }
         }
 
+
+    }
+
+    public void processInput(String input) {
 
     }
 

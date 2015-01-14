@@ -247,7 +247,7 @@ class FourCharmTUI implements FourCharmView, MoveRequestable {
         }
 
         Player player1 = new ASyncPlayer(name, this, Mark.P1);
-        Player player2 = new LocalAIPlayer(new NegaMaxStrategy(12), Mark.P2);
+        Player player2 = new LocalAIPlayer(new NegaMaxStrategy(10), Mark.P2);
 
         game = new Game(BinaryBoard.class, player1, player2);
         game.addObserver(this);
