@@ -93,7 +93,6 @@ public class GameGroup extends ClientGroup {
         throw new InvalidCommandError("You are not allowed to use this command now.");
     }
 
-
     private class MoveQueue implements MoveRequestable {
 
         // ---------------- Instantie variabelen ------------------
