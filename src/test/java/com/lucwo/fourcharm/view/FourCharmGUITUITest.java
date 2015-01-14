@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import java.util.Observable;
 
-public class FourCharmTUITest {
+public class FourCharmGUITUITest {
 
     FourCharmTUI tui;
 

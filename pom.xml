@@ -38,7 +38,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.lucwo.fourcharm.FourCharm</mainClass>
+                            <mainClass>com.lucwo.fourcharm.view.FourCharmGUI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -59,7 +59,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.lucwo.fourcharm.FourCharm</mainClass>
+                            <mainClass>com.lucwo.fourcharm.view.FourCharmGUI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -154,7 +154,7 @@
         <dependency>
             <groupId>nl.woutertimmermans.connect4</groupId>
             <artifactId>c4-protocol</artifactId>
-            <version>0.2</version>
+            <version>0.4</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

@@ -36,11 +36,8 @@ public class Game extends Observable implements Runnable {
      * @param boardClass Class to use as board implementation
      * @param p1 The first player who wil play this game
      * @param p2 The second player who wil play this game
-     * @throws InstantiationException 
-     * @throws IllegalAccessException 
      */
-    public Game(Class<? extends Board> boardClass, Player p1, Player p2)
-            throws InstantiationException, IllegalAccessException {
+    public Game(Class<? extends Board> boardClass, Player p1, Player p2) {
         super();
 
         initBoard(boardClass);
@@ -54,11 +51,14 @@ public class Game extends Observable implements Runnable {
      * @param boardClass
      *            Class to use as board implementation
      */
-    private void initBoard(Class<? extends Board> boardClass) throws InstantiationException, 
-        IllegalAccessException {
+    private void initBoard(Class<? extends Board> boardClass) {
 
-        board = boardClass.newInstance();
-      
+        try {
+            board = boardClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            Logger.getGlobal().throwing("Game", "initBoard", e);
+        }
+
     }
 
     /**

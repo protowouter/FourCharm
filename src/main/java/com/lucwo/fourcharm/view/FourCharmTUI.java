@@ -6,9 +6,12 @@ package com.lucwo.fourcharm.view;
 
 import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
-import com.lucwo.fourcharm.model.board.ReferenceBoard;
+import com.lucwo.fourcharm.model.board.BinaryBoard;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.ConsoleHandler;
@@ -20,7 +23,9 @@ import java.util.logging.Logger;
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
-class FourCharmTUI implements Observer, MoveRequestable {
+class FourCharmTUI implements FourCharmView, MoveRequestable {
+
+    private static final String NOT_IMPLEMENTED = "Not yet implemented";
 
 
     // ------------------ Instance variables ----------------
@@ -33,14 +38,7 @@ class FourCharmTUI implements Observer, MoveRequestable {
     
     // --------------------- Constructors -------------------
 
-    /**
-     * Constructor
-     *
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     */
-    protected FourCharmTUI() throws InstantiationException, IllegalAccessException {
-        super();
+    protected FourCharmTUI() {
 
         nameScanner = new Scanner(System.in);
         rij = new LinkedBlockingQueue<>(1);
@@ -63,12 +61,8 @@ class FourCharmTUI implements Observer, MoveRequestable {
 
         globalLogger.addHandler(cH);
 
-        try {
-            new FourCharmTUI().run();
-        } catch (InstantiationException | IllegalAccessException e) {
-            Logger.getGlobal().throwing("FourCharmTUI", "main", e);
-        }
 
+        new FourCharmTUI().run();
 
 
     }
@@ -89,7 +83,7 @@ class FourCharmTUI implements Observer, MoveRequestable {
             while (commandScanner.hasNext()) {
                 args.add(commandScanner.next());
             }
-            checkCommand(command, args.toArray(new String[0]));
+            checkCommand(command, args.toArray(new String[args.size()]));
         }
         commandScanner.close();
 
@@ -131,6 +125,7 @@ class FourCharmTUI implements Observer, MoveRequestable {
                 break;
             //Use the chat function
             case CHAT:
+                showError(NOT_IMPLEMENTED);
                 break;
             //Make a move
             case MOVE:
@@ -143,12 +138,15 @@ class FourCharmTUI implements Observer, MoveRequestable {
                 break;
             //Ask for a hint in the current game.
             case HINT:
+                showError(NOT_IMPLEMENTED);
                 break;
             //Challenge another player to play a game
             case CHALLENGE:
+                showError(NOT_IMPLEMENTED);
                 break;
             //List all of the players in the lobby
             case LIST_PLAYERS:
+                showError(NOT_IMPLEMENTED);
                 break;
             //List all the available commands
             case HELP:
@@ -189,17 +187,12 @@ class FourCharmTUI implements Observer, MoveRequestable {
 
     }
 
-    /**
-     * Updates everything, like omg.
-     * @param o
-     * @param arg het object
-     */
     @Override
     public void update(Observable o, Object arg) {
         Logger.getGlobal().finer("Tui is getting message from: " + o.toString());
         if (o instanceof Game) {
             Game newGame = (Game) o;
-            System.out.println((newGame).getBoard().toString());
+            System.out.println(newGame.getBoard().toString());
             if (newGame.hasFinished()) {
                 showMessage("The game has finished. ");
                 gameOn = false;
@@ -223,7 +216,7 @@ class FourCharmTUI implements Observer, MoveRequestable {
      * Run the game.
      */
     protected void run() {
-        showMessage("Welcome to FourCharm Connect4.");
+        showMessage("Welcome to FourCharmGUI Connect4.");
         startGame();
 
 
@@ -234,9 +227,9 @@ class FourCharmTUI implements Observer, MoveRequestable {
 
         game.stop();
         try {
-            rij.put(0);
+            rij.put(-1);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Logger.getGlobal().throwing(this.getClass().getSimpleName(), "run", e);
         }
 
     }
@@ -254,19 +247,12 @@ class FourCharmTUI implements Observer, MoveRequestable {
         }
 
         Player player1 = new ASyncPlayer(name, this, Mark.P1);
-        Player player2 = new LocalAIPlayer(new NegaMaxStrategy(10), Mark.P2);
+        Player player2 = new LocalAIPlayer(new NegaMaxStrategy(12), Mark.P2);
 
-        try {
-            game = new Game(ReferenceBoard.class, player1, player2);
-            game.addObserver(this);
+        game = new Game(BinaryBoard.class, player1, player2);
+        game.addObserver(this);
 
-            new Thread(game).start();
-
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        new Thread(game).start();
     }
 
     /**
@@ -306,8 +292,9 @@ class FourCharmTUI implements Observer, MoveRequestable {
         }
 
         /**
-         * @param cString
-         * @return
+         * @param cString String that will be parsed to a {@link Command}
+         * @return The command enum that is parsed from the input String.
+         * {@code null} if the command can't be parsed.
          */
         public static Command parseString(String cString) {
             for (Command c : Command.values()) {
@@ -320,14 +307,14 @@ class FourCharmTUI implements Observer, MoveRequestable {
         }
 
         /**
-         * @return an integer with the total amount of arguments
+         * @return an integer with the total amount of arguments.
          */
         public int argCount() {
             return parameterNames.length;
         }
 
         /**
-         * @return
+         * @return the Description of the arguments of this command.
          */
         public String argDesc() {
             String desc = "";
@@ -339,7 +326,7 @@ class FourCharmTUI implements Observer, MoveRequestable {
         }
 
         /**
-         * @return the string representation
+         * @return the string representation of this command.
          */
         @Override
         public String toString() {
