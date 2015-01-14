@@ -7,7 +7,6 @@ package com.lucwo.fourcharm.server;
 import com.lucwo.fourcharm.model.ASyncPlayer;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.Mark;
-import com.lucwo.fourcharm.model.MoveRequestable;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
@@ -16,8 +15,6 @@ import nl.woutertimmermans.connect4.protocol.exceptions.InvalidMoveError;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class GameGroup extends ClientGroup {
 
@@ -41,6 +38,7 @@ public class GameGroup extends ClientGroup {
 
         game = new Game(BinaryBoard.class, new ASyncPlayer(client1.getName(), p1Queue, Mark.P1),
                 new ASyncPlayer(client2.getName(), p2Queue, Mark.P2));
+        new Thread(game).start();
     }
 
 // ----------------------- Queries ----------------------
@@ -88,41 +86,4 @@ public class GameGroup extends ClientGroup {
     }
 
 
-    private class MoveQueue implements MoveRequestable {
-
-        // ---------------- Instantie variabelen ------------------
-
-        private BlockingQueue<Integer> rij;
-
-        // ---------------- Constructor ---------------------------
-
-        public MoveQueue() {
-            rij = new LinkedBlockingQueue<>(1);
-        }
-
-        // ---------------- Queries -------------------------------
-
-        // ---------------- Commands ------------------------------
-
-        /**
-         * Asks for a move and puts this move in the queue.
-         *
-         * @return the requested move
-         */
-        @Override
-        public int requestMove() {
-
-            int column = -1;
-            try {
-                column = rij.take();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return column;
-        }
-
-        public BlockingQueue<Integer> getQueue() {
-            return rij;
-        }
-    }
 }

@@ -4,16 +4,15 @@
 
 package com.lucwo.fourcharm.view;
 
-import com.lucwo.fourcharm.model.*;
-import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
-import com.lucwo.fourcharm.model.board.BinaryBoard;
+import com.lucwo.fourcharm.client.Client;
+import com.lucwo.fourcharm.model.Game;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Scanner;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -23,7 +22,7 @@ import java.util.logging.Logger;
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
-class FourCharmTUI implements FourCharmView, MoveRequestable {
+public class FourCharmTUI implements FourCharmView {
 
     private static final String NOT_IMPLEMENTED = "Not yet implemented";
 
@@ -33,15 +32,14 @@ class FourCharmTUI implements FourCharmView, MoveRequestable {
     private Game game;
     private Scanner nameScanner;
     private boolean running;
-    private BlockingQueue<Integer> rij;
     private boolean gameOn;
+    private Client client;
     
     // --------------------- Constructors -------------------
 
     protected FourCharmTUI() {
 
         nameScanner = new Scanner(System.in);
-        rij = new LinkedBlockingQueue<>(1);
         gameOn = true;
         running = true;
     }
@@ -130,11 +128,8 @@ class FourCharmTUI implements FourCharmView, MoveRequestable {
             //Make a move
             case MOVE:
                 int moove = Integer.parseInt(args[0]) - 1;
-                try {
-                    rij.put(moove);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                client.queueMove(moove);
+
                 break;
             //Ask for a hint in the current game.
             case HINT:
@@ -226,11 +221,6 @@ class FourCharmTUI implements FourCharmView, MoveRequestable {
         }
 
         game.stop();
-        try {
-            rij.put(-1);
-        } catch (InterruptedException e) {
-            Logger.getGlobal().throwing(this.getClass().getSimpleName(), "run", e);
-        }
 
     }
 
@@ -246,29 +236,12 @@ class FourCharmTUI implements FourCharmView, MoveRequestable {
             showMessage("Welcome " + name);
         }
 
-        Player player1 = new ASyncPlayer(name, this, Mark.P1);
-        Player player2 = new LocalAIPlayer(new NegaMaxStrategy(12), Mark.P2);
-
-        game = new Game(BinaryBoard.class, player1, player2);
-        game.addObserver(this);
-
-        new Thread(game).start();
-    }
-
-    /**
-     * Asks for a move and puts this move in the queue.
-     * @return the requested move
-     */
-    @Override
-    public int requestMove() {
-        showMessage("It's your turn now! Please make a move by using command 'move [number]'");
-        int column = -1;
         try {
-            column = rij.take();
-        } catch (InterruptedException e) {
+            client = new Client(name, InetAddress.getLocalHost(), 8080);
+            new Thread(client).start();
+        } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        return column;
     }
 
     /**

@@ -154,7 +154,7 @@
         <dependency>
             <groupId>nl.woutertimmermans.connect4</groupId>
             <artifactId>c4-protocol</artifactId>
-            <version>0.4</version>
+            <version>0.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
