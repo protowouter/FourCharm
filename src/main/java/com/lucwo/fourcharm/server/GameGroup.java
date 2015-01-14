@@ -28,13 +28,13 @@ public class GameGroup extends ClientGroup {
 
     // --------------------- Constructors -------------------
     public GameGroup(ClientHandler client1, ClientHandler client2) {
-        player1 = client1;
-        player2 = client2;
         MoveQueue p1Queue = new MoveQueue();
         MoveQueue p2Queue = new MoveQueue();
         moveQueues = new HashMap<>();
         moveQueues.put(client1, p1Queue);
         moveQueues.put(client2, p2Queue);
+        addHandler(client1);
+        addHandler(client2);
 
         game = new Game(BinaryBoard.class, new ASyncPlayer(client1.getName(), p1Queue, Mark.P1),
                 new ASyncPlayer(client2.getName(), p2Queue, Mark.P2));
