@@ -16,10 +16,7 @@ import nl.woutertimmermans.connect4.protocol.fgroup.CoreServer;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
@@ -38,11 +35,12 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
     private Game game;
     private Map<String, MoveQueue> queueMap;
     private Player ai;
+    private Observer gameObserver;
 
 // --------------------- Constructors -------------------
 
-    public Client(String namepie, InetAddress host, int port) {
-
+    public Client(String namepie, InetAddress host, int port, Observer obsv) {
+        gameObserver = obsv;
         name = namepie;
         queueMap = new HashMap<>();
 
@@ -118,7 +116,10 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
         }
         ai = new LocalAIPlayer(new NegaMaxStrategy(10), aiMark);
 
-        new Game(BinaryBoard.class, player1, player2);
+        Game game = new Game(BinaryBoard.class, player1, player2);
+        game.addObserver(gameObserver);
+        new Thread(game).start();
+
 
 
     }

@@ -237,11 +237,12 @@ public class FourCharmTUI implements FourCharmView {
         }
 
         try {
-            client = new Client(name, InetAddress.getLocalHost(), 8080);
-            new Thread(client).start();
+            client = new Client(name, InetAddress.getLocalHost(), 8080, this);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+        new Thread(client).start();
+
     }
 
     /**
