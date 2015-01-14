@@ -20,6 +20,8 @@ import java.io.PipedReader;
 import java.io.PipedWriter;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
 
@@ -28,7 +30,7 @@ public class GamePresenter implements Observer {
     // ------------------ Instance variables ----------------
 
 
-    PipedWriter playerInput;
+    BlockingQueue<Integer> playerMoves;
     @FXML
     private Parent root;
     @FXML
@@ -75,6 +77,7 @@ public class GamePresenter implements Observer {
 
     public void showGame() {
         playerInput = new PipedWriter();
+        playerMoves = new LinkedBlockingQueue<>();
         BufferedReader playerReader = new BufferedReader(new PipedReader());
 
         try {
@@ -84,7 +87,7 @@ public class GamePresenter implements Observer {
         }
 
         p1 = new LocalAIPlayer(new NegaMaxStrategy(), Mark.P1);
-        p2 = new ASyncPlayer(null, null, Mark.P2);
+        p2 = new ASyncPlayer("To be Implemented", null, Mark.P2);
 
 
         game = new Game(BinaryBoard.class, p1, p2);
