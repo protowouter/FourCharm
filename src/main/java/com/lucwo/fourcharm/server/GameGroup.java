@@ -76,15 +76,19 @@ public class GameGroup extends ClientGroup {
     @Override
     public void doMove(ClientHandler client, int col) throws C4Exception {
 
-        try {
-            moveQueues.get(client).getQueue().add(col);
-            for (ClientHandler c : getClients()) {
-                c.getClient().doneMove(client.getName(), col);
+        if (game.getCurrent().getName().equals(client.getName())) {
+
+            try {
+                for (ClientHandler c : getClients()) {
+                    c.getClient().doneMove(client.getName(), col);
+                }
+                moveQueues.get(client).getQueue().add(col);
+            } catch (IllegalStateException e) {
+                throw new InvalidMoveError("You are not allowed to make a move right now");
             }
-        } catch (IllegalStateException e) {
+        } else {
             throw new InvalidMoveError("You are not allowed to make a move right now");
         }
-
 
     }
 

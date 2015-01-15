@@ -6,7 +6,7 @@ package com.lucwo.fourcharm.client;
 
 import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
-import com.lucwo.fourcharm.model.board.BinaryBoard;
+import com.lucwo.fourcharm.model.board.ReferenceBoard;
 import com.lucwo.fourcharm.server.MoveQueue;
 import com.lucwo.fourcharm.view.FourCharmTUI;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
@@ -117,12 +117,11 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
         } else {
             aiMark = Mark.P2;
         }
-        ai = new LocalAIPlayer(new NegaMaxStrategy(12), aiMark);
+        ai = new LocalAIPlayer(new NegaMaxStrategy(10), aiMark);
 
-        game = new Game(BinaryBoard.class, player1, player2);
+        game = new Game(ReferenceBoard.class, player1, player2);
         game.addObserver(gameObserver);
         new Thread(game).start();
-
 
 
     }
@@ -131,11 +130,16 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
     public void requestMove(String player) {
 
         if (player.equals(name)) {
-            try {
-                serverClient.doMove(ai.determineMove(game.getBoard()));
-            } catch (C4Exception e) {
-                e.printStackTrace();
-            }
+
+            new Thread(() -> {
+                try {
+                    serverClient.doMove(ai.determineMove(game.getBoard()));
+                } catch (C4Exception e) {
+                    Logger.getGlobal().throwing("Client", "requestMove", e);
+                }
+
+            }).start();
+
         }
 
     }

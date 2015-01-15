@@ -78,6 +78,7 @@ public class Game extends Observable implements Runnable {
                 current.doMove(board);
                 Logger.getGlobal().finer(board.toString());
             } catch (InvalidMoveException e) {
+                Logger.getGlobal().warning("This is not fair!1!111!!");
                 fairplay = false;
             }
 

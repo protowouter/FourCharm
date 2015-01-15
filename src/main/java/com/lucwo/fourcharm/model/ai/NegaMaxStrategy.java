@@ -240,7 +240,7 @@ public class NegaMaxStrategy implements GameStrategy {
         startCol = startCol < 0 ? 0 : startCol;
 
 
-        for (int col = startCol; col < col + streak && col < cols; col++) {
+        for (int col = startCol; col < vCol + streak && col < cols; col++) {
             value += positionValue(board, mark, col, vRow);
         }
 
@@ -257,7 +257,7 @@ public class NegaMaxStrategy implements GameStrategy {
         int startRow = vRow - streak;
         startRow = startRow < 0 ? 0 : startRow;
 
-        for (int row = startRow; row < row + streak && row < rows; row++) {
+        for (int row = startRow; row < vRow + streak && row < rows; row++) {
             value += positionValue(board, mark, vCol, row);
         }
 

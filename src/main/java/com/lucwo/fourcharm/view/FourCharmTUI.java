@@ -29,7 +29,6 @@ public class FourCharmTUI implements FourCharmView {
 
     // ------------------ Instance variables ----------------
 
-    private Game game;
     private Scanner nameScanner;
     private boolean running;
     private boolean gameOn;
@@ -221,8 +220,6 @@ public class FourCharmTUI implements FourCharmView {
             parseCommand(nameScanner.nextLine());
 
         }
-
-        game.stop();
 
     }
 
