@@ -70,6 +70,7 @@ public class LobbyGroup extends ClientGroup {
                     "Please be patient.");
         } else {
             new GameGroup(readyClient, client);
+            readyClient = null;
         }
 
     }
