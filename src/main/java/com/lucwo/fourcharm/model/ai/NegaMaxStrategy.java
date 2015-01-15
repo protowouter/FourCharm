@@ -8,9 +8,12 @@ import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.board.Board;
 
-import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ForkJoinTask;
+import java.util.concurrent.RecursiveTask;
 import java.util.logging.Logger;
 
 /**
@@ -26,8 +29,7 @@ public class NegaMaxStrategy implements GameStrategy {
     /**
      * Default search depth for the NegaMax algorithm.
      */
-    public static final int DEF_DEPTH = 12;
-    public static final ExecutorService VALUE_EXECUTOR = Executors.newCachedThreadPool();
+    public static final int DEF_DEPTH = 10;
     public static final int FOE_POS_VALUE = 0;
     public static final int FRIENDLY_POS_VALUE = 2;
     public static final int EMPTY_POS_VALUE = 1;
@@ -71,7 +73,6 @@ public class NegaMaxStrategy implements GameStrategy {
         double bestValue = Double.NEGATIVE_INFINITY;
         int bestMove = -1;
         int columns = board.getColumns();
-        Map<Integer, Future<Double>> values = new HashMap<>();
 
 
         for (int col = 0; col < columns; col++) {
@@ -79,33 +80,19 @@ public class NegaMaxStrategy implements GameStrategy {
                 try {
                     Board cBoard = board.deepCopy();
                     cBoard.makemove(col, mark);
-                    values.put(col, NegaMaxStrategy.VALUE_EXECUTOR.submit(() ->
-                            -negaMax(cBoard, mark.other(), Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, depth - 1)));
+                    Double value =
+                            -negaMax(cBoard, mark.other(), Double.NEGATIVE_INFINITY,
+                                    Double.POSITIVE_INFINITY, depth - 1);
+
+                    if (value > bestValue) {
+                        bestMove = col;
+                        bestValue = value;
+                    }
                 } catch (InvalidMoveException e) {
                     Logger.getGlobal().throwing(getClass().toString(), "negaMax", e);
                 }
             }
         }
-
-        for (int col = 0; col < columns; col++) {
-            if (values.get(col) != null) {
-                double value = 0;
-
-                try {
-                    value = values.get(col).get();
-                } catch (InterruptedException | ExecutionException e) {
-                    Logger.getGlobal().throwing(getClass().toString(), "determineMove", e);
-                }
-                Logger.getGlobal().fine("Move: " + col + " Value: " + value);
-                if (value > bestValue) {
-                    bestMove = col;
-                    bestValue = value;
-                }
-
-            }
-
-        }
-
         Logger.getGlobal().fine("Calculated nodes: " + nodeCounter);
         Logger.getGlobal().fine("Best move: " + bestMove);
 
@@ -208,15 +195,20 @@ public class NegaMaxStrategy implements GameStrategy {
         int cols = board.getColumns();
         int rows = board.getRows();
         double value = 0;
+        List<ForkJoinTask<Double>> tasks = new LinkedList<>();
+        List<Spot> spots = new LinkedList<>();
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                value += horizontalValue(board, mark, col, row) +
-                        verticalValue(board, mark, col, row) +
-                        lRDiagonalValue(board, mark, col, row) +
-                        rLDiagonalValue(board, mark, col, row);
+                spots.add(new Spot(col, row));
             }
         }
+
+
+        value = new NodeValueTask(board, mark, spots).invoke();
+
+
+
 
         boolean mWin = board.hasWon(mark);
         boolean oWin = board.hasWon(mark.other());
@@ -357,6 +349,57 @@ public class NegaMaxStrategy implements GameStrategy {
 
         EXACT, UPPER_BOUND, LOWER_BOUND
 
+    }
+
+    private class Spot {
+        public final int col;
+        public final int row;
+
+        public Spot(int column, int rowtje) {
+            col = column;
+            row = rowtje;
+        }
+    }
+
+    private class NodeValueTask extends RecursiveTask<Double> {
+
+        List<Spot> spots;
+        private Board board;
+        private Mark mark;
+
+        public NodeValueTask(Board b, Mark m, List<Spot> s) {
+            board = b;
+            mark = m;
+            spots = s;
+        }
+
+        /**
+         * The main computation performed by this task.
+         *
+         * @return the result of the computation
+         */
+        @Override
+        protected Double compute() {
+            Double value;
+            if (spots.size() == 1) {
+                Spot spot = spots.get(0);
+                int col = spot.col;
+                int row = spot.row;
+                value = horizontalValue(board, mark, col, row) +
+                        verticalValue(board, mark, col, row) +
+                        lRDiagonalValue(board, mark, col, row) +
+                        rLDiagonalValue(board, mark, col, row);
+            } else {
+                NodeValueTask leftTask = new NodeValueTask(board, mark, spots.subList(0, spots.size() / 2));
+                NodeValueTask rightTask = new NodeValueTask(board, mark, spots.subList(spots.size() / 2, spots.size()));
+                leftTask.fork();
+                value = rightTask.compute() + leftTask.join();
+            }
+
+            return value;
+
+
+        }
     }
 
     class TransPosEntry {

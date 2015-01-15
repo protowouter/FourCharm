@@ -118,9 +118,4 @@ public class FourCharmServer {
 
     }
 
-    public void processInput(String input) {
-
-    }
-
-
 }

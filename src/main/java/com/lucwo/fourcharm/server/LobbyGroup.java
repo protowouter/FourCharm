@@ -61,7 +61,7 @@ public class LobbyGroup extends ClientGroup {
      * @throws C4Exception
      */
     @Override
-    public void ready(ClientHandler client) throws C4Exception {
+    public synchronized void ready(ClientHandler client) throws C4Exception {
 
         if (readyClient == null) {
             readyClient = client;

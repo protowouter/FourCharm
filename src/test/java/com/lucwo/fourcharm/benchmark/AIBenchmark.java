@@ -10,7 +10,6 @@ import com.lucwo.fourcharm.model.LocalAIPlayer;
 import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.Player;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
-import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 
@@ -21,9 +20,6 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.logging.Logger;
 
-/**
- * Created by woutertimmermans on 26-11-14.
- */
 
 // ------------------ Instance variables ----------------
 
@@ -143,8 +139,6 @@ public class AIBenchmark {
 
         long duration = System.currentTimeMillis() - start;
         Logger.getGlobal().info("mps: " + ((double) score[3]) / duration * 1000);
-
-        NegaMaxStrategy.VALUE_EXECUTOR.shutdown();
 
     }
 }

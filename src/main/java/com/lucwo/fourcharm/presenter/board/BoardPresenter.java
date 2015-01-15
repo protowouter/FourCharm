@@ -72,7 +72,7 @@ public class BoardPresenter implements Observer {
                     spaces[col][row] = fxmlLoader.getController();
                     spaces[col][row].setMark(board.getMark(col, row));
                     spaces[col][row].setBoardPresenter(this);
-                    spaces[col][row].setCol(col + 1);
+                    spaces[col][row].setCol(col);
                 } catch (IOException exception) {
                     throw new RuntimeException(exception);
                 }
