@@ -118,18 +118,27 @@ public class FourCharmTUI implements FourCharmView {
             //Start new game if true
             case YES:
                 if (!gameOn) {
-                    startGame();
+                    //TODO start new game on same server
                 }
                 break;
             //Use the chat function
             case CHAT:
                 showError(NOT_IMPLEMENTED);
                 break;
+            //Connect to a server
+            case CONNECT:
+                try {
+                    InetAddress address = InetAddress.getByName(args[0]);
+                    int port = Integer.parseInt(args[1]);
+                    startGame(address, port);
+                } catch (UnknownHostException | NumberFormatException e) {
+                    showError(e.getMessage());
+                }
+                break;
             //Make a move
             case MOVE:
                 int moove = Integer.parseInt(args[0]) - 1;
                 client.queueMove(moove);
-
                 break;
             //Ask for a hint in the current game.
             case HINT:
@@ -195,13 +204,6 @@ public class FourCharmTUI implements FourCharmView {
                     showMessage("The winner is " + newGame.getWinner());
                 }
                 showMessage("Would you like to play a new game? [yes/exit]");
-                if (nameScanner.hasNextLine()) {
-                    if (nameScanner.nextLine().equals("Yes")) {
-                        startGame();
-                    }
-                }
-
-
             }
         }
 
@@ -212,7 +214,7 @@ public class FourCharmTUI implements FourCharmView {
      */
     protected void run() {
         showMessage("Welcome to FourCharmGUI Connect4.");
-        startGame();
+        showHelp();
 
 
         while (running && nameScanner.hasNextLine()) {
@@ -227,7 +229,7 @@ public class FourCharmTUI implements FourCharmView {
     /**
      * Starts the game.
      */
-    private void startGame() {
+    private void startGame(InetAddress adrr, int port) {
         String name = "";
         showMessage("Please enter your name");
 
@@ -236,11 +238,8 @@ public class FourCharmTUI implements FourCharmView {
             showMessage("Welcome " + name);
         }
 
-        try {
-            client = new Client(name, InetAddress.getLocalHost(), 8080, this);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+
+        client = new Client(name, adrr, port, this);
         new Thread(client).start();
 
     }
@@ -250,6 +249,7 @@ public class FourCharmTUI implements FourCharmView {
      */
     private enum Command {
         CHAT(new String[]{"Chatmessage"}),
+        CONNECT(new String[]{"Host", "Port"}),
         HINT(new String[0]),
         EXIT(new String[0]),
         CHALLENGE(new String[]{"Player name"}),
