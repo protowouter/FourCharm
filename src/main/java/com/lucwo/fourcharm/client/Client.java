@@ -60,13 +60,13 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
     @Override
     public void run() {
         try {
-            serverClient.join(name, GROUP_NUMBER, new HashSet<>());
+            serverClient.join(name, GROUP_NUMBER, new HashSet<String>());
         } catch (C4Exception e) {
             Logger.getGlobal().throwing("Client", "run", e);
         }
         try {
             String input = in.readLine();
-            while (in != null) {
+            while (input != null) {
                 Logger.getGlobal().info("Processing input " + input);
                 processor.process(input);
                 input = in.readLine();
@@ -109,6 +109,8 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
         MoveQueue p2Q = new MoveQueue();
         Player player1 = new ASyncPlayer(p1, p1Q, Mark.P1);
         Player player2 = new ASyncPlayer(p2, p2Q, Mark.P2);
+        queueMap.put(player1.getName(), p1Q);
+        queueMap.put(player2.getName(), p2Q);
         Mark aiMark;
         if (p1.equals(name)) {
             aiMark = Mark.P1;
@@ -117,7 +119,7 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
         }
         ai = new LocalAIPlayer(new NegaMaxStrategy(10), aiMark);
 
-        Game game = new Game(BinaryBoard.class, player1, player2);
+        game = new Game(BinaryBoard.class, player1, player2);
         game.addObserver(gameObserver);
         new Thread(game).start();
 
@@ -129,7 +131,11 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
     public void requestMove(String player) {
 
         if (player.equals(name)) {
-            serverClient.doMove(ai.determineMove(game.getBoard()));
+            try {
+                serverClient.doMove(ai.determineMove(game.getBoard()));
+            } catch (C4Exception e) {
+                e.printStackTrace();
+            }
         }
 
     }

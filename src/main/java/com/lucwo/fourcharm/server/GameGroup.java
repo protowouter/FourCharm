@@ -41,8 +41,16 @@ public class GameGroup extends ClientGroup {
 
         game = new Game(BinaryBoard.class, new ASyncPlayer(client1.getName(), p1Queue, Mark.P1),
                 new ASyncPlayer(client2.getName(), p2Queue, Mark.P2));
-        client1.getClient().startGame(client1.getName(), client2.getName());
-        client2.getClient().startGame(client1.getName(), client2.getName());
+        try {
+            client1.getClient().startGame(client1.getName(), client2.getName());
+        } catch (C4Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            client2.getClient().startGame(client1.getName(), client2.getName());
+        } catch (C4Exception e) {
+            e.printStackTrace();
+        }
         new Thread(game).start();
     }
 
@@ -119,7 +127,11 @@ public class GameGroup extends ClientGroup {
         @Override
         public int requestMove() {
 
-            client.getClient().requestMove(client.getName());
+            try {
+                client.getClient().requestMove(client.getName());
+            } catch (C4Exception e) {
+                e.printStackTrace();
+            }
 
             int column = -1;
             try {

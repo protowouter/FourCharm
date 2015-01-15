@@ -95,7 +95,11 @@ public class FourCharmServer {
                 } catch (C4Exception e) {
 
                     Logger.getGlobal().info("Throwing exception " + e.getMessage());
-                    clientClient.error(e.getErrorCode());
+                    try {
+                        clientClient.error(e.getErrorCode());
+                    } catch (C4Exception e1) {
+                        e1.printStackTrace();
+                    }
 
                 }
                 input = in.readLine();
