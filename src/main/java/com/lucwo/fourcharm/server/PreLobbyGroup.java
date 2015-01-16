@@ -6,6 +6,7 @@ package com.lucwo.fourcharm.server;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
+import nl.woutertimmermans.connect4.protocol.exceptions.InvalidUsernameError;
 
 import java.util.Set;
 
@@ -15,11 +16,13 @@ public class PreLobbyGroup extends ClientGroup {
     // ------------------ Instance variables ----------------
 
     ClientGroup lobby;
+    FourCharmServer server;
 
     // --------------------- Constructors -------------------
 
-    public PreLobbyGroup(ClientGroup lob) {
+    public PreLobbyGroup(ClientGroup lob, FourCharmServer theServer) {
         lobby = lob;
+        server = theServer;
     }
 
     // ----------------------- Queries ----------------------
@@ -38,10 +41,14 @@ public class PreLobbyGroup extends ClientGroup {
     @Override
     public void join(ClientHandler client, String pName, int gNumber,
                      Set<String> exts) throws C4Exception {
-        //TODO: Check dat de naam niet al bestaat in de server.
-        client.setName(pName);
-        client.getClient().accept(gNumber, exts);
-        lobby.addHandler(client);
+        if (server.hasClientWithName(pName)) {
+            throw new InvalidUsernameError("The username " + pName + " is already in use");
+        } else {
+            client.setName(pName);
+            client.getClient().accept(gNumber, exts);
+            lobby.addHandler(client);
+        }
+
     }
 
     /**

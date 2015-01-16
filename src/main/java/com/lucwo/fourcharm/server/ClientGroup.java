@@ -24,6 +24,10 @@ public abstract class ClientGroup {
         clientCollection = new HashMap<>();
     }
 
+    public boolean clientNameExists(String name) {
+        return clientCollection.keySet().contains(name);
+    }
+
 
     /**
      * Adds a ClientHandler to this collection of Clients and informs the

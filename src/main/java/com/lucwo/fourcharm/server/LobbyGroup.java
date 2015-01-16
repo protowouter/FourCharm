@@ -14,11 +14,13 @@ public class LobbyGroup extends ClientGroup {
     // ------------------ Instance variables ----------------
 
     private ClientHandler readyClient;
+    private FourCharmServer server;
 
     // --------------------- Constructors -------------------
 
-    public LobbyGroup() {
+    public LobbyGroup(FourCharmServer theServer) {
         readyClient = null;
+        server = theServer;
     }
 
     // ----------------------- Queries ----------------------
@@ -69,7 +71,9 @@ public class LobbyGroup extends ClientGroup {
             throw new InvalidCommandError("You are already waiting and not allowed to play against yourself. " +
                     "Please be patient.");
         } else {
-            new GameGroup(readyClient, client);
+            GameGroup game = new GameGroup(server, readyClient, client);
+            server.addGame(game);
+            new Thread(game).start();
             readyClient = null;
         }
 

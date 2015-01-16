@@ -21,12 +21,12 @@ public class FourCharmServer {
 
     private ClientGroup lobby;
     private ClientGroup preLobby;
-    private Collection<ClientGroup> games;
+    private Collection<GameGroup> games;
     private boolean running;
 
     public FourCharmServer(int port) {
-        lobby = new LobbyGroup();
-        preLobby = new PreLobbyGroup(lobby);
+        lobby = new LobbyGroup(this);
+        preLobby = new PreLobbyGroup(lobby, this);
         games = new ArrayList<>();
         running = true;
         startServer(port);
@@ -36,7 +36,17 @@ public class FourCharmServer {
 
         new FourCharmServer(8080);
 
+    }
 
+    public boolean hasClientWithName(String name) {
+        boolean nameExistsinGame = false;
+        for (ClientGroup cG : games) {
+            nameExistsinGame = cG.clientNameExists(name);
+            if (nameExistsinGame) {
+                break;
+            }
+        }
+        return nameExistsinGame || lobby.clientNameExists(name);
     }
 
     public void startServer(int port) {
@@ -57,6 +67,14 @@ public class FourCharmServer {
 
         Logger.getGlobal().info("Shutting down Fourcharm server");
 
+    }
+
+    public void addGame(GameGroup game) {
+        games.add(game);
+    }
+
+    public void removeGame(GameGroup game) {
+        games.remove(game);
     }
 
     public void stop() {

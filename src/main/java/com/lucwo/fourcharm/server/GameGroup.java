@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class GameGroup extends ClientGroup {
+public class GameGroup extends ClientGroup implements Runnable {
 
 // ------------------ Instance variables ----------------
 
@@ -27,10 +27,12 @@ public class GameGroup extends ClientGroup {
     ClientHandler player2;
     Map<ClientHandler, MoveQueue> moveQueues;
     Game game;
+    FourCharmServer server;
 
 
     // --------------------- Constructors -------------------
-    public GameGroup(ClientHandler client1, ClientHandler client2) {
+    public GameGroup(FourCharmServer theServer, ClientHandler client1, ClientHandler client2) {
+        server = theServer;
         MoveQueue p1Queue = new MoveQueue(client1);
         MoveQueue p2Queue = new MoveQueue(client2);
         moveQueues = new HashMap<>();
@@ -51,7 +53,6 @@ public class GameGroup extends ClientGroup {
         } catch (C4Exception e) {
             e.printStackTrace();
         }
-        new Thread(game).start();
     }
 
 // ----------------------- Queries ----------------------
@@ -103,6 +104,26 @@ public class GameGroup extends ClientGroup {
     public void ready(ClientHandler client) throws C4Exception {
 
         throw new InvalidCommandError("You are not allowed to use this command now.");
+    }
+
+    /**
+     * When an object implementing interface <code>Runnable</code> is used
+     * to create a thread, starting the thread causes the object's
+     * <code>run</code> method to be called in that separately executing
+     * thread.
+     * <p>
+     * The general contract of the method <code>run</code> is that it may
+     * take any action whatsoever.
+     *
+     * @see Thread#run()
+     */
+    @Override
+    public void run() {
+
+        game.run();
+        server.removeGame(this);
+
+
     }
 
     private class MoveQueue implements MoveRequestable {

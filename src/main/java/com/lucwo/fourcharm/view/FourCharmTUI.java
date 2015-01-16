@@ -33,6 +33,8 @@ public class FourCharmTUI implements FourCharmView {
     private boolean running;
     private boolean gameOn;
     private Client client;
+    private InetAddress address;
+    private int port;
     
     // --------------------- Constructors -------------------
 
@@ -117,7 +119,7 @@ public class FourCharmTUI implements FourCharmView {
             //Start new game if true
             case YES:
                 if (!gameOn) {
-                    //TODO start new game on same server
+                    startGame();
                 }
                 break;
             //Use the chat function
@@ -127,9 +129,9 @@ public class FourCharmTUI implements FourCharmView {
             //Connect to a server
             case CONNECT:
                 try {
-                    InetAddress address = InetAddress.getByName(args[0]);
-                    int port = Integer.parseInt(args[1]);
-                    startGame(address, port);
+                    address = InetAddress.getByName(args[0]);
+                    port = Integer.parseInt(args[1]);
+                    startGame();
                 } catch (UnknownHostException | NumberFormatException e) {
                     showError(e.getMessage());
                 }
@@ -226,7 +228,7 @@ public class FourCharmTUI implements FourCharmView {
     /**
      * Starts the game.
      */
-    private void startGame(InetAddress adrr, int port) {
+    private void startGame() {
         String name = "";
         showMessage("Please enter your name");
 
@@ -236,7 +238,7 @@ public class FourCharmTUI implements FourCharmView {
         }
 
 
-        client = new Client(name, adrr, port, this);
+        client = new Client(name, address, port, this);
         new Thread(client).start();
 
     }
