@@ -167,7 +167,7 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
     }
 
     @Override
-    public void error(int eCode) {
+    public void error(int eCode, String message) {
 
     }
 

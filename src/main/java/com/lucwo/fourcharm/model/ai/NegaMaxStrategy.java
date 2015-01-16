@@ -8,12 +8,8 @@ import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.board.Board;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ForkJoinTask;
-import java.util.concurrent.RecursiveTask;
 import java.util.logging.Logger;
 
 /**
@@ -195,20 +191,15 @@ public class NegaMaxStrategy implements GameStrategy {
         int cols = board.getColumns();
         int rows = board.getRows();
         double value = 0;
-        List<ForkJoinTask<Double>> tasks = new LinkedList<>();
-        List<Spot> spots = new LinkedList<>();
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                spots.add(new Spot(col, row));
+                value += horizontalValue(board, mark, col, row) +
+                        verticalValue(board, mark, col, row) +
+                        lRDiagonalValue(board, mark, col, row) +
+                        rLDiagonalValue(board, mark, col, row);
             }
         }
-
-
-        value = new NodeValueTask(board, mark, spots).invoke();
-
-
-
 
         boolean mWin = board.hasWon(mark);
         boolean oWin = board.hasWon(mark.other());
@@ -351,56 +342,6 @@ public class NegaMaxStrategy implements GameStrategy {
 
     }
 
-    private class Spot {
-        public final int col;
-        public final int row;
-
-        public Spot(int column, int rowtje) {
-            col = column;
-            row = rowtje;
-        }
-    }
-
-    private class NodeValueTask extends RecursiveTask<Double> {
-
-        List<Spot> spots;
-        private Board board;
-        private Mark mark;
-
-        public NodeValueTask(Board b, Mark m, List<Spot> s) {
-            board = b;
-            mark = m;
-            spots = s;
-        }
-
-        /**
-         * The main computation performed by this task.
-         *
-         * @return the result of the computation
-         */
-        @Override
-        protected Double compute() {
-            Double value;
-            if (spots.size() == 1) {
-                Spot spot = spots.get(0);
-                int col = spot.col;
-                int row = spot.row;
-                value = horizontalValue(board, mark, col, row) +
-                        verticalValue(board, mark, col, row) +
-                        lRDiagonalValue(board, mark, col, row) +
-                        rLDiagonalValue(board, mark, col, row);
-            } else {
-                NodeValueTask leftTask = new NodeValueTask(board, mark, spots.subList(0, spots.size() / 2));
-                NodeValueTask rightTask = new NodeValueTask(board, mark, spots.subList(spots.size() / 2, spots.size()));
-                leftTask.fork();
-                value = rightTask.compute() + leftTask.join();
-            }
-
-            return value;
-
-
-        }
-    }
 
     class TransPosEntry {
 

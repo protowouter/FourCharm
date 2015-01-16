@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 public class MTDfStrategy implements GameStrategy {
 
-    private static final int MAX_DEPTH = 10;
+    private static final int MAX_DEPTH = 6;
     private static final int DEPTH_STEP = 2;
     private static final int MAX_DURATION = 100_000;
 
@@ -83,9 +83,9 @@ public class MTDfStrategy implements GameStrategy {
 
         double upperBound = Double.POSITIVE_INFINITY;
         double lowerBound = Double.NEGATIVE_INFINITY;
-        double beta;
 
         while (lowerBound < upperBound) {
+            double beta;
 
             if (guess == lowerBound) {
                 beta = guess + 1;
@@ -94,10 +94,7 @@ public class MTDfStrategy implements GameStrategy {
 
             }
 
-            final double lBeta = beta;
-
-            guess = nega.negaMax(board, mark, lBeta - 1, lBeta, depth);
-
+            guess = nega.negaMax(board, mark, beta - 1, beta, depth);
 
             if (guess < beta) {
                 upperBound = guess;

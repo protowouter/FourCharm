@@ -73,7 +73,7 @@ public class ClientHandler implements CoreServer.Iface {
     }
 
     /**
-     * Join the lobby
+     * Join the lobby.
      * @param pName the name of the player
      * @param gNumber the groupnumber
      * @param exts extensions
@@ -106,6 +106,11 @@ public class ClientHandler implements CoreServer.Iface {
     public void doMove(int col) throws C4Exception {
         Logger.getGlobal().info("Received doMove for user " + getName());
         group.doMove(this, col);
+    }
+
+    @Override
+    public void error(int errorCode, String message) throws C4Exception {
+        Logger.getGlobal().info(errorCode + " " + message);
     }
 
 }

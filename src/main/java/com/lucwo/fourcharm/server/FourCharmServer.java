@@ -90,13 +90,14 @@ public class FourCharmServer {
                     boolean processed = processor.process(input);
                     if (!processed) {
                         Logger.getGlobal().warning("This command is not recognized");
-                        clientClient.error(new InvalidCommandError("").getErrorCode());
+                        C4Exception error = new InvalidCommandError(input + " is not recognized");
+                        clientClient.error(error.getErrorCode(), error.getMessage());
                     }
                 } catch (C4Exception e) {
 
                     Logger.getGlobal().info("Throwing exception " + e.getMessage());
                     try {
-                        clientClient.error(e.getErrorCode());
+                        clientClient.error(e.getErrorCode(), e.getMessage());
                     } catch (C4Exception e1) {
                         e1.printStackTrace();
                     }
