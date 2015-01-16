@@ -24,6 +24,7 @@ public class MTDfStrategy implements GameStrategy {
 
     private static final int DEPTH_STEP = 2;
     private static final int MAX_DURATION = 10_000;
+    private static final int[] COLS = new int[]{3, 4, 2, 5, 1, 6, 0};
 
     // ------------------ Instance variables ----------------
     private long endTime;
@@ -52,6 +53,7 @@ public class MTDfStrategy implements GameStrategy {
         int freeSpots = board.getSpotCount() - board.getPlieCount();
         double bestValue = Double.NEGATIVE_INFINITY;
         int bestMove = -1;
+        int achievedDepth = 0;
 
         for (int depth = 2; System.currentTimeMillis() < endTime && depth < freeSpots;
              depth = depth + DEPTH_STEP) {
@@ -62,7 +64,7 @@ public class MTDfStrategy implements GameStrategy {
             Map<Integer, Future<Double>> valueFutures = new TreeMap<>();
 
 
-            for (int col = 0; col < columns; col++) {
+            for (int col : COLS) {
                 if (board.columnHasFreeSpace(col)) {
                     try {
                         Board cBoard = board.deepCopy();
@@ -87,6 +89,7 @@ public class MTDfStrategy implements GameStrategy {
                 }
                 bestMove = bestMoveCurrentIteration;
                 bestValue = bestValueCurrentIteration;
+                achievedDepth = depth;
             } catch (InterruptedException | ExecutionException e) {
                 Logger.getGlobal().throwing(getClass().toString(), "determineMove", e);
             } catch (TimeoutException e) {
@@ -99,6 +102,7 @@ public class MTDfStrategy implements GameStrategy {
             bestMove = new RandomStrategy().determineMove(board, mark);
         }
         Logger.getGlobal().fine("Evaluated nodes: " + nega.getCounter());
+        Logger.getGlobal().fine("Search achieved a depth of " + achievedDepth);
         Logger.getGlobal().fine("Best move: " + bestMove);
         Logger.getGlobal().fine("Best move value: " + bestValue);
         return bestMove;
@@ -111,7 +115,7 @@ public class MTDfStrategy implements GameStrategy {
         double upperBound = Double.POSITIVE_INFINITY;
         double lowerBound = Double.NEGATIVE_INFINITY;
 
-        while (lowerBound < upperBound && System.currentTimeMillis() < endTime) {
+        while (lowerBound < upperBound && System.currentTimeMillis() - 1000 < endTime) {
             double beta;
 
             if (guess == lowerBound) {

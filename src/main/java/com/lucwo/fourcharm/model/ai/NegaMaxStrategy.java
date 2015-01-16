@@ -8,8 +8,6 @@ import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.board.Board;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.*;
@@ -35,7 +33,7 @@ public class NegaMaxStrategy implements GameStrategy {
     public static final ExecutorService NEGA_EXEC = ForkJoinPool.commonPool();
 
     public static final int POS_TABLE_SIZE = 10_000_000;
-    public static final Map<Long, TransPosEntry> TRANS_POS_TABLE = new ConcurrentHashMap<>(2*POS_TABLE_SIZE);
+    public static final Map<Long, TransPosEntry> TRANS_POS_TABLE = new ConcurrentSkipListMap<>();
 
     private long nodeCounter;
 

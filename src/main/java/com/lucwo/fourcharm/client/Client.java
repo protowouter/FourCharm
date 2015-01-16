@@ -5,7 +5,7 @@
 package com.lucwo.fourcharm.client;
 
 import com.lucwo.fourcharm.model.*;
-import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
+import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.board.ReferenceBoard;
 import com.lucwo.fourcharm.server.MoveQueue;
 import com.lucwo.fourcharm.view.FourCharmTUI;
@@ -117,7 +117,7 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
         } else {
             aiMark = Mark.P2;
         }
-        ai = new LocalAIPlayer(new NegaMaxStrategy(10), aiMark);
+        ai = new LocalAIPlayer(new MTDfStrategy(), aiMark);
 
         game = new Game(ReferenceBoard.class, player1, player2);
         game.addObserver(gameObserver);
