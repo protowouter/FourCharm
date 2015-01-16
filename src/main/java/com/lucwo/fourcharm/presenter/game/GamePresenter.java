@@ -6,7 +6,6 @@ package com.lucwo.fourcharm.presenter.game;
 
 import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
-import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.presenter.board.BoardPresenter;
 import javafx.application.Platform;
@@ -76,7 +75,7 @@ public class GamePresenter implements Observer, MoveRequestable {
     public void showGame() {
         playerMoves = new LinkedBlockingQueue<>();
 
-        p1 = new LocalAIPlayer(new NegaMaxStrategy(), Mark.P1);
+        p1 = new LocalAIPlayer(new MTDfStrategy(), Mark.P1);
         p2 = new ASyncPlayer("To be Implemented", this, Mark.P2);
 
 

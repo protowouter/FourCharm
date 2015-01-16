@@ -10,9 +10,7 @@ import com.lucwo.fourcharm.model.board.Board;
 
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.logging.Logger;
 
 /**
@@ -24,20 +22,21 @@ import java.util.logging.Logger;
 
 public class MTDfStrategy implements GameStrategy {
 
-    private static final int MAX_DEPTH = 12;
     private static final int DEPTH_STEP = 2;
-    private static final int MAX_DURATION = 100_000;
+    private static final int MAX_DURATION = 10_000;
 
     // ------------------ Instance variables ----------------
-    private long start;
+    private long endTime;
     private Double prevValue;
     private NegaMaxStrategy nega;
 
     // --------------------- Constructors -------------------
 
     public MTDfStrategy() {
+        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "5");
 
-        nega = new NegaMaxStrategy(MAX_DEPTH);
+
+        nega = new NegaMaxStrategy();
         prevValue = Double.MIN_VALUE;
 
     }
@@ -47,52 +46,64 @@ public class MTDfStrategy implements GameStrategy {
 
     @Override
     public int determineMove(Board board, Mark mark) {
-        start = System.currentTimeMillis();
         nega.resetCounter();
-
+        endTime = System.currentTimeMillis() + MAX_DURATION;
+        int columns = board.getColumns();
+        int freeSpots = board.getSpotCount() - board.getPlieCount();
         double bestValue = Double.NEGATIVE_INFINITY;
         int bestMove = -1;
-        int columns = board.getColumns();
-        Map<Integer, Future<Double>> valueFutures = new TreeMap<>();
+
+        for (int depth = 2; System.currentTimeMillis() < endTime && depth < freeSpots;
+             depth = depth + DEPTH_STEP) {
+            int bestMoveCurrentIteration = -1;
+            double bestValueCurrentIteration = Double.NEGATIVE_INFINITY;
+            final int itDepth = depth;
+
+            Map<Integer, Future<Double>> valueFutures = new TreeMap<>();
 
 
-        for (int col = 0; col < columns; col++) {
-            if (board.columnHasFreeSpace(col)) {
-                Board cBoard = board.deepCopy();
-                try {
-                    cBoard.makemove(col, mark);
-                    Future<Double> valFut = ForkJoinPool.commonPool()
-                            .submit(() -> -mtdf(cBoard, mark.other(), MAX_DEPTH - 1));
-                    valueFutures.put(col, valFut);
-                } catch (InvalidMoveException e) {
-                    Logger.getGlobal().throwing(getClass().toString(), "determineMove", e);
+            for (int col = 0; col < columns; col++) {
+                if (board.columnHasFreeSpace(col)) {
+                    try {
+                        Board cBoard = board.deepCopy();
+                        cBoard.makemove(col, mark);
+                        Future<Double> valFut = ForkJoinPool.commonPool()
+                                .submit(() -> -mtdf(cBoard, mark.other(), itDepth - 1));
+                        valueFutures.put(col, valFut);
+                    } catch (InvalidMoveException e) {
+                        Logger.getGlobal().throwing(getClass().toString(), "determineMove", e);
+                    }
                 }
             }
-        }
-
-        for (Map.Entry<Integer, Future<Double>> valFut : valueFutures.entrySet()) {
-            double value = 0;
             try {
-                value = valFut.getValue().get();
+                for (Map.Entry<Integer, Future<Double>> valFut : valueFutures.entrySet()) {
+
+                    double value = valFut.getValue().
+                            get(endTime - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+                    if (value > bestValueCurrentIteration) {
+                        bestMoveCurrentIteration = valFut.getKey();
+                        bestValueCurrentIteration = value;
+                    }
+                }
+                bestMove = bestMoveCurrentIteration;
+                bestValue = bestValueCurrentIteration;
             } catch (InterruptedException | ExecutionException e) {
                 Logger.getGlobal().throwing(getClass().toString(), "determineMove", e);
+            } catch (TimeoutException e) {
+                Logger.getGlobal().finer("Time's up: " + e.toString());
             }
-            if (value > bestValue) {
-                bestMove = valFut.getKey();
-                bestValue = value;
-            }
+            prevValue = bestValue;
+
         }
-        Logger.getGlobal().fine("Evaluated nodes: " + nega.getCounter());
-        Logger.getGlobal().fine("Best move: " + bestMove);
-
-        prevValue = bestValue;
-
         if (bestMove == -1) {
             bestMove = new RandomStrategy().determineMove(board, mark);
         }
-
+        Logger.getGlobal().fine("Evaluated nodes: " + nega.getCounter());
+        Logger.getGlobal().fine("Best move: " + bestMove);
+        Logger.getGlobal().fine("Best move value: " + bestValue);
         return bestMove;
     }
+
 
     private double mtdf(Board board, Mark mark, int depth) {
         double guess = prevValue;
@@ -100,7 +111,7 @@ public class MTDfStrategy implements GameStrategy {
         double upperBound = Double.POSITIVE_INFINITY;
         double lowerBound = Double.NEGATIVE_INFINITY;
 
-        while (lowerBound < upperBound) {
+        while (lowerBound < upperBound && System.currentTimeMillis() < endTime) {
             double beta;
 
             if (guess == lowerBound) {
