@@ -8,8 +8,11 @@ import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.board.Board;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.TreeMap;
+import java.util.concurrent.*;
 import java.util.logging.Logger;
 
 /**
@@ -25,13 +28,14 @@ public class NegaMaxStrategy implements GameStrategy {
     /**
      * Default search depth for the NegaMax algorithm.
      */
-    public static final int DEF_DEPTH = 10;
+    public static final int DEF_DEPTH = 12;
     public static final int FOE_POS_VALUE = 0;
     public static final int FRIENDLY_POS_VALUE = 2;
     public static final int EMPTY_POS_VALUE = 1;
+    public static final ExecutorService NEGA_EXEC = ForkJoinPool.commonPool();
 
     public static final int POS_TABLE_SIZE = 10_000_000;
-    public static final Map<Long, TransPosEntry> TRANS_POS_TABLE = new ConcurrentHashMap<>(POS_TABLE_SIZE);
+    public static final Map<Long, TransPosEntry> TRANS_POS_TABLE = new ConcurrentHashMap<>(2*POS_TABLE_SIZE);
 
     private long nodeCounter;
 
@@ -69,6 +73,7 @@ public class NegaMaxStrategy implements GameStrategy {
         double bestValue = Double.NEGATIVE_INFINITY;
         int bestMove = -1;
         int columns = board.getColumns();
+        Map<Integer, Future<Double>> valueFutures = new TreeMap<>();
 
 
         for (int col = 0; col < columns; col++) {
@@ -76,17 +81,25 @@ public class NegaMaxStrategy implements GameStrategy {
                 try {
                     Board cBoard = board.deepCopy();
                     cBoard.makemove(col, mark);
-                    Double value =
-                            -negaMax(cBoard, mark.other(), Double.NEGATIVE_INFINITY,
-                                    Double.POSITIVE_INFINITY, depth - 1);
-
-                    if (value > bestValue) {
-                        bestMove = col;
-                        bestValue = value;
-                    }
+                    Future<Double> valFut = NEGA_EXEC.submit(() -> -negaMax(cBoard, mark.other(), Double.NEGATIVE_INFINITY,
+                            Double.POSITIVE_INFINITY, depth - 1));
+                    valueFutures.put(col, valFut);
                 } catch (InvalidMoveException e) {
                     Logger.getGlobal().throwing(getClass().toString(), "negaMax", e);
                 }
+            }
+        }
+
+        for(Map.Entry<Integer, Future<Double>> val : valueFutures.entrySet()) {
+            double value = 0;
+            try {
+                value = val.getValue().get();
+            } catch (InterruptedException | ExecutionException e) {
+                Logger.getGlobal().throwing("NegaMaxStrategy", "determineMove", e);
+            }
+            if (value > bestValue) {
+                bestMove = val.getKey();
+                bestValue = value;
             }
         }
         Logger.getGlobal().fine("Calculated nodes: " + nodeCounter);
