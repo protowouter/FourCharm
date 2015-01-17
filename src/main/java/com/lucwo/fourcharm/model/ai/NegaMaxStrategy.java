@@ -29,9 +29,9 @@ public class NegaMaxStrategy implements GameStrategy {
      * Default search depth for the NegaMax algorithm.
      */
     public static final int DEF_DEPTH = 6;
-    public static final int P2_POS_VALUE = 0;
-    public static final int P1_POS_VALUE = 2;
-    public static final int EMPTY_POS_VALUE = 1;
+    public static final int FOE_POS_VALUE = -1000;
+    public static final int FRIENDLY_POS_VALUE = 1000;
+    public static final int EMPTY_POS_VALUE = 10;
     public static final ExecutorService NEGA_EXEC = ForkJoinPool.commonPool();
 
     public static final int POS_TABLE_SIZE = 10_000_000;
@@ -113,11 +113,7 @@ public class NegaMaxStrategy implements GameStrategy {
 
         if (!foundValue) {
             if (depth == 0 || board.isFull() || board.hasWon(mark.other())) {
-                Double value = nodeValue(board);
-                if (mark == Mark.P2) {
-                    value = -value;
-                }
-                result = new Result(-1, value);
+                result = new Result(-1, nodeValue(board, mark));
             } else {
 
                 result = getNegaResult(board, mark, depth, alpha, beta);
@@ -141,20 +137,23 @@ public class NegaMaxStrategy implements GameStrategy {
 
         boolean searching = true;
         for (int col = 0; searching && col < columns; col++) {
-            try {
-                Board childBoard = board.deepCopy();
-                childBoard.makemove(col, mark);
-                double val = -negaMax(childBoard, mark.other(), -beta, -alpha, depth - 1).value;
-                if (val > bestValue) {
-                    bestValue = val;
-                    newAlpha = val;
-                    bestMove = col;
-                }
-                searching = newAlpha < beta;
+            if (board.columnHasFreeSpace(col)) {
+                try {
+                    Board childBoard = board.deepCopy();
+                    childBoard.makemove(col, mark);
+                    double val = -negaMax(childBoard, mark.other(), -beta, -alpha, depth - 1).value;
+                    if (val > bestValue) {
+                        bestValue = val;
+                        newAlpha = val;
+                        bestMove = col;
+                    }
+                    searching = newAlpha < beta;
 
-            } catch (InvalidMoveException e) {
-                Logger.getGlobal().finer(e.toString());
+                } catch (InvalidMoveException e) {
+                    Logger.getGlobal().throwing(getClass().toString(), "getNegaResult", e);
+                }
             }
+
 
 
         }
@@ -181,8 +180,7 @@ public class NegaMaxStrategy implements GameStrategy {
         TRANS_POS_TABLE.put(posKey % POS_TABLE_SIZE, ttEntry);
     }
 
-    public double nodeValue(Board board) {
-        Mark mark = Mark.P1;
+    public double nodeValue(Board board, Mark mark) {
         upCounter();
 
 
@@ -192,20 +190,20 @@ public class NegaMaxStrategy implements GameStrategy {
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                value += horizontalValue(board, col, row) +
-                        verticalValue(board, col, row) +
-                        lRDiagonalValue(board, col, row) +
-                        rLDiagonalValue(board, col, row);
+                value += horizontalValue(board, mark, col, row) +
+                        verticalValue(board, mark, col, row) +
+                        lRDiagonalValue(board, mark, col, row) +
+                        rLDiagonalValue(board, mark, col, row);
             }
         }
 
-        value = board.hasWon(Mark.P1) ? Double.POSITIVE_INFINITY : value;
-        value = board.hasWon(Mark.P2) ? Double.NEGATIVE_INFINITY : value;
+        value = board.hasWon(mark) ? Double.POSITIVE_INFINITY : value;
+        value = board.hasWon(mark.other()) ? Double.NEGATIVE_INFINITY : value;
 
         return value;
     }
 
-    private double horizontalValue(Board board, int vCol, int vRow) {
+    private double horizontalValue(Board board, Mark mark, int vCol, int vRow) {
 
         int cols = board.getColumns();
         int streak = board.getWinStreak();
@@ -216,14 +214,14 @@ public class NegaMaxStrategy implements GameStrategy {
 
 
         for (int col = startCol; col < vCol + streak && col < cols; col++) {
-            value += positionValue(board, col, vRow);
+            value += positionValue(board, mark, col, vRow);
         }
 
         return value;
 
     }
 
-    private double verticalValue(Board board, int vCol, int vRow) {
+    private double verticalValue(Board board, Mark mark, int vCol, int vRow) {
 
         int rows = board.getRows();
         int streak = board.getWinStreak();
@@ -233,7 +231,7 @@ public class NegaMaxStrategy implements GameStrategy {
         startRow = startRow < 0 ? 0 : startRow;
 
         for (int row = startRow; row < vRow + streak && row < rows; row++) {
-            value += positionValue(board, vCol, row);
+            value += positionValue(board, mark, vCol, row);
         }
 
         return value;
@@ -250,32 +248,23 @@ public class NegaMaxStrategy implements GameStrategy {
      * . . . . . . @
      */
 
-    private double lRDiagonalValue(Board board, int vCol, int vRow) {
+    private double lRDiagonalValue(Board board, Mark mark, int vCol, int vRow) {
 
         int rows = board.getRows();
         int cols = board.getColumns();
         int streak = board.getWinStreak();
         int value = 0;
 
-        int tempStartRow = vRow - streak + 1;
-        int tempStartCol = vCol + streak - 1;
-        int startCol = tempStartCol;
-        int startRow = tempStartRow;
-
-
-        if (tempStartRow < 0) {
-            startRow = 0;
-            startCol = vCol + vRow;
+        //Up and left
+        for (int col = vCol, row = vRow; col > vCol - streak && col >= 0
+                && row < vRow + streak && row < rows; row++, col--) {
+            value += positionValue(board, mark, col, row);
         }
 
-        if (tempStartCol > cols - 1) {
-            startCol = cols - 1;
-            startRow = vRow - (cols - 1 - vCol);
-        }
-
-        for (int col = startCol, row = startRow; col > vCol - streak && col > 0
-                && row < startRow + streak && row < rows; col--, row++) {
-            value += positionValue(board, col, row);
+        //Down and right
+        for (int col = vCol, row = vRow; col < cols && col < vCol + streak
+                && row >= 0 && row > vRow - streak; col++, row--) {
+            value += positionValue(board, mark, col, row);
         }
 
         return value;
@@ -293,42 +282,34 @@ public class NegaMaxStrategy implements GameStrategy {
      * @ . . . . . .
      */
 
-    private double rLDiagonalValue(Board board, int vCol, int vRow) {
+    private double rLDiagonalValue(Board board, Mark mark, int vCol, int vRow) {
 
         int rows = board.getRows();
         int cols = board.getColumns();
         int streak = board.getWinStreak();
         int value = 0;
 
-        int tempStartRow = vRow - streak + 1;
-        int tempStartCol = vCol - streak + 1;
-        int startRow = tempStartRow;
-        int startCol = tempStartCol;
-
-        if (tempStartRow < 0) {
-            startRow = 0;
-            startCol = vCol - vRow;
-        } else if (tempStartCol < 0) {
-            startCol = 0;
-            startRow = vRow - vCol;
+        //Down and left
+        for (int col = vCol, row = vRow; col >= 0 && col > vCol - streak
+                && row >= 0 && row > vRow - streak; row--, col--) {
+            value += positionValue(board, mark, col, row);
         }
-        startRow = startRow < 0 ? 0 : startRow;
-        startCol = startCol < 0 ? 0 : startCol;
 
-        for (int col = startCol, row = startRow; col < vCol + streak && col < cols
-                && row < vRow + streak && row < rows; col++, row++) {
-            value += positionValue(board, col, row);
+        //Up and right
+        for (int col = vCol, row = vRow; col < cols && col < vCol + streak
+                && row < rows && row < vRow + streak; col++, row++) {
+            value += positionValue(board, mark, col, row);
         }
 
         return value;
 
     }
 
-    private int positionValue(Board board, int col, int row) {
+    private int positionValue(Board board, Mark mark, int col, int row) {
         Mark posMark = board.getMark(col, row);
-        int value = P2_POS_VALUE;
-        if (posMark == Mark.P1) {
-            value = P1_POS_VALUE;
+        int value = FOE_POS_VALUE;
+        if (posMark == mark) {
+            value = FRIENDLY_POS_VALUE;
         } else if (posMark == Mark.EMPTY) {
             value = EMPTY_POS_VALUE;
         }
