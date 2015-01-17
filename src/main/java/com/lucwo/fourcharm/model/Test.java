@@ -5,7 +5,6 @@
 package com.lucwo.fourcharm.model;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
-import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.model.board.Board;
@@ -35,18 +34,22 @@ public class Test {
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InvalidMoveException {
         setup();
         Board board = new BinaryBoard();
-        GameStrategy strat = new NegaMaxStrategy(1);
-        try {
-            board.makemove(3, Mark.P1);
-            board.makemove(3, Mark.P1);
-            board.makemove(3, Mark.P1);
-        } catch (InvalidMoveException e) {
-            e.printStackTrace();
+        board.makemove(0, Mark.P1);
+        NegaMaxStrategy strat = new NegaMaxStrategy(0);
+        for (int i = 0; i < board.getColumns(); i++) {
+            try {
+                board = new BinaryBoard();
+                board.makemove(i, Mark.P1);
+                System.out.println("Column: " + i + " Value: " + strat.nodeValue(board));
+            } catch (InvalidMoveException e) {
+
+            }
         }
-        strat.determineMove(new BinaryBoard(), Mark.P1);
+
+        //strat.determineMove(board, Mark.P1);
 
 
     }
