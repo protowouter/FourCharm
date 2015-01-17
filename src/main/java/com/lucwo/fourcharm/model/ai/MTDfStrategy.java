@@ -22,8 +22,8 @@ import java.util.logging.Logger;
 
 public class MTDfStrategy implements GameStrategy {
 
-    private static final int DEPTH_STEP = 2;
     private static final int MAX_DURATION = 10_000;
+    private static final double FIRST_GUESS = 840;
     private static final int[] COLS = new int[]{3, 4, 2, 5, 1, 6, 0};
 
     // ------------------ Instance variables ----------------
@@ -38,7 +38,7 @@ public class MTDfStrategy implements GameStrategy {
 
 
         nega = new NegaMaxStrategy();
-        prevValue = Double.MIN_VALUE;
+        prevValue = FIRST_GUESS;
 
     }
 
@@ -49,17 +49,16 @@ public class MTDfStrategy implements GameStrategy {
     public int determineMove(Board board, Mark mark) {
         nega.resetCounter();
         endTime = System.currentTimeMillis() + MAX_DURATION;
-        int columns = board.getColumns();
         int freeSpots = board.getSpotCount() - board.getPlieCount();
         double bestValue = Double.NEGATIVE_INFINITY;
         int bestMove = -1;
         int achievedDepth = 0;
 
-        for (int depth = 2; System.currentTimeMillis() < endTime && depth < freeSpots;
-             depth = depth + DEPTH_STEP) {
+        for (int depth = 2; System.currentTimeMillis() < endTime && depth < freeSpots - 1;
+             depth++) {
             int bestMoveCurrentIteration = -1;
             double bestValueCurrentIteration = Double.NEGATIVE_INFINITY;
-            final int itDepth = depth;
+            final int mtDepth = depth - 1;
 
             Map<Integer, Future<Double>> valueFutures = new TreeMap<>();
 
@@ -70,7 +69,7 @@ public class MTDfStrategy implements GameStrategy {
                         Board cBoard = board.deepCopy();
                         cBoard.makemove(col, mark);
                         Future<Double> valFut = ForkJoinPool.commonPool()
-                                .submit(() -> -mtdf(cBoard, mark.other(), itDepth - 1));
+                                .submit(() -> -mtdf(cBoard, mark.other(), mtDepth));
                         valueFutures.put(col, valFut);
                     } catch (InvalidMoveException e) {
                         Logger.getGlobal().throwing(getClass().toString(), "determineMove", e);
@@ -95,11 +94,12 @@ public class MTDfStrategy implements GameStrategy {
             } catch (TimeoutException e) {
                 Logger.getGlobal().finer("Time's up: " + e.toString());
             }
-            prevValue = bestValue;
 
         }
         if (bestMove == -1) {
             bestMove = new RandomStrategy().determineMove(board, mark);
+        } else {
+            prevValue = bestValue;
         }
         Logger.getGlobal().fine("Evaluated nodes: " + nega.getCounter());
         Logger.getGlobal().fine("Search achieved a depth of " + achievedDepth);
@@ -125,7 +125,7 @@ public class MTDfStrategy implements GameStrategy {
 
             }
 
-            guess = nega.negaMax(board, mark, beta - 1, beta, depth);
+            guess = nega.negaMax(board, mark, beta - 1, beta, depth).value;
 
             if (guess < beta) {
                 upperBound = guess;

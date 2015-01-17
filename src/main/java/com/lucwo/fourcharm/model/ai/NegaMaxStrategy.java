@@ -9,8 +9,10 @@ import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.board.Board;
 
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 /**
@@ -26,7 +28,7 @@ public class NegaMaxStrategy implements GameStrategy {
     /**
      * Default search depth for the NegaMax algorithm.
      */
-    public static final int DEF_DEPTH = 12;
+    public static final int DEF_DEPTH = 6;
     public static final int FOE_POS_VALUE = 0;
     public static final int FRIENDLY_POS_VALUE = 2;
     public static final int EMPTY_POS_VALUE = 1;
@@ -35,7 +37,7 @@ public class NegaMaxStrategy implements GameStrategy {
     public static final int POS_TABLE_SIZE = 10_000_000;
     public static final Map<Long, TransPosEntry> TRANS_POS_TABLE = new ConcurrentSkipListMap<>();
 
-    private long nodeCounter;
+    private final AtomicLong nodeCounter = new AtomicLong();
 
     private int searchDept;
 
@@ -65,44 +67,12 @@ public class NegaMaxStrategy implements GameStrategy {
      * @return The best move according to the negamax algorithm.
      */
     public int determineMove(Board board, Mark mark, int depth) {
-
-        nodeCounter = 0;
-
-        double bestValue = Double.NEGATIVE_INFINITY;
-        int bestMove = -1;
-        int columns = board.getColumns();
-        Map<Integer, Future<Double>> valueFutures = new TreeMap<>();
-
-
-        for (int col = 0; col < columns; col++) {
-            if (board.columnHasFreeSpace(col)) {
-                try {
-                    Board cBoard = board.deepCopy();
-                    cBoard.makemove(col, mark);
-                    Future<Double> valFut = NEGA_EXEC.submit(() -> -negaMax(cBoard, mark.other(), Double.NEGATIVE_INFINITY,
-                            Double.POSITIVE_INFINITY, depth - 1));
-                    valueFutures.put(col, valFut);
-                } catch (InvalidMoveException e) {
-                    Logger.getGlobal().throwing(getClass().toString(), "negaMax", e);
-                }
-            }
-        }
-
-        for(Map.Entry<Integer, Future<Double>> val : valueFutures.entrySet()) {
-            double value = 0;
-            try {
-                value = val.getValue().get();
-            } catch (InterruptedException | ExecutionException e) {
-                Logger.getGlobal().throwing("NegaMaxStrategy", "determineMove", e);
-            }
-            if (value > bestValue) {
-                bestMove = val.getKey();
-                bestValue = value;
-            }
-        }
-        Logger.getGlobal().fine("Calculated nodes: " + nodeCounter);
-        Logger.getGlobal().fine("Best move: " + bestMove);
-
+        resetCounter();
+        Result result = negaMax(board, mark, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, depth);
+        int bestMove = result.column;
+        Double bestValue = result.value;
+        Logger.getGlobal().fine("Calculated nodes: " + nodeCounter.get());
+        Logger.getGlobal().fine("Best move: " + bestMove + " Value: " + bestValue);
         if (bestMove == -1) {
             bestMove = new RandomStrategy().determineMove(board, mark);
         }
@@ -114,20 +84,20 @@ public class NegaMaxStrategy implements GameStrategy {
     /**
      * @param board Board for which the negaMax value will be determined
      * @param depth Depth at which will be searched for the best move
-     * @return The negamax value of the current board state
+     * @return The negamax value of the current board state and the best move
      */
-    public double negaMax(Board board, Mark mark, double alphaOrig, double betaOrig, int depth) {
+    public Result negaMax(Board board, Mark mark, double alphaOrig, double betaOrig, int depth) {
         double alpha = alphaOrig;
         double beta = betaOrig;
         long posKey = board.positionCode();
-        double value = 0;
+        Result result = null;
         boolean foundValue = false;
 
         TransPosEntry ttEntry = TRANS_POS_TABLE.get(posKey % POS_TABLE_SIZE);
         if (ttEntry != null && ttEntry.key == posKey && ttEntry.depth >= depth) {
 
             if (ttEntry.flag == Flag.EXACT) {
-                value = ttEntry.value;
+                result = new Result(ttEntry.move, ttEntry.value);
                 foundValue = true;
             } else if (ttEntry.flag == Flag.LOWER_BOUND) {
                 alpha = Math.max(alpha, ttEntry.value);
@@ -135,67 +105,84 @@ public class NegaMaxStrategy implements GameStrategy {
                 beta = Math.min(beta, ttEntry.value);
             }
             if (alpha >= beta) {
-                value = ttEntry.value;
+                result = new Result(ttEntry.move, ttEntry.value);
                 foundValue = true;
             }
 
         }
 
         if (!foundValue) {
-            if (depth == 0 || board.isFull() || board.hasWon(mark)) {
-                value = nodeValue(board, mark);
+            if (depth == 0 || board.isFull() || board.hasWon(mark.other())) {
+                Double value = nodeValue(board);
+                if (mark == Mark.P2) {
+                    value = -value;
+                }
+                result = new Result(-1, value);
             } else {
 
-                double bestValue = Double.NEGATIVE_INFINITY;
-                int columns = board.getColumns();
+                result = getNegaResult(board, mark, depth, alpha, beta);
 
-                try {
-
-                    boolean searching = true;
-                    for (int col = 0; searching && col < columns; col++) {
-                        if (board.columnHasFreeSpace(col)) {
-
-                            Board childBoard = board.deepCopy();
-                            childBoard.makemove(col, mark);
-                            double tValue = -negaMax(childBoard, mark.other(), -beta, -alpha, depth - 1);
-                            bestValue = Math.max(bestValue, tValue);
-                            alpha = Math.max(alpha, tValue);
-
-                            searching = alpha < beta;
-
-                        }
-                    }
-                } catch (InvalidMoveException e) {
-                    Logger.getGlobal().throwing("NegaMaxStrategy", "negaMax", e);
-                }
-
-                value = bestValue;
-
-                ttEntry = new TransPosEntry();
-                ttEntry.value = value;
-                if (value <= alphaOrig) {
-                    ttEntry.flag = Flag.UPPER_BOUND;
-                } else if (value >= beta) {
-                    ttEntry.flag = Flag.LOWER_BOUND;
-                } else {
-                    ttEntry.flag = Flag.EXACT;
-                }
-                ttEntry.depth = depth;
-                ttEntry.key = posKey;
-                TRANS_POS_TABLE.put(posKey % POS_TABLE_SIZE, ttEntry);
+                saveToTransPostTable(alphaOrig, depth, beta, posKey, result);
 
             }
         }
 
-
-
-
-        return value;
+        return result;
 
     }
 
-    private double nodeValue(Board board, Mark mark) {
+    private void saveToTransPostTable(double alphaOrig, int depth, double beta, long posKey, Result result) {
+        TransPosEntry ttEntry;
+        ttEntry = new TransPosEntry();
+        ttEntry.value = result.value;
+        ttEntry.move = result.column;
+        if (result.value <= alphaOrig) {
+            ttEntry.flag = Flag.UPPER_BOUND;
+        } else if (result.value >= beta) {
+            ttEntry.flag = Flag.LOWER_BOUND;
+        } else {
+            ttEntry.flag = Flag.EXACT;
+        }
+        ttEntry.depth = depth;
+        ttEntry.key = posKey;
+        TRANS_POS_TABLE.put(posKey % POS_TABLE_SIZE, ttEntry);
+    }
 
+    private Result getNegaResult(Board board, Mark mark, int depth, double alpha, double beta) {
+        double newAlpha = alpha;
+        Result result;
+        double bestValue = Double.NEGATIVE_INFINITY;
+        int bestMove = -1;
+        int columns = board.getColumns();
+
+
+        boolean searching = true;
+        for (int col = 0; searching && col < columns; col++) {
+            try {
+                Board childBoard = board.deepCopy();
+                childBoard.makemove(col, mark);
+                double val = -negaMax(childBoard, mark.other(), -beta, -alpha, depth - 1).value;
+                if (val > bestValue) {
+                    bestValue = val;
+                    newAlpha = val;
+                    bestMove = col;
+                }
+                searching = newAlpha < beta;
+
+            } catch (InvalidMoveException e) {
+                Logger.getGlobal().finer(e.toString());
+            }
+
+
+        }
+
+
+        result = new Result(bestMove, bestValue);
+        return result;
+    }
+
+    private double nodeValue(Board board) {
+        Mark mark = Mark.P1;
         upCounter();
 
 
@@ -298,6 +285,7 @@ public class NegaMaxStrategy implements GameStrategy {
      * . . . @ . . .
      * . . @ . . . .
      * . @ . . . . .
+     *
      * @ . . . . . .
      */
 
@@ -335,16 +323,16 @@ public class NegaMaxStrategy implements GameStrategy {
         return value;
     }
 
-    public synchronized void upCounter() {
-        nodeCounter++;
+    public void upCounter() {
+        nodeCounter.getAndIncrement();
     }
 
     public long getCounter() {
-        return nodeCounter;
+        return nodeCounter.get();
     }
 
     public void resetCounter() {
-        nodeCounter = 0;
+        nodeCounter.set(0);
     }
 
     enum Flag {
@@ -353,11 +341,21 @@ public class NegaMaxStrategy implements GameStrategy {
 
     }
 
+    public class Result {
+        public final int column;
+        public final Double value;
+
+        public Result(int col, Double val) {
+            column = col;
+            value = val;
+        }
+    }
 
     class TransPosEntry {
 
         Flag flag;
         double value;
+        int move;
         int depth;
         long key;
 
