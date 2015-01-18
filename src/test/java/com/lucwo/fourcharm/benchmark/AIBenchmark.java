@@ -10,7 +10,6 @@ import com.lucwo.fourcharm.model.LocalAIPlayer;
 import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.Player;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
-import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 
@@ -56,8 +55,8 @@ public class AIBenchmark {
         final int total = ITERATIONS;
         final double step = total * STEP_PERCENTAGE;
 
-        Player smartPlayer1 = new LocalAIPlayer(new NegaMaxStrategy(10), Mark.P1);
-        Player smartPlayer2 = new LocalAIPlayer(new NegaMaxStrategy(10), Mark.P2);
+        Player smartPlayer1 = new LocalAIPlayer(new MTDfStrategy(), Mark.P1);
+        Player smartPlayer2 = new LocalAIPlayer(new MTDfStrategy(), Mark.P2);
         Player dumbPlayer1 = new LocalAIPlayer(new RandomStrategy(), Mark.P1);
         Player dumbPlayer2 = new LocalAIPlayer(new RandomStrategy(), Mark.P2);
 

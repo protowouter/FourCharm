@@ -7,6 +7,7 @@ package com.lucwo.fourcharm.server;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreServer;
+import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 
 import java.util.Set;
 import java.util.logging.Logger;
@@ -80,7 +81,7 @@ public class ClientHandler implements CoreServer.Iface {
      * @throws C4Exception
      */
     @Override
-    public void join(String pName, int gNumber, Set<String> exts) throws C4Exception {
+    public void join(String pName, int gNumber, Set<Extension> exts) throws C4Exception {
         Logger.getGlobal().info("Received join for user " + pName);
         group.join(this, pName, gNumber, exts);
 

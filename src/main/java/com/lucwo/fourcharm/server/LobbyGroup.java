@@ -6,6 +6,7 @@ package com.lucwo.fourcharm.server;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
+import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 
 import java.util.Set;
 
@@ -37,7 +38,7 @@ public class LobbyGroup extends ClientGroup {
      * @throws C4Exception is already in the LobbyGroup
      */
     @Override
-    public void join(ClientHandler client, String pName, int gNumber, Set<String> exts) throws C4Exception {
+    public void join(ClientHandler client, String pName, int gNumber, Set<Extension> exts) throws C4Exception {
 
         throw new InvalidCommandError("You are not allowed to use this command now.");
     }

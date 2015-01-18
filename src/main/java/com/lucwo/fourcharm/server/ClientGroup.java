@@ -5,6 +5,7 @@
 package com.lucwo.fourcharm.server;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -73,7 +74,7 @@ public abstract class ClientGroup {
      * @param exts    Set of extensions supported
      */
     public abstract void join(ClientHandler client, String pName, int gNumber,
-                              Set<String> exts) throws C4Exception;
+                              Set<Extension> exts) throws C4Exception;
 
     public abstract void doMove(ClientHandler client, int col) throws C4Exception;
 

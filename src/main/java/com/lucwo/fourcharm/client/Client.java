@@ -12,6 +12,7 @@ import com.lucwo.fourcharm.view.FourCharmTUI;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreServer;
+import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -21,7 +22,7 @@ import java.util.logging.Logger;
 
 public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
 
-    private static int GROUP_NUMBER = 23;
+    private static final int GROUP_NUMBER = 23;
 
 // ------------------ Instance variables ----------------
 
@@ -60,7 +61,7 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
     @Override
     public void run() {
         try {
-            serverClient.join(name, GROUP_NUMBER, new HashSet<String>());
+            serverClient.join(name, GROUP_NUMBER, new HashSet<Extension>());
         } catch (C4Exception e) {
             Logger.getGlobal().throwing("Client", "run", e);
         }
@@ -90,7 +91,7 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
     }
 
     @Override
-    public void accept(int gNumber, Set<String> exts) {
+    public void accept(int gNumber, Set<Extension> exts) {
 
         try {
             serverClient.ready();

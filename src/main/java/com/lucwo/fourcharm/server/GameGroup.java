@@ -12,6 +12,7 @@ import com.lucwo.fourcharm.model.board.BinaryBoard;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidMoveError;
+import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,7 +70,7 @@ public class GameGroup extends ClientGroup implements Runnable {
      * @throws C4Exception client is already in the GameGroup
      */
     @Override
-    public void join(ClientHandler client, String pName, int gNumber, Set<String> exts) throws C4Exception {
+    public void join(ClientHandler client, String pName, int gNumber, Set<Extension> exts) throws C4Exception {
 
         throw new InvalidCommandError("You are not allowed to use this command now.");
     }
