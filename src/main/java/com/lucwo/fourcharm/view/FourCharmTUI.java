@@ -225,6 +225,8 @@ public class FourCharmTUI implements FourCharmView {
 
     }
 
+    // TODO: Naar de controller:
+
     /**
      * Starts the game.
      */
