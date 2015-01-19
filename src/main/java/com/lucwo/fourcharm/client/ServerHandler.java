@@ -16,13 +16,14 @@ import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
+public class ServerHandler implements CoreClient.Iface, Runnable {
 
     private static final int GROUP_NUMBER = 23;
 
@@ -33,7 +34,7 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
     private BufferedReader in;
     private BufferedWriter out;
     private CoreServer.Client serverClient;
-    private CoreClient.Processor<Client> processor;
+    private CoreClient.Processor<ServerHandler> processor;
     private FourCharmController controller;
     private Game game;
     private Map<String, ASyncPlayer> playerMap;
@@ -41,7 +42,7 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
 
 // --------------------- Constructors -------------------
 
-    public Client(String namepie, String hostString, String portString, FourCharmController contr) {
+    public ServerHandler(String namepie, String hostString, String portString, FourCharmController contr) {
         controller = contr;
         name = namepie;
         playerMap = new HashMap<>();
@@ -50,12 +51,12 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
             InetAddress host = InetAddress.getByName(hostString);
             int port = Integer.parseInt(portString);
             sock = new Socket(host, port);
-            in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-            out = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()));
+            in = new BufferedReader(new InputStreamReader(sock.getInputStream(), Charset.forName("UTF-8")));
+            out = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream(), Charset.forName("UTF-8")));
             processor = new CoreClient.Processor<>(this);
             serverClient = new CoreServer.Client(out);
         } catch (IOException e) {
-            Logger.getGlobal().throwing("Client", "Constructor", e);
+            Logger.getGlobal().throwing(getClass().toString(), "Constructor", e);
         }
 
 
@@ -66,7 +67,7 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
         try {
             serverClient.join(name, GROUP_NUMBER, new HashSet<Extension>());
         } catch (C4Exception e) {
-            Logger.getGlobal().throwing("Client", "run", e);
+            Logger.getGlobal().throwing(getClass().toString(), "run", e);
         }
         try {
             String input = in.readLine();
@@ -77,10 +78,14 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
 
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getGlobal().throwing(getClass().toString(), "run", e);
         } catch (C4Exception e) {
-            Logger.getGlobal().warning(e.getMessage() +
-                    " May not be sent to the server, so there");
+            Logger.getGlobal().throwing(getClass().toString(), "run", e);
+            try {
+                serverClient.error(e.getErrorCode(), e.getMessage());
+            } catch (C4Exception c4) {
+                Logger.getGlobal().throwing(getClass().toString(), "run", c4);
+            }
         }
     }
 
@@ -89,17 +94,13 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
 
 // ----------------------- Commands ---------------------
 
-    public void queueMove(int col) {
-
-    }
-
     @Override
     public void accept(int gNumber, Set<Extension> exts) {
 
         try {
             serverClient.ready();
         } catch (C4Exception e) {
-            Logger.getGlobal().throwing("Client", "accept", e);
+            Logger.getGlobal().throwing("ServerHandler", "accept", e);
         }
 
     }
@@ -136,9 +137,8 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
                 try {
                     serverClient.doMove(ai.determineMove(game.getBoard()));
                 } catch (C4Exception e) {
-                    Logger.getGlobal().throwing("Client", "requestMove", e);
+                    Logger.getGlobal().throwing("ServerHandler", "requestMove", e);
                 }
-
             }).start();
 
         }
@@ -166,10 +166,5 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
     @Override
     public void error(int eCode, String message) {
 
-    }
-
-    @Override
-    public int requestMove() {
-        return 0;
     }
 }

@@ -4,7 +4,7 @@
 
 package com.lucwo.fourcharm;
 
-import com.lucwo.fourcharm.client.Client;
+import com.lucwo.fourcharm.client.ServerHandler;
 import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
@@ -13,13 +13,16 @@ import com.lucwo.fourcharm.view.FourCharmView;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FourCharmController implements Observer {
 
 // ------------------ Instance variables ----------------
 
     private FourCharmView view;
-    private Client client;
+    private ServerHandler serverHandler;
 
 // --------------------- Constructors -------------------
 
@@ -34,10 +37,17 @@ public class FourCharmController implements Observer {
 // ----------------------- Commands ---------------------
 
     public static void main(String[] args) {
+        Logger.getGlobal().setLevel(Level.FINEST);
+
+
+        ConsoleHandler cH = new ConsoleHandler();
+        cH.setLevel(Level.FINEST);
+
+        Logger.getGlobal().addHandler(cH);
         new FourCharmController();
     }
 
-    public void startNetworkGame(String playerName, GameStrategy strategy) {
+    public void startNetworkGame(String hostName, String port, String playerName, GameStrategy strategy) {
 
     }
 
@@ -77,7 +87,7 @@ public class FourCharmController implements Observer {
     @Override
     public void update(Observable o, Object arg) {
 
-        if (o instanceof Game) {
+        if (o instanceof Game && !((Game) o).hasFinished()) {
             handlePlayerTurn(((Game) o).getCurrent());
         }
 

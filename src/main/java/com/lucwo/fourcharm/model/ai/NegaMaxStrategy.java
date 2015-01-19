@@ -34,7 +34,7 @@ public class NegaMaxStrategy implements GameStrategy {
     public static final int EMPTY_POS_VALUE = 10;
     public static final ExecutorService NEGA_EXEC = ForkJoinPool.commonPool();
 
-    public static final int POS_TABLE_SIZE = 10_000_000;
+    public static final int POS_TABLE_SIZE = 20_000_000;
     public static final Map<Long, TransPosEntry> TRANS_POS_TABLE = new ConcurrentSkipListMap<>();
 
     private final AtomicLong nodeCounter = new AtomicLong();

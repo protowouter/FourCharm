@@ -29,7 +29,7 @@ public class LobbyGroup extends ClientGroup {
     // ----------------------- Commands ---------------------
 
     /**
-     * Client wants to go from the PreLobbyGroup to the LobbyGroup.
+     * ServerHandler wants to go from the PreLobbyGroup to the LobbyGroup.
      *
      * @param client  The client which performed this command.
      * @param pName   Player name

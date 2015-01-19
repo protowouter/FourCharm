@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 public class MTDfStrategy implements GameStrategy {
 
     private static final int MAX_DURATION = 10_000;
-    private static final double FIRST_GUESS = 840;
+    private static final double FIRST_GUESS = 17880;
     private static final int[] COLS = new int[]{3, 4, 2, 5, 1, 6, 0};
 
     // ------------------ Instance variables ----------------
@@ -115,7 +115,9 @@ public class MTDfStrategy implements GameStrategy {
         double upperBound = Double.POSITIVE_INFINITY;
         double lowerBound = Double.NEGATIVE_INFINITY;
 
-        while (lowerBound < upperBound && System.currentTimeMillis() - 1000 < endTime) {
+        final int TIMEOUT = 10;
+
+        while (lowerBound < upperBound && System.currentTimeMillis() - TIMEOUT < endTime) {
             double beta;
 
             if (guess == lowerBound) {

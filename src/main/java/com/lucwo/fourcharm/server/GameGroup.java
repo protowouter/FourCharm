@@ -7,7 +7,6 @@ package com.lucwo.fourcharm.server;
 import com.lucwo.fourcharm.model.ASyncPlayer;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.Mark;
-import com.lucwo.fourcharm.model.MoveRequestable;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
@@ -17,8 +16,6 @@ import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
 public class GameGroup extends ClientGroup implements Runnable {
@@ -60,7 +57,7 @@ public class GameGroup extends ClientGroup implements Runnable {
 // ----------------------- Commands ---------------------
 
     /**
-     * Client wants to go from the PreLobbyGroup to the LobbyGroup.
+     * ServerHandler wants to go from the PreLobbyGroup to the LobbyGroup.
      *
      * @param client  The client which performed this command.
      * @param pName   Player name
@@ -136,51 +133,5 @@ public class GameGroup extends ClientGroup implements Runnable {
         server.removeGame(this);
 
 
-    }
-
-    private class MoveQueue implements MoveRequestable {
-
-        // ---------------- Instantie variabelen ------------------
-
-        private BlockingQueue<Integer> rij;
-        private ClientHandler client;
-
-        // ---------------- Constructor ---------------------------
-
-        public MoveQueue(ClientHandler c) {
-            client = c;
-            rij = new LinkedBlockingQueue<>(1);
-        }
-
-        // ---------------- Queries -------------------------------
-
-        // ---------------- Commands ------------------------------
-
-        /**
-         * Asks for a move and puts this move in the queue.
-         *
-         * @return the requested move
-         */
-        @Override
-        public int requestMove() {
-
-            try {
-                client.getClient().requestMove(client.getName());
-            } catch (C4Exception e) {
-                e.printStackTrace();
-            }
-
-            int column = -1;
-            try {
-                column = rij.take();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return column;
-        }
-
-        public BlockingQueue<Integer> getQueue() {
-            return rij;
-        }
     }
 }

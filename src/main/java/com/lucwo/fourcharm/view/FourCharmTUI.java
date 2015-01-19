@@ -5,7 +5,7 @@
 package com.lucwo.fourcharm.view;
 
 import com.lucwo.fourcharm.FourCharmController;
-import com.lucwo.fourcharm.client.Client;
+import com.lucwo.fourcharm.client.ServerHandler;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Scanner;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
@@ -32,21 +31,21 @@ public class FourCharmTUI implements FourCharmView {
 
     // ------------------ Instance variables ----------------
 
-    private Scanner nameScanner;
+    private Scanner commandScanner;
     private boolean running;
     private boolean gameOn;
     private FourCharmController controller;
-    private Client client;
+    private ServerHandler serverHandler;
     private InetAddress address;
     private int port;
-    private BlockingQueue<Integer> moveQueue;
     private boolean moveNeeded;
+    private LinkedBlockingQueue<Integer> moveQueue;
     
     // --------------------- Constructors -------------------
 
     public FourCharmTUI(FourCharmController cont) {
 
-        nameScanner = new Scanner(System.in);
+        commandScanner = new Scanner(System.in);
         gameOn = false;
         running = true;
         controller = cont;
@@ -92,7 +91,16 @@ public class FourCharmTUI implements FourCharmView {
                         + " parameters. You gave " + args.length + ".");
             }
         } else {
-            showError("This command has no power here!");
+            // Maybe it's a move?
+            try {
+                int move = Integer.parseInt(commandString) - 1;
+                moveQueue.put(move);
+            } catch (NumberFormatException | InterruptedException e) {
+                Logger.getGlobal().throwing(getClass().toString(), "checkCommand", e);
+                showError("This command has no power here!");
+            }
+
+
         }
     }
 
@@ -120,20 +128,10 @@ public class FourCharmTUI implements FourCharmView {
                 break;
             //Play a local game
             case LOCAL:
-                createLocalGame(args);
-                break;
-            //Make a move
-            case MOVE:
-                int moove = Integer.parseInt(args[0]) - 1;
-                if (moveNeeded) {
-                    try {
-                        moveQueue.put(moove);
-                        moveNeeded = false;
-                    } catch (InterruptedException e) {
-                        Logger.getGlobal().throwing(getClass().toString(), "executeCommand", e);
-                    }
+                if (!gameOn) {
+                    createLocalGame(args);
                 } else {
-                    showError("It is not your turn");
+                    showError("Currently playing a game!");
                 }
                 break;
             //Ask for a hint in the current game.
@@ -180,7 +178,6 @@ public class FourCharmTUI implements FourCharmView {
         } else {
             controller.startLocalGame(new String[0], new GameStrategy[]{p1Strat, p2Strat});
         }
-
     }
 
     private GameStrategy parseStrategy(String strat) {
@@ -216,17 +213,16 @@ public class FourCharmTUI implements FourCharmView {
     public void update(Observable o, Object arg) {
         Logger.getGlobal().finer("Tui is getting message from: " + o.toString());
         if (o instanceof Game) {
+            gameOn = true;
             Game newGame = (Game) o;
             System.out.println(newGame.getBoard().toString());
             showMessage(((Game) o).getCurrent().getName() + "'s turn");
-
             if (newGame.hasFinished()) {
                 showMessage("The game has finished. ");
                 gameOn = false;
                 if (newGame.hasWinner()) {
                     showMessage("The winner is " + newGame.getWinner());
                 }
-                showMessage("Would you like to play a new game? [yes/exit]");
             }
         }
 
@@ -237,14 +233,15 @@ public class FourCharmTUI implements FourCharmView {
      */
     public void run() {
         showMessage("Welcome to FourCharmGUI Connect4.");
+        parseCommands();
+    }
 
+    private void parseCommands() {
         showPrompt();
-        while (running && nameScanner.hasNextLine()) {
-            parseCommand(nameScanner.nextLine());
+        while (running && commandScanner.hasNextLine()) {
+            parseCommand(commandScanner.nextLine());
             showPrompt();
-
         }
-
     }
 
     private void showPrompt() {
@@ -269,9 +266,12 @@ public class FourCharmTUI implements FourCharmView {
 
     @Override
     public int requestMove() {
+        showMessage("Enter a move (1-7)");
+        showPrompt();
         int move = -1;
         try {
             move = moveQueue.take();
+            moveNeeded = false;
         } catch (InterruptedException e) {
             Logger.getGlobal().throwing(getClass().toString(), "requestMove", e);
         }
@@ -289,7 +289,6 @@ public class FourCharmTUI implements FourCharmView {
         EXIT(new String[0]),
         CHALLENGE(new String[]{"Player name"}),
         HELP(new String[0]),
-        MOVE(new String[]{"The column"}),
         LIST_PLAYERS(new String[0]);
 
 
