@@ -118,6 +118,7 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
         } else {
             aiMark = Mark.P2;
         }
+
         ai = new LocalAIPlayer(new MTDfStrategy(), aiMark);
 
         game = new Game(ReferenceBoard.class, player1, player2);
