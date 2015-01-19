@@ -4,18 +4,22 @@
 
 package com.lucwo.fourcharm;
 
+import com.lucwo.fourcharm.client.Client;
 import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.view.FourCharmTUI;
 import com.lucwo.fourcharm.view.FourCharmView;
 
-public class FourCharmController {
+import java.util.Observable;
+import java.util.Observer;
+
+public class FourCharmController implements Observer {
 
 // ------------------ Instance variables ----------------
 
-    private Game game;
     private FourCharmView view;
+    private Client client;
 
 // --------------------- Constructors -------------------
 
@@ -31,6 +35,10 @@ public class FourCharmController {
 
     public static void main(String[] args) {
         new FourCharmController();
+    }
+
+    public void startNetworkGame(String playerName, GameStrategy strategy) {
+
     }
 
     /*@ requires localPlayerNames.length + aiStrategies.length == 2
@@ -49,12 +57,36 @@ public class FourCharmController {
             player1 = new LocalHumanPlayer(localPlayerNames[0], Mark.P1);
             player2 = new LocalAIPlayer(aIStrategies[0], Mark.P2);
         }
-
         Game game = new Game(BinaryBoard.class, player1, player2);
+        game.addObserver(this);
         view.showGame(game);
         new Thread(game).start();
 
     }
 
 
+    /**
+     * This method is called whenever the observed object is changed. An
+     * application calls an <tt>Observable</tt> object's
+     * <code>notifyObservers</code> method to have all the object's
+     * observers notified of the change.
+     *
+     * @param o   the observable object.
+     * @param arg an argument passed to the <code>notifyObservers</code>
+     */
+    @Override
+    public void update(Observable o, Object arg) {
+
+        if (o instanceof Game) {
+            handlePlayerTurn(((Game) o).getCurrent());
+        }
+
+    }
+
+    private void handlePlayerTurn(Player player) {
+        if (player instanceof LocalHumanPlayer) {
+            view.enableInput();
+            ((LocalHumanPlayer) player).queueMove(view.requestMove());
+        }
+    }
 }

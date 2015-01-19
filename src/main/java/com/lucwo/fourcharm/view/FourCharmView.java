@@ -22,4 +22,8 @@ public interface FourCharmView extends Observer, Runnable {
 
     public void showNewGame();
 
+    public void enableInput();
+
+    public int requestMove();
+
 }

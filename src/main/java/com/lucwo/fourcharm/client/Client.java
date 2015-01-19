@@ -4,10 +4,10 @@
 
 package com.lucwo.fourcharm.client;
 
+import com.lucwo.fourcharm.FourCharmController;
 import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.board.ReferenceBoard;
-import com.lucwo.fourcharm.view.FourCharmTUI;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreServer;
@@ -16,7 +16,10 @@ import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
@@ -31,20 +34,21 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
     private BufferedWriter out;
     private CoreServer.Client serverClient;
     private CoreClient.Processor<Client> processor;
-    private FourCharmTUI controller;
+    private FourCharmController controller;
     private Game game;
     private Map<String, ASyncPlayer> playerMap;
     private Player ai;
-    private Observer gameObserver;
 
 // --------------------- Constructors -------------------
 
-    public Client(String namepie, InetAddress host, int port, Observer obsv) {
-        gameObserver = obsv;
+    public Client(String namepie, String hostString, String portString, FourCharmController contr) {
+        controller = contr;
         name = namepie;
         playerMap = new HashMap<>();
 
         try {
+            InetAddress host = InetAddress.getByName(hostString);
+            int port = Integer.parseInt(portString);
             sock = new Socket(host, port);
             in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()));
@@ -119,8 +123,6 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
         ai = new LocalAIPlayer(new MTDfStrategy(), aiMark);
 
         game = new Game(ReferenceBoard.class, player1, player2);
-        game.addObserver(gameObserver);
-        new Thread(game).start();
 
 
     }

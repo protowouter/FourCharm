@@ -6,11 +6,10 @@ package com.lucwo.fourcharm.view;
 
 import com.lucwo.fourcharm.FourCharmController;
 import com.lucwo.fourcharm.client.Client;
-import com.lucwo.fourcharm.model.ASyncPlayer;
 import com.lucwo.fourcharm.model.Game;
-import com.lucwo.fourcharm.model.LocalHumanPlayer;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
+import com.lucwo.fourcharm.model.ai.RandomStrategy;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -18,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Scanner;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
 /**
@@ -38,7 +39,8 @@ public class FourCharmTUI implements FourCharmView {
     private Client client;
     private InetAddress address;
     private int port;
-    private ASyncPlayer currentPlayer;
+    private BlockingQueue<Integer> moveQueue;
+    private boolean moveNeeded;
     
     // --------------------- Constructors -------------------
 
@@ -48,6 +50,8 @@ public class FourCharmTUI implements FourCharmView {
         gameOn = false;
         running = true;
         controller = cont;
+        moveNeeded = false;
+        moveQueue = new LinkedBlockingQueue<>(1);
     }
 
     // ----------------------- Commands ---------------------
@@ -100,12 +104,6 @@ public class FourCharmTUI implements FourCharmView {
      */
     private void executeCommand(Command command, String[] args) {
         switch (command) {
-            //Start new game if true
-            case YES:
-                if (!gameOn) {
-                    controller.startLocalGame(new String[]{"Wouter"}, new GameStrategy[]{new MTDfStrategy()});
-                }
-                break;
             //Use the chat function
             case CHAT:
                 showError(NOT_IMPLEMENTED);
@@ -120,12 +118,20 @@ public class FourCharmTUI implements FourCharmView {
                     showError(e.getMessage());
                 }
                 break;
+            //Play a local game
+            case LOCAL:
+                createLocalGame(args);
+                break;
             //Make a move
             case MOVE:
                 int moove = Integer.parseInt(args[0]) - 1;
-                if (currentPlayer != null) {
-                    currentPlayer.queueMove(moove);
-                    currentPlayer = null;
+                if (moveNeeded) {
+                    try {
+                        moveQueue.put(moove);
+                        moveNeeded = false;
+                    } catch (InterruptedException e) {
+                        Logger.getGlobal().throwing(getClass().toString(), "executeCommand", e);
+                    }
                 } else {
                     showError("It is not your turn");
                 }
@@ -162,6 +168,31 @@ public class FourCharmTUI implements FourCharmView {
         System.out.println(message);
     }
 
+    private void createLocalGame(String[] args) {
+        GameStrategy p1Strat = parseStrategy(args[0]);
+        GameStrategy p2Strat = parseStrategy(args[1]);
+        if (p1Strat == null && p2Strat == null) {
+            controller.startLocalGame(new String[]{args[0], args[1]}, null);
+        } else if (p1Strat == null) {
+            controller.startLocalGame(new String[]{args[0]}, new GameStrategy[]{p2Strat});
+        } else if (p2Strat == null) {
+            controller.startLocalGame(new String[]{args[1]}, new GameStrategy[]{p1Strat});
+        } else {
+            controller.startLocalGame(new String[0], new GameStrategy[]{p1Strat, p2Strat});
+        }
+
+    }
+
+    private GameStrategy parseStrategy(String strat) {
+        GameStrategy strategy = null;
+        if ("-m".equals(strat)) {
+            strategy = new MTDfStrategy();
+        } else if ("-r".equals(strat)) {
+            strategy = new RandomStrategy();
+        }
+        return strategy;
+    }
+
     /**
      * Shows all of the available commands.
      */
@@ -187,11 +218,7 @@ public class FourCharmTUI implements FourCharmView {
         if (o instanceof Game) {
             Game newGame = (Game) o;
             System.out.println(newGame.getBoard().toString());
-            if (newGame.getCurrent() instanceof LocalHumanPlayer) {
-                currentPlayer = (ASyncPlayer) newGame.getCurrent();
-                showMessage(currentPlayer.getName() + " please enter a move");
-                showPrompt();
-            }
+            showMessage(((Game) o).getCurrent().getName() + "'s turn");
 
             if (newGame.hasFinished()) {
                 showMessage("The game has finished. ");
@@ -224,27 +251,7 @@ public class FourCharmTUI implements FourCharmView {
         System.out.print("FourCharm$ ");
     }
 
-  /*  // TODO: Naar de controller:
 
-    */
-
-    /**
-     * Starts the game.
-     *//*
-    private void startGame() {
-        String name = "";
-        showMessage("Please enter your name");
-
-        if (nameScanner.hasNextLine()) {
-            name = nameScanner.nextLine();
-            showMessage("Welcome " + name);
-        }
-
-
-        client = new Client(name, address, port, this);
-        new Thread(client).start();
-
-    }*/
     @Override
     public void showGame(Game game) {
         game.addObserver(this);
@@ -255,19 +262,35 @@ public class FourCharmTUI implements FourCharmView {
 
     }
 
+    @Override
+    public void enableInput() {
+        moveNeeded = true;
+    }
+
+    @Override
+    public int requestMove() {
+        int move = -1;
+        try {
+            move = moveQueue.take();
+        } catch (InterruptedException e) {
+            Logger.getGlobal().throwing(getClass().toString(), "requestMove", e);
+        }
+        return move;
+    }
+
     /**
      * Enum class that 'holds' the commands of the Connect4 game.
      */
     private enum Command {
         CHAT(new String[]{"Chatmessage"}),
         CONNECT(new String[]{"Host", "Port"}),
+        LOCAL(new String[]{"Playername | -m (MTDF) | -r (Random)", "Playername | -m (MTDF) | -r (Random)"}),
         HINT(new String[0]),
         EXIT(new String[0]),
         CHALLENGE(new String[]{"Player name"}),
         HELP(new String[0]),
         MOVE(new String[]{"The column"}),
-        LIST_PLAYERS(new String[0]),
-        YES(new String[0]);
+        LIST_PLAYERS(new String[0]);
 
 
         String[] parameterNames;
