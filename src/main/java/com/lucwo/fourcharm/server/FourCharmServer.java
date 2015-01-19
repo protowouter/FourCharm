@@ -81,6 +81,10 @@ public class FourCharmServer {
         running = false;
     }
 
+    public ClientGroup getLobby() {
+        return lobby;
+    }
+
     public void handleClient(Socket sock) {
 
         final String m_name = "handleClient";

@@ -18,13 +18,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Logger;
 
 public class GameGroup extends ClientGroup implements Runnable {
 
 // ------------------ Instance variables ----------------
 
-    ClientHandler player1;
-    ClientHandler player2;
     Map<ClientHandler, MoveQueue> moveQueues;
     Game game;
     FourCharmServer server;
@@ -121,6 +120,18 @@ public class GameGroup extends ClientGroup implements Runnable {
     public void run() {
 
         game.run();
+        String winnerName = null;
+        if (game.hasWinner()) {
+            winnerName = game.getWinner().getName();
+        }
+        try {
+            for (ClientHandler clientje: moveQueues.keySet()) {
+                clientje.getClient().gameEnd(winnerName);
+                server.getLobby().addHandler(clientje);
+            }
+        } catch (C4Exception e) {
+            Logger.getGlobal().throwing("GameGroup", "run()", e);
+        }
         server.removeGame(this);
 
 
