@@ -4,8 +4,10 @@
 
 package com.lucwo.fourcharm.presenter.game;
 
-import com.lucwo.fourcharm.model.*;
-import com.lucwo.fourcharm.model.ai.MTDfStrategy;
+import com.lucwo.fourcharm.model.Game;
+import com.lucwo.fourcharm.model.LocalHumanPlayer;
+import com.lucwo.fourcharm.model.Mark;
+import com.lucwo.fourcharm.model.Player;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.presenter.board.BoardPresenter;
 import javafx.application.Platform;
@@ -17,17 +19,15 @@ import javafx.scene.layout.FlowPane;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
 
-public class GamePresenter implements Observer, MoveRequestable {
+public class GamePresenter implements Observer {
 
     // ------------------ Instance variables ----------------
 
 
-    BlockingQueue<Integer> playerMoves;
+    private LocalHumanPlayer currentPlayer;
     @FXML
     private Parent root;
     @FXML
@@ -73,11 +73,10 @@ public class GamePresenter implements Observer, MoveRequestable {
     }
 
     public void showGame() {
-        playerMoves = new LinkedBlockingQueue<>();
-
-        p1 = new ASyncPlayer("Sam", Mark.P1);
+        p1 = new LocalHumanPlayer("Wouter", Mark.P1);
+        p2 = new LocalHumanPlayer("Luce", Mark.P2);
         //p1 = new LocalAIPlayer(new MTDfStrategy(), Mark.P1);
-        p2 = new LocalAIPlayer(new MTDfStrategy(), Mark.P2);
+        //p2 = new LocalAIPlayer(new MTDfStrategy(), Mark.P2);
         //p2 = new ASyncPlayer("To be Implemented", this, Mark.P2);
 
 
@@ -95,7 +94,8 @@ public class GamePresenter implements Observer, MoveRequestable {
 
         if (o instanceof Game) {
             Platform.runLater(() -> {
-                if (game.getCurrent() instanceof ASyncPlayer) {
+                if (game.getCurrent() instanceof LocalHumanPlayer) {
+                    currentPlayer = (LocalHumanPlayer) game.getCurrent();
                     boardPresenter.enableSpaces();
                 } else {
                     boardPresenter.disableSpaces();
@@ -112,11 +112,8 @@ public class GamePresenter implements Observer, MoveRequestable {
     }
 
     public void doPlayerMove(int col) {
-        try {
-            playerMoves.put(col);
-        } catch (InterruptedException e) {
-            Logger.getGlobal().throwing("FourCharmController", "doPlayerMove", e);
-        }
+        currentPlayer.queueMove(col);
+        currentPlayer = null;
     }
 
     private void initBoardPane() {
@@ -140,14 +137,4 @@ public class GamePresenter implements Observer, MoveRequestable {
         game.addObserver(fxmlLoader.getController());
     }
 
-    @Override
-    public int requestMove() {
-        int result = -1;
-        try {
-            result = playerMoves.take();
-        } catch (InterruptedException e) {
-            Logger.getGlobal().throwing(this.getClass().getSimpleName(), "requestMove", e);
-        }
-        return result;
-    }
 }
