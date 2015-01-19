@@ -11,14 +11,13 @@ import com.lucwo.fourcharm.model.board.BinaryBoard;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidMoveError;
+import nl.woutertimmermans.connect4.protocol.exceptions.PlayerDisconnectError;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
-public class GameGroup extends ClientGroup implements Runnable {
+public class GameGroup extends ClientGroup implements Observer {
 
 // ------------------ Instance variables ----------------
 
@@ -40,6 +39,7 @@ public class GameGroup extends ClientGroup implements Runnable {
         addHandler(client2);
 
         game = new Game(BinaryBoard.class, player1, player2);
+        game.addObserver(this);
         try {
             client1.getClient().startGame(client1.getName(), client2.getName());
         } catch (C4Exception e) {
@@ -104,34 +104,77 @@ public class GameGroup extends ClientGroup implements Runnable {
     }
 
     /**
-     * When an object implementing interface <code>Runnable</code> is used
-     * to create a thread, starting the thread causes the object's
-     * <code>run</code> method to be called in that separately executing
-     * thread.
-     * <p>
-     * The general contract of the method <code>run</code> is that it may
-     * take any action whatsoever.
+     * Handles the removal of a client from the group.
      *
-     * @see Thread#run()
+     * @param client The {@link com.lucwo.fourcharm.server.ClientHandler} which will has been removed from the group.
      */
     @Override
-    public void run() {
+    public void removeClientCallback(ClientHandler client) {
+        for (ClientHandler cH : getClients()) {
+            C4Exception e = new PlayerDisconnectError("Player " + client.getName() + " disconnected");
+            try {
+                cH.getClient().error(e.getErrorCode(), e.getMessage());
+            } catch (C4Exception e1) {
+                Logger.getGlobal().throwing(getClass().toString(), "removeClientCallback", e);
+            }
+        }
+        endGame();
+    }
 
-        game.run();
+    public void startGame() {
+
+        Thread gameThread = new Thread(game);
+        gameThread.start();
+    }
+
+    private void endGame() {
+
         String winnerName = null;
         if (game.hasWinner()) {
             winnerName = game.getWinner().getName();
         }
         try {
-            for (ClientHandler clientje : playerMap.keySet()) {
-                clientje.getClient().gameEnd(winnerName);
-                server.getLobby().addHandler(clientje);
+            for (ClientHandler client : playerMap.keySet()) {
+                client.getClient().gameEnd(winnerName);
+                server.getLobby().addHandler(client);
             }
         } catch (C4Exception e) {
-            Logger.getGlobal().throwing("GameGroup", "run()", e);
+            Logger.getGlobal().throwing("GameGroup", "startGame()", e);
         }
         server.removeGame(this);
 
+    }
 
+    /**
+     * This method is called whenever the observed object is changed. An
+     * application calls an <tt>Observable</tt> object's
+     * <code>notifyObservers</code> method to have all the object's
+     * observers notified of the change.
+     *
+     * @param o   the observable object.
+     * @param arg an argument passed to the <code>notifyObservers</code>
+     */
+    @Override
+    public void update(Observable o, Object arg) {
+        if (o instanceof Game) {
+            if (!((Game) o).hasFinished()) {
+                String currentName = ((Game) o).getCurrent().getName();
+                ClientHandler client = null;
+                for (ClientHandler c : playerMap.keySet()) {
+                    if (c.getName().equals(currentName)) {
+                        client = c;
+                    }
+                }
+                if (client != null) {
+                    try {
+                        client.getClient().requestMove(currentName);
+                    } catch (C4Exception e) {
+                        Logger.getGlobal().throwing(getClass().toString(), "update", e);
+                    }
+                }
+            } else {
+                endGame();
+            }
+        }
     }
 }

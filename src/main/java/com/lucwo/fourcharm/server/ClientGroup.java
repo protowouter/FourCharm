@@ -53,6 +53,7 @@ public abstract class ClientGroup {
     public void removeHandler(ClientHandler client) {
         clientCollection.remove(client.getName());
         client.setClientGroup(null);
+        removeClientCallback(client);
     }
 
 
@@ -79,6 +80,15 @@ public abstract class ClientGroup {
     public abstract void doMove(ClientHandler client, int col) throws C4Exception;
 
     public abstract void ready(ClientHandler client) throws C4Exception;
+
+    /**
+     * Handles the removal of a client from the group.
+     *
+     * @param client The {@link com.lucwo.fourcharm.server.ClientHandler} which will has been removed from the group.
+     */
+    public abstract void removeClientCallback(ClientHandler client);
+
+
 
 
 }

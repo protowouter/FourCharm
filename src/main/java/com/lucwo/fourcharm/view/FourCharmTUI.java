@@ -6,13 +6,13 @@ package com.lucwo.fourcharm.view;
 
 import com.lucwo.fourcharm.FourCharmController;
 import com.lucwo.fourcharm.client.ServerHandler;
+import com.lucwo.fourcharm.exception.ServerConnectionException;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -62,7 +62,7 @@ public class FourCharmTUI implements FourCharmView {
     private void parseCommand(String commandString) {
         Scanner commandScanner = new Scanner(commandString);
         String command;
-        List<String> args = new ArrayList<String>();
+        List<String> args = new ArrayList<>();
 
         if (commandScanner.hasNext()) {
             command = commandScanner.next();
@@ -118,13 +118,7 @@ public class FourCharmTUI implements FourCharmView {
                 break;
             //Connect to a server
             case CONNECT:
-                try {
-                    address = InetAddress.getByName(args[0]);
-                    port = Integer.parseInt(args[1]);
-                    //startGame();
-                } catch (UnknownHostException | NumberFormatException e) {
-                    showError(e.getMessage());
-                }
+                connect(args);
                 break;
             //Play a local game
             case LOCAL:
@@ -188,6 +182,19 @@ public class FourCharmTUI implements FourCharmView {
             strategy = new RandomStrategy();
         }
         return strategy;
+    }
+
+    private void connect(String[] args) {
+        String host = args[0];
+        String port = args[1];
+        String playerName = args[2];
+        GameStrategy strat = parseStrategy(args[3]);
+        try {
+            controller.startNetworkGame(host, port, playerName, strat);
+        } catch (ServerConnectionException e) {
+            showError(e.getMessage());
+        }
+
     }
 
     /**
@@ -283,7 +290,7 @@ public class FourCharmTUI implements FourCharmView {
      */
     private enum Command {
         CHAT(new String[]{"Chatmessage"}),
-        CONNECT(new String[]{"Host", "Port"}),
+        CONNECT(new String[]{"Host", "Port", "Playername", "| -m (MTDF) | -r (Random) | -h (Human)"}),
         LOCAL(new String[]{"Playername | -m (MTDF) | -r (Random)", "Playername | -m (MTDF) | -r (Random)"}),
         HINT(new String[0]),
         EXIT(new String[0]),

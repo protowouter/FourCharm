@@ -5,26 +5,29 @@
 package com.lucwo.fourcharm.server;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreServer;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 
+import java.io.*;
+import java.net.Socket;
 import java.util.Set;
 import java.util.logging.Logger;
 
-public class ClientHandler implements CoreServer.Iface {
+public class ClientHandler implements CoreServer.Iface, Runnable {
 
 // ------------------ Instance variables ----------------
 
-    private CoreClient.Client client;
     private ClientGroup group;
     private String name;
+    private Socket socket;
+    private CoreClient.Client client;
 
 // --------------------- Constructors -------------------
 
-    public ClientHandler(CoreClient.Client c) {
-
-        client = c;
+    public ClientHandler(Socket sock) {
+        socket = sock;
     }
 
 // ----------------------- Queries ----------------------
@@ -114,4 +117,73 @@ public class ClientHandler implements CoreServer.Iface {
         Logger.getGlobal().info(errorCode + " " + message);
     }
 
+    /**
+     * When an object implementing interface <code>Runnable</code> is used
+     * to create a thread, starting the thread causes the object's
+     * <code>run</code> method to be called in that separately executing
+     * thread.
+     * <p>
+     * The general contract of the method <code>run</code> is that it may
+     * take any action whatsoever.
+     *
+     * @see Thread#run()
+     */
+    @Override
+    public void run() {
+        handleClient();
+    }
+
+    public void handleClient() {
+
+        final String m_name = "handleClient";
+
+        BufferedWriter out = null;
+        BufferedReader in = null;
+        try {
+            out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        } catch (IOException e) {
+            Logger.getGlobal().throwing("FourCharmServer", m_name, e);
+        }
+
+        client = new CoreClient.Client(out);
+        CoreServer.Processor processor = new CoreServer.Processor<>(this);
+
+        try {
+            String input = in == null ? null : in.readLine();
+            while (input != null) {
+                Logger.getGlobal().info("Processing input " + input);
+                try {
+                    boolean processed = processor.process(input);
+                    if (!processed) {
+                        Logger.getGlobal().warning("This command is not recognized");
+                        C4Exception error = new InvalidCommandError(input + " is not recognized");
+                        client.error(error.getErrorCode(), error.getMessage());
+                    }
+                } catch (C4Exception e) {
+
+                    Logger.getGlobal().info("Throwing exception " + e.getMessage());
+                    try {
+                        client.error(e.getErrorCode(), e.getMessage());
+                    } catch (C4Exception e1) {
+                        e1.printStackTrace();
+                    }
+
+                }
+                input = in.readLine();
+            }
+
+        } catch (IOException e) {
+            Logger.getGlobal().throwing("FourCharmServer", m_name, e);
+        } finally {
+            try {
+                socket.close();
+                group.removeHandler(this);
+            } catch (IOException e) {
+                Logger.getGlobal().throwing("FourCharmServer", m_name, e);
+            }
+        }
+
+
+    }
 }

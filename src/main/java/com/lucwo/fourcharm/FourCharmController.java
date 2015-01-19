@@ -5,6 +5,7 @@
 package com.lucwo.fourcharm;
 
 import com.lucwo.fourcharm.client.ServerHandler;
+import com.lucwo.fourcharm.exception.ServerConnectionException;
 import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
@@ -47,7 +48,9 @@ public class FourCharmController implements Observer {
         new FourCharmController();
     }
 
-    public void startNetworkGame(String hostName, String port, String playerName, GameStrategy strategy) {
+    public void startNetworkGame(String hostName, String port, String playerName, GameStrategy strategy) throws ServerConnectionException {
+
+        new Thread(new ServerHandler(playerName, hostName, port, this)).start();
 
     }
 
@@ -68,10 +71,13 @@ public class FourCharmController implements Observer {
             player2 = new LocalAIPlayer(aIStrategies[0], Mark.P2);
         }
         Game game = new Game(BinaryBoard.class, player1, player2);
+        setGame(game);
+    }
+
+    public void setGame(Game game) {
         game.addObserver(this);
         view.showGame(game);
         new Thread(game).start();
-
     }
 
 

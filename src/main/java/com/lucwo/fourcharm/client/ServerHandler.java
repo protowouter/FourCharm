@@ -5,9 +5,10 @@
 package com.lucwo.fourcharm.client;
 
 import com.lucwo.fourcharm.FourCharmController;
+import com.lucwo.fourcharm.exception.ServerConnectionException;
 import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
-import com.lucwo.fourcharm.model.board.ReferenceBoard;
+import com.lucwo.fourcharm.model.board.BinaryBoard;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreServer;
@@ -36,13 +37,13 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
     private CoreServer.Client serverClient;
     private CoreClient.Processor<ServerHandler> processor;
     private FourCharmController controller;
-    private Game game;
     private Map<String, ASyncPlayer> playerMap;
     private Player ai;
+    private Game game;
 
 // --------------------- Constructors -------------------
 
-    public ServerHandler(String namepie, String hostString, String portString, FourCharmController contr) {
+    public ServerHandler(String namepie, String hostString, String portString, FourCharmController contr) throws ServerConnectionException {
         controller = contr;
         name = namepie;
         playerMap = new HashMap<>();
@@ -56,7 +57,7 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
             processor = new CoreClient.Processor<>(this);
             serverClient = new CoreServer.Client(out);
         } catch (IOException e) {
-            Logger.getGlobal().throwing(getClass().toString(), "Constructor", e);
+            throw new ServerConnectionException(e.getMessage());
         }
 
 
@@ -64,11 +65,24 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
 
     @Override
     public void run() {
+        joinServer();
+        handleServerCommands();
+    }
+
+
+// ----------------------- Queries ----------------------
+
+// ----------------------- Commands ---------------------
+
+    public void joinServer() {
         try {
-            serverClient.join(name, GROUP_NUMBER, new HashSet<Extension>());
+            serverClient.join(name, GROUP_NUMBER, new HashSet<>());
         } catch (C4Exception e) {
-            Logger.getGlobal().throwing(getClass().toString(), "run", e);
+            Logger.getGlobal().throwing(getClass().toString(), "startGame", e);
         }
+    }
+
+    public void handleServerCommands() {
         try {
             String input = in.readLine();
             while (input != null) {
@@ -78,38 +92,29 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
 
             }
         } catch (IOException e) {
-            Logger.getGlobal().throwing(getClass().toString(), "run", e);
+            Logger.getGlobal().throwing(getClass().toString(), "startGame", e);
         } catch (C4Exception e) {
-            Logger.getGlobal().throwing(getClass().toString(), "run", e);
+            Logger.getGlobal().throwing(getClass().toString(), "startGame", e);
             try {
                 serverClient.error(e.getErrorCode(), e.getMessage());
             } catch (C4Exception c4) {
-                Logger.getGlobal().throwing(getClass().toString(), "run", c4);
+                Logger.getGlobal().throwing(getClass().toString(), "startGame", c4);
             }
         }
     }
 
-
-// ----------------------- Queries ----------------------
-
-// ----------------------- Commands ---------------------
-
     @Override
     public void accept(int gNumber, Set<Extension> exts) {
-
         try {
             serverClient.ready();
         } catch (C4Exception e) {
             Logger.getGlobal().throwing("ServerHandler", "accept", e);
         }
-
     }
 
     @Override
     public void startGame(String p1, String p2) {
-
         Logger.getGlobal().info("Starting game with players " + p1 + " " + p2);
-
         ASyncPlayer player1 = new ASyncPlayer(p1, Mark.P1);
         ASyncPlayer player2 = new ASyncPlayer(p2, Mark.P2);
         playerMap.put(player1.getName(), player1);
@@ -120,29 +125,25 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
         } else {
             aiMark = Mark.P2;
         }
-
         ai = new LocalAIPlayer(new MTDfStrategy(), aiMark);
-
-        game = new Game(ReferenceBoard.class, player1, player2);
-
-
+        game = new Game(BinaryBoard.class, player1, player2);
+        controller.setGame(game);
     }
 
     @Override
     public void requestMove(String player) {
 
-        if (player.equals(name)) {
+        if (name.equals(player)) {
 
             new Thread(() -> {
                 try {
                     serverClient.doMove(ai.determineMove(game.getBoard()));
                 } catch (C4Exception e) {
-                    Logger.getGlobal().throwing("ServerHandler", "requestMove", e);
+                    Logger.getGlobal().throwing(getClass().toString(), "requestMove", e);
                 }
             }).start();
 
         }
-
     }
 
     @Override

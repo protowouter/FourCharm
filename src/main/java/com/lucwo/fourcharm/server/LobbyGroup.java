@@ -74,10 +74,20 @@ public class LobbyGroup extends ClientGroup {
         } else {
             GameGroup game = new GameGroup(server, readyClient, client);
             server.addGame(game);
-            new Thread(game).start();
+            game.startGame();
             readyClient = null;
         }
 
+    }
+
+    /**
+     * Handles the removal of a client from the group.
+     *
+     * @param client The {@link com.lucwo.fourcharm.server.ClientHandler} which will has been removed from the group.
+     */
+    @Override
+    public void removeClientCallback(ClientHandler client) {
+        // Not yet a special case when a client disconnects.
     }
 
 

@@ -78,7 +78,15 @@ public class PreLobbyGroup extends ClientGroup {
         throw new InvalidCommandError("You are not allowed to use this command now.");
     }
 
-
+    /**
+     * Handles the removal of a client from the group.
+     *
+     * @param client The {@link com.lucwo.fourcharm.server.ClientHandler} which will has been removed from the group.
+     */
+    @Override
+    public void removeClientCallback(ClientHandler client) {
+        // No special case when an client disconnects in this state.
+    }
 
 
 }
