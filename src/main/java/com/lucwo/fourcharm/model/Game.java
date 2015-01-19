@@ -71,9 +71,9 @@ public class Game extends Observable implements Runnable {
         boolean fairplay = true;
 
         while (running && fairplay && (current == null || !hasFinished())) {
+            current = nextPlayer();
             setChanged();
             notifyObservers();
-            current = nextPlayer();
             try {
                 current.doMove(board);
                 Logger.getGlobal().finer(board.toString());

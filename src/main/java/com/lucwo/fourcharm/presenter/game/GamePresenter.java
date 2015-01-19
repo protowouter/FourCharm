@@ -75,7 +75,7 @@ public class GamePresenter implements Observer, MoveRequestable {
     public void showGame() {
         playerMoves = new LinkedBlockingQueue<>();
 
-        p1 = new ASyncPlayer("Sam", this, Mark.P1);
+        p1 = new ASyncPlayer("Sam", Mark.P1);
         //p1 = new LocalAIPlayer(new MTDfStrategy(), Mark.P1);
         p2 = new LocalAIPlayer(new MTDfStrategy(), Mark.P2);
         //p2 = new ASyncPlayer("To be Implemented", this, Mark.P2);

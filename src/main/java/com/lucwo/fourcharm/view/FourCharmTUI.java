@@ -4,8 +4,13 @@
 
 package com.lucwo.fourcharm.view;
 
+import com.lucwo.fourcharm.FourCharmController;
 import com.lucwo.fourcharm.client.Client;
+import com.lucwo.fourcharm.model.ASyncPlayer;
 import com.lucwo.fourcharm.model.Game;
+import com.lucwo.fourcharm.model.LocalHumanPlayer;
+import com.lucwo.fourcharm.model.ai.GameStrategy;
+import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -13,9 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Scanner;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -32,38 +34,20 @@ public class FourCharmTUI implements FourCharmView {
     private Scanner nameScanner;
     private boolean running;
     private boolean gameOn;
+    private FourCharmController controller;
     private Client client;
     private InetAddress address;
     private int port;
+    private ASyncPlayer currentPlayer;
     
     // --------------------- Constructors -------------------
 
-    protected FourCharmTUI() {
+    public FourCharmTUI(FourCharmController cont) {
 
         nameScanner = new Scanner(System.in);
-        gameOn = true;
+        gameOn = false;
         running = true;
-    }
-
-    /**
-     * The main method of the FourCharmTui.
-     * @param args none applicable
-     */
-    public static void main(String[] args) {
-
-        Logger globalLogger = Logger.getGlobal();
-        LogManager.getLogManager().reset();
-        globalLogger.setLevel(Level.FINE);
-
-        ConsoleHandler cH = new ConsoleHandler();
-        cH.setLevel(Level.FINE);
-
-        globalLogger.addHandler(cH);
-
-
-        new FourCharmTUI().run();
-
-
+        controller = cont;
     }
 
     // ----------------------- Commands ---------------------
@@ -119,7 +103,7 @@ public class FourCharmTUI implements FourCharmView {
             //Start new game if true
             case YES:
                 if (!gameOn) {
-                    startGame();
+                    controller.startLocalGame(new String[]{"Wouter"}, new GameStrategy[]{new MTDfStrategy()});
                 }
                 break;
             //Use the chat function
@@ -131,7 +115,7 @@ public class FourCharmTUI implements FourCharmView {
                 try {
                     address = InetAddress.getByName(args[0]);
                     port = Integer.parseInt(args[1]);
-                    startGame();
+                    //startGame();
                 } catch (UnknownHostException | NumberFormatException e) {
                     showError(e.getMessage());
                 }
@@ -139,7 +123,12 @@ public class FourCharmTUI implements FourCharmView {
             //Make a move
             case MOVE:
                 int moove = Integer.parseInt(args[0]) - 1;
-                client.queueMove(moove);
+                if (currentPlayer != null) {
+                    currentPlayer.queueMove(moove);
+                    currentPlayer = null;
+                } else {
+                    showError("It is not your turn");
+                }
                 break;
             //Ask for a hint in the current game.
             case HINT:
@@ -198,6 +187,12 @@ public class FourCharmTUI implements FourCharmView {
         if (o instanceof Game) {
             Game newGame = (Game) o;
             System.out.println(newGame.getBoard().toString());
+            if (newGame.getCurrent() instanceof LocalHumanPlayer) {
+                currentPlayer = (ASyncPlayer) newGame.getCurrent();
+                showMessage(currentPlayer.getName() + " please enter a move");
+                showPrompt();
+            }
+
             if (newGame.hasFinished()) {
                 showMessage("The game has finished. ");
                 gameOn = false;
@@ -213,23 +208,29 @@ public class FourCharmTUI implements FourCharmView {
     /**
      * Run the game.
      */
-    protected void run() {
+    public void run() {
         showMessage("Welcome to FourCharmGUI Connect4.");
-        showHelp();
 
-
+        showPrompt();
         while (running && nameScanner.hasNextLine()) {
             parseCommand(nameScanner.nextLine());
+            showPrompt();
 
         }
 
     }
 
-    // TODO: Naar de controller:
+    private void showPrompt() {
+        System.out.print("FourCharm$ ");
+    }
+
+  /*  // TODO: Naar de controller:
+
+    */
 
     /**
      * Starts the game.
-     */
+     *//*
     private void startGame() {
         String name = "";
         showMessage("Please enter your name");
@@ -242,6 +243,15 @@ public class FourCharmTUI implements FourCharmView {
 
         client = new Client(name, address, port, this);
         new Thread(client).start();
+
+    }*/
+    @Override
+    public void showGame(Game game) {
+        game.addObserver(this);
+    }
+
+    @Override
+    public void showNewGame() {
 
     }
 

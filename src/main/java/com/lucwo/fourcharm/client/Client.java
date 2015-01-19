@@ -7,7 +7,6 @@ package com.lucwo.fourcharm.client;
 import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.board.ReferenceBoard;
-import com.lucwo.fourcharm.server.MoveQueue;
 import com.lucwo.fourcharm.view.FourCharmTUI;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreClient;
@@ -34,7 +33,7 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
     private CoreClient.Processor<Client> processor;
     private FourCharmTUI controller;
     private Game game;
-    private Map<String, MoveQueue> queueMap;
+    private Map<String, ASyncPlayer> playerMap;
     private Player ai;
     private Observer gameObserver;
 
@@ -43,7 +42,7 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
     public Client(String namepie, InetAddress host, int port, Observer obsv) {
         gameObserver = obsv;
         name = namepie;
-        queueMap = new HashMap<>();
+        playerMap = new HashMap<>();
 
         try {
             sock = new Socket(host, port);
@@ -106,12 +105,10 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
 
         Logger.getGlobal().info("Starting game with players " + p1 + " " + p2);
 
-        MoveQueue p1Q = new MoveQueue();
-        MoveQueue p2Q = new MoveQueue();
-        Player player1 = new ASyncPlayer(p1, p1Q, Mark.P1);
-        Player player2 = new ASyncPlayer(p2, p2Q, Mark.P2);
-        queueMap.put(player1.getName(), p1Q);
-        queueMap.put(player2.getName(), p2Q);
+        ASyncPlayer player1 = new ASyncPlayer(p1, Mark.P1);
+        ASyncPlayer player2 = new ASyncPlayer(p2, Mark.P2);
+        playerMap.put(player1.getName(), player1);
+        playerMap.put(player2.getName(), player2);
         Mark aiMark;
         if (p1.equals(name)) {
             aiMark = Mark.P1;
@@ -147,17 +144,13 @@ public class Client implements CoreClient.Iface, Runnable, MoveRequestable {
     }
 
     @Override
-    public void doneMove(String player, int col) {
+    public void doneMove(String playerName, int col) {
 
-        MoveQueue queue = queueMap.get(player);
-        if (queue != null) {
-            try {
-                queue.getQueue().put(col);
-            } catch (InterruptedException e) {
-                Logger.getGlobal().throwing("Client", "doneMove", e);
-            }
+        ASyncPlayer player = playerMap.get(playerName);
+        if (player != null) {
+            player.queueMove(col);
         } else {
-            Logger.getGlobal().warning("Player " + player + " is unknown");
+            Logger.getGlobal().warning("Player " + playerName + " is unknown");
         }
 
 

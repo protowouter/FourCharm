@@ -25,24 +25,24 @@ public class GameGroup extends ClientGroup implements Runnable {
 
 // ------------------ Instance variables ----------------
 
-    Map<ClientHandler, MoveQueue> moveQueues;
+    Map<ClientHandler, ASyncPlayer> playerMap;
     Game game;
     FourCharmServer server;
 
 
     // --------------------- Constructors -------------------
     public GameGroup(FourCharmServer theServer, ClientHandler client1, ClientHandler client2) {
+        // TODO: refactor to make use of ASyncPlayer.getMoveRequester()
         server = theServer;
-        MoveQueue p1Queue = new MoveQueue(client1);
-        MoveQueue p2Queue = new MoveQueue(client2);
-        moveQueues = new HashMap<>();
-        moveQueues.put(client1, p1Queue);
-        moveQueues.put(client2, p2Queue);
+        playerMap = new HashMap<>();
+        ASyncPlayer player1 = new ASyncPlayer(client1.getName(), Mark.P1);
+        ASyncPlayer player2 = new ASyncPlayer(client2.getName(), Mark.P2);
+        playerMap.put(client1, player1);
+        playerMap.put(client2, player2);
         addHandler(client1);
         addHandler(client2);
 
-        game = new Game(BinaryBoard.class, new ASyncPlayer(client1.getName(), p1Queue, Mark.P1),
-                new ASyncPlayer(client2.getName(), p2Queue, Mark.P2));
+        game = new Game(BinaryBoard.class, player1, player2);
         try {
             client1.getClient().startGame(client1.getName(), client2.getName());
         } catch (C4Exception e) {
@@ -83,7 +83,7 @@ public class GameGroup extends ClientGroup implements Runnable {
                 for (ClientHandler c : getClients()) {
                     c.getClient().doneMove(client.getName(), col);
                 }
-                moveQueues.get(client).getQueue().add(col);
+                playerMap.get(client).queueMove(col);
             } catch (IllegalStateException e) {
                 throw new InvalidMoveError("You are not allowed to make a move right now");
             }
@@ -126,7 +126,7 @@ public class GameGroup extends ClientGroup implements Runnable {
             winnerName = game.getWinner().getName();
         }
         try {
-            for (ClientHandler clientje: moveQueues.keySet()) {
+            for (ClientHandler clientje : playerMap.keySet()) {
                 clientje.getClient().gameEnd(winnerName);
                 server.getLobby().addHandler(clientje);
             }

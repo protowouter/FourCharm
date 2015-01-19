@@ -2,24 +2,20 @@
  * Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
  */
 
-package com.lucwo.fourcharm.view;
+package com.lucwo.fourcharm.model;
 
-import com.lucwo.fourcharm.model.Game;
-
-import java.util.Observer;
-
-public interface FourCharmView extends Observer, Runnable {
+public class LocalHumanPlayer extends ASyncPlayer {
 
 // ------------------ Instance variables ----------------
 
 // --------------------- Constructors -------------------
 
+    public LocalHumanPlayer(String namePie, Mark themark) {
+        super(namePie, themark);
+    }
+
 // ----------------------- Queries ----------------------
 
 // ----------------------- Commands ---------------------
-
-    public void showGame(Game game);
-
-    public void showNewGame();
 
 }

@@ -16,7 +16,7 @@ public class FourCharmGUITUITest {
     @Before
     public void setUp() throws Exception {
 
-        tui = new FourCharmTUI();
+        tui = new FourCharmTUI(null);
 
     }
 
