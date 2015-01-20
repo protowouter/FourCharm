@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>FourCharm</groupId>
     <artifactId>FourCharm</artifactId>
-    <version>v0.5.1-SNAPSHOT</version>
+    <version>v0.5.5</version>
     <build>
         <plugins>
             <plugin>
@@ -38,7 +38,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.lucwo.fourcharm.view.FourCharmGUI</mainClass>
+                            <mainClass>com.lucwo.fourcharm.FourCharmController</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -59,7 +59,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.lucwo.fourcharm.view.FourCharmGUI</mainClass>
+                            <mainClass>com.lucwo.fourcharm.FourCharmController</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

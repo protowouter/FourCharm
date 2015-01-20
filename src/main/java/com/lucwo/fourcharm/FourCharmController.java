@@ -52,7 +52,9 @@ public class FourCharmController implements Observer {
         }
         if (args.length > 0 && "-c".equals(args[0])) {
             FourCharmController con = new FourCharmController();
-            con.setView(new FourCharmTUI(con));
+            FourCharmTUI view = new FourCharmTUI(con);
+            con.setView(view);
+            new Thread(view).start();
         } else {
             Application.launch(FourCharmGUI.class);
         }
@@ -163,6 +165,9 @@ public class FourCharmController implements Observer {
     }
 
     public void shutdown() {
-        game.shutdown();
+        if (game != null) {
+            game.shutdown();
+        }
+
     }
 }

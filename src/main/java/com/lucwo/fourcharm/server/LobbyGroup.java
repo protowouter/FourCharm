@@ -82,8 +82,10 @@ public class LobbyGroup extends ClientGroup {
      * @param client The {@link com.lucwo.fourcharm.server.ClientHandler} which will has been removed from the group.
      */
     @Override
-    public void removeClientCallback(ClientHandler client) {
-        // Not yet a special case when a client disconnects.
+    public synchronized void removeClientCallback(ClientHandler client) {
+        if (readyClient == client) {
+            readyClient = null;
+        }
     }
 
 

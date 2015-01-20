@@ -146,7 +146,7 @@ public class GameGroup extends ClientGroup implements Observer {
             winnerName = game.getWinner().getName();
         }
         try {
-            for (ClientHandler client : playerMap.keySet()) {
+            for (ClientHandler client : getClients()) {
                 client.getClient().gameEnd(winnerName);
                 server.getLobby().addHandler(client);
             }

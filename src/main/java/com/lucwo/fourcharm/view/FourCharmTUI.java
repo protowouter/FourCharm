@@ -28,7 +28,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     // ------------------ Instance variables ----------------
 
-    private Scanner commandScanner;
+    private Scanner inputScanner;
     private boolean running;
     private boolean gameOn;
     private FourCharmController controller;
@@ -42,13 +42,12 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     public FourCharmTUI(FourCharmController cont) {
 
-        commandScanner = new Scanner(System.in);
+        inputScanner = new Scanner(System.in);
         gameOn = false;
         running = true;
         controller = cont;
         moveNeeded = false;
         moveQueue = new LinkedBlockingQueue<>(1);
-        new Thread(this).start();
     }
 
     // ----------------------- Commands ---------------------
@@ -237,16 +236,18 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
      * Run the game.
      */
     public void run() {
-        showMessage("Welcome to FourCharmGUI Connect4.");
+        showMessage("Welcome to FourCharm Connect4.");
         parseCommands();
     }
 
     private void parseCommands() {
         showPrompt();
-        while (running && commandScanner.hasNextLine()) {
-            parseCommand(commandScanner.nextLine());
+        while (running && inputScanner.hasNextLine()) {
+            parseCommand(inputScanner.nextLine());
             showPrompt();
         }
+        controller.shutdown();
+        System.exit(0);
     }
 
     private void showPrompt() {
