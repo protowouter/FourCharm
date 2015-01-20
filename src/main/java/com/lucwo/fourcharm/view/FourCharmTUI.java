@@ -265,6 +265,11 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
     }
 
     @Override
+    public void showRematch() {
+
+    }
+
+    @Override
     public void enableInput() {
         moveNeeded = true;
     }

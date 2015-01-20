@@ -98,7 +98,7 @@ public class FourCharmServer {
     }
 
     /**
-     * Makes sure the server will stop.
+     * Makes sure the server will shutdown.
      */
     public void stop() {
         running = false;

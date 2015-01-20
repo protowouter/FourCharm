@@ -59,6 +59,8 @@ public class FourCharmFactory {
                 FXMLLoader loader = new FXMLLoader();
                 loader.load(getClass().getClassLoader().getResourceAsStream("views/game/show.fxml"));
                 gamePresenter = loader.getController();
+                gamePresenter.setFourCharmPresenter(fourCharmPresenter);
+                gamePresenter.init();
 
             } catch (IOException e) {
                 throw new RuntimeException("Unable to load show.fxml");

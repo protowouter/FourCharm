@@ -8,6 +8,7 @@ import com.lucwo.fourcharm.FourCharmController;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.presenter.game.GamePresenter;
 import com.lucwo.fourcharm.presenter.game.NewGamePresenter;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
@@ -51,7 +52,7 @@ public class FourCharmPresenter {
 
 
     public void showNewGame() {
-        contentArea.setCenter(newGamePresenter.getView());
+        Platform.runLater(() -> contentArea.setCenter(newGamePresenter.getView()));
     }
 
     public void enableInput() {
@@ -63,9 +64,11 @@ public class FourCharmPresenter {
     }
 
     public void showGame(Game game) {
-        gamePresenter.init();
         gamePresenter.showGame(game);
         contentArea.setCenter(gamePresenter.getView());
     }
 
+    public void showRematch() {
+        Platform.runLater(gamePresenter::showRematch);
+    }
 }

@@ -9,7 +9,6 @@ import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.presenter.FourCharmFactory;
 import com.lucwo.fourcharm.presenter.FourCharmPresenter;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -28,7 +27,6 @@ public class FourCharmGUI extends Application implements FourCharmView {
     public FourCharmGUI(FourCharmController contr) {
         fourCharmFactory = new FourCharmFactory();
         controller = contr;
-        new Thread(() -> Application.launch(FourCharmGUI.class)).start();
     }
 
     public FourCharmGUI() {
@@ -53,14 +51,25 @@ public class FourCharmGUI extends Application implements FourCharmView {
         stage.show();
     }
 
+    public void stop() {
+        controller.shutdown();
+    }
+
+
+
     @Override
     public void showGame(Game game) {
-        Platform.runLater(() -> fourCharmPresenter.showGame(game));
+        fourCharmPresenter.showGame(game);
     }
 
     @Override
     public void showNewGame() {
         fourCharmPresenter.showNewGame();
+    }
+
+    @Override
+    public void showRematch() {
+        fourCharmPresenter.showRematch();
     }
 
     @Override

@@ -20,6 +20,8 @@ public interface FourCharmView {
 
     public void showNewGame();
 
+    public void showRematch();
+
     public void enableInput();
 
     public int requestMove();

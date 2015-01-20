@@ -167,7 +167,7 @@ public class Game extends Observable implements Runnable {
         play();
     }
 
-    public void stop() {
+    public void shutdown() {
         running = false;
     }
 

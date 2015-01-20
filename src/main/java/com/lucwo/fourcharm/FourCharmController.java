@@ -10,7 +10,9 @@ import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.view.FourCharmGUI;
+import com.lucwo.fourcharm.view.FourCharmTUI;
 import com.lucwo.fourcharm.view.FourCharmView;
+import javafx.application.Application;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -25,11 +27,12 @@ public class FourCharmController implements Observer {
 // ------------------ Instance variables ----------------
 
     private FourCharmView view;
+    private Game game;
 
 // --------------------- Constructors -------------------
 
     public FourCharmController() {
-        view = new FourCharmGUI(this);
+
     }
 
 // ----------------------- Queries ----------------------
@@ -44,7 +47,13 @@ public class FourCharmController implements Observer {
         cH.setLevel(Level.FINEST);
 
         Logger.getGlobal().addHandler(cH);
-        new FourCharmController();
+        if (args.length > 0 && "-c".equals(args[0])) {
+            FourCharmController con = new FourCharmController();
+            con.setView(new FourCharmTUI(con));
+        } else {
+            Application.launch(FourCharmGUI.class);
+        }
+
     }
 
     public void setView(FourCharmView v) {
@@ -87,11 +96,12 @@ public class FourCharmController implements Observer {
             player1 = new LocalHumanPlayer(localPlayerNames[0], Mark.P1);
             player2 = new LocalAIPlayer(aIStrategies[0], Mark.P2);
         }
-        Game game = new Game(BinaryBoard.class, player1, player2);
-        setGame(game);
+        Game gamepje = new Game(BinaryBoard.class, player1, player2);
+        setGame(gamepje);
     }
 
-    public void setGame(Game game) {
+    public void setGame(Game g) {
+        game = g;
         game.addObserver(this);
         view.showGame(game);
         new Thread(game).start();
@@ -123,8 +133,14 @@ public class FourCharmController implements Observer {
 
         if (o instanceof Game && !((Game) o).hasFinished()) {
             handlePlayerTurn(((Game) o).getCurrent());
+        } else if (o instanceof Game && ((Game) o).hasFinished()) {
+            view.showRematch();
         }
 
+    }
+
+    public void rematch() {
+        // TODO Implement
     }
 
 
@@ -141,5 +157,9 @@ public class FourCharmController implements Observer {
             view.enableInput();
             ((LocalHumanPlayer) player).queueMove(view.requestMove());
         }
+    }
+
+    public void shutdown() {
+        game.shutdown();
     }
 }
