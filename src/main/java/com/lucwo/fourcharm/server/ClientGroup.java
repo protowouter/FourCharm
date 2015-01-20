@@ -25,6 +25,12 @@ public abstract class ClientGroup {
         clientCollection = new HashMap<>();
     }
 
+    /**
+     * Checks if the name of the client already exists.
+     *
+     * @param name the name that will be checked
+     * @return true if the name already exists, false if not
+     */
     public boolean clientNameExists(String name) {
         return clientCollection.keySet().contains(name);
     }
@@ -68,7 +74,6 @@ public abstract class ClientGroup {
     /**
      * Handles the join command from a client. The implementation is left to Classes
      * which extend ClientGroup.
-     *
      * @param client  The client which performed this command.
      * @param pName   Player name
      * @param gNumber Group number
@@ -77,13 +82,24 @@ public abstract class ClientGroup {
     public abstract void join(ClientHandler client, String pName, int gNumber,
                               Set<Extension> exts) throws C4Exception;
 
+    /**
+     * Makes a move
+     * @param client the client that will make the move
+     * @param col the column the move is about
+     * @throws C4Exception
+     */
     public abstract void doMove(ClientHandler client, int col) throws C4Exception;
 
+
+    /**
+     * If the client is ready to start a game, this method will be called.
+     * @param client the client that is ready to start a game
+     * @throws C4Exception
+     */
     public abstract void ready(ClientHandler client) throws C4Exception;
 
     /**
      * Handles the removal of a client from the group.
-     *
      * @param client The {@link com.lucwo.fourcharm.server.ClientHandler} which will has been removed from the group.
      */
     public abstract void removeClientCallback(ClientHandler client);

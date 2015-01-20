@@ -18,21 +18,30 @@ public class FourCharmServer {
     private ClientGroup preLobby;
     private Collection<GameGroup> games;
     private boolean running;
+    private int poort;
 
     public FourCharmServer(int port) {
         lobby = new LobbyGroup(this);
         preLobby = new PreLobbyGroup(lobby, this);
         games = new ArrayList<>();
         running = true;
-        startServer(port);
+        poort = port;
     }
 
     public static void main(String[] args) {
 
-        new FourCharmServer(8080);
+        FourCharmServer server = new FourCharmServer(8080);
+        server.startServer();
 
     }
 
+    /**
+     * Checks if there is already a client with the same name.
+     *
+     * @param name the name that will be checked
+     * @return true if there exists another client with the same name,
+     * false if there does not exist another client with the same name.
+     */
     public boolean hasClientWithName(String name) {
         boolean nameExistsinGame = false;
         for (ClientGroup cG : games) {
@@ -44,12 +53,16 @@ public class FourCharmServer {
         return nameExistsinGame || lobby.clientNameExists(name);
     }
 
-    public void startServer(int port) {
+    /**
+     * Starts the server.
+     */
+    public void startServer() {
 
         Logger.getGlobal().info("Starting Fourcharm server");
 
+
         try {
-            ServerSocket ss = new ServerSocket(port);
+            ServerSocket ss = new ServerSocket(poort);
             while (running) {
                 Socket sock = ss.accept();
                 ClientHandler client = new ClientHandler(sock);
@@ -66,18 +79,35 @@ public class FourCharmServer {
 
     }
 
+    /**
+     * Adds a game to the GameGroup
+     *
+     * @param game the game that will be added
+     */
     public void addGame(GameGroup game) {
         games.add(game);
     }
 
+    /**
+     * Removes a game from the GameGroup whenever a game is finished,
+     * or when a game stopped.
+     * @param game the game that will be removed
+     */
     public void removeGame(GameGroup game) {
         games.remove(game);
     }
 
+    /**
+     * Makes sure the server will stop.
+     */
     public void stop() {
         running = false;
     }
 
+    /**
+     * Gives the specific lobby.
+     * @return the lobby you've asked for
+     */
     public ClientGroup getLobby() {
         return lobby;
     }
