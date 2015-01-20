@@ -71,6 +71,13 @@ public class GameGroup extends ClientGroup implements Observer {
         throw new InvalidCommandError("You are not allowed to use this command now.");
     }
 
+    /**
+     * Makes a move for a specific client
+     *
+     * @param client the client that is about to make a move
+     * @param col    the column the move will be about
+     * @throws C4Exception
+     */
     @Override
     public void doMove(ClientHandler client, int col) throws C4Exception {
 
@@ -105,7 +112,6 @@ public class GameGroup extends ClientGroup implements Observer {
 
     /**
      * Handles the removal of a client from the group.
-     *
      * @param client The {@link com.lucwo.fourcharm.server.ClientHandler} which will has been removed from the group.
      */
     @Override
@@ -121,12 +127,18 @@ public class GameGroup extends ClientGroup implements Observer {
         endGame();
     }
 
+    /**
+     * Starts a new game.
+     */
     public void startGame() {
 
         Thread gameThread = new Thread(game);
         gameThread.start();
     }
 
+    /**
+     * Ends a game that started before.
+     */
     private void endGame() {
 
         String winnerName = null;
