@@ -41,7 +41,7 @@ public class RandomStrategy implements GameStrategy {
 
     @Override
     public String toString() {
-        return "Random Strategy";
+        return "RandomStrategy";
     }
 
 }

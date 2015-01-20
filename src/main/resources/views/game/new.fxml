@@ -4,11 +4,11 @@
   ~ Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
   -->
 
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<GridPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lucwo.fourcharm.presenter.game.NewGamePresenter">
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity"
+          minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="500.0"
+          xmlns="http://javafx.com/javafx/8" fx:controller="com.lucwo.fourcharm.presenter.game.NewGamePresenter">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -23,13 +23,21 @@
     </rowConstraints>
     <children>
         <ChoiceBox fx:id="p1Select" prefWidth="150.0" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-        <ChoiceBox fx:id="p2Select" prefWidth="150.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+        <ChoiceBox fx:id="p2Select" disable="true" prefWidth="150.0" visible="false" GridPane.columnIndex="2"
+                   GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
         <Label text="Player 1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-        <Label text="Player 2" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+        <Label fx:id="player2Label" text="Player 2" visible="false" GridPane.columnIndex="2"
+               GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
         <Button fx:id="playButton" disable="true" mnemonicParsing="false" onMouseClicked="#startNewGame" text="Play" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
       <ChoiceBox fx:id="p1Strategy" disable="true" prefWidth="150.0" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
       <ChoiceBox fx:id="p2Strategy" disable="true" prefWidth="150.0" visible="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
       <TextField fx:id="p1Name" disable="true" promptText="Enter player name" visible="false" GridPane.rowIndex="3" GridPane.valignment="TOP" />
       <TextField fx:id="p2Name" disable="true" promptText="Enter player name" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+        <ChoiceBox fx:id="localNetworkChoice" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                   GridPane.rowIndex="1"/>
+        <TextField fx:id="serverAddress" disable="true" promptText="Enter server address" visible="false"
+                   GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <TextField fx:id="serverPort" disable="true" promptText="Enter port number" visible="false"
+                   GridPane.columnIndex="1" GridPane.rowIndex="3"/>
     </children>
 </GridPane>

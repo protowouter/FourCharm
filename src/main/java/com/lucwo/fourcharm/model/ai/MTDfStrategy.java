@@ -142,7 +142,7 @@ public class MTDfStrategy implements GameStrategy {
 
     @Override
     public String toString() {
-        return "MTDf Strategy";
+        return "MTDfStrategy";
     }
 
 

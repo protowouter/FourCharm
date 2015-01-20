@@ -329,6 +329,11 @@ public class NegaMaxStrategy implements GameStrategy {
         nodeCounter.set(0);
     }
 
+    @Override
+    public String toString() {
+        return "NegamaxStrategy";
+    }
+
     enum Flag {
 
         EXACT, UPPER_BOUND, LOWER_BOUND
@@ -353,10 +358,5 @@ public class NegaMaxStrategy implements GameStrategy {
         int depth;
         long key;
 
-    }
-
-    @Override
-    public String toString() {
-        return "Negamax Strategy";
     }
 }
