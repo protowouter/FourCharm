@@ -140,5 +140,10 @@ public class MTDfStrategy implements GameStrategy {
         return guess;
     }
 
+    @Override
+    public String toString() {
+        return "MTDf Strategy";
+    }
+
 
 }

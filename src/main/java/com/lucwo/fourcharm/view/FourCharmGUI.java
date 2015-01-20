@@ -47,14 +47,6 @@ public class FourCharmGUI extends Application implements FourCharmView {
 
     public void start(Stage stage) throws Exception {
 
-        Logger.getGlobal().setLevel(Level.FINEST);
-
-
-        ConsoleHandler cH = new ConsoleHandler();
-        cH.setLevel(Level.FINEST);
-
-        Logger.getGlobal().addHandler(cH);
-
         fourCharmPresenter = fourCharmFactory.getFourCharmPresenter(controller);
 
         Pane root = (Pane) fourCharmPresenter.getView();

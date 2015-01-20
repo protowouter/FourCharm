@@ -354,4 +354,9 @@ public class NegaMaxStrategy implements GameStrategy {
         long key;
 
     }
+
+    @Override
+    public String toString() {
+        return "Negamax Strategy";
+    }
 }

@@ -45,6 +45,7 @@ public class FourCharmFactory {
                 loader.load(getClass().getClassLoader().getResourceAsStream("views/game/new.fxml"));
                 newGamePresenter = loader.getController();
                 newGamePresenter.setFourcharmPresenter(fourCharmPresenter);
+                newGamePresenter.init();
             } catch (IOException e) {
                 throw new RuntimeException("Unable to load new.fxml", e);
             }

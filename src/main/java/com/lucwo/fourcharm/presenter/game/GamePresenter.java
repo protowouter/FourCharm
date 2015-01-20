@@ -50,7 +50,7 @@ public class GamePresenter implements Observer {
     }
 
     public void enableInput() {
-        boardPresenter.enableSpaces();
+        Platform.runLater(boardPresenter::enableSpaces);
     }
 
     public void showGame(Game game) {
