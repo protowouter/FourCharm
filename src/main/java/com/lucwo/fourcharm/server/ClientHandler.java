@@ -50,7 +50,6 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
 
     /**
      * Gives the client.
-     *
      * @return the client
      */
     public CoreClient.Client getClient() {
@@ -112,6 +111,13 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
         group.doMove(this, col);
     }
 
+    /**
+     * Gives an error.
+     *
+     * @param errorCode the code of the error
+     * @param message   the message about the error
+     * @throws C4Exception
+     */
     @Override
     public void error(int errorCode, String message) throws C4Exception {
         Logger.getGlobal().info(errorCode + " " + message);
@@ -133,6 +139,9 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
         handleClient();
     }
 
+    /**
+     * TODO: Javadoc schrijven voor handleClient()
+     */
     public void handleClient() {
 
         final String m_name = "handleClient";
