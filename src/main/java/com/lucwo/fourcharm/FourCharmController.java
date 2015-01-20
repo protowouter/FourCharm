@@ -47,6 +47,9 @@ public class FourCharmController implements Observer {
         cH.setLevel(Level.FINEST);
 
         Logger.getGlobal().addHandler(cH);
+        for (String arg : args) {
+            System.out.println(arg);
+        }
         if (args.length > 0 && "-c".equals(args[0])) {
             FourCharmController con = new FourCharmController();
             con.setView(new FourCharmTUI(con));

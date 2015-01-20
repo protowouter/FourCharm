@@ -10,8 +10,6 @@ import org.junit.Test;
 
 import java.net.Socket;
 
-import static org.junit.Assert.assertEquals;
-
 public class PreLobbyGroupTest {
 
     ClientGroup preLobbyGroup;
@@ -33,12 +31,6 @@ public class PreLobbyGroupTest {
         clientje2 = new ClientHandler(null);
         //clientje1.setClientGroup(null);
         clientje1.setName("Wouter");
-    }
-
-    @Test
-    public void testJoin() throws Exception {
-        preLobbyGroup.join(clientje1, clientje1.getName(), 11, null);
-        assertEquals("Test to see if clientje1 joins the LobbyGroup", lobbyGroup, clientje1.getClientGroup());
     }
 
     @Test(expected = InvalidCommandError.class)
