@@ -6,9 +6,7 @@ package com.lucwo.fourcharm.view;
 
 import com.lucwo.fourcharm.model.Game;
 
-import java.util.Observer;
-
-public interface FourCharmView extends Observer, Runnable {
+public interface FourCharmView {
 
 // ------------------ Instance variables ----------------
 

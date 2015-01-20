@@ -13,10 +13,7 @@ import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
@@ -24,7 +21,7 @@ import java.util.logging.Logger;
  * @author Luce Sandfort and Wouter Timmermans
  *
  */
-public class FourCharmTUI implements FourCharmView {
+public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     private static final String NOT_IMPLEMENTED = "Not yet implemented";
 
@@ -51,6 +48,7 @@ public class FourCharmTUI implements FourCharmView {
         controller = cont;
         moveNeeded = false;
         moveQueue = new LinkedBlockingQueue<>(1);
+        new Thread(this).start();
     }
 
     // ----------------------- Commands ---------------------

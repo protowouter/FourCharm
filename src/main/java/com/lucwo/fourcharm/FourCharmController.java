@@ -9,7 +9,7 @@ import com.lucwo.fourcharm.exception.ServerConnectionException;
 import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
-import com.lucwo.fourcharm.view.FourCharmTUI;
+import com.lucwo.fourcharm.view.FourCharmGUI;
 import com.lucwo.fourcharm.view.FourCharmView;
 
 import java.util.Observable;
@@ -20,17 +20,16 @@ import java.util.logging.Logger;
 
 public class FourCharmController implements Observer {
 
+    public static final int MAX_PLAYERS = 2;
+
 // ------------------ Instance variables ----------------
 
     private FourCharmView view;
-    private ServerHandler serverHandler;
 
 // --------------------- Constructors -------------------
 
     public FourCharmController() {
-        view = new FourCharmTUI(this);
-        view.showNewGame();
-        view.run();
+        view = new FourCharmGUI(this);
     }
 
 // ----------------------- Queries ----------------------
@@ -48,22 +47,37 @@ public class FourCharmController implements Observer {
         new FourCharmController();
     }
 
-    public void startNetworkGame(String hostName, String port, String playerName, GameStrategy strategy) throws ServerConnectionException {
 
-        new Thread(new ServerHandler(playerName, hostName, port, this)).start();
+    /**
+     * Starts a networked game, making use of a server.
+     *
+     * @param hostName   String for hostname
+     * @param port       String for port
+     * @param playerName The name which will be reported to the server.
+     * @param strategy   The strategy that will be used for the ai or null of no ai will be used.
+     * @throws ServerConnectionException When unable to connect to a server.
+     */
+    public void startNetworkGame(String hostName, String port, String playerName, GameStrategy strategy) throws ServerConnectionException {
+        ServerHandler handler = new ServerHandler(playerName, hostName, port, this);
+        handler.setStrategy(strategy);
+        new Thread(handler).start();
 
     }
 
+    /**
+     * Starts a local game, without making use of a server.
+     * @param localPlayerNames
+     * @param aIStrategies
+     */
     /*@ requires localPlayerNames.length + aiStrategies.length == 2
-     *
      */
     public void startLocalGame(String[] localPlayerNames, GameStrategy[] aIStrategies) {
         Player player1;
         Player player2;
-        if (localPlayerNames.length == 2) {
+        if (localPlayerNames.length == MAX_PLAYERS) {
             player1 = new LocalHumanPlayer(localPlayerNames[0], Mark.P1);
             player2 = new LocalHumanPlayer(localPlayerNames[1], Mark.P2);
-        } else if (aIStrategies.length == 2) {
+        } else if (aIStrategies.length == MAX_PLAYERS) {
             player1 = new LocalAIPlayer(aIStrategies[0], Mark.P1);
             player2 = new LocalAIPlayer(aIStrategies[1], Mark.P2);
         } else {
@@ -78,6 +92,17 @@ public class FourCharmController implements Observer {
         game.addObserver(this);
         view.showGame(game);
         new Thread(game).start();
+    }
+
+
+    /**
+     * Enables the move input of the view and retrieves the move from the view.
+     *
+     * @return the move the human has decided upon.
+     */
+    public int getHumanPlayerMove() {
+        view.enableInput();
+        return view.requestMove();
     }
 
 
@@ -99,6 +124,15 @@ public class FourCharmController implements Observer {
 
     }
 
+
+    /**
+     * When playing a local game this method is used to retrieve the current move from
+     * a humanplayer, this is only done when the current player is human, because an AI
+     * doesn't need human input. When playing an networkgame this method is not used, in that
+     * case it is the responsibility of the {@link com.lucwo.fourcharm.client.ServerHandler}
+     * to call the {@link #getHumanPlayerMove} method.
+     * @param player The player which current turn it is.
+     */
     private void handlePlayerTurn(Player player) {
         if (player instanceof LocalHumanPlayer) {
             view.enableInput();

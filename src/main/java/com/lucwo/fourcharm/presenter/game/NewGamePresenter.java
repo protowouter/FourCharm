@@ -6,6 +6,7 @@ package com.lucwo.fourcharm.presenter.game;
 
 
 import com.lucwo.fourcharm.model.Player;
+import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.presenter.FourCharmPresenter;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -41,9 +42,7 @@ public class NewGamePresenter {
     // ----------------------- Commands ---------------------
 
     public void startNewGame() {
-
-        fourCharmPresenter.showGame();
-
+        fourCharmPresenter.getFourCharmController().startLocalGame(new String[]{"Wouter", "Luce"}, new GameStrategy[0]);
     }
 
     public void setFourcharmPresenter(FourCharmPresenter newFourCharmPresenter) {

@@ -7,6 +7,7 @@ package com.lucwo.fourcharm.client;
 import com.lucwo.fourcharm.FourCharmController;
 import com.lucwo.fourcharm.exception.ServerConnectionException;
 import com.lucwo.fourcharm.model.*;
+import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
@@ -30,14 +31,13 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
 
 // ------------------ Instance variables ----------------
 
-    private Socket sock;
     private String name;
     private BufferedReader in;
-    private BufferedWriter out;
     private CoreServer.Client serverClient;
     private CoreClient.Processor<ServerHandler> processor;
     private FourCharmController controller;
     private Map<String, ASyncPlayer> playerMap;
+    private GameStrategy strategy;
     private Player ai;
     private Game game;
 
@@ -51,9 +51,9 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
         try {
             InetAddress host = InetAddress.getByName(hostString);
             int port = Integer.parseInt(portString);
-            sock = new Socket(host, port);
+            Socket sock = new Socket(host, port);
             in = new BufferedReader(new InputStreamReader(sock.getInputStream(), Charset.forName("UTF-8")));
-            out = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream(), Charset.forName("UTF-8")));
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream(), Charset.forName("UTF-8")));
             processor = new CoreClient.Processor<>(this);
             serverClient = new CoreServer.Client(out);
         } catch (IOException e) {
@@ -72,7 +72,15 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
 
 // ----------------------- Queries ----------------------
 
+    public GameStrategy getStrategy() {
+        return strategy;
+    }
+
 // ----------------------- Commands ---------------------
+
+    public void setStrategy(GameStrategy strat) {
+        strategy = strat;
+    }
 
     public void joinServer() {
         try {
@@ -119,13 +127,15 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
         ASyncPlayer player2 = new ASyncPlayer(p2, Mark.P2);
         playerMap.put(player1.getName(), player1);
         playerMap.put(player2.getName(), player2);
-        Mark aiMark;
-        if (p1.equals(name)) {
-            aiMark = Mark.P1;
-        } else {
-            aiMark = Mark.P2;
+        if (strategy != null) {
+            Mark aiMark;
+            if (p1.equals(name)) {
+                aiMark = Mark.P1;
+            } else {
+                aiMark = Mark.P2;
+            }
+            ai = new LocalAIPlayer(new MTDfStrategy(), aiMark);
         }
-        ai = new LocalAIPlayer(new MTDfStrategy(), aiMark);
         game = new Game(BinaryBoard.class, player1, player2);
         controller.setGame(game);
     }
@@ -133,16 +143,23 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
     @Override
     public void requestMove(String player) {
 
+        new Thread(() -> handleRequestMove(player)).start();
+
+    }
+
+    private void handleRequestMove(String player) {
         if (name.equals(player)) {
-
-            new Thread(() -> {
-                try {
-                    serverClient.doMove(ai.determineMove(game.getBoard()));
-                } catch (C4Exception e) {
-                    Logger.getGlobal().throwing(getClass().toString(), "requestMove", e);
-                }
-            }).start();
-
+            int move;
+            if (ai != null) {
+                move = ai.determineMove(game.getBoard());
+            } else {
+                move = controller.getHumanPlayerMove();
+            }
+            try {
+                serverClient.doMove(move);
+            } catch (C4Exception e) {
+                Logger.getGlobal().throwing(getClass().toString(), "requestMove", e);
+            }
         }
     }
 

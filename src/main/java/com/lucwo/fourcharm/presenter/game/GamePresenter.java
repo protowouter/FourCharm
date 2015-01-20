@@ -6,11 +6,7 @@ package com.lucwo.fourcharm.presenter.game;
 
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.LocalHumanPlayer;
-import com.lucwo.fourcharm.model.Mark;
-import com.lucwo.fourcharm.model.Player;
-import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.presenter.board.BoardPresenter;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -33,10 +29,6 @@ public class GamePresenter implements Observer {
     @FXML
     private FlowPane boardPane;
 
-    private Game game;
-    private Thread gameThread;
-    private Player p1;
-    private Player p2;
     private BoardPresenter boardPresenter;
 
 
@@ -49,43 +41,12 @@ public class GamePresenter implements Observer {
 
     // ----------------------- Commands ---------------------
 
-    public void setGame(Game newGame) {
-
-
-        game = newGame;
-
-
+    public void enableInput() {
+        boardPresenter.enableSpaces();
     }
 
-    private void createGame() {
-        ClassLoader classloader = getClass().getClassLoader();
-        FXMLLoader fxmlLoader = new FXMLLoader(classloader.getResource("views/game/new.fxml"));
-
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
-
-        fxmlLoader.getRoot();
-
-
-    }
-
-    public void showGame() {
-        p1 = new LocalHumanPlayer("Wouter", Mark.P1);
-        p2 = new LocalHumanPlayer("Luce", Mark.P2);
-        //p1 = new LocalAIPlayer(new MTDfStrategy(), Mark.P1);
-        //p2 = new LocalAIPlayer(new MTDfStrategy(), Mark.P2);
-        //p2 = new ASyncPlayer("To be Implemented", this, Mark.P2);
-
-
-        game = new Game(BinaryBoard.class, p1, p2);
-
+    public void showGame(Game game) {
         game.addObserver(this);
-
-        gameThread = new Thread(game);
-
         initBoardPane();
     }
 
@@ -93,22 +54,9 @@ public class GamePresenter implements Observer {
     public void update(Observable o, Object arg) {
 
         if (o instanceof Game) {
-            Platform.runLater(() -> {
-                if (game.getCurrent() instanceof LocalHumanPlayer) {
-                    currentPlayer = (LocalHumanPlayer) game.getCurrent();
-                    boardPresenter.enableSpaces();
-                } else {
-                    boardPresenter.disableSpaces();
-                }
-            });
-
+            boardPresenter.initBoard(((Game) o).getBoard());
         }
 
-    }
-
-    public void startGame() {
-        update(game, null);
-        gameThread.start();
     }
 
     public void doPlayerMove(int col) {
@@ -131,10 +79,6 @@ public class GamePresenter implements Observer {
         } catch (IOException e) {
             Logger.getGlobal().throwing(this.getClass().getSimpleName(), "initBoardPane", e);
         }
-
-        ((BoardPresenter) fxmlLoader.getController()).initBoard(game.getBoard());
-
-        game.addObserver(fxmlLoader.getController());
     }
 
 }
