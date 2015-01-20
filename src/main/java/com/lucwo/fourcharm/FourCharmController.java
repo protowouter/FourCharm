@@ -47,6 +47,9 @@ public class FourCharmController implements Observer {
         new FourCharmController();
     }
 
+    public void setView(FourCharmView v) {
+        view = v;
+    }
 
     /**
      * Starts a networked game, making use of a server.

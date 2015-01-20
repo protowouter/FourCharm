@@ -46,10 +46,10 @@ public class SpacePresenter {
 
         if (m == Mark.P1) {
             spaceButton.textProperty().setValue("");
-            spaceButton.setBackground(new Background(new BackgroundFill(Color.YELLOW, new CornerRadii(PIECE_RADIUS), null)));
+            spaceButton.setBackground(new Background(new BackgroundFill(Color.PINK, new CornerRadii(PIECE_RADIUS), null)));
         } else if (m == Mark.P2) {
             spaceButton.textProperty().setValue("");
-            spaceButton.setBackground(new Background(new BackgroundFill(Color.BLUE, new CornerRadii(PIECE_RADIUS), null)));
+            spaceButton.setBackground(new Background(new BackgroundFill(Color.SKYBLUE, new CornerRadii(PIECE_RADIUS), null)));
         } else {
             spaceButton.textProperty().setValue(m.toString());
         }

@@ -55,13 +55,15 @@ public class FourCharmPresenter {
     }
 
     public void enableInput() {
+        gamePresenter.enableInput();
     }
 
     public int requestMove() {
-        return -1;
+        return gamePresenter.getPlayerMove();
     }
 
     public void showGame(Game game) {
+        gamePresenter.init();
         gamePresenter.showGame(game);
         contentArea.setCenter(gamePresenter.getView());
     }

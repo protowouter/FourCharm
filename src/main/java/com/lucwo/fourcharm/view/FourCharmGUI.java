@@ -21,8 +21,8 @@ public class FourCharmGUI extends Application implements FourCharmView {
 
     // ---------------- Instance Variables ------------------
 
-    private static FourCharmFactory fourCharmFactory;
-    private static FourCharmController controller;
+    private FourCharmFactory fourCharmFactory;
+    private FourCharmController controller;
     private FourCharmPresenter fourCharmPresenter;
 
 
@@ -35,6 +35,10 @@ public class FourCharmGUI extends Application implements FourCharmView {
     }
 
     public FourCharmGUI() {
+
+        controller = new FourCharmController();
+        controller.setView(this);
+        fourCharmFactory = new FourCharmFactory();
 
     }
 
