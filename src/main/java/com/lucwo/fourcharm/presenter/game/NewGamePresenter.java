@@ -8,6 +8,7 @@ package com.lucwo.fourcharm.presenter.game;
 import com.lucwo.fourcharm.exception.ServerConnectionException;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
+import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.presenter.FourCharmPresenter;
 import javafx.beans.value.ChangeListener;
@@ -78,8 +79,8 @@ public class NewGamePresenter {
                         showPlayerFields();
                     }
         );
-        p1Strategy.getItems().addAll(new MTDfStrategy(), new RandomStrategy());
-        p2Strategy.getItems().addAll(new MTDfStrategy(), new RandomStrategy());
+        p1Strategy.getItems().addAll(new MTDfStrategy(), new RandomStrategy(), new NegaMaxStrategy(12));
+        p2Strategy.getItems().addAll(new MTDfStrategy(), new RandomStrategy(), new NegaMaxStrategy(12));
 
         ChangeListener<GameStrategy> playahlistener = (observableValue, oldValue, newValue) -> checkAbleToPlayah();
         p1Strategy.getSelectionModel().selectedItemProperty().addListener(playahlistener);

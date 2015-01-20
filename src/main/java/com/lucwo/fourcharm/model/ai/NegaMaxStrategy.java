@@ -141,7 +141,7 @@ public class NegaMaxStrategy implements GameStrategy {
                 try {
                     Board childBoard = board.deepCopy();
                     childBoard.makemove(col, mark);
-                    double val = -negaMax(childBoard, mark.other(), -beta, -alpha, depth - 1).value;
+                    double val = -negaMax(childBoard, mark.other(), -beta, -newAlpha, depth - 1).value;
                     if (val > bestValue) {
                         bestValue = val;
                         newAlpha = val;

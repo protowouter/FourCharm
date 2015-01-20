@@ -25,6 +25,7 @@ public class MTDfStrategy implements GameStrategy {
     private static final int MAX_DURATION = 10_000;
     private static final double FIRST_GUESS = 17880;
     private static final int[] COLS = new int[]{3, 4, 2, 5, 1, 6, 0};
+    private static final int DEPTH_STEP = 2;
 
     // ------------------ Instance variables ----------------
     private long endTime;
@@ -54,8 +55,8 @@ public class MTDfStrategy implements GameStrategy {
         int bestMove = -1;
         int achievedDepth = 0;
 
-        for (int depth = 2; System.currentTimeMillis() < endTime && depth < freeSpots - 1;
-             depth++) {
+        for (int depth = DEPTH_STEP; System.currentTimeMillis() < endTime && depth < freeSpots - 1;
+             depth += DEPTH_STEP) {
             int bestMoveCurrentIteration = -1;
             double bestValueCurrentIteration = Double.NEGATIVE_INFINITY;
             final int mtDepth = depth - 1;
@@ -85,6 +86,7 @@ public class MTDfStrategy implements GameStrategy {
                         bestMoveCurrentIteration = valFut.getKey();
                         bestValueCurrentIteration = value;
                     }
+                    Logger.getGlobal().info("Depth: " + achievedDepth + " Col: " + valFut.getKey() + " Value: " + value);
                 }
                 bestMove = bestMoveCurrentIteration;
                 bestValue = bestValueCurrentIteration;
