@@ -210,7 +210,6 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
      */
     public void showError(String message) {
         System.err.println(message);
-
     }
 
     @Override
@@ -350,5 +349,6 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
         public String toString() {
             return name() + " " + argDesc();
         }
+
     }
 }

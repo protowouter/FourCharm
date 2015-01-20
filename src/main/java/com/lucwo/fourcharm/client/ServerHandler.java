@@ -8,7 +8,6 @@ import com.lucwo.fourcharm.FourCharmController;
 import com.lucwo.fourcharm.exception.ServerConnectionException;
 import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
-import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreClient;
@@ -40,10 +39,12 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
     private GameStrategy strategy;
     private Player ai;
     private Game game;
+    private boolean running;
 
 // --------------------- Constructors -------------------
 
     public ServerHandler(String namepie, String hostString, String portString, FourCharmController contr) throws ServerConnectionException {
+        running = true;
         controller = contr;
         name = namepie;
         playerMap = new HashMap<>();
@@ -93,8 +94,8 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
     public void handleServerCommands() {
         try {
             String input = in.readLine();
-            while (input != null) {
-                Logger.getGlobal().info("Processing input " + input);
+            while (running && input != null) {
+                Logger.getGlobal().fine("Processing input " + input);
                 processor.process(input);
                 input = in.readLine();
 
@@ -134,7 +135,7 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
             } else {
                 aiMark = Mark.P2;
             }
-            ai = new LocalAIPlayer(new MTDfStrategy(), aiMark);
+            ai = new LocalAIPlayer(strategy, aiMark);
         }
         game = new Game(BinaryBoard.class, player1, player2);
         controller.setGame(game);
@@ -176,13 +177,18 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
 
     }
 
+    public void disconnect() {
+        running = false;
+    }
+
     @Override
     public void gameEnd(String player) {
-
+        disconnect();
     }
 
     @Override
     public void error(int eCode, String message) {
+        controller.showError("Error " + eCode + ": " + message);
 
     }
 }

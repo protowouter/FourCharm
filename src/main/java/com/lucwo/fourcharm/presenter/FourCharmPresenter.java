@@ -56,7 +56,7 @@ public class FourCharmPresenter {
     }
 
     public void enableInput() {
-        gamePresenter.enableInput();
+        Platform.runLater(gamePresenter::enableInput);
     }
 
     public int requestMove() {

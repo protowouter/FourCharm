@@ -26,4 +26,6 @@ public interface FourCharmView {
 
     public int requestMove();
 
+    public void showError(String errorMessage);
+
 }

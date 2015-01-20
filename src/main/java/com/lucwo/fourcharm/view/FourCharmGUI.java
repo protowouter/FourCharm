@@ -9,6 +9,7 @@ import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.presenter.FourCharmFactory;
 import com.lucwo.fourcharm.presenter.FourCharmPresenter;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -59,7 +60,7 @@ public class FourCharmGUI extends Application implements FourCharmView {
 
     @Override
     public void showGame(Game game) {
-        fourCharmPresenter.showGame(game);
+        Platform.runLater(() -> fourCharmPresenter.showGame(game));
     }
 
     @Override
@@ -80,6 +81,11 @@ public class FourCharmGUI extends Application implements FourCharmView {
     @Override
     public int requestMove() {
         return fourCharmPresenter.requestMove();
+    }
+
+    @Override
+    public void showError(String errorMessage) {
+
     }
 }
 

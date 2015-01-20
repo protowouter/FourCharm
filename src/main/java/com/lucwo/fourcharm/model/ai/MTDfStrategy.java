@@ -86,7 +86,7 @@ public class MTDfStrategy implements GameStrategy {
                         bestMoveCurrentIteration = valFut.getKey();
                         bestValueCurrentIteration = value;
                     }
-                    Logger.getGlobal().info("Depth: " + achievedDepth + " Col: " + valFut.getKey() + " Value: " + value);
+                    Logger.getGlobal().finest("Depth: " + achievedDepth + " Col: " + valFut.getKey() + " Value: " + value);
                 }
                 bestMove = bestMoveCurrentIteration;
                 bestValue = bestValueCurrentIteration;

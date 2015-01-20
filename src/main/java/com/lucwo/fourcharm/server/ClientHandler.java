@@ -171,11 +171,11 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
                     }
                 } catch (C4Exception e) {
 
-                    Logger.getGlobal().info("Throwing exception " + e.getMessage());
+                    Logger.getGlobal().info("Sending exception " + e.getMessage());
                     try {
                         client.error(e.getErrorCode(), e.getMessage());
                     } catch (C4Exception e1) {
-                        e1.printStackTrace();
+                        Logger.getGlobal().throwing(getClass().toString(), "handleClient", e);
                     }
 
                 }

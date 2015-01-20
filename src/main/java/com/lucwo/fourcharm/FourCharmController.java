@@ -28,6 +28,7 @@ public class FourCharmController implements Observer {
 
     private FourCharmView view;
     private Game game;
+    private ServerHandler serverClient;
 
 // --------------------- Constructors -------------------
 
@@ -40,13 +41,6 @@ public class FourCharmController implements Observer {
 // ----------------------- Commands ---------------------
 
     public static void main(String[] args) {
-        Logger.getGlobal().setLevel(Level.FINEST);
-
-
-        ConsoleHandler cH = new ConsoleHandler();
-        cH.setLevel(Level.FINEST);
-
-        Logger.getGlobal().addHandler(cH);
         for (String arg : args) {
             System.out.println(arg);
         }
@@ -57,6 +51,13 @@ public class FourCharmController implements Observer {
             new Thread(view).start();
         } else {
             Application.launch(FourCharmGUI.class);
+        }
+
+        if (args.length > 1 && "-v".equals(args[1])) {
+            Logger.getGlobal().setLevel(Level.FINEST);
+            ConsoleHandler cH = new ConsoleHandler();
+            cH.setLevel(Level.FINEST);
+            Logger.getGlobal().addHandler(cH);
         }
 
     }
@@ -75,9 +76,9 @@ public class FourCharmController implements Observer {
      * @throws ServerConnectionException When unable to connect to a server.
      */
     public void startNetworkGame(String hostName, String port, String playerName, GameStrategy strategy) throws ServerConnectionException {
-        ServerHandler handler = new ServerHandler(playerName, hostName, port, this);
-        handler.setStrategy(strategy);
-        new Thread(handler).start();
+        serverClient = new ServerHandler(playerName, hostName, port, this);
+        serverClient.setStrategy(strategy);
+        new Thread(serverClient).start();
 
     }
 
@@ -168,6 +169,12 @@ public class FourCharmController implements Observer {
         if (game != null) {
             game.shutdown();
         }
+        if (serverClient != null) {
+            serverClient.disconnect();
+        }
+    }
 
+    public void showError(String message) {
+        view.showError(message);
     }
 }

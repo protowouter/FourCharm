@@ -145,8 +145,9 @@ public class GameGroup extends ClientGroup implements Observer {
         if (game.hasWinner()) {
             winnerName = game.getWinner().getName();
         }
+        List<ClientHandler> clients = new LinkedList<>(getClients());
         try {
-            for (ClientHandler client : getClients()) {
+            for (ClientHandler client : clients) {
                 client.getClient().gameEnd(winnerName);
                 server.getLobby().addHandler(client);
             }
