@@ -70,7 +70,7 @@
 \paragraph_indentation default
 \quotes_language english
 \papercolumns 1
-\papersides 2
+\papersides 1
 \paperpagestyle plain
 \tracking_changes false
 \output_changes false
@@ -119,7 +119,7 @@ Overall Design
 Early on in the design of our system we recognized that the protocol that
  handle the communication between the client and server could be extracted
  from the game system.
- This protocol implemententation is available at Github.com 
+ This protocol implementation is available at Github.com 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "c4-protocol"
@@ -181,7 +181,7 @@ Global overview of FourCharm
 \end_layout
 
 \begin_layout Paragraph
-Global overiew
+Global overview
 \end_layout
 
 \begin_layout Standard
@@ -207,12 +207,12 @@ reference "fig:Model-package"
 \end_inset
 
  is a detailed class diagram of the Game model component of our system.
- The main entrypoint to the Game model is the Game class.
+ The main entry point to the Game model is the Game class.
  The game class uses a Board and two Players to achieve te responsibilities.
  The Board is responsible to maintain a valid Board state and the Game makes
- shure that only the current player can make a move.
+ sure that only the current player can make a move.
  We have developed two Board implementations: ReferenceBoard and BinaryBoard.
- The binaryboard implementation is explained in more detail at 
+ The binary board implementation is explained in more detail at 
 \begin_inset CommandInset ref
 LatexCommand vref
 reference "chap:BinaryBoard"
@@ -247,6 +247,31 @@ reference "chap:BinaryBoard"
 \end_inset
 
  to the same test regimen.
+ The Player interface is implemented by two Classes, ASyncPlayer and LocalAIPlay
+er.
+ A LocalAIPlayer uses a GameStrategy to determine the best move.
+ The ASyncPlayer class is meant for Players which receive input in a Asynchronou
+s way, this could be a player connected via a server or a human player connected
+ to the local machine.
+ There is also the LocalHumanPlayer class which simply extends ASyncPlayer
+ and provides no further functionality, this is chiefly done to simplify
+ checking if the current player is a human connected to the local machine.
+ No distinction is made between AI an human players connected via a server.
+ The GameStrategy collection of classes are also used to provide hint functional
+ity to a locally connected user.
+ 
+\end_layout
+
+\begin_layout Paragraph
+View
+\end_layout
+
+\begin_layout Standard
+Our system has two implementations of the FourCharmView interface.
+ The main responsibility of controlling user input lies at the controller,
+ but the Views are responsible for displaying changes in the game state.
+ This reduces the unnecessary passing around of the board between the controller
+ and the view.
 \end_layout
 
 \begin_layout Paragraph
@@ -285,7 +310,7 @@ ClientHandler: holds the connection to a client.
 \begin_layout Standard
 Because there are multiple commands in the protocol that have different
  depending on the state of the client we decided that a Client always is
- in a Gamegroup.
+ in a GameGroup.
  All the different GameGroup have their own implementation of all the commands.
  In this way the protocol behavior is modeled on the server side.
 \end_layout
@@ -508,12 +533,14 @@ Requirements overview
 \end_layout
 
 \begin_layout Standard
+\align center
 \begin_inset Float table
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
+\align left
 \begin_inset Tabular
 <lyxtabular version="3" rows="8" columns="3">
 <features rotate="0" tabularvalignment="middle" tabularwidth="100col%">
@@ -679,7 +706,7 @@ TODO
 \begin_inset Text
 
 \begin_layout Plain Layout
-A server can support multiple instances of the game that are played simultanious
+A server can support multiple instances of the game that are played simultaneous
 ly by different clients
 \end_layout
 
@@ -780,14 +807,11 @@ The requirements for the server
 \end_layout
 
 \begin_layout Standard
+\align center
 \begin_inset Float table
 wide false
 sideways false
 status collapsed
-
-\begin_layout Plain Layout
-
-\end_layout
 
 \begin_layout Plain Layout
 \begin_inset Tabular
@@ -898,7 +922,7 @@ FourCharmTUI
 \begin_inset Text
 
 \begin_layout Plain Layout
-Client supports human players and computerplayers (AI)
+Client supports human players and computer players (AI)
 \end_layout
 
 \end_inset
@@ -927,7 +951,7 @@ FourCharmController
 \begin_inset Text
 
 \begin_layout Plain Layout
-The maximum thinking time of the computerplayer should be a parameter
+The maximum thinking time of the computer player should be a parameter
 \end_layout
 
 \end_inset
@@ -1192,7 +1216,7 @@ The observer pattern is used in multiple places in our application.
  it is.
  GameGroup is also an Observer of Game, after every move when notifyObserver
  is called, the server notifies all clients in the Game of the current player.
- When the game has ended the server also informs all clients in the gamegroup
+ When the game has ended the server also informs all clients in the GameGroup
  of this.
 \end_layout
 
