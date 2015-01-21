@@ -16,7 +16,10 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 /**
- * TODO: clienthandler javadoc
+ * A ClientHandler is responsible for maintaining a connection with a client and passing received
+ * commands to the {@link ClientGroup} the ClientHandler currently resides in. For parsing the received
+ * commands from the client the C4 Protocol module is used. The ClientHandler can also be used by other
+ * parts of the server to send commands to the client.
  *
  * @author Luce Sandfort and Wouter Timmermans
  */
@@ -32,6 +35,11 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
 
 // --------------------- Constructors -------------------
 
+    /**
+     * Constructs a new ClientHandler with a given socket.
+     *
+     * @param sock The socket which will be used to communicate with the client.
+     */
     public ClientHandler(Socket sock) {
         socket = sock;
     }
@@ -48,14 +56,14 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
 
     /**
      * Sets the name of this ClientHandler.
-     * @param naam the name of the ClientHandler
+     * @param newName the name of the ClientHandler
      */
-    public void setName(String naam) {
-        name = naam;
+    public void setName(String newName) {
+        name = newName;
     }
 
     /**
-     * Gives the client.
+     * Returns the protocol @{link C4Client} to communicate with the client.
      * @return the client
      */
     public CoreClient.Client getClient() {
@@ -130,14 +138,7 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
     }
 
     /**
-     * When an object implementing interface <code>Runnable</code> is used
-     * to create a thread, starting the thread causes the object's
-     * <code>run</code> method to be called in that separately executing
-     * thread.
-     * <p>
-     * The general contract of the method <code>run</code> is that it may
-     * take any action whatsoever.
-     *
+     * Starts the input handling of this client.
      * @see Thread#run()
      */
     @Override
@@ -146,7 +147,7 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
     }
 
     /**
-     * TODO: Javadoc schrijven voor handleClient()
+     * Processes the commands received from the client via the {@link java.net.Socket}.
      */
     public void handleClient() {
 

@@ -8,7 +8,9 @@ import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.board.Board;
 
 /**
- * TODO: Javadoccccc voor player interface.
+ * A participant in a game of connect four. A player has a {@link com.lucwo.fourcharm.model.Mark} and can
+ * be asked to make a move on a {@link com.lucwo.fourcharm.model.board.Board} or asked what move is best
+ * to make on a given {@link com.lucwo.fourcharm.model.board.Board}.
  *
  * @author Luce Sandfort and Wouter Timmermans
  */

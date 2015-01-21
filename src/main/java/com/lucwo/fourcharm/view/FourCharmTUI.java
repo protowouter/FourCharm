@@ -5,22 +5,21 @@
 package com.lucwo.fourcharm.view;
 
 import com.lucwo.fourcharm.FourCharmController;
-import com.lucwo.fourcharm.client.ServerHandler;
 import com.lucwo.fourcharm.exception.ServerConnectionException;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 
-import java.net.InetAddress;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
-/**TODO verder uitwrken FCTUI javadoc
+/**
  * The FourCharmTUI is the Textual User Interface of the FourCharm
- * Connect4 game. It makes use of the FourCharmController, Presenter,
- * Factory and Game class, as well as the AI strategies.
+ * Connect4 game. It makes use of the FourCharmController, and Game class,
+ * as well as the AI strategies. The TUI takes care of communication with
+ * a user and uses the controller for communication with the rest of the system.
  *
  * @author Luce Sandfort and Wouter Timmermans
  */
@@ -35,9 +34,6 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
     private boolean running;
     private boolean gameOn;
     private FourCharmController controller;
-    private ServerHandler serverHandler;
-    private InetAddress address;
-    private int port;
     private boolean moveNeeded;
     private LinkedBlockingQueue<Integer> moveQueue;
     
@@ -96,15 +92,18 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
             }
         } else {
             // Maybe it's a move?
-            try {
-                int move = Integer.parseInt(commandString) - 1;
-                moveQueue.put(move);
-            } catch (NumberFormatException | InterruptedException e) {
-                Logger.getGlobal().throwing(getClass().toString(), "checkCommand", e);
-                showError("This command has no power here!");
+            if (moveNeeded) {
+                try {
+                    int move = Integer.parseInt(commandString) - 1;
+                    moveQueue.put(move);
+                    moveNeeded = false;
+                } catch (NumberFormatException | InterruptedException e) {
+                    Logger.getGlobal().throwing(getClass().toString(), "checkCommand", e);
+                    showError("This command has no power here!");
+                }
+            } else {
+                showError("Be patient your grasshopper, not yet your turn is");
             }
-
-
         }
     }
 
@@ -307,7 +306,6 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
         int move = -1;
         try {
             move = moveQueue.take();
-            moveNeeded = false;
         } catch (InterruptedException e) {
             Logger.getGlobal().throwing(getClass().toString(), "requestMove", e);
         }

@@ -243,7 +243,6 @@ public class ReferenceBoard extends Board {
     @Override
     public long positionCode() {
 
-        long result = 0;
         long p1Sum = 0;
         long p2Sum = 0;
 

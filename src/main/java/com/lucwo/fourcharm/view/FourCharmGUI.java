@@ -58,8 +58,8 @@ public class FourCharmGUI extends Application implements FourCharmView {
 
     /**
      * Starts the Graphical User Interface.
-     * @param stage TODO stage?
-     * @throws Exception TODO exception?
+     * @param stage the JavaFX stage
+     * @throws Exception All sorts of exceptions thrown by JavaFX
      */
     public void start(Stage stage) throws Exception {
 

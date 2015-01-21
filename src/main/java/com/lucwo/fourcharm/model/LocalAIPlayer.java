@@ -14,9 +14,7 @@ import com.lucwo.fourcharm.model.board.Board;
  * to this interface (the MDTDfStrategy class, the NegaMaxStrategy class and
  * the RandomStrategy class).
  *
- * 
  * @author Luce Sandfort and Wouter Timmermans
- *
  */
 public class LocalAIPlayer implements Player {
 
