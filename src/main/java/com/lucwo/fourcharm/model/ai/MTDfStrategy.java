@@ -52,11 +52,10 @@ public class MTDfStrategy implements GameStrategy {
 
     // ----------------------- Queries ----------------------
 
-    //TODO: Misschien nog wat uitgebreider beschrijven?
     /**
-     * Determines the next moves given a maximum thinking time. Every spot gets a number
-     * and the spot with the highest number is the best move to make.
-     * @param board The board that is used by the game.
+     * Determines the next moves given a maximum thinking time. Every spot gets a value
+     * and the spot with the highest value is the best move to make.
+     * @param board The current board state used to determine the best move.
      * @param mark The mark of the current player.
      * @return The best move possible for the current situation on the board.
      */
@@ -126,7 +125,8 @@ public class MTDfStrategy implements GameStrategy {
 
 
     /**
-     * The method gives the NegaMax value in less steps than the NegaMax algorithm.
+     * The method gives the NegaMax value in less steps than the NegaMax algorithm by using a zero width
+     * alpha beta window.
      * @param board The board that is used by the game.
      * @param mark The mark of the current player.
      * @param depth The maximum search depth of the algorithm.
@@ -135,7 +135,9 @@ public class MTDfStrategy implements GameStrategy {
     private double mtdf(Board board, Mark mark, int depth) {
         double guess = prevValue;
 
+        //@ invariant upperBound > lowerBound;
         double upperBound = Double.POSITIVE_INFINITY;
+        //@ invariant lowerBound < upperBound;
         double lowerBound = Double.NEGATIVE_INFINITY;
 
         final int TIMEOUT = 10;

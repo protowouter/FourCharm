@@ -84,11 +84,17 @@ public abstract class Board {
      */
     public abstract boolean isFull();
 
-
-    //TODO: pliecount belongs in Game
+    /**
+     * Returns the amount of moves made on the board.
+     *
+     * @return Amount of moves made.
+     */
     public abstract int getPlieCount();
 
-    //TODO: pliecount belongs in Game
+    /**
+     * Returns an array of the moves made on the board.
+     * @return Array of moves.
+     */
     public abstract int[] getMoves();
 
 
@@ -149,7 +155,7 @@ public abstract class Board {
 
     /**
      * Makes a move on a given column and fills the lowest spot of that column with the
-     * {@link com.lucwo.fourcharm.model.Mark}
+     * {@link com.lucwo.fourcharm.model.Mark}.
      * @param col The column where a move will be made.
      * @throws InvalidMoveException when a invalid move is entered or the column
      * does not exist.
@@ -165,6 +171,10 @@ public abstract class Board {
       */
     public abstract Board deepCopy();
 
+    /**
+     * @see java.lang.Object#equals
+     */
+    @Override
     public boolean equals(Object o) {
         boolean equals = true;
         if (o instanceof Board) {

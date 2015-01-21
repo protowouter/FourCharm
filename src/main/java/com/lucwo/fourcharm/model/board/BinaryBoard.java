@@ -47,7 +47,6 @@ public class BinaryBoard extends Board {
      */
     private static final long TOP = BOTTOM << ROWS;
     // Array with moves since the start of the game
-    // TODO: move this to the game class
     private final int[] moves;
     // Array with the index of lowest free square
     // for every column; assumes SIZE < 128
@@ -69,13 +68,12 @@ public class BinaryBoard extends Board {
         reset();
     }
 
-    //TODO: javadoc binaryboard constructor
     /**
-     * Constructs a binaryBoard.
-     * @param origMoves
-     * @param origNplies
-     * @param origHeight
-     * @param origColor
+     * Private constructor to be used in making deepcopies.
+     * @param origMoves Moves from original board.
+     * @param origNplies Amount of moves made on the original board.
+     * @param origHeight Array of colunm heights of the original board.
+     * @param origColor Array of player bitmasks of the original board.
      */
     private BinaryBoard(int[] origMoves, int origNplies, byte[] origHeight, long[] origColor) {
         super();
@@ -212,7 +210,7 @@ public class BinaryBoard extends Board {
     }
 
     /**
-     * Gives the mark of a spot on the board
+     * Gives the mark of a spot on the board.
      * @param index The index of the spot on the board.
      * @return The mark of a spot.
      */
@@ -224,7 +222,13 @@ public class BinaryBoard extends Board {
         return getInternalMark(col * H1 + row);
     }
 
-    //TODO: Javadox getinternal mark
+    /**
+     * Because the binary board uses a different numbering of spot indexes, this method is used to
+     * get a mark for an internal index.
+     *
+     * @param internalIndex The index number.
+     * @return The {@link com.lucwo.fourcharm.model.Mark} on the given index.
+     */
     private Mark getInternalMark(int internalIndex) {
 
         Mark mark = Mark.EMPTY;

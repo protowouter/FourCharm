@@ -175,28 +175,28 @@ public class NewGamePresenter {
     public void checkAbleToPlayah() {
         String p1Type = p1Select.getSelectionModel().getSelectedItem();
         String p2Type = p2Select.getSelectionModel().getSelectedItem();
-        boolean canPlay = false;
-        if (localNetworkChoice.getSelectionModel().getSelectedItem().equals("Local")) {
-            if (p1Type.equals("Computer")) {
+        boolean canPlay;
+        if ("Local".equals(localNetworkChoice.getSelectionModel().getSelectedItem())) {
+            if ("Computer".equals(p1Type)) {
                 canPlay = !p1Strategy.getSelectionModel().isEmpty();
             } else {
-                canPlay = !p1Name.textProperty().get().equals("");
+                canPlay = !"".equals(p1Name.textProperty().get());
             }
             if (canPlay) {
-                if (p2Type.equals("Computer")) {
+                if ("Computer".equals(p2Type)) {
                     canPlay = !p2Strategy.getSelectionModel().isEmpty();
                 } else {
-                    canPlay = !p2Name.textProperty().get().equals("");
+                    canPlay = !"".equals(p2Name.textProperty().get());
                 }
             }
         } else {
-            if (p1Type.equals("Computer")) {
+            if ("Computer".equals(p1Type)) {
                 canPlay = !p1Strategy.getSelectionModel().isEmpty();
             } else {
-                canPlay = !p1Name.textProperty().get().equals("");
+                canPlay = !"".equals(p1Name.textProperty().get());
             }
             if (canPlay) {
-                canPlay = !serverAddress.textProperty().get().equals("");
+                canPlay = !"".equals(serverAddress.textProperty().get());
                 if (canPlay) {
                     try {
                         Integer.parseInt(serverPort.textProperty().get());
@@ -247,15 +247,15 @@ public class NewGamePresenter {
         String[] pNames;
         GameStrategy[] pStrategies;
 
-        if (p1Type.equals("Human") && p2Type.equals("Human")) {
+        if ("Human".equals(p1Type) && "Human".equals(p2Type)) {
             pNames = new String[]{p1Name.textProperty().get(), p2Name.textProperty().get()};
             pStrategies = new GameStrategy[0];
-        } else if (p1Type.equals("Computer") && p2Type.equals("Computer")) {
+        } else if ("Computer".equals(p1Type) && "Computer".equals(p2Type)) {
             pNames = new String[0];
             pStrategies = new GameStrategy[]{p1Strategy.getSelectionModel().getSelectedItem(),
                     p2Strategy.getSelectionModel().getSelectedItem()};
         } else {
-            if (p1Type.equals("Human")) {
+            if ("Human".equals(p1Type)) {
                 pNames = new String[]{p1Name.textProperty().get()};
                 pStrategies = new GameStrategy[]{p2Strategy.getSelectionModel().getSelectedItem()};
             } else {

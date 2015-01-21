@@ -12,9 +12,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Logger;
 
-/**TODO: fourcharmserver verder aanvullen met javadoc.
- * The FourCharmServer class that is responsible for the server.
- * The class checks the incoming clients and starts a server.
+/**
+ * The FourCharmServer class that is responsible for the server. The FourCharmServer makes sure that
+ * at a given time there are no players with the same name. This class also maintains a list of
+ * GameGroups and uses {@link com.lucwo.fourcharm.server.PreLobbyGroup} and
+ * {@link com.lucwo.fourcharm.server.LobbyGroup} to model the state of clients.
  *
  * @author Luce Sandfort and Wouter Timmermans
  */

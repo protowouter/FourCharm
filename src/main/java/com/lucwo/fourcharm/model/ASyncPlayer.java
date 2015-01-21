@@ -14,6 +14,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Connect4 as a human, the Game class makes use of the interface
  * Player. The ASyncPlayer class implements Player. The main priority
  * of this class is get the input of the human player to the board.
+ * // TODO klopt niet. ASyncPlayer hoeft geen mens te zijn.
  *
  *
  * @author Luce Sandfort and Wouter Timmermans

@@ -20,8 +20,12 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**TODO javadoc voor de controller.
- *
+/**
+ * Functions as the Controller part of MVC for the FourCharm system.
+ * The controllers maintains a connection with a server if applicable
+ * and handles the communication between the model and the view for human players.
+ * This class uses a Serverhandler for communication with a server and a Object implementing
+ * {@link com.lucwo.fourcharm.view.FourCharmView} to communicate with users of the system.
  *
  * @author Luce Sandfort and Wouter Timmermans
  */
@@ -73,6 +77,7 @@ public class FourCharmController implements Observer {
 
     /**
      * Sets the view (textual or graphical).
+     *
      * @param v The given view.
      */
     public void setView(FourCharmView v) {
@@ -81,6 +86,7 @@ public class FourCharmController implements Observer {
 
     /**
      * Starts a networked game, making use of a server.
+     *
      * @param hostName   String for hostname
      * @param port       String for port
      * @param playerName The name which will be reported to the server.
@@ -96,8 +102,9 @@ public class FourCharmController implements Observer {
 
     /**
      * Starts a local game, without making use of a server.
+     *
      * @param localPlayerNames The names of the human player(s).
-     * @param aIStrategies The names of the AI player(s).
+     * @param aIStrategies     The names of the AI player(s).
      */
     /*@ requires localPlayerNames.length + aiStrategies.length == 2
      */
@@ -119,7 +126,8 @@ public class FourCharmController implements Observer {
     }
 
     /**
-     * Sets a game and starts a new Thread.
+     * Sets a game and starts the game in a new Thread.
+     *
      * @param g The game that needs to be started.
      */
     public void setGame(Game g) {
@@ -132,6 +140,7 @@ public class FourCharmController implements Observer {
 
     /**
      * Enables the move input of the view and retrieves the move from the view.
+     *
      * @return the move the human has decided upon.
      */
     public int getHumanPlayerMove() {
@@ -145,6 +154,7 @@ public class FourCharmController implements Observer {
      * application calls an <tt>Observable</tt> object's
      * <code>notifyObservers</code> method to have all the object's
      * observers notified of the change.
+     *
      * @param o   the observable object.
      * @param arg an argument passed to the <code>notifyObservers</code>
      */
@@ -160,7 +170,7 @@ public class FourCharmController implements Observer {
     }
 
     /**
-     * 
+     *
      */
     public void rematch() {
         // TODO Implement
@@ -173,6 +183,7 @@ public class FourCharmController implements Observer {
      * doesn't need human input. When playing an networkgame this method is not used, in that
      * case it is the responsibility of the {@link com.lucwo.fourcharm.client.ServerHandler}
      * to call the {@link #getHumanPlayerMove} method.
+     *
      * @param player The player which current turn it is.
      */
     private void handlePlayerTurn(Player player) {
@@ -196,6 +207,7 @@ public class FourCharmController implements Observer {
 
     /**
      * Shows an error with a message.
+     *
      * @param message The errormessage.
      */
     public void showError(String message) {
