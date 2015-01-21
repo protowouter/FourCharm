@@ -18,6 +18,9 @@ import java.util.logging.Logger;
  * is a specific strategy a computer player (LocalAIPlayer class) can use.
  * So this class is responsible for giving the computer player brains. This
  * way the computer player can think ahead and foresee certain moves.
+ * This class also uses the NegaMaxStrategy class to come up with new moves.
+ *
+ * @author Luce Sandfort and Wouter Timmermans.
  */
 
 public class MTDfStrategy implements GameStrategy {
@@ -34,6 +37,9 @@ public class MTDfStrategy implements GameStrategy {
 
     // --------------------- Constructors -------------------
 
+    /**
+     * This method constructs the MTDf strategy.
+     */
     public MTDfStrategy() {
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "5");
 
@@ -46,6 +52,14 @@ public class MTDfStrategy implements GameStrategy {
 
     // ----------------------- Queries ----------------------
 
+    //TODO: Misschien nog wat uitgebreider beschrijven?
+    /**
+     * Determines the next moves given a maximum thinking time. Every spot gets a number
+     * and the spot with the highest number is the best move to make.
+     * @param board The board that is used by the game.
+     * @param mark The mark of the current player.
+     * @return The best move possible for the current situation on the board.
+     */
     @Override
     public int determineMove(Board board, Mark mark) {
         nega.resetCounter();
@@ -111,6 +125,13 @@ public class MTDfStrategy implements GameStrategy {
     }
 
 
+    /**
+     * The method gives the NegaMax value in less steps than the NegaMax algorithm.
+     * @param board The board that is used by the game.
+     * @param mark The mark of the current player.
+     * @param depth The maximum search depth of the algorithm.
+     * @return The NegaMax value of the current board.
+     */
     private double mtdf(Board board, Mark mark, int depth) {
         double guess = prevValue;
 
@@ -142,6 +163,10 @@ public class MTDfStrategy implements GameStrategy {
         return guess;
     }
 
+    /**
+     * The name of the strategy.
+     * @return The name of the strategy.
+     */
     @Override
     public String toString() {
         return "MTDfStrategy";

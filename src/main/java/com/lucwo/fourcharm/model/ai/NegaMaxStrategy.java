@@ -25,34 +25,43 @@ import java.util.logging.Logger;
  */
 public class NegaMaxStrategy implements GameStrategy {
 
+    // TODO: Add stuff hahahahaahahah
     /**
      * Default search depth for the NegaMax algorithm.
      */
     public static final int DEF_DEPTH = 6;
-    public static final int FOE_POS_VALUE = -1000;
-    public static final int FRIENDLY_POS_VALUE = 1000;
-    public static final int EMPTY_POS_VALUE = 10;
-    public static final ExecutorService NEGA_EXEC = ForkJoinPool.commonPool();
+    private static final int FOE_POS_VALUE = -1000;
+    private static final int FRIENDLY_POS_VALUE = 1000;
+    private static final int EMPTY_POS_VALUE = 10;
+    private static final ExecutorService NEGA_EXEC = ForkJoinPool.commonPool();
 
-    public static final int POS_TABLE_SIZE = 20_000_000;
-    public static final Map<Long, TransPosEntry> TRANS_POS_TABLE = new ConcurrentSkipListMap<>();
+    private static final int POS_TABLE_SIZE = 20_000_000;
+    private static final Map<Long, TransPosEntry> TRANS_POS_TABLE = new ConcurrentSkipListMap<>();
 
     private final AtomicLong nodeCounter = new AtomicLong();
 
     private int searchDept;
 
+    /**
+     * Constructs a new NegaMaxStrategy.
+     */
     public NegaMaxStrategy() {
         this(DEF_DEPTH);
     }
 
+    /**
+     * Constructs a new NegaMaxStrategy with the given depth.
+     * @param depth The given depth the NegaMaxStrategy will use.
+     */
     public NegaMaxStrategy(int depth) {
         searchDept = depth;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see ft.model.Player#determineMove(ft.model.board.Board)
+    /**
+     * Determine the move to be made using the NegaMax algorithm.
+     * @param board The board for which the best move will be determined.
+     * @param mark The mark of the current player.
+     * @return The best move according to the negamax algorithm.
      */
     @Override
     public int determineMove(Board board, Mark mark) {
@@ -60,10 +69,12 @@ public class NegaMaxStrategy implements GameStrategy {
     }
 
     /**
-     * Determine the move to be made using the negamax algorithm.
+     * Determine the move to be made using the NegaMax algorithm given a specific
+     * thinking time / depth.
      *
-     * @param board board for which the best move will be determined
-     * @param depth search depth for the NegaMax algorithm
+     * @param board The board for which the best move will be determined.
+     * @param mark The mark of the current player.
+     * @param depth The search depth for the NegaMax algorithm.
      * @return The best move according to the negamax algorithm.
      */
     public int determineMove(Board board, Mark mark, int depth) {
@@ -81,8 +92,13 @@ public class NegaMaxStrategy implements GameStrategy {
 
     }
 
+    //TODO: Javadoc aanvullen
     /**
+     *
      * @param board Board for which the negaMax value will be determined
+     * @param mark The mark of the current player.
+     * @param alphaOrig
+     * @param betaOrig
      * @param depth Depth at which will be searched for the best move
      * @return The negamax value of the current board state and the best move
      */
@@ -122,10 +138,20 @@ public class NegaMaxStrategy implements GameStrategy {
 
             }
         }
-
         return result;
 
     }
+
+    //TODO: alpha en beta param aanvullen
+    /**
+     * Gives the NegaMax value of the best move.
+     * @param board The current board.
+     * @param mark The mark of the current player.
+     * @param depth The maximum searching depth.
+     * @param alpha
+     * @param beta
+     * @return The best move and its value. This value will be the highest value.
+     */
 
     private Result getNegaResult(Board board, Mark mark, int depth, double alpha, double beta) {
         double newAlpha = alpha;
@@ -133,7 +159,6 @@ public class NegaMaxStrategy implements GameStrategy {
         double bestValue = Double.NEGATIVE_INFINITY;
         int bestMove = -1;
         int columns = board.getColumns();
-
 
         boolean searching = true;
         for (int col = 0; searching && col < columns; col++) {
@@ -153,16 +178,20 @@ public class NegaMaxStrategy implements GameStrategy {
                     Logger.getGlobal().throwing(getClass().toString(), "getNegaResult", e);
                 }
             }
-
-
-
         }
-
-
         result = new Result(bestMove, bestValue);
         return result;
     }
 
+    //TODO: javadoc invullen
+    /**
+     *
+     * @param alphaOrig
+     * @param depth
+     * @param beta
+     * @param posKey
+     * @param result
+     */
     private void saveToTransPostTable(double alphaOrig, int depth, double beta, long posKey, Result result) {
         TransPosEntry ttEntry;
         ttEntry = new TransPosEntry();
@@ -180,6 +209,12 @@ public class NegaMaxStrategy implements GameStrategy {
         TRANS_POS_TABLE.put(posKey % POS_TABLE_SIZE, ttEntry);
     }
 
+    /**
+     * Calculates the value of a specific spot on the board.
+     * @param board The current board.
+     * @param mark The mark of the current player.
+     * @return The calculated value.
+     */
     public double nodeValue(Board board, Mark mark) {
         upCounter();
 
@@ -203,6 +238,14 @@ public class NegaMaxStrategy implements GameStrategy {
         return value;
     }
 
+    /**
+     * Calculates the horizontal value of a move.
+     * @param board The current board.
+     * @param mark The mark of the current player.
+     * @param vCol The column of the move.
+     * @param vRow The row of the move.
+     * @return The calculated horizontal value.
+     */
     private double horizontalValue(Board board, Mark mark, int vCol, int vRow) {
 
         int cols = board.getColumns();
@@ -218,9 +261,16 @@ public class NegaMaxStrategy implements GameStrategy {
         }
 
         return value;
-
     }
 
+    /**
+     * Calculates the vertical value of a move.
+     * @param board The current board.
+     * @param mark The mark of the current player.
+     * @param vCol The column of the move.
+     * @param vRow The row of the move.
+     * @return The calculated vertical value.
+     */
     private double verticalValue(Board board, Mark mark, int vCol, int vRow) {
 
         int rows = board.getRows();
@@ -235,17 +285,21 @@ public class NegaMaxStrategy implements GameStrategy {
         }
 
         return value;
-
     }
 
     /**
-     * Find columns of the following form:
+     * Calculates the diagonal value by finding columns of the following form:
      * . . . . . . .
      * . . . . . . .
      * . . . @ . . .
      * . . . . @ . .
      * . . . . . @ .
      * . . . . . . @
+     * @param board The current board.
+     * @param mark The mark of the current player.
+     * @param vCol The columns of the move.
+     * @param vRow The rows of the move.
+     * @return The calculated diagonal value.
      */
 
     private double lRDiagonalValue(Board board, Mark mark, int vCol, int vRow) {
@@ -272,16 +326,19 @@ public class NegaMaxStrategy implements GameStrategy {
     }
 
     /**
-     * Find columns of the following form:
+     * Calculates the diagonal value by finding columns of the following form:
      * . . . . . . .
      * . . . . . . .
      * . . . @ . . .
      * . . @ . . . .
      * . @ . . . . .
-     *
      * @ . . . . . .
+     * @param board The current board.
+     * @param mark The mark of the current player.
+     * @param vCol The columns of the move.
+     * @param vRow The rows of the move.
+     * @return The calculated diagonal value.
      */
-
     private double rLDiagonalValue(Board board, Mark mark, int vCol, int vRow) {
 
         int rows = board.getRows();
@@ -305,6 +362,14 @@ public class NegaMaxStrategy implements GameStrategy {
 
     }
 
+    /**
+     * Calculates a position value.
+     * @param board The current board.
+     * @param mark The mark of the current player.
+     * @param col The column of the move.
+     * @param row The row of the move.
+     * @return The calculated postion value.
+     */
     private int positionValue(Board board, Mark mark, int col, int row) {
         Mark posMark = board.getMark(col, row);
         int value = FOE_POS_VALUE;
@@ -317,29 +382,50 @@ public class NegaMaxStrategy implements GameStrategy {
         return value;
     }
 
+    /**
+     * Increases the nodeCounter.
+     */
     public void upCounter() {
         nodeCounter.getAndIncrement();
     }
 
+    /**
+     * Gives the nodeCounter.
+     * @return the nodeCounter.
+     */
     public long getCounter() {
         return nodeCounter.get();
     }
 
+    /**
+     * Resets the nodeCounter.
+     */
     public void resetCounter() {
         nodeCounter.set(0);
     }
 
+    /**
+     * Gives the name of the strategy
+     * @return 'NegaMaxStrategy'
+     */
     @Override
     public String toString() {
         return "NegamaxStrategy";
     }
 
+    //TODO: Invullen javadoc enum flag
+    /**
+     *
+     */
     enum Flag {
 
         EXACT, UPPER_BOUND, LOWER_BOUND
-
     }
 
+    //TODO: Invullen javadoc
+    /**
+     *
+     */
     public static class Result {
         int column;
         Double value;
@@ -350,6 +436,7 @@ public class NegaMaxStrategy implements GameStrategy {
         }
     }
 
+    //TODO: Invullen javadoc
     private static class TransPosEntry {
 
         Flag flag;

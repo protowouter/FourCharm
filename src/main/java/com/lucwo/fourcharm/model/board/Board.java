@@ -158,7 +158,6 @@ public abstract class Board {
 
     /**
      * Returns a deepcopy of the board.
-     * 
      * @return deepcopy of this board
      */
      /*@

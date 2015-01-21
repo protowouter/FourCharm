@@ -24,6 +24,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
+/**
+ * Handles the connection to the server from the perspective of the client.
+ * This class makes use of the Protocol classes, the Board Model classes and the
+ * strategy classes to achieve its responsibilities.
+ *
+ * @author Luce Sandfort and Wouter Timmermans.
+ */
+
 public class ServerHandler implements CoreClient.Iface, Runnable {
 
     private static final int GROUP_NUMBER = 23;
@@ -43,6 +51,14 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
 
 // --------------------- Constructors -------------------
 
+    /**
+     * Constructs a serverHandler.
+     * @param namepie The name of the serverHandler.
+     * @param hostString The host of the serverHandler (the IP address).
+     * @param portString The port the serverHandler will use.
+     * @param contr The FourCharmController of the serverHandler.
+     * @throws ServerConnectionException If the ServerHandler cannot make a connection to the server.
+     */
     public ServerHandler(String namepie, String hostString, String portString, FourCharmController contr) throws ServerConnectionException {
         running = true;
         controller = contr;
@@ -64,6 +80,9 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
 
     }
 
+    /**
+     * Joins the server and starts handling the commands.
+     */
     @Override
     public void run() {
         joinServer();
@@ -73,16 +92,28 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
 
 // ----------------------- Queries ----------------------
 
+    /**
+     * Gives the strategy that is used by the computerplayer.
+     * @return The used strategy (this is either MDTf strategy or a random strategy).
+     */
     public GameStrategy getStrategy() {
         return strategy;
     }
 
 // ----------------------- Commands ---------------------
 
+    /**
+     * Changes the strategy that is used by the computerplayer.
+     * @param strat The strategy that will be used from now on (this is either a MDTf strategy or
+     *              a random strategy).
+     */
     public void setStrategy(GameStrategy strat) {
         strategy = strat;
     }
 
+    /**
+     * Method to join a server. Protocol errors are caught and logged.
+     */
     public void joinServer() {
         try {
             serverClient.join(name, GROUP_NUMBER, new HashSet<>());
@@ -91,6 +122,10 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
         }
     }
 
+    /**
+     * Method to handle server commands. Input Ouput errors and Protocol errors
+     * are caught and logged.
+     */
     public void handleServerCommands() {
         try {
             String input = in.readLine();
@@ -112,6 +147,11 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
         }
     }
 
+    /**
+     * Accepts a client. If the client is accepted, his state will change to the 'ready' state.
+     * @param gNumber The given group number of the client that is joining the server.
+     * @param exts The arguments given by the client that is joining the server.
+     */
     @Override
     public void accept(int gNumber, Set<Extension> exts) {
         try {
@@ -121,6 +161,12 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
         }
     }
 
+    /**
+     * The method that starts a new game. It takes the input and starts a game with the
+     * two players specified in the input.
+     * @param p1 The name of the first player.
+     * @param p2 The name of the second player.
+     */
     @Override
     public void startGame(String p1, String p2) {
         Logger.getGlobal().info("Starting game with players " + p1 + " " + p2);
@@ -141,6 +187,10 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
         controller.setGame(game);
     }
 
+    /**
+     * Requests a move from the given player. The method starts a new Thread to do so.
+     * @param player The player that needs to do a move.
+     */
     @Override
     public void requestMove(String player) {
 
@@ -148,6 +198,11 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
 
     }
 
+    /**
+     * Handles the request move method. The method will use the AI if there is one,
+     * otherwise the serverHandler will get the move from the controller.
+     * @param player The player who's turn it is.
+     */
     private void handleRequestMove(String player) {
         if (name.equals(player)) {
             int move;
@@ -164,6 +219,12 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
         }
     }
 
+    /**
+     * If a move is done by a player, this method handles the move. If the player exists,
+     * the move will be put in the queueMove. Else an error is caught.
+     * @param playerName The player who did the move.
+     * @param col The move which has been received from the server.
+     */
     @Override
     public void doneMove(String playerName, int col) {
 
@@ -177,15 +238,27 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
 
     }
 
+    /**
+     * Disconnects from the server.
+     */
     public void disconnect() {
         running = false;
     }
 
+    /**
+     * Ends a game if a player disconnects.
+     * @param player The player that disconnects.
+     */
     @Override
     public void gameEnd(String player) {
         disconnect();
     }
 
+    /**
+     * This method gives an error.
+     * @param eCode The error code.
+     * @param message The error message.
+     */
     @Override
     public void error(int eCode, String message) {
         controller.showError("Error " + eCode + ": " + message);

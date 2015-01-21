@@ -10,8 +10,8 @@ import com.lucwo.fourcharm.model.Mark;
 import java.util.Arrays;
 
 /**
- * Class for modeling an board for the game connect four. This class's
- * responsibility is to keep the state of the board. For efficiency reasons the
+ * Class for modelling a board for the game connect four. The responsibility
+ * of this class is to keep the state of the board. For efficiency reasons the
  * board state is implemented in an array of 2 longs. This class makes use of
  * the Board class to achieve its responsibilities.
  *
@@ -69,6 +69,14 @@ public class BinaryBoard extends Board {
         reset();
     }
 
+    //TODO: javadoc binaryboard constructor
+    /**
+     * Constructs a binaryBoard.
+     * @param origMoves
+     * @param origNplies
+     * @param origHeight
+     * @param origColor
+     */
     private BinaryBoard(int[] origMoves, int origNplies, byte[] origHeight, long[] origColor) {
         super();
         moves = origMoves;
@@ -77,6 +85,9 @@ public class BinaryBoard extends Board {
         color = origColor;
     }
 
+    /**
+     * Resets the binary board.
+     */
     private void reset() {
         nplies = 0;
         color[0] = 0L;
@@ -87,6 +98,11 @@ public class BinaryBoard extends Board {
         }
     }
 
+    /**
+     * Checks if the column has free space.
+     * @param col the column for which the free space will be checked.
+     * @return True is the column has free space, false if not.
+     */
     public boolean columnHasFreeSpace(int col) {
 
         return isLegalBoard(color[0] | (1L << height[col])) &&
@@ -94,63 +110,99 @@ public class BinaryBoard extends Board {
 
     }
 
+    /**
+     * Checks if the board is legal.
+     * @param newBoard The board that will be checked.
+     * @return True if the board is legal, false if not.
+     */
     private boolean isLegalBoard(long newBoard) {
 
         // Checks whether no columns have overflown
         return (newBoard & TOP) == 0;
-
-
     }
 
+    /**
+     * Checks if a player has won.
+     * @param mark The player to check.
+     * @return True if the player has won, false if not.
+     */
     public boolean hasWon(Mark mark) {
 
         long board = color[getPlayerIndex(mark)];
 
         return hasLRDiagonal(board) || hasHorizontal(board)
                 || hasRLDiagonal(board) || hasVertical(board);
-
     }
 
+    /**
+     * Checks if the board is full.
+     * @return True if full, false if not full.
+     */
     public boolean isFull() {
 
         return nplies >= SIZE;
 
     }
 
+    /**
+     * Gives the plieCount.
+     * @return The plieCount.
+     */
     public int getPlieCount() {
 
         return nplies;
 
     }
 
+    /**
+     * Gives an int array of the moves that are made.
+     * @return The moves that are made.
+     */
     public int[] getMoves() {
         return moves;
     }
 
+    /**
+     * Checks if the board has a diagonal (four in a row).
+     * @param newBoard The board that will be checked.
+     * @return True if there are four connected spots on a diagonal line, false if not.
+     */
     private boolean hasLRDiagonal(long newBoard) {
 
         long y = newBoard & (newBoard >> ROWS);
 
         return (y & (y >> (2 * ROWS))) != 0;
-
     }
 
+    /**
+     * Checks if the board has a diagonal (four in a row).
+     * @param newBoard The board that will be checked.
+     * @return True if there are four connected spots on a diagonal line, false if not.
+     */
     private boolean hasRLDiagonal(long newBoard) {
 
         long y = newBoard & (newBoard >> H2);
 
         return (y & (y >> (2 * H2))) != 0;
-
     }
 
+    /**
+     * Checks if the board has a horizontal row.
+     * @param newBoard The board that will be checked.
+     * @return True if there are four connected spots on a horizontal line, false if not.
+     */
     private boolean hasHorizontal(long newBoard) {
 
         long y = newBoard & (newBoard >> H1);
 
         return (y & (y >> (2 * H1))) != 0;
-
     }
 
+    /**
+     * Checks if the board has a vertical row.
+     * @param newBoard The board that will be checked.
+     * @return True if there are four connected spots on a vertical line, false if not.
+     */
     private boolean hasVertical(long newBoard) {
 
         long y = newBoard & (newBoard >> 1);
@@ -159,16 +211,20 @@ public class BinaryBoard extends Board {
 
     }
 
+    /**
+     * Gives the mark of a spot on the board
+     * @param index The index of the spot on the board.
+     * @return The mark of a spot.
+     */
     public Mark getMark(int index) {
 
         int col = index / ROWS;
         int row = index % ROWS;
 
         return getInternalMark(col * H1 + row);
-
-
     }
 
+    //TODO: Javadox getinternal mark
     private Mark getInternalMark(int internalIndex) {
 
         Mark mark = Mark.EMPTY;
@@ -180,9 +236,13 @@ public class BinaryBoard extends Board {
         }
 
         return mark;
-
     }
 
+    /**
+     * Gives the integer of the player index.
+     * @param m The given mark.
+     * @return The int of the player index.
+     */
     private int getPlayerIndex(Mark m) {
         int result = -1;
         if (m == Mark.P1) {
@@ -194,6 +254,12 @@ public class BinaryBoard extends Board {
     }
 
 
+    /**
+     * Makes a move.
+     * @param col The column where a move will be made.
+     * @param mark The current mark.
+     * @throws InvalidMoveException if the move is not allowed.
+     */
     @Override
     public void makemove(int col, Mark mark) throws InvalidMoveException {
 
@@ -219,6 +285,10 @@ public class BinaryBoard extends Board {
 
     }
 
+    /**
+     * Makes a string representation.
+     * @return The representation.
+     */
     public String toString() {
         StringBuilder repr = new StringBuilder();
 
@@ -241,12 +311,20 @@ public class BinaryBoard extends Board {
         return repr.toString();
     }
 
+    /**
+     * Gives the positioncode.
+     * @return The position code.
+     */
     public long positionCode() {
 
         return 2 * color[0] + color[1] + BOTTOM;
 
     }
 
+    /**
+     * Makes a deepcopy of the board.
+     * @return A deepcopy of the current board.
+     */
     public Board deepCopy() {
         int[] moveCopy = Arrays.copyOf(moves, moves.length);
         byte[] heightCopy = Arrays.copyOf(height, height.length);

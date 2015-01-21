@@ -55,12 +55,14 @@ public class ReferenceBoard extends Board {
 
     // ----------------------- Queries ----------------------
 
+    @Override
     public boolean columnHasFreeSpace(int col) {
 
         return board[col][ROWS - 1] == Mark.EMPTY;
 
     }
 
+    @Override
     public boolean hasWon(Mark mark) {
 
 
@@ -69,28 +71,31 @@ public class ReferenceBoard extends Board {
 
     }
 
+    @Override
     public boolean isFull() {
 
         return nplies >= SIZE;
 
     }
 
+    @Override
     public int getPlieCount() {
 
         return nplies;
-
     }
 
     /**
-     * Find columns of the following form:
+     * Finds columns of the following form:
      * . . . . . . .
      * . . . . . . .
      * . . . @ . . .
      * . . . . @ . .
      * . . . . . @ .
      * . . . . . . @
+     *
+     * @param player The (mark of the) current player.
+     * @return True if there exists a LRDiagonal, false if not.
      */
-
     private boolean hasLRDiagonal(Mark player) {
 
         boolean diag = false;
@@ -106,7 +111,6 @@ public class ReferenceBoard extends Board {
         }
 
         return diag;
-
     }
 
     /**
@@ -117,10 +121,12 @@ public class ReferenceBoard extends Board {
      * . . @ . . . .
      * . @ . . . . .
      * @ . . . . . .
+     *
+     * @param player The (mark of the) current player.
+     * @return True if there exists a RLDiagonal, false if not.
      */
 
     private boolean hasRLDiagonal(Mark player) {
-
 
         boolean diag = false;
 
@@ -136,9 +142,13 @@ public class ReferenceBoard extends Board {
         }
 
         return diag;
-
     }
 
+    /**
+     * Finds the horizontal 'four in a row's of the game.
+     * @param player The (mark of the) current player.
+     * @return True if there exists a horizontal row, false if not.
+     */
     private boolean hasHorizontal(Mark player) {
 
         boolean horizontal = false;
@@ -149,13 +159,15 @@ public class ReferenceBoard extends Board {
                 streak = (this.board[column][row] == player) ? (streak + 1) : 0;
             }
             horizontal = streak == WIN_STREAK;
-
         }
-
         return horizontal;
-
     }
 
+    /**
+     * Finds the vertical 'four in a row's of the game.
+     * @param player The (mark of the) current player.
+     * @return True if there exists a vertical row, false if not.
+     */
     private boolean hasVertical(Mark player) {
 
         boolean vertical = false;
@@ -167,27 +179,27 @@ public class ReferenceBoard extends Board {
             }
             Logger.getGlobal().finer("Streak = " + streak);
             vertical = streak == WIN_STREAK;
-
         }
-
         return vertical;
-
     }
 
+    @Override
     public Mark getMark(int index) {
 
         return getMark(index / ROWS, index % ROWS);
-
     }
 
+    @Override
     public Mark getMark(int col, int row) {
         return board[col][row];
     }
 
+    @Override
     public int[] getMoves() {
         return moves;
     }
 
+    @Override
     public String toString() {
         StringBuilder repr = new StringBuilder();
 
@@ -217,6 +229,7 @@ public class ReferenceBoard extends Board {
         return repr.toString();
     }
 
+    @Override
     public Board deepCopy() {
 
         Mark[][] newBoard = new Mark[COLUMNS][ROWS];
@@ -227,6 +240,7 @@ public class ReferenceBoard extends Board {
         return new ReferenceBoard(Arrays.copyOf(moves, moves.length), newBoard, nplies);
     }
 
+    @Override
     public long positionCode() {
 
         long result = 0;
@@ -255,6 +269,7 @@ public class ReferenceBoard extends Board {
      * @param col column in which a piece will be placed
      * @requires gets called for the player which current turn it is
      */
+    @Override
     public void makemove(int col, Mark mark) throws InvalidMoveException {
 
         if (col >= 0 && col < COLUMNS && columnHasFreeSpace(col)) {
@@ -280,6 +295,9 @@ public class ReferenceBoard extends Board {
 
     }
 
+    /**
+     * Resets the board.
+     */
     private void reset() {
         moves = new int[SIZE];
         nplies = 0;
