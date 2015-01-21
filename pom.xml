@@ -30,7 +30,7 @@
                         <artifactId>texdoclet</artifactId>
                         <version>0.9-SNAPSHOT</version>
                     </docletArtifact>
-                    <sourcepath>src/main/java:src/test/java</sourcepath>
+                    <sourcepath>src/main/java</sourcepath>
                     <useStandardDocletOptions>false</useStandardDocletOptions><!-- important ! -->
                     <destDir>apidocs_tex</destDir>
                     <additionalparam>
@@ -40,7 +40,7 @@
                         -createpdf
                         -title "FourCharm Java Documentation"
                         -subtitle "Created with Javadoc TeXDoclet Doclet"
-                        -author "Luce Sandfort \and Wouter Timmermans"
+                        -author "Luce Sandfort and Wouter Timmermans"
                         -subpackages org
                         -shortinherited
                     </additionalparam>
