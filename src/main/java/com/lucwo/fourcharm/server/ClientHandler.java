@@ -15,6 +15,12 @@ import java.net.Socket;
 import java.util.Set;
 import java.util.logging.Logger;
 
+/**
+ * TODO: clienthandler javadoc
+ *
+ * @author Luce Sandfort and Wouter Timmermans
+ */
+
 public class ClientHandler implements CoreServer.Iface, Runnable {
 
 // ------------------ Instance variables ----------------

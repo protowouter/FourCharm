@@ -12,6 +12,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Logger;
 
+/**TODO: fourcharmserver verder aanvullen met javadoc.
+ * The FourCharmServer class that is responsible for the server.
+ * The class checks the incoming clients and starts a server.
+ *
+ * @author Luce Sandfort and Wouter Timmermans
+ */
 public class FourCharmServer {
 
     private ClientGroup lobby;
@@ -20,6 +26,10 @@ public class FourCharmServer {
     private boolean running;
     private int poort;
 
+    /**
+     * Constructs a new FourCharmServer given a specific port.
+     * @param port The port the new server will use.
+     */
     public FourCharmServer(int port) {
         lobby = new LobbyGroup(this);
         preLobby = new PreLobbyGroup(lobby, this);
@@ -37,7 +47,6 @@ public class FourCharmServer {
 
     /**
      * Checks if there is already a client with the same name.
-     *
      * @param name the name that will be checked
      * @return true if there exists another client with the same name,
      * false if there does not exist another client with the same name.
@@ -81,7 +90,6 @@ public class FourCharmServer {
 
     /**
      * Adds a game to the GameGroup
-     *
      * @param game the game that will be added
      */
     public void addGame(GameGroup game) {

@@ -20,6 +20,12 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**TODO javadoc voor de controller.
+ *
+ *
+ * @author Luce Sandfort and Wouter Timmermans
+ */
+
 public class FourCharmController implements Observer {
 
     public static final int MAX_PLAYERS = 2;
@@ -32,6 +38,9 @@ public class FourCharmController implements Observer {
 
 // --------------------- Constructors -------------------
 
+    /**
+     * Constructs a new controller.
+     */
     public FourCharmController() {
 
     }
@@ -62,13 +71,16 @@ public class FourCharmController implements Observer {
 
     }
 
+    /**
+     * Sets the view (textual or graphical).
+     * @param v The given view.
+     */
     public void setView(FourCharmView v) {
         view = v;
     }
 
     /**
      * Starts a networked game, making use of a server.
-     *
      * @param hostName   String for hostname
      * @param port       String for port
      * @param playerName The name which will be reported to the server.
@@ -84,8 +96,8 @@ public class FourCharmController implements Observer {
 
     /**
      * Starts a local game, without making use of a server.
-     * @param localPlayerNames
-     * @param aIStrategies
+     * @param localPlayerNames The names of the human player(s).
+     * @param aIStrategies The names of the AI player(s).
      */
     /*@ requires localPlayerNames.length + aiStrategies.length == 2
      */
@@ -106,6 +118,10 @@ public class FourCharmController implements Observer {
         setGame(gamepje);
     }
 
+    /**
+     * Sets a game and starts a new Thread.
+     * @param g The game that needs to be started.
+     */
     public void setGame(Game g) {
         game = g;
         game.addObserver(this);
@@ -116,7 +132,6 @@ public class FourCharmController implements Observer {
 
     /**
      * Enables the move input of the view and retrieves the move from the view.
-     *
      * @return the move the human has decided upon.
      */
     public int getHumanPlayerMove() {
@@ -130,7 +145,6 @@ public class FourCharmController implements Observer {
      * application calls an <tt>Observable</tt> object's
      * <code>notifyObservers</code> method to have all the object's
      * observers notified of the change.
-     *
      * @param o   the observable object.
      * @param arg an argument passed to the <code>notifyObservers</code>
      */
@@ -145,6 +159,9 @@ public class FourCharmController implements Observer {
 
     }
 
+    /**
+     * 
+     */
     public void rematch() {
         // TODO Implement
     }
@@ -165,6 +182,9 @@ public class FourCharmController implements Observer {
         }
     }
 
+    /**
+     * Closes the game.
+     */
     public void shutdown() {
         if (game != null) {
             game.shutdown();
@@ -174,6 +194,10 @@ public class FourCharmController implements Observer {
         }
     }
 
+    /**
+     * Shows an error with a message.
+     * @param message The errormessage.
+     */
     public void showError(String message) {
         view.showError(message);
     }

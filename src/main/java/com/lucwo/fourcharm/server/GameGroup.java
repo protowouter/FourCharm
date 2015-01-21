@@ -17,6 +17,13 @@ import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 import java.util.*;
 import java.util.logging.Logger;
 
+/**TODO: GameGroup class javadoc verder uitbreiden.
+ * The GameGroup class extends the ClientGroup abstract class and implements Observer.
+ * This class uses the Protocol classes as well. Two Clients play against each other in
+ * the GameGroup.
+ *
+ * @author Luce Sandfort and Wouter Timmermans
+ */
 public class GameGroup extends ClientGroup implements Observer {
 
 // ------------------ Instance variables ----------------
@@ -27,6 +34,13 @@ public class GameGroup extends ClientGroup implements Observer {
 
 
     // --------------------- Constructors -------------------
+
+    /**
+     * Constructs a new GameGroup given the parameters.
+     * @param theServer The server that will be used for the GameGroup.
+     * @param client1 The first ClientHandler that will be player 1 in the Game.
+     * @param client2 The second ClientHandler that will be player 2 in the Game.
+     */
     public GameGroup(FourCharmServer theServer, ClientHandler client1, ClientHandler client2) {
         // TODO: refactor to make use of ASyncPlayer.getMoveRequester()
         server = theServer;
@@ -58,12 +72,12 @@ public class GameGroup extends ClientGroup implements Observer {
 
     /**
      * ServerHandler wants to go from the PreLobbyGroup to the LobbyGroup.
-     *
      * @param client  The client which performed this command.
      * @param pName   Player name
      * @param gNumber Group number
      * @param exts    Set of extensions supported
-     * @throws C4Exception client is already in the GameGroup
+     * @throws C4Exception If the client is already in the GameGroup an
+     *      InvalidCommandError will be thrown.
      */
     @Override
     public void join(ClientHandler client, String pName, int gNumber, Set<Extension> exts) throws C4Exception {
@@ -73,10 +87,9 @@ public class GameGroup extends ClientGroup implements Observer {
 
     /**
      * Makes a move for a specific client
-     *
      * @param client the client that is about to make a move
      * @param col    the column the move will be about
-     * @throws C4Exception
+     * @throws C4Exception If the move is not allowed an InvalidMoveError will be thrown.
      */
     @Override
     public void doMove(ClientHandler client, int col) throws C4Exception {
@@ -100,9 +113,9 @@ public class GameGroup extends ClientGroup implements Observer {
     /**
      * Sets the status of the player to ready. If there is another player ready as well,
      * a new game will be started.
-     *
      * @param client the client that wants to play a game
-     * @throws C4Exception the client is not allowed to use this command
+     * @throws C4Exception If the client is not allowed to use this command an InvalidCommandError
+     *          is thrown.
      */
     @Override
     public void ready(ClientHandler client) throws C4Exception {

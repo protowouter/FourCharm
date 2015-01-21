@@ -13,6 +13,10 @@ import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 
+/**
+ * TODO: boardpresenter javadoc
+ */
+
 public class BoardPresenter {
 
 

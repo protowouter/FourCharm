@@ -11,6 +11,16 @@ import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 
 import java.util.Set;
 
+/**
+ * The PreLobbyGroup class extends the ClientGroup abstract class. Every Client
+ * that wants to play a game has to enter the PreLobbyGroup first. After this, by
+ * using the command join, the Client will be able to move to the LobbyGroup to
+ * find a partner to play a game with. This class makes use of the Protocol classes
+ * as well.
+ *
+ * @author Luce Sandfort and Wouter Timmermans
+ */
+
 public class PreLobbyGroup extends ClientGroup {
 
 
@@ -21,6 +31,11 @@ public class PreLobbyGroup extends ClientGroup {
 
     // --------------------- Constructors -------------------
 
+    /**
+     * Constructs a PreLobbyGroup.
+     * @param lob The Clientgroup
+     * @param theServer The server the PreLobbyGroup will be on.
+     */
     public PreLobbyGroup(ClientGroup lob, FourCharmServer theServer) {
         lobby = lob;
         server = theServer;

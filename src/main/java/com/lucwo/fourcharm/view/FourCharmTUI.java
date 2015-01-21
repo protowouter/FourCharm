@@ -17,9 +17,12 @@ import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
-/**
- * @author Luce Sandfort and Wouter Timmermans
+/**TODO verder uitwrken FCTUI javadoc
+ * The FourCharmTUI is the Textual User Interface of the FourCharm
+ * Connect4 game. It makes use of the FourCharmController, Presenter,
+ * Factory and Game class, as well as the AI strategies.
  *
+ * @author Luce Sandfort and Wouter Timmermans
  */
 public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
@@ -40,6 +43,10 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
     
     // --------------------- Constructors -------------------
 
+    /**
+     * Constructs a new FourCharmTUI given a controller.
+     * @param cont The given FourCharmController.
+     */
     public FourCharmTUI(FourCharmController cont) {
 
         inputScanner = new Scanner(System.in);
@@ -54,7 +61,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     /**
      * Reads the command and places it in an array.
-     * @param commandString the command in string format
+     * @param commandString the command in string format.
      */
     private void parseCommand(String commandString) {
         Scanner commandScanner = new Scanner(commandString);
@@ -74,8 +81,8 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     /**
      * Checks if the given command is valid.
-     * @param commandString the command in string format
-     * @param args          the amount of commands
+     * @param commandString the command in string format.
+     * @param args the amount of commands.
      */
     private void checkCommand(String commandString, String[] args) {
         Command command = Command.parseString(commandString);
@@ -157,6 +164,10 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
         System.out.println(message);
     }
 
+    /**
+     * Creates a local game.
+     * @param args The arguments given to play a game (for instance: CHAT, CHALLENGE, etc.).
+     */
     private void createLocalGame(String[] args) {
         GameStrategy p1Strat = parseStrategy(args[0]);
         GameStrategy p2Strat = parseStrategy(args[1]);
@@ -171,6 +182,11 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
         }
     }
 
+    /**
+     * Parses the input string to a strategy.
+     * @param strat The input String strategy (-m, -r).
+     * @return The strategy.
+     */
     private GameStrategy parseStrategy(String strat) {
         GameStrategy strategy = null;
         if ("-m".equals(strat)) {
@@ -181,6 +197,10 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
         return strategy;
     }
 
+    /**
+     * Connects a networkgame.
+     * @param args The arguments given to play a game (for instance: CHAT, CHALLENGE, etc.).
+     */
     private void connect(String[] args) {
         String host = args[0];
         String port = args[1];
@@ -232,13 +252,16 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
     }
 
     /**
-     * Run the game.
+     * Runs the game.
      */
     public void run() {
         showMessage("Welcome to FourCharm Connect4.");
         parseCommands();
     }
 
+    /**
+     * Parses the commands.
+     */
     private void parseCommands() {
         showPrompt();
         while (running && inputScanner.hasNextLine()) {
@@ -249,6 +272,9 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
         System.exit(0);
     }
 
+    /**
+     * Show a prompt message at the beginning of each sentence.
+     */
     private void showPrompt() {
         System.out.print("FourCharm$ ");
     }

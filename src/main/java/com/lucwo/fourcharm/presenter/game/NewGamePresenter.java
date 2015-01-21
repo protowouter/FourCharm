@@ -21,6 +21,9 @@ import javafx.scene.control.TextField;
 
 import java.util.logging.Logger;
 
+/**
+ * TODO newgamepresenter javadoc
+ */
 public class NewGamePresenter {
     // ------------------ Instance variables ----------------
 

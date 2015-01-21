@@ -13,8 +13,10 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Interface for modeling a group of clients. This could be a LobbyGroup, a GameGroup or something
- * completely different.
+ * Interface for modeling a group of clients. This could be a LobbyGroup, a GameGroup or a
+ * preLobbyGroup. This interface is used by the classes mentioned before.
+ *
+ * @author Luce Sandfort and Wouter Timmermans
  */
 
 public abstract class ClientGroup {

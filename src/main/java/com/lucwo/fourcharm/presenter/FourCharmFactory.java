@@ -12,6 +12,11 @@ import javafx.fxml.FXMLLoader;
 
 import java.io.IOException;
 
+/**
+ * TODO fourcharmfactory javadoc
+ *
+ * @author Luce Sandfort and Wouter Timmermans
+ */
 public class FourCharmFactory {
 
     // ------------------ Instance variables ----------------
@@ -21,6 +26,12 @@ public class FourCharmFactory {
 
     // ----------------------- Commands ---------------------
 
+    /**
+     * Gives the FourCharmPresenter given a fourcharmcontroller. Throws and catches a
+     * IOException if the input if wrong. Throws a RuntimeException.
+     * @param controller The given FourCharmController.
+     * @return The FourCharmPresenter
+     */
     public FourCharmPresenter getFourCharmPresenter(FourCharmController controller) {
         if (fourCharmPresenter == null) {
             try {
@@ -38,6 +49,10 @@ public class FourCharmFactory {
         return fourCharmPresenter;
     }
 
+    /**
+     * Gives the newGamePresenter. Throws a new RuntimeException if the input if wrong.
+     * @return The newGamePresenter.
+     */
     public NewGamePresenter getNewGamePresenter() {
         if (newGamePresenter == null) {
             try {
@@ -53,6 +68,10 @@ public class FourCharmFactory {
         return newGamePresenter;
     }
 
+    /**
+     * Gives the gamePresenter. Throws a RuntimeException if the input is wrong.
+     * @return The GamePresenter.
+     */
     public GamePresenter getGamePresenter() {
         if (gamePresenter == null) {
             try {

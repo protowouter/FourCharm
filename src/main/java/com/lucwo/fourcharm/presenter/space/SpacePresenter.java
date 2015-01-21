@@ -13,6 +13,13 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 
+
+/**
+ * TODO spacepresenter javadoc
+ *
+ * @author Luce Sandfort and Wouter Timmermans
+ */
+
 public class SpacePresenter {
 
     // ------------------ Instance variables ----------------

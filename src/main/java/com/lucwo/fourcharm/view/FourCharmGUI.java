@@ -14,6 +14,14 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+/**TODO: fourcharmgui javadoc verder uitwerken.
+ * The FourCharmGUI is the Graphical User Interface of the FourCharm
+ * Connect4 game. It makes use of the FourCharmController, Presenter,
+ * Factory and Game class.
+ *
+ * @author Luce Sandfort and Wouter Timmermans
+ */
+
 public class FourCharmGUI extends Application implements FourCharmView {
 
     // ---------------- Instance Variables ------------------
@@ -25,11 +33,18 @@ public class FourCharmGUI extends Application implements FourCharmView {
 
     // --------------------- Constructors -------------------
 
+    /**
+     * Constructs a FourCharmGUI with a given controller.
+     * @param contr The given FourCharmController.
+     */
     public FourCharmGUI(FourCharmController contr) {
         fourCharmFactory = new FourCharmFactory();
         controller = contr;
     }
 
+    /**
+     * Constructs a FourCharmGUI.
+     */
     public FourCharmGUI() {
 
         controller = new FourCharmController();
@@ -41,6 +56,11 @@ public class FourCharmGUI extends Application implements FourCharmView {
 
     // ----------------------- Commands ---------------------
 
+    /**
+     * Starts the Graphical User Interface.
+     * @param stage TODO stage?
+     * @throws Exception TODO exception?
+     */
     public void start(Stage stage) throws Exception {
 
         fourCharmPresenter = fourCharmFactory.getFourCharmPresenter(controller);
@@ -52,11 +72,12 @@ public class FourCharmGUI extends Application implements FourCharmView {
         stage.show();
     }
 
+    /**
+     * Stops the controller (and the GUI as well).
+     */
     public void stop() {
         controller.shutdown();
     }
-
-
 
     @Override
     public void showGame(Game game) {

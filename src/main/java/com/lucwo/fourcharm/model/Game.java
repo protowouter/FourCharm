@@ -18,7 +18,6 @@ import java.util.logging.Logger;
  * a game of Connect4.
  *
  * @author Luce Sandfort and Wouter Timmermans
- *
  */
 public class Game extends Observable implements Runnable {
     private Board board;

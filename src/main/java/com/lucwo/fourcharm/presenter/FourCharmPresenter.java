@@ -13,6 +13,11 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 
+/**
+ * TODO: Fourcharmpresenter javadoc
+ *
+ * @author Luce Sandfort and Wouter Timmermans
+ */
 public class FourCharmPresenter {
     // ------------------ Instance variables ----------------
 

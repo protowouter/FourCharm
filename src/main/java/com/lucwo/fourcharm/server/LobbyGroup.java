@@ -10,6 +10,15 @@ import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 
 import java.util.Set;
 
+/**
+ * The LobbyGroup class extends the ClientGroup abstract class. It makes a Lobby and
+ * adds Clients to the LobbyGroup. From these Clients, whenever they are ready, 2 are
+ * chosen and they will be added to the GameGroup to start a new game. Before a Client
+ * can enter the LobbyGroup, he will be in the PreLobbyGroup as long as he did not give
+ * the command 'join'.
+ *
+ * @author Luce Sandfort and Wouter Timmermans
+ */
 public class LobbyGroup extends ClientGroup {
 
     // ------------------ Instance variables ----------------
@@ -19,6 +28,10 @@ public class LobbyGroup extends ClientGroup {
 
     // --------------------- Constructors -------------------
 
+    /**
+     * Constructs a new LobbyGroup.
+     * @param theServer The server the LobbyGroup is constructed on.
+     */
     public LobbyGroup(FourCharmServer theServer) {
         readyClient = null;
         server = theServer;
@@ -50,7 +63,6 @@ public class LobbyGroup extends ClientGroup {
      */
     @Override
     public void doMove(ClientHandler client, int col) throws C4Exception {
-
         throw new InvalidCommandError("You are not allowed to use this command now.");
     }
 

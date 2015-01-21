@@ -25,7 +25,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
-
+/**
+ * TODO gamepresenter javadoc
+ */
 public class GamePresenter implements Observer {
 
     // ------------------ Instance variables ----------------
