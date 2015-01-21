@@ -2,7 +2,7 @@
 \lyxformat 474
 \begin_document
 \begin_header
-\textclass article
+\textclass scrartcl
 \use_default_options true
 \maintain_unincluded_children false
 \language english
@@ -25,6 +25,7 @@
 \bibtex_command default
 \index_command default
 \paperfontsize default
+\spacing single
 \use_hyperref false
 \papersize default
 \use_geometry false
@@ -77,9 +78,9 @@ status open
 \begin_layout Plain Layout
 \begin_inset Tabular
 <lyxtabular version="3" rows="8" columns="3">
-<features rotate="0" tabularvalignment="middle">
+<features rotate="0" tabularvalignment="middle" tabularwidth="100col%">
 <column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
+<column alignment="center" valignment="top" width="40col%">
 <column alignment="center" valignment="top">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
@@ -120,7 +121,7 @@ Implemented by class
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -133,7 +134,7 @@ Server is started
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+FourCharmServer
 \end_layout
 
 \end_inset
@@ -149,7 +150,7 @@ Server is started
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -162,7 +163,7 @@ Server listens to entered port number
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+TODO
 \end_layout
 
 \end_inset
@@ -178,7 +179,7 @@ Server listens to entered port number
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -191,7 +192,7 @@ Error message if the port number is in use
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+FourCharmServer
 \end_layout
 
 \end_inset
@@ -207,7 +208,7 @@ Error message if the port number is in use
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -220,7 +221,7 @@ New port number can be entered
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+TODO
 \end_layout
 
 \end_inset
@@ -236,7 +237,7 @@ New port number can be entered
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -250,7 +251,7 @@ ly by different clients
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+GameGroup/FourCharmServer
 \end_layout
 
 \end_inset
@@ -266,7 +267,7 @@ ly by different clients
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -279,7 +280,7 @@ All communication messages are written to System.out
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+FourCharmTUI
 \end_layout
 
 \end_inset
@@ -309,7 +310,7 @@ The server respects the written protocol and is able to communicate with
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+Package nl.woutertimmermans.connect4.protocol
 \end_layout
 
 \end_inset
@@ -468,7 +469,7 @@ Client supports human players and computerplayers (AI)
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+FourCharmController
 \end_layout
 
 \end_inset
@@ -497,7 +498,7 @@ The maximum thinking time of the computerplayer should be a parameter
 \begin_inset Text
 
 \begin_layout Plain Layout
-GameStrategy
+MTDfStrategy
 \end_layout
 
 \end_inset
@@ -526,7 +527,7 @@ The client provides a 'hint' functionality.
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+TODO
 \end_layout
 
 \end_inset
@@ -556,7 +557,7 @@ The 'hint' functionality is a possible move and may only be proposed to
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+TODO
 \end_layout
 
 \end_inset
@@ -585,7 +586,7 @@ After a game has finished, the player should be able to start a new game
 \begin_inset Text
 
 \begin_layout Plain Layout
-TUI/GUI
+FourCharmTUI
 \end_layout
 
 \end_inset
@@ -615,7 +616,7 @@ Other players should be informed if a player quits the game before it has
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+FourCharmTUI/TODO
 \end_layout
 
 \end_inset
@@ -645,7 +646,7 @@ After 8, the other player should be allowed to register again with the server
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+FourCharmTUI
 \end_layout
 
 \end_inset
@@ -675,7 +676,7 @@ If a server disconnects, the client should react to this in a decent way
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+ServerHandler
 \end_layout
 
 \end_inset
@@ -705,7 +706,7 @@ The client respects the written protocol and is able to communicate with
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+Package nl.woutertimmermans.connect4.protocol
 \end_layout
 
 \end_inset
@@ -727,13 +728,42 @@ The requirements for the client
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
+\end_layout
+
+\begin_layout Section
+Programming Patterns
+\end_layout
+
+\begin_layout Subsection
+Observer
+\end_layout
+
+\begin_layout Standard
+There is only one class in our application that is an Observable: Game.
+ There are however multiple classes that are Observers.
+\end_layout
+
+\begin_layout Standard
+The observer pattern is used in multiple places in our application.
+ Both the view and the controller are observers of the Game.
+ The view just renders the board on an update, the controller checks wether
+ input from a human is required and enables the move input of the view when
+ it is.
+ GameGroup is also an Observer of Game, after every move when notifyObserver
+ is called, the server notifies all clients in the Game of the current player.
+ When the game has ended the server also informs all clients in the gamegroup
+ of this.
+\end_layout
+
+\begin_layout Subsection
+Model View Controller
+\end_layout
+
+\begin_layout Standard
+We have controllers and models.
 \end_layout
 
 \end_body
