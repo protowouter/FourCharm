@@ -2,7 +2,7 @@
 \lyxformat 474
 \begin_document
 \begin_header
-\textclass scrartcl
+\textclass scrreprt
 \use_default_options true
 \maintain_unincluded_children false
 \language english
@@ -26,7 +26,19 @@
 \index_command default
 \paperfontsize default
 \spacing single
-\use_hyperref false
+\use_hyperref true
+\pdf_title "FourCharm: A client-server Connect4 game"
+\pdf_author "Luce Sandfort, Wouter Timmermans"
+\pdf_subject "Maintenance document for FourCharm"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
 \papersize default
 \use_geometry false
 \use_package amsmath 1
@@ -58,8 +70,8 @@
 \paragraph_indentation default
 \quotes_language english
 \papercolumns 1
-\papersides 1
-\paperpagestyle default
+\papersides 2
+\paperpagestyle plain
 \tracking_changes false
 \output_changes false
 \html_math_output 0
@@ -69,19 +81,358 @@
 
 \begin_body
 
+\begin_layout Title
+FourCharm: A client-server Connect4 Game
+\end_layout
+
+\begin_layout Author
+Luce Sandfort 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+and
+\end_layout
+
+\end_inset
+
+ Wouter Timmermans
+\end_layout
+
+\begin_layout Chapter
+Overall Design
+\end_layout
+
+\begin_layout Standard
+Early on in the design of our system we recognized that the protocol that
+ handle the communication between the client and server could be extracted
+ from the game system.
+ This protocol implemententation is available at Github.com 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "c4-protocol"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Section
+Class Diagrams
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename doc/classDiagramTotalPackage.png
+	height 60pheight%
+	rotateAngle 270
+	rotateOrigin center
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Global-overview-of"
+
+\end_inset
+
+Global overview of FourCharm
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Global overiew
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:Global-overview-of"
+
+\end_inset
+
+ gives an overview of the global design of the system.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Server
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:Server-package"
+
+\end_inset
+
+ is a detailed class diagram of the server component of our system.
+ From an birds eye perspective the server consists of three parts: 
+\end_layout
+
+\begin_layout Enumerate
+FourCharmServer: this is the main server class that listens for incoming
+ connections and creates new ClientHandlers for every incoming connection.
+ This class also keeps track of all running games.
+\end_layout
+
+\begin_layout Enumerate
+ClientGroup: models a collection of clients, this class is specialized in
+ PrelobbyGroup, LobbyGroup and GameGroup.
+\end_layout
+
+\begin_layout Enumerate
+ClientHandler: holds the connection to a client.
+ ClientHandler uses C4 Protocol to parse incoming commands from the server
+ and relays these messages to the ClientGroup this ClientHandler currently
+ resides.
+\end_layout
+
+\begin_layout Standard
+Because there are multiple commands in the protocol that have different
+ depending on the state of the client we decided that a Client always is
+ in a Gamegroup.
+ All the different GameGroup have their own implementation of all the commands.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename doc/classDiagramModel.png
+	width 75col%
+	rotateAngle 270
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Model package
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename doc/classDiagramView.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+View package class diagram
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename doc/classDiagramControllerServerHandler.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Controller and ServerHandler
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename doc/classDiagramPresenter.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Presenter package
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename doc/classDiagramServer.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Server-package"
+
+\end_inset
+
+Server package
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Requirements overview
+\end_layout
+
 \begin_layout Standard
 \begin_inset Float table
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \begin_inset Tabular
 <lyxtabular version="3" rows="8" columns="3">
 <features rotate="0" tabularvalignment="middle" tabularwidth="100col%">
-<column alignment="center" valignment="top">
+<column alignment="center" valignment="top" width="8col%">
 <column alignment="center" valignment="top" width="40col%">
-<column alignment="center" valignment="top">
+<column alignment="center" valignment="top" width="42col%">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
@@ -130,7 +481,7 @@ Server is started
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -159,7 +510,7 @@ Server listens to entered port number
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -188,7 +539,7 @@ Error message if the port number is in use
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -217,7 +568,7 @@ New port number can be entered
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -247,7 +598,7 @@ ly by different clients
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -276,7 +627,7 @@ All communication messages are written to System.out
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -310,7 +661,7 @@ The server respects the written protocol and is able to communicate with
 \begin_inset Text
 
 \begin_layout Plain Layout
-Package nl.woutertimmermans.connect4.protocol
+C4 Protocol
 \end_layout
 
 \end_inset
@@ -345,7 +696,7 @@ The requirements for the server
 \begin_inset Float table
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 
@@ -355,9 +706,9 @@ status open
 \begin_inset Tabular
 <lyxtabular version="3" rows="12" columns="3">
 <features rotate="0" tabularvalignment="middle">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
+<column alignment="center" valignment="top" width="8col%">
+<column alignment="center" valignment="top" width="60col%">
+<column alignment="center" valignment="top" width="32col%">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
@@ -706,7 +1057,7 @@ The client respects the written protocol and is able to communicate with
 \begin_inset Text
 
 \begin_layout Plain Layout
-Package nl.woutertimmermans.connect4.protocol
+C4 Protocol
 \end_layout
 
 \end_inset
@@ -764,6 +1115,17 @@ Model View Controller
 
 \begin_layout Standard
 We have controllers and models.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "doc/fourcharm"
+options "plain"
+
+\end_inset
+
+
 \end_layout
 
 \end_body
