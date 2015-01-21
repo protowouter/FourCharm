@@ -27,9 +27,8 @@ public class ASyncPlayer implements Player {
 
     /**
      * Create an new humanplayer given an way to communicate with the player.
-     * 
-     * @param inputReader
-     *            Reader from which the human input can be parsed
+     * @param namePie The given name of the player.
+     * @param themark The mark of the player.
      */
     public ASyncPlayer(String namePie, Mark themark) {
         super();
@@ -39,10 +38,10 @@ public class ASyncPlayer implements Player {
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see ft.model.Player#determineMove()
+    /**
+     * Determines a move.
+     * @param board The board used to determine the move.
+     * @return The determint move (column).
      */
     public int determineMove(Board board) {
 
@@ -56,6 +55,10 @@ public class ASyncPlayer implements Player {
 
     }
 
+    /**
+     * Puts a move in the queueMove.
+     * @param col The move.
+     */
     public void queueMove(int col) {
         try {
             rij.put(col);
@@ -64,14 +67,26 @@ public class ASyncPlayer implements Player {
         }
     }
 
+    /**
+     * Gives the current mark.
+     * @return The mark.
+     */
     public Mark getMark() {
         return mark;
     }
 
+    /**
+     * Gives the name of the current player.
+     * @return The name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gives back string representation.
+     * @return The string.
+     */
     public String toString() {
         return getMark() + ": " + getClass().getSimpleName() + " " + getName();
     }
