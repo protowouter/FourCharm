@@ -120,7 +120,6 @@ public class Game extends Observable implements Runnable {
 
     /**
      * Returns the winner of the game, if there is a winner.
-     *
      * @return The Player who won the game, null if there is no winner (yet)
      */
     public Player getWinner() {
@@ -133,7 +132,6 @@ public class Game extends Observable implements Runnable {
 
     /**
      * Return wether or not the game has ended.
-     * 
      * @return true if board is full or a player won the game
      */
     public boolean hasFinished() {
@@ -143,12 +141,17 @@ public class Game extends Observable implements Runnable {
     }
     
     /**
+     * Give a copy of the board.
      * @return copy of the board used for the game state
      */
     public Board getBoard() {
         return board.deepCopy();
     }
 
+    /**
+     * Gives the next player.
+     * @return The player who is next.
+     */
     private Player nextPlayer() {
 
         Player next = player1;
@@ -163,10 +166,16 @@ public class Game extends Observable implements Runnable {
 
     }
 
+    /**
+     * Runs the game.
+     */
     public void run() {
         play();
     }
 
+    /**
+     * Closes the game by using shutdown.
+     */
     public void shutdown() {
         running = false;
     }

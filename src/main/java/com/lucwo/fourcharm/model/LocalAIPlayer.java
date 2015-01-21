@@ -37,6 +37,7 @@ public class LocalAIPlayer implements Player {
 
     }
 
+    @Override
     public int determineMove(Board board) {
         return strategy.determineMove(board, mark);
     }
@@ -46,10 +47,12 @@ public class LocalAIPlayer implements Player {
         return strategy.getClass().getSimpleName();
     }
 
+    @Override
     public Mark getMark() {
         return mark;
     }
 
+    @Override
     public String toString() {
         return getMark() + ": " + getClass().getSimpleName() + " " + getName();
     }
