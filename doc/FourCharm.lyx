@@ -117,7 +117,7 @@ Overall Design
 
 \begin_layout Standard
 Early on in the design of our system we recognized that the protocol that
- handle the communication between the client and server could be extracted
+ would handle the communication between the client and server could be extracted
  from the game system.
  This protocol implementation is available at Github.com 
 \begin_inset CommandInset citation
@@ -220,7 +220,8 @@ reference "chap:BinaryBoard"
 \end_inset
 
 .
- The ReferenceBoard class is an more orthodox implementation of the Board.
+ The ReferenceBoard class is an implementation of the Board that is a little
+ bit more orthodox.
  ReferenceBoard is mainly used for performance comparison to the BinaryBoard.
  Both boards conform to the same specification and are 
 \begin_inset Quotes eld
@@ -251,14 +252,14 @@ reference "chap:BinaryBoard"
 er.
  A LocalAIPlayer uses a GameStrategy to determine the best move.
  The ASyncPlayer class is meant for Players which receive input in a Asynchronou
-s way, this could be a player connected via a server or a human player connected
+s way: this could be a player connected via a server or a human player connected
  to the local machine.
- There is also the LocalHumanPlayer class which simply extends ASyncPlayer
- and provides no further functionality, this is chiefly done to simplify
- checking if the current player is a human connected to the local machine.
+ There is also the LocalHumanPlayer class which extends ASyncPlayer and
+ provides no further functionality, this is chiefly done to simplify checking
+ if the current player is a human connected to the local machine.
  No distinction is made between AI an human players connected via a server.
- The GameStrategy collection of classes are also used to provide hint functional
-ity to a locally connected user.
+ The GameStrategy collection of classes is also used to provide hint functionali
+ty to a locally connected user.
  
 \end_layout
 
@@ -272,6 +273,16 @@ Our system has two implementations of the FourCharmView interface.
  but the Views are responsible for displaying changes in the game state.
  This reduces the unnecessary passing around of the board between the controller
  and the view.
+ The two implementations of the FourCharmView interface are the FourCharmGUI
+ (a graphical user interface) and the FourCharmTUI (a textual user interface).
+\end_layout
+
+\begin_layout Paragraph
+Controller
+\end_layout
+
+\begin_layout Paragraph
+Presenter
 \end_layout
 
 \begin_layout Paragraph
@@ -286,7 +297,7 @@ reference "fig:Server-package"
 \end_inset
 
  is a detailed class diagram of the server component of our system.
- From an birds eye perspective the server consists of three parts: 
+ From a birds eye perspective, the server consists of three parts: 
 \end_layout
 
 \begin_layout Enumerate
@@ -296,8 +307,8 @@ FourCharmServer: this is the main server class that listens for incoming
 \end_layout
 
 \begin_layout Enumerate
-ClientGroup: models a collection of clients, this class is specialized in
- PrelobbyGroup, LobbyGroup and GameGroup.
+ClientGroup: models a collection of clients, this class is extended by PrelobbyG
+roup, LobbyGroup and GameGroup.
 \end_layout
 
 \begin_layout Enumerate
@@ -309,10 +320,24 @@ ClientHandler: holds the connection to a client.
 
 \begin_layout Standard
 Because there are multiple commands in the protocol that have different
- depending on the state of the client we decided that a Client always is
- in a GameGroup.
- All the different GameGroup have their own implementation of all the commands.
- In this way the protocol behavior is modeled on the server side.
+ meanings, depending on the state of the client, we decided that a Client
+ is always in a ClientGroup.
+ All of the different ClientGroups have their own implementation of the
+ commands.
+ This way the protocol behavior is modeled on the server side.
+\end_layout
+
+\begin_layout Standard
+Whenever a Client is connected to the server, he will start in the PreLobbyGroup.
+ If the Client gives the command 'join' and he is accepted by the server,
+ he will be deleted from the PreLobbyGroup.
+ Then, the Client will be added to the LobbyGroup.
+ In here, whenever two Clients give the command 'ready' a game will be started
+ with these two Clients.
+ This will be done by putting them into the GameGroup.
+ When the game is finished, the Clients are send back to the LobbyGroup
+ where they will stay until they either start a new game or exit the game
+ of Connect Four.
 \end_layout
 
 \begin_layout Standard
@@ -1225,7 +1250,7 @@ Model View Controller
 \end_layout
 
 \begin_layout Standard
-We have controllers and models.
+We have a model, multiple views and a controller.
 \end_layout
 
 \begin_layout Chapter
