@@ -1,4 +1,4 @@
-Feature: Client disconnects
+Feature: Server handles client disconnects correctly
   Scenario: Client disconnects while in a game
     Given the client is in a game with another player
     When I disconnect from the server

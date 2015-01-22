@@ -112,7 +112,7 @@ public class ServerSteps {
     }
 
     @Then("^the server will send an InvalidParameterError with (.+)$")
-    public void the_server_will_send_an_InvalidUserName_error_to_Wouter(String arg) throws Throwable {
+    public void the_server_will_send_an_InvalidParameter_error_with(String arg) throws Throwable {
         String error = inWouter.readLine();
         assertEquals("Server should send invalid parameter error",
                 "error 8 Argument " + arg + " is not valid", error);
@@ -140,8 +140,9 @@ public class ServerSteps {
         joinWouter("Wouter");
         inWouter.readLine(); // nomnom accept
         readyLuce();
+        Thread.sleep(100); // added wait to improve reliability of test. Otherwise sometimes Wouter joins first.
         readyWouter();
-        inWouter.readLine(); // nomnom start_game
+        System.out.println(inWouter.readLine()); // nomnom start_game
         inLuce.readLine(); // nomnom start_game
         inWouter.readLine(); // nomnom request_move
         inLuce.readLine(); // nomnom request_move

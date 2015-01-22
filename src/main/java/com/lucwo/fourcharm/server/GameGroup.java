@@ -189,7 +189,7 @@ public class GameGroup extends ClientGroup implements Observer {
                 String currentName = ((Game) o).getCurrent().getName();
                 ClientHandler client = null;
                 for (ClientHandler c : playerMap.keySet()) {
-                    if (c.getName().equals(currentName)) {
+                    if (currentName.equals(c.getName())) {
                         client = c;
                     }
                 }
