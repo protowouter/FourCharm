@@ -12,5 +12,5 @@ Feature: Client can make a move
 
   Scenario: Client is not in a game
     Given a client that is in a server, but not yet in a game
-    When I send the 'do move 4' command
+    When I send a 'do move 4' command
     Then the server will send an InvalidCommandError

@@ -94,6 +94,8 @@ public class GameGroup extends ClientGroup implements Observer {
     @Override
     public void doMove(ClientHandler client, int col) throws C4Exception {
 
+        // TODO check if move is valid
+
         if (game.getCurrent().getName().equals(client.getName())) {
 
             try {
@@ -192,11 +194,14 @@ public class GameGroup extends ClientGroup implements Observer {
                     }
                 }
                 if (client != null) {
-                    try {
-                        client.getClient().requestMove(currentName);
-                    } catch (C4Exception e) {
-                        Logger.getGlobal().throwing(getClass().toString(), "update", e);
+                    for (ClientHandler c : getClients()) {
+                        try {
+                            c.getClient().requestMove(currentName);
+                        } catch (C4Exception e) {
+                            Logger.getGlobal().throwing(getClass().toString(), "update", e);
+                        }
                     }
+
                 }
             } else {
                 endGame();

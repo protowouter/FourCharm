@@ -5,7 +5,6 @@
 package com.lucwo.fourcharm.cucumber;
 
 import com.lucwo.fourcharm.server.FourCharmServer;
-import cucumber.api.PendingException;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -20,6 +19,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class ServerSteps {
 
@@ -95,6 +95,7 @@ public class ServerSteps {
     @Given("^a server with one connected client$")
     public void a_server_with_one_connected_client() throws Throwable {
         joinWouter("Wouter");
+        inWouter.readLine();
     }
 
     @When("^I join the server with the same name$")
@@ -105,7 +106,6 @@ public class ServerSteps {
 
     @Then("^the server will send an InvalidUserName error$")
     public void the_server_will_send_an_InvalidUserName_error() throws Throwable {
-        //String accept = inLuce.readLine();
         String error = inLuce.readLine();
         assertEquals("Server should send invalid username error",
                 "error 4 The username Wouter is already in use", error);
@@ -120,50 +120,97 @@ public class ServerSteps {
 
     @Given("^a game with two players and it's the clients turn$")
     public void a_game_with_two_players_and_it_s_the_clients_turn() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
-    }
+        joinLuce();
+        inLuce.readLine(); // nomnom accept
+        joinWouter("Wouter");
+        inWouter.readLine(); // nomnom accept
+        readyWouter();
+        readyLuce();
+        inWouter.readLine(); // nomnom start_game
+        inLuce.readLine(); // nomnom start_game
+        inWouter.readLine(); // nomnom request_move
+        inLuce.readLine(); // nomnom request_move
 
-    @When("^I send a 'do move' command$")
-    public void I_send_a_do_move_command() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
-    }
-
-    @Then("^the I send the move to the server$")
-    public void the_I_send_the_move_to_the_server() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
-    }
-
-    @Then("^the server sends the move to the other player$")
-    public void the_server_sends_the_move_to_the_other_player() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
     }
 
     @Given("^a game with two players and it's not the clients turn$")
     public void a_game_with_two_players_and_it_s_not_the_clients_turn() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+        joinLuce();
+        inLuce.readLine(); // nomnom accept
+        joinWouter("Wouter");
+        inWouter.readLine(); // nomnom accept
+        readyLuce();
+        readyWouter();
+        inWouter.readLine(); // nomnom start_game
+        inLuce.readLine(); // nomnom start_game
+        inWouter.readLine(); // nomnom request_move
+        inLuce.readLine(); // nomnom request_move
     }
 
     @Then("^the server will send an InvalidCommandError$")
     public void the_server_will_send_an_InvalidCommandError() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+        assertEquals("the server should send an InvalidCommandError", "error 7 You are not allowed to use this command now.", inWouter.readLine());
     }
 
     @Given("^a client that is in a server, but not yet in a game$")
     public void a_client_that_is_in_a_server_but_not_yet_in_a_game() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+        joinWouter("Wouter");
+        inWouter.readLine(); // nomnom accept
     }
 
-    @When("^I send the 'do move' command$")
-    public void I_send_the_do_move_command() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+    @Given("^the client is in a game with another player$")
+    public void the_client_is_in_a_game_with_another_player() throws Throwable {
+        joinLuce();
+        inLuce.readLine(); // nomnom accept
+        joinWouter("Wouter");
+        inWouter.readLine(); // nomnom accept
+        readyWouter();
+        readyLuce();
+        inWouter.readLine(); // nomnom start_game
+        inLuce.readLine(); // nomnom start_game
+        inWouter.readLine(); // nomnom request_move
+        inLuce.readLine(); // nomnom request_move
+    }
+
+    @When("^I disconnect from the server$")
+    public void I_disconnect_from_the_game() throws Throwable {
+        wouterSocket.close();
+    }
+
+    @Then("^the server sends a PlayerDisconnectError to the other player$")
+    public void the_server_sends_a_PlayerDisconnectError_to_the_other_player() throws Throwable {
+        assertEquals("the server should send a PlayerDisconnectError to the other player",
+                "error 3 Player Wouter disconnected", inLuce.readLine());
+    }
+
+    @Then("^the server sends an end_game command$")
+    public void the_server_sends_an_end_game_command() throws Throwable {
+        assertEquals("the server should send a end game command to Luce", "game_end", inLuce.readLine());
+    }
+
+    @When("^I send a 'do move (\\d+)' command$")
+    public void I_send_a_do_move_command(int arg1) throws Throwable {
+        outWouter.write("do_move " + arg1 + "\n");
+        outWouter.flush();
+    }
+
+    @Then("^the server sends the move (\\d+) to both the players$")
+    public void the_server_sends_the_move_to_both_the_players(int arg1) throws Throwable {
+        String luceMove = inLuce.readLine();
+        String wouterMove = inWouter.readLine();
+        assertEquals("The server should send the move to Luce", "done_move Wouter " + arg1, luceMove);
+        assertEquals("The server should send the move to Wouter", "done_move Wouter " + arg1, wouterMove);
+    }
+
+    @Then("^the server sends a requestmove to the other player$")
+    public void the_server_sends_a_requestmove_to_the_other_player() throws Throwable {
+        assertEquals("The server should send request move to Luce", "request_move Luce", inLuce.readLine());
+    }
+
+    @Then("^the server will send an InvalidMoveError$")
+    public void the_server_will_send_an_InvalidMoveError() throws Throwable {
+        assertEquals("The server should send invalid move error to wouter",
+                "error 2 You are not allowed to make a move right now", inWouter.readLine());
     }
 
     @Given("^a server with one other ready player$")
@@ -190,14 +237,12 @@ public class ServerSteps {
 
     @Given("^a server with no other ready players$")
     public void a_server_with_no_other_ready_players() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+
     }
 
     @Then("^the server waits with putting me in a game until another player is ready as well$")
     public void the_server_waits_with_putting_me_in_a_game_until_another_player_is_ready_as_well() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+        assertFalse(inLuce.ready());
     }
 
 }
