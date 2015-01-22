@@ -1,7 +1,7 @@
 Feature: Client can join a server
   Scenario: Name not yet exists in server
     Given a empty server
-    When I join the server
+    When I join the server with name Wouter
     Then the server will accept me
 
   Scenario: Name exists in server
@@ -11,8 +11,8 @@ Feature: Client can join a server
 
   Scenario: Name is not valid according to protocol
     Given a empty server
-    When I join the server
-    Then the server will send an InvalidUserName error
+    When I join the server with name Wouter@
+    Then the server will send an InvalidParameterError with Wouter@
 
 
 

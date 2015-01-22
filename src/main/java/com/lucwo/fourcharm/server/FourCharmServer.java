@@ -49,6 +49,10 @@ public class FourCharmServer {
 
     }
 
+    public int getSocketPort() {
+        return serverSocket.getLocalPort();
+    }
+
     /**
      * Checks if there is already a client with the same name.
      * @param name the name that will be checked
@@ -69,7 +73,10 @@ public class FourCharmServer {
     public void openSocket() {
         try {
             serverSocket = new ServerSocket(poort);
+            serverSocket.setSoTimeout(1000);
+            Logger.getGlobal().info("Listening for connections on port " + poort);
         } catch (IOException e) {
+            Logger.getGlobal().warning("Cannot listen on port " + poort);
             Logger.getGlobal().throwing("FourCharmServer", "main", e);
         }
     }
