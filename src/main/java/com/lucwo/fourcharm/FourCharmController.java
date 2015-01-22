@@ -76,6 +76,15 @@ public class FourCharmController implements Observer {
     }
 
     /**
+     * Returns the current {@link com.lucwo.fourcharm.view.FourCharmView} used by this controller
+     *
+     * @return the current view
+     */
+    public FourCharmView getView() {
+        return view;
+    }
+
+    /**
      * Sets the view (textual or graphical).
      *
      * @param v The given view.
