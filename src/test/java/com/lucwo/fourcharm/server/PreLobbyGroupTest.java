@@ -19,11 +19,9 @@ import static org.junit.Assert.assertEquals;
 public class PreLobbyGroupTest {
 
     ClientGroup preLobbyGroup;
-    @Mocked
-    FourCharmServer theServer;
+    @Mocked FourCharmServer theServer;
     ClientHandler clientje1;
-    @Mocked
-    CoreClient.Client c1Client;
+    @Mocked CoreClient.Client c1Client;
     ClientHandler clientje2;
     ClientGroup lobbyGroup;
     Socket sock;

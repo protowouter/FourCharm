@@ -26,6 +26,7 @@ public class FourCharmServer {
     private ClientGroup preLobby;
     private Collection<GameGroup> games;
     private boolean running;
+    private ServerSocket serverSocket;
     private int poort;
 
     /**
@@ -43,6 +44,7 @@ public class FourCharmServer {
     public static void main(String[] args) {
 
         FourCharmServer server = new FourCharmServer(8080);
+        server.openSocket();
         server.startServer();
 
     }
@@ -64,6 +66,14 @@ public class FourCharmServer {
         return nameExistsinGame || lobby.clientNameExists(name);
     }
 
+    public void openSocket() {
+        try {
+            serverSocket = new ServerSocket(poort);
+        } catch (IOException e) {
+            Logger.getGlobal().throwing("FourCharmServer", "main", e);
+        }
+    }
+
     /**
      * Starts the server.
      */
@@ -72,18 +82,15 @@ public class FourCharmServer {
         Logger.getGlobal().info("Starting Fourcharm server");
 
 
-        try {
-            ServerSocket ss = new ServerSocket(poort);
-            while (running) {
-                Socket sock = ss.accept();
+        while (running) {
+            try {
+                Socket sock = serverSocket.accept();
                 ClientHandler client = new ClientHandler(sock);
                 preLobby.addHandler(client);
                 new Thread(client).start();
-
-
+            } catch (IOException e) {
+                Logger.getGlobal().throwing("FourCharmServer", "main", e);
             }
-        } catch (IOException e) {
-            Logger.getGlobal().throwing("FourCharmServer", "main", e);
         }
 
         Logger.getGlobal().info("Shutting down Fourcharm server");
