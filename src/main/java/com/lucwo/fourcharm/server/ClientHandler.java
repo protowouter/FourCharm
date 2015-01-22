@@ -32,6 +32,7 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
     private String name;
     private Socket socket;
     private CoreClient.Client client;
+    private BufferedReader in;
 
 // --------------------- Constructors -------------------
 
@@ -143,6 +144,7 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
      */
     @Override
     public void run() {
+        init();
         handleClient();
     }
 
@@ -151,18 +153,8 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
      */
     public void handleClient() {
 
-        final String m_name = "handleClient";
+        final String mName = "handleClient";
 
-        BufferedWriter out = null;
-        BufferedReader in = null;
-        try {
-            out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (IOException e) {
-            Logger.getGlobal().throwing("FourCharmServer", m_name, e);
-        }
-
-        client = new CoreClient.Client(out);
         CoreServer.Processor processor = new CoreServer.Processor<>(this);
 
         try {
@@ -182,7 +174,7 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
                     try {
                         client.error(e.getErrorCode(), e.getMessage());
                     } catch (C4Exception e1) {
-                        Logger.getGlobal().throwing(getClass().toString(), "handleClient", e);
+                        Logger.getGlobal().throwing(getClass().toString(), mName, e);
                     }
 
                 }
@@ -190,16 +182,29 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
             }
 
         } catch (IOException e) {
-            Logger.getGlobal().throwing("FourCharmServer", m_name, e);
+            Logger.getGlobal().throwing("FourCharmServer", mName, e);
         } finally {
             try {
                 socket.close();
                 group.removeHandler(this);
             } catch (IOException e) {
-                Logger.getGlobal().throwing("FourCharmServer", m_name, e);
+                Logger.getGlobal().throwing("FourCharmServer", mName, e);
             }
         }
 
 
+    }
+
+    public void init() {
+        BufferedWriter out = null;
+        in = null;
+        try {
+            out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        } catch (IOException e) {
+            Logger.getGlobal().throwing("FourCharmServer", "init", e);
+        }
+
+        client = new CoreClient.Client(out);
     }
 }

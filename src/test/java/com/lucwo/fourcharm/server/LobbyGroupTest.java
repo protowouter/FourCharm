@@ -4,6 +4,8 @@
 
 package com.lucwo.fourcharm.server;
 
+import mockit.Expectations;
+import mockit.Mocked;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,8 +15,11 @@ import java.net.Socket;
 public class LobbyGroupTest {
 
     ClientGroup lobbyGroup;
+    @Mocked
     FourCharmServer theServer;
+    @Mocked
     ClientHandler clientje1;
+    @Mocked
     ClientHandler clientje2;
     Socket sock;
 
@@ -36,6 +41,23 @@ public class LobbyGroupTest {
     @Test(expected = InvalidCommandError.class)
     public void testDoMove() throws Exception {
         lobbyGroup.doMove(clientje1, 4);
+    }
+
+    @Test
+    public void testReady() throws Exception {
+        new Expectations() {
+            GameGroup game;
+
+            {
+                clientje1.getName();
+                result = "hoi";
+                clientje2.getName();
+                result = "hallo";
+                new GameGroup(theServer, clientje1, clientje2);// expect constructor
+                //theServer.addGame(game);
+            }
+        };
+        lobbyGroup.ready(clientje1);
     }
 
     @Test(expected = InvalidCommandError.class)

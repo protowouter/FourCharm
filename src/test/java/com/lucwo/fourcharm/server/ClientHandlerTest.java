@@ -4,14 +4,16 @@
 
 package com.lucwo.fourcharm.server;
 
-import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
+import nl.woutertimmermans.connect4.protocol.fgroup.CoreClient;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.net.Socket;
 import java.security.cert.Extension;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class ClientHandlerTest {
 
@@ -20,7 +22,7 @@ public class ClientHandlerTest {
     ClientHandler clientH3;
     ClientGroup clientLobbyGroup;
     ClientGroup clientPreLobbyGroup;
-    // ClientGroup clientGameGroup;
+    ClientGroup clientGameGroup;
     FourCharmServer theServer;
     Set<Extension> exts;
 
@@ -28,14 +30,14 @@ public class ClientHandlerTest {
 
     @Before
     public void setUp() throws Exception {
-        clientH = new ClientHandler(null);
+        clientH = new ClientHandler(new Socket());
+        clientH.init();
         clientH2 = new ClientHandler(null);
         clientH3 = new ClientHandler(null);
         clientH.setName("Wouter");
         clientPreLobbyGroup = new PreLobbyGroup(clientLobbyGroup, theServer);
         clientLobbyGroup = new LobbyGroup(theServer);
         clientH2.setClientGroup(clientLobbyGroup);
-        // clientGameGroup = new GameGroup(theServer, clientH, clientH3);
     }
 
     @Test
@@ -52,8 +54,8 @@ public class ClientHandlerTest {
     @Test
     public void testGetClient() throws Exception {
 
-        //TODO: getClient vergelijken met een client
-        //  assertEquals("Test to see if getClient() works", , clientH3.getClient());
+        CoreClient.Client bogus = null;
+        assertNotEquals("getClient() should return non-null result", bogus, clientH.getClient());
 
     }
 
@@ -68,48 +70,5 @@ public class ClientHandlerTest {
         assertEquals("Test to see if setting a ClientGroup to pre lobby group works", clientPreLobbyGroup, clientH2.getClientGroup());
         clientH2.setClientGroup(clientLobbyGroup);
         assertEquals("Test to see if setting a ClientGroup to lobby group works", clientLobbyGroup, clientH2.getClientGroup());
-
-        //TODO: setclientgroup to gamegroup
-       /* clientH2.setClientGroup(clientGameGroup);
-        clientH3.setClientGroup(clientGameGroup);
-        assertEquals("Test to see ifs setting a clientGroup to game group works", clientGameGroup, clientH2.getClientGroup());*/
-    }
-
-  /*  @Test
-    public void testJoin() throws Exception {
-       // clientPreLobbyGroup.join(clientH3, clientH3.getName(), 23, exts);
-
-
-    }
-
-    @Test
-    public void testReady() throws Exception {
-
-        clientLobbyGroup.ready(clientH3);
-    }
-
-    @Test
-    public void testDoMove() throws Exception {
-
-        //Game group?
-    }*/
-
-    @Test(expected = InvalidCommandError.class)
-    public void testError() throws Exception {
-        clientPreLobbyGroup.doMove(clientH3, 5);
-
-    }
-
-    @Test
-    public void run() throws Exception {
-
-        //TODO: run() test schrijven
-        handleClient();
-    }
-
-    @Test
-    public void handleClient() throws Exception {
-
-        //TODO: handleClient() test schrijven
     }
 }
