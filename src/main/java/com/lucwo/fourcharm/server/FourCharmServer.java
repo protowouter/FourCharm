@@ -73,7 +73,7 @@ public class FourCharmServer {
     public void openSocket() {
         try {
             serverSocket = new ServerSocket(poort);
-            serverSocket.setSoTimeout(1000);
+            serverSocket.setSoTimeout(100);
             Logger.getGlobal().info("Listening for connections on port " + getSocketPort());
         } catch (IOException e) {
             Logger.getGlobal().warning("Cannot listen on port " + poort);

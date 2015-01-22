@@ -18,6 +18,8 @@ import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import static com.lucwo.fourcharm.cucumber.RegexMatcher.matches;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -95,7 +97,7 @@ public class ServerSteps {
     @Given("^a server with one connected client$")
     public void a_server_with_one_connected_client() throws Throwable {
         joinWouter("Wouter");
-        inWouter.readLine();
+        String accept = inWouter.readLine();
     }
 
     @When("^I join the server with the same name$")
@@ -125,6 +127,7 @@ public class ServerSteps {
         joinWouter("Wouter");
         inWouter.readLine(); // nomnom accept
         readyWouter();
+        Thread.sleep(100); // added wait to improve reliability of test. Otherwise sometimes Wouter joins first.
         readyLuce();
         inWouter.readLine(); // nomnom start_game
         inLuce.readLine(); // nomnom start_game
@@ -142,7 +145,7 @@ public class ServerSteps {
         readyLuce();
         Thread.sleep(100); // added wait to improve reliability of test. Otherwise sometimes Wouter joins first.
         readyWouter();
-        System.out.println(inWouter.readLine()); // nomnom start_game
+        inWouter.readLine(); // nomnom start_game
         inLuce.readLine(); // nomnom start_game
         inWouter.readLine(); // nomnom request_move
         inLuce.readLine(); // nomnom request_move
@@ -150,7 +153,7 @@ public class ServerSteps {
 
     @Then("^the server will send an InvalidCommandError$")
     public void the_server_will_send_an_InvalidCommandError() throws Throwable {
-        assertEquals("the server should send an InvalidCommandError", "error 7 You are not allowed to use this command now.", inWouter.readLine());
+        assertThat(inWouter.readLine(), matches("error 7.*"));
     }
 
     @Given("^a client that is in a server, but not yet in a game$")
@@ -216,24 +219,28 @@ public class ServerSteps {
 
     @Given("^a server with one other ready player$")
     public void a_server_with_one_other_ready_player() throws Throwable {
-        joinWouter("Wouter");
-        String accept = inWouter.readLine();
-        readyWouter();
+        joinLuce();
+        String accept = inLuce.readLine();
+        readyLuce();
     }
 
     @When("^I send the ready command$")
     public void I_send_the_ready_command() throws Throwable {
-        joinLuce();
-        String accept = inLuce.readLine();
-        readyLuce();
+        readyWouter();
+    }
+
+    @When("^I send the command bogus$")
+    public void I_send_the_command_bogus() throws Throwable {
+        outWouter.write("bogus\n");
+        outWouter.flush();
     }
 
     @Then("^the server starts a game with the other ready player and me$")
     public void the_server_starts_a_game_with_the_other_ready_player_and_me() throws Throwable {
         String startLuce = inLuce.readLine();
         String startWouter = inWouter.readLine();
-        assertEquals("Server should send start game to Luce", "start_game Wouter Luce", startLuce);
-        assertEquals("Server should send start game to Wouter", "start_game Wouter Luce", startWouter);
+        assertEquals("Server should send start game to Luce", "start_game Luce Wouter", startLuce);
+        assertEquals("Server should send start game to Wouter", "start_game Luce Wouter", startWouter);
     }
 
     @Given("^a server with no other ready players$")
