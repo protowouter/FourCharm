@@ -4,9 +4,20 @@
 
 package com.lucwo.fourcharm;
 
+import com.lucwo.fourcharm.client.ServerHandler;
 import com.lucwo.fourcharm.model.Game;
+import com.lucwo.fourcharm.model.LocalAIPlayer;
+import com.lucwo.fourcharm.model.LocalHumanPlayer;
+import com.lucwo.fourcharm.model.Mark;
+import com.lucwo.fourcharm.model.ai.GameStrategy;
+import com.lucwo.fourcharm.model.ai.RandomStrategy;
+import com.lucwo.fourcharm.model.board.BinaryBoard;
+import com.lucwo.fourcharm.view.FourCharmGUI;
+import com.lucwo.fourcharm.view.FourCharmTUI;
 import com.lucwo.fourcharm.view.FourCharmView;
+import javafx.application.Application;
 import mockit.Expectations;
+import mockit.Injectable;
 import mockit.Mocked;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,14 +51,50 @@ public class FourCharmControllerTest {
     }
 
     @Test
-    public void testStartNetworkGame() throws Exception {
+    public void testStartNetworkGame(@Mocked ServerHandler client) throws Exception {
+
+        final GameStrategy p1Strat = new RandomStrategy();
+
+        new Expectations() {
+            {
+                new ServerHandler("mallePietje", "localhost", "1335", controller); result = client;
+                client.setStrategy(p1Strat);
+            }
+        };
+
+        controller.startNetworkGame("localhost", "1335", "mallePietje", p1Strat);
 
 
     }
 
     @Test
-    public void testStartLocalGame() throws Exception {
+    public void testStartLocalGameHumanPlayers(@Mocked final LocalHumanPlayer p1, @Mocked final LocalHumanPlayer p2) throws Exception {
 
+        new Expectations() {
+            {
+                new LocalHumanPlayer("Frits", Mark.P1); result = p1;
+                new LocalHumanPlayer("Wester", Mark.P2); result = p2;
+                new Game(BinaryBoard.class, p1, p2);
+            }
+        };
+
+        controller.startLocalGame("Frits", "Wester", null, null);
+    }
+
+    @Test
+    public void testStartLocalGameAIPlayers(@Mocked final LocalAIPlayer p1, @Mocked final LocalAIPlayer p2) throws Exception {
+        final GameStrategy p1Strat = new RandomStrategy();
+        final GameStrategy p2Strat = new RandomStrategy();
+
+        new Expectations() {
+            {
+                new LocalAIPlayer(p1Strat, Mark.P1); result = p1;
+                new LocalAIPlayer(p2Strat, Mark.P2); result = p2;
+                new Game(BinaryBoard.class, p1, p2);
+            }
+        };
+
+        controller.startLocalGame(null, null, p1Strat, p2Strat);
     }
 
     @Test

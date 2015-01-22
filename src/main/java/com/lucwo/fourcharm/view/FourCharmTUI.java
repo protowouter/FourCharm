@@ -171,13 +171,13 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
         GameStrategy p1Strat = parseStrategy(args[0]);
         GameStrategy p2Strat = parseStrategy(args[1]);
         if (p1Strat == null && p2Strat == null) {
-            controller.startLocalGame(new String[]{args[0], args[1]}, null);
+            controller.startLocalGame(args[0], args[1], null, null);
         } else if (p1Strat == null) {
-            controller.startLocalGame(new String[]{args[0]}, new GameStrategy[]{p2Strat});
+            controller.startLocalGame(args[0], null, null, p2Strat);
         } else if (p2Strat == null) {
-            controller.startLocalGame(new String[]{args[1]}, new GameStrategy[]{p1Strat});
+            controller.startLocalGame(null, args[1], p1Strat, null);
         } else {
-            controller.startLocalGame(new String[0], new GameStrategy[]{p1Strat, p2Strat});
+            controller.startLocalGame(null, null, p1Strat, p2Strat);
         }
     }
 

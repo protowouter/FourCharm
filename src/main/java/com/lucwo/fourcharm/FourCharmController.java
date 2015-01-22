@@ -109,29 +109,32 @@ public class FourCharmController implements Observer {
 
     }
 
+
     /**
-     * Starts a local game, without making use of a server.
-     *
-     * @param localPlayerNames The names of the human player(s).
-     * @param aIStrategies     The names of the AI player(s).
+     * Starts a local game, without making use of a server. This method requires that exactly two parameters are
+     * null and two not null.
+     * @param humanName1 name of a human player1, or null if player 1 is an AI
+     * @param humanName2 name of a human player2, or null if player 2 is an AI
+     * @param stratp1 strategy used by AI player1, or null if player 1 is a human
+     * @param stratp2 strategy used by AI player2, or null if player 2 is a human
      */
-    /*@ requires localPlayerNames.length + aiStrategies.length == 2
+    /*@ requires stratp1 == null && stratp2 == null || humanName1 == null && humanName2 == null
+        || humanName1 == null && stratp2 == null || humanName2 == null && stratp1 == null
      */
-    public void startLocalGame(String[] localPlayerNames, GameStrategy[] aIStrategies) {
+    public void startLocalGame(String humanName1, String humanName2, GameStrategy stratp1, GameStrategy stratp2) {
         Player player1;
         Player player2;
-        if (localPlayerNames.length == MAX_PLAYERS) {
-            player1 = new LocalHumanPlayer(localPlayerNames[0], Mark.P1);
-            player2 = new LocalHumanPlayer(localPlayerNames[1], Mark.P2);
-        } else if (aIStrategies.length == MAX_PLAYERS) {
-            player1 = new LocalAIPlayer(aIStrategies[0], Mark.P1);
-            player2 = new LocalAIPlayer(aIStrategies[1], Mark.P2);
+        if (humanName1 != null) {
+            player1 = new LocalHumanPlayer(humanName1, Mark.P1);
         } else {
-            player1 = new LocalHumanPlayer(localPlayerNames[0], Mark.P1);
-            player2 = new LocalAIPlayer(aIStrategies[0], Mark.P2);
+            player1 = new LocalAIPlayer(stratp1, Mark.P1);
         }
-        Game gamepje = new Game(BinaryBoard.class, player1, player2);
-        setGame(gamepje);
+        if (humanName2 != null) {
+            player2 = new LocalHumanPlayer(humanName2, Mark.P2);
+        } else {
+            player2 = new LocalAIPlayer(stratp2, Mark.P2);
+        }
+        setGame(new Game(BinaryBoard.class, player1, player2));
     }
 
     /**

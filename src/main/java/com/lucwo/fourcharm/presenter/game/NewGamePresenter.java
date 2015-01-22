@@ -244,27 +244,23 @@ public class NewGamePresenter {
 
         String p1Type = p1Select.getSelectionModel().getSelectedItem();
         String p2Type = p2Select.getSelectionModel().getSelectedItem();
-        String[] pNames;
-        GameStrategy[] pStrategies;
+        String player1Name = null;
+        String player2Name = null;
+        GameStrategy p1Strat = null;
+        GameStrategy p2Strat = null;
 
-        if ("Human".equals(p1Type) && "Human".equals(p2Type)) {
-            pNames = new String[]{p1Name.textProperty().get(), p2Name.textProperty().get()};
-            pStrategies = new GameStrategy[0];
-        } else if ("Computer".equals(p1Type) && "Computer".equals(p2Type)) {
-            pNames = new String[0];
-            pStrategies = new GameStrategy[]{p1Strategy.getSelectionModel().getSelectedItem(),
-                    p2Strategy.getSelectionModel().getSelectedItem()};
+        if ("Human".equals(p1Type)) {
+            player1Name = p1Name.textProperty().get();
         } else {
-            if ("Human".equals(p1Type)) {
-                pNames = new String[]{p1Name.textProperty().get()};
-                pStrategies = new GameStrategy[]{p2Strategy.getSelectionModel().getSelectedItem()};
-            } else {
-                pNames = new String[]{p2Name.textProperty().get()};
-                pStrategies = new GameStrategy[]{p1Strategy.getSelectionModel().getSelectedItem()};
-            }
+            p1Strat = p1Strategy.getSelectionModel().getSelectedItem();
+        }
+        if ("Human".equals(p2Type)) {
+            player2Name = p2Name.textProperty().get();
+        } else {
+            p2Strat = p2Strategy.getSelectionModel().getSelectedItem();
         }
 
-        fourCharmPresenter.getFourCharmController().startLocalGame(pNames, pStrategies);
+        fourCharmPresenter.getFourCharmController().startLocalGame(player1Name, player2Name, p1Strat, p2Strat);
 
     }
 
