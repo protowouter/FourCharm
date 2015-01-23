@@ -10,6 +10,7 @@ import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import nl.woutertimmermans.connect4.protocol.exceptions.InvalidMoveError;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreServer;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
@@ -226,16 +227,17 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
      * @param col The move which has been received from the server.
      */
     @Override
-    public void doneMove(String playerName, int col) {
-
+    public void doneMove(String playerName, int col) throws C4Exception {
         ASyncPlayer player = playerMap.get(playerName);
-        if (player != null) {
-            player.queueMove(col);
+        if (game.getCurrent() == player) {
+            if (game.getBoard().columnHasFreeSpace(col)) {
+                player.queueMove(col);
+            } else {
+                throw new InvalidMoveError("The board has no free space a column " + col);
+            }
         } else {
-            Logger.getGlobal().warning("Player " + playerName + " is unknown");
+            throw new InvalidMoveError("It is not the turn of player " + playerName);
         }
-
-
     }
 
     /**
