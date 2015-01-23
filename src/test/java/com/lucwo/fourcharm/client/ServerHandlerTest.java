@@ -93,6 +93,8 @@ public class ServerHandlerTest {
 
         new Expectations() {{
             anyPlayer.queueMove(3);
+            anyPlayer.getName();
+            returns("start", "game");
         }};
         handler.startGame("start", "game");
         handler.doneMove("start", 3);

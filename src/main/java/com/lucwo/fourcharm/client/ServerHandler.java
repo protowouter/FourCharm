@@ -10,6 +10,7 @@ import com.lucwo.fourcharm.model.*;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidMoveError;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreServer;
@@ -58,9 +59,11 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
      * @param hostString The host of the serverHandler (the IP address).
      * @param portString The port the serverHandler will use.
      * @param contr The FourCharmController of the serverHandler.
-     * @throws ServerConnectionException If the ServerHandler cannot make a connection to the server.
+     * @throws ServerConnectionException If the ServerHandler cannot
+     * make a connection to the server.
      */
-    public ServerHandler(String namepie, String hostString, String portString, FourCharmController contr) throws ServerConnectionException {
+    public ServerHandler(String namepie, String hostString, String portString,
+                         FourCharmController contr) throws ServerConnectionException {
         running = true;
         controller = contr;
         name = namepie;
@@ -70,8 +73,10 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
             InetAddress host = InetAddress.getByName(hostString);
             int port = Integer.parseInt(portString);
             Socket sock = new Socket(host, port);
-            in = new BufferedReader(new InputStreamReader(sock.getInputStream(), Charset.forName("UTF-8")));
-            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream(), Charset.forName("UTF-8")));
+            in = new BufferedReader(new InputStreamReader(sock.getInputStream(),
+                    Charset.forName("UTF-8")));
+            BufferedWriter out = new BufferedWriter(
+                    new OutputStreamWriter(sock.getOutputStream(), Charset.forName("UTF-8")));
             processor = new CoreClient.Processor<>(this);
             serverClient = new CoreServer.Client(out);
         } catch (IOException e) {
@@ -169,23 +174,28 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
      * @param p2 The name of the second player.
      */
     @Override
-    public void startGame(String p1, String p2) {
-        Logger.getGlobal().info("Starting game with players " + p1 + " " + p2);
-        ASyncPlayer player1 = new ASyncPlayer(p1, Mark.P1);
-        ASyncPlayer player2 = new ASyncPlayer(p2, Mark.P2);
-        playerMap.put(player1.getName(), player1);
-        playerMap.put(player2.getName(), player2);
-        if (strategy != null) {
-            Mark aiMark;
-            if (p1.equals(name)) {
-                aiMark = Mark.P1;
-            } else {
-                aiMark = Mark.P2;
+    public void startGame(String p1, String p2) throws C4Exception {
+        if (game == null || game.hasFinished()) {
+            Logger.getGlobal().info("Starting game with players " + p1 + " " + p2);
+            ASyncPlayer player1 = new ASyncPlayer(p1, Mark.P1);
+            ASyncPlayer player2 = new ASyncPlayer(p2, Mark.P2);
+            playerMap.put(player1.getName(), player1);
+            playerMap.put(player2.getName(), player2);
+            if (strategy != null) {
+                Mark aiMark;
+                if (p1.equals(name)) {
+                    aiMark = Mark.P1;
+                } else {
+                    aiMark = Mark.P2;
+                }
+                ai = new LocalAIPlayer(strategy, aiMark);
             }
-            ai = new LocalAIPlayer(strategy, aiMark);
+            game = new Game(BinaryBoard.class, player1, player2);
+            controller.setGame(game);
+        } else {
+            throw new InvalidCommandError("There is already a game running");
         }
-        game = new Game(BinaryBoard.class, player1, player2);
-        controller.setGame(game);
+
     }
 
     /**
