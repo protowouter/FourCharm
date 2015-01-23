@@ -1776,10 +1776,9 @@ LocalAIPlayerTest
 The LocalAIPlayer class has been tested by JUNIT tests.
  It is not tested in complete isolation, but a dedicated test class has
  been made.
- Two RandomStrategy Local AI players will play a game in this test class.
- The tests are about the current player, if there is a winner of the game
- after it was finished, if the board is not null, etc.
- The tests are done by using assertTrue, assertFalse and assertEquals.
+ By using assertTrue and assertEquals the methods doMove() and getMark()
+ are tested to see if they do what they should do.
+ 
 \end_layout
 
 \begin_layout Subsubsection
@@ -1794,9 +1793,10 @@ GameTest
 The Game class has been tested by JUNIT tests.
  The tests are not done in complete isolation, but a dedicated test class
  has been made.
- By using assertTrue and assertEquals the methods doMove() and getMark()
- are tested to see if they do what they should do.
- 
+ Two RandomStrategy Local AI players will play a game in this test class.
+ The tests are about the current player, if there is a winner of the game
+ after it was finished, if the board is not null, etc.
+ The tests are done by using assertTrue, assertFalse and assertEquals.
 \end_layout
 
 \begin_layout Subsection
