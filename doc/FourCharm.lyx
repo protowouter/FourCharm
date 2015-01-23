@@ -118,7 +118,7 @@ Overall Design
 \begin_layout Standard
 Early on in the design of our system we recognized that the protocol that
  would handle the communication between the client and server could be extracted
- from the game system.
+ from the rest of the system.
  This protocol implementation is available at Github.com 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -127,7 +127,7 @@ key "c4-protocol"
 \end_inset
 
 .
- 
+ Our system therefore consists of two parts: FourCharm and C4 Protocol.
 \end_layout
 
 \begin_layout Section
@@ -168,10 +168,6 @@ Global overview of FourCharm
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -275,6 +271,7 @@ Our system has two implementations of the FourCharmView interface.
  and the view.
  The two implementations of the FourCharmView interface are the FourCharmGUI
  (a graphical user interface) and the FourCharmTUI (a textual user interface).
+ The views 
 \end_layout
 
 \begin_layout Paragraph
@@ -324,7 +321,8 @@ Because there are multiple commands in the protocol that have different
  is always in a ClientGroup.
  All of the different ClientGroups have their own implementation of the
  commands.
- This way the protocol behavior is modeled on the server side.
+ This way the protocol behavior is modeled on a way that improves maintainabilit
+y.
 \end_layout
 
 \begin_layout Standard
@@ -456,10 +454,6 @@ Controller and ServerHandler
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
@@ -497,10 +491,6 @@ Presenter package
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -544,17 +534,65 @@ Server package
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
 \end_layout
 
 \begin_layout Section
-Requirements overview
+Requirements
+\end_layout
+
+\begin_layout Standard
+This section includes a description of the way we implemented the Functional
+ requirements of the application.
+ For an general overview you can refer to table 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "tab:The-requirements-for"
+
+\end_inset
+
+ for the server requirements and table 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "tab:The-requirements-for-1"
+
+\end_inset
+
+ for the client.
+\end_layout
+
+\begin_layout Subparagraph
+Server
+\end_layout
+
+\begin_layout Standard
+The entry point for the server is the FourCharmServer class.
+ This class accept clients and creates a ClientHandler to take care of sending
+ and receiving the commands.
+ ClientHandler uses a C4 Protocol C4Processor to convert incoming command
+ strings to method calls on the ClientHandler.
+ C4 Protocol checks all parameters and parses them to native Java types.
+ When one of the parameters is not correct a C4Exception is thrown, that
+ error is then sent to the client.
+ C4 Protocol also makes sure that the error never sends a command that doesn't
+ respect the protocol because it throws a C4Exception when this is attempted.
+ 
+\end_layout
+
+\begin_layout Standard
+Games, the Lobby and the PreLobby are modeled as ClientGroups.
+ A ClientGroup is just a collection of ClientHandlers, it allows adding
+ and removing of ClientHandlers and checking if a particular name already
+ exists in the group.
+ The FourCharmServer maintains a list of all running games.
+ Because of this the server supports the running of an arbitrary amount
+ of games simultaneously.
+ The clienthandlers forward the received commands to the current group the
+ clienthandler is in.
+ The FourCharmServer class offers an minimal UI for monitoring communication
+ messages and entering or changing the port number the server listens on.
 \end_layout
 
 \begin_layout Standard
@@ -770,7 +808,7 @@ All communication messages are written to System.out
 \begin_inset Text
 
 \begin_layout Plain Layout
-FourCharmTUI
+FourCharmServer
 \end_layout
 
 \end_inset
@@ -814,6 +852,12 @@ C4 Protocol
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:The-requirements-for"
+
+\end_inset
+
 The requirements for the server
 \end_layout
 
@@ -822,13 +866,34 @@ The requirements for the server
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
+\end_layout
+
+\begin_layout Paragraph
+Client
+\end_layout
+
+\begin_layout Standard
+The entry point for the client portion of our system is the FourCharmController
+ class.
+ Dependent on the program arguments given to the main method the controller
+ starts a GUI or a TUI.
+ The client also uses the model collection of classes for the game logic.
+ The user friendliness is the responsibility of the FourCharmTUI and the
+ FourCharmGUI.
+ The controller both supports local games without a server and games played
+ via a server.
+ The class ServerHandler is responsible for communicating with the server
+ using C4 Protocol.
+ C4 Protocol again makes shure that only valid commands are processed and
+ that no invalid commands are being sent.
+ The ServerHandler class is the only class that has access to the C4 Protocol
+ Server Client and is therefore responsible for all communications with
+ the server and makes sure that commands only get sent when the client is
+ in the correct state according to the protocol.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -836,7 +901,7 @@ The requirements for the server
 \begin_inset Float table
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Tabular
@@ -1207,6 +1272,12 @@ C4 Protocol
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:The-requirements-for-1"
+
+\end_inset
+
 The requirements for the client
 \end_layout
 
@@ -1537,6 +1608,16 @@ FourCharmPresenter
 Server
 \end_layout
 
+\begin_layout Standard
+In this section the classes that make the Server are discussed.
+ The server is divided between a ClientHandler class, the 'real' server
+ FourCharmServer and three ClientGroups (GameGroup for the clients in a
+ game, LobbyGroup for the clients in the lobby and PreLobbyGroup for the
+ clients that open the FourCharm game of Connect Four).
+ Every server class makes use of the Protocol classes as well.
+ 
+\end_layout
+
 \begin_layout Paragraph
 ClientHandler
 \end_layout
@@ -1559,7 +1640,7 @@ FourCharmServer
 \begin_layout Standard
 The FourCharmServer class that is responsible for the server.
  The FourCharmServer makes sure that at a given time there are no players
- with the same name.
+ with the same name connected to the server.
  This class also maintains a list of GameGroups and uses the PreLobbyGroup
  and LobbyGroup to model the state of clients.
  
@@ -1572,8 +1653,18 @@ GameGroup
 \begin_layout Standard
 The GameGroup class extends the ClientGroup abstract class and implements
  Observer.
- This class uses the Protocol classes as well.
- Two Clients play against each other in the GameGroup.
+ Two Clients play against each other in the GameGroup, so this class 'simulates'
+ a game.
+ After a game is finished clients are send back to the LobbyGroup (or they
+ can start a new game by choosing the option rematch).
+ 
+\end_layout
+
+\begin_layout Standard
+Before the clients are able to be in the game group, they will be in the
+ LobbyGroup until they send the ready_for_game command to the server.
+ Only if there are two clients ready, the server will place them in the
+ GameGroup
 \end_layout
 
 \begin_layout Paragraph
@@ -1582,11 +1673,15 @@ LobbyGroup
 
 \begin_layout Standard
 The LobbyGroup class extends the ClientGroup abstract class.
- It makes a Lobby and adds Clients to the LobbyGroup.
- From these Clients, whenever they are ready, 2 are chosen and they will
- be added to the GameGroup to start a new game.
- Before a Client can enter the LobbyGroup, he will be in the PreLobbyGroup
- as long as he did not give the command 'join'.
+ It makes a 'Lobby' and adds Clients to the LobbyGroup.
+ Whenever two of those clients are ready (they sent the ready_for_game command
+ to the server), the server will add the clients to the GameGroup to start
+ a new Game.
+\end_layout
+
+\begin_layout Standard
+Before a Client can enter the LobbyGroup, he will be and stay in the PreLobbyGro
+up as long as he did not give the join command.
 \end_layout
 
 \begin_layout Paragraph
@@ -1595,10 +1690,15 @@ PreLobbyGroup
 
 \begin_layout Standard
 The PreLobbyGroup class extends the ClientGroup abstract class.
- Every Client that wants to play a game has to enter the PreLobbyGroup first.
+ Every Client that wants to play a game of Connect Four has to enter the
+ PreLobbyGroup first.
  After this, by using the command join, the Client will be able to move
- to the LobbyGroup to find a partner to play a game with.
- This class makes use of the Protocol classes as well.
+ from the PreLobbyGroup to the LobbyGroup to find a partner to play a game
+ with.
+ Whenever the join command is send by the client, the server first needs
+ to check if there is not another player with the same name already in the
+ server.
+ This is one of the requirements of the protocol of the INF-3 group.
 \end_layout
 
 \begin_layout Section
@@ -1686,6 +1786,19 @@ The ServerHandler has been tested in isolation by using mocked instances.
  These tests are done by JUNIT testing.
 \end_layout
 
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Discussion test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Model
 \end_layout
@@ -1719,6 +1832,19 @@ egy class.
  class.
 \end_layout
 
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Discussion test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Paragraph
 RandomStrategyTest
 \end_layout
@@ -1729,6 +1855,19 @@ The RandomStrategy class has been tested the same way as the NegaMaxStrategy.
  makes use of the Board class to make a move.
  The doMove() method is the only method that is tested.
  This method is tested the same way as the NegaMaxStrategy with an assertTrue.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Discussion test coverage
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -1745,7 +1884,8 @@ BoardTest
 
 \begin_layout Standard
 The Board class is tested in isolation.
- This class is one of the most complex classes that needed a lot of testing.
+ This class is one of the most complex classes that needed a lot of UNIT
+ testing.
  A lot of different states of the board can be seen in the dedicated test
  class.
  For instance if a column is full, then the columnHasFreeSpace(col) method
@@ -1763,6 +1903,19 @@ A lot of testing has been done for the checking if a player has a winstreak:
  as well.
  Almost all of the tests are done by using assertEquals, assertTrue and
  assertFalse.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Discussion test coverage
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -1786,6 +1939,24 @@ The LocalAIPlayer class has been tested by JUNIT tests.
  
 \end_layout
 
+\begin_layout Standard
+The doMove() should determine a move if the column has a free space and
+ the getMark method should return the mark of the player.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Discussion test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsubsection
 Game
 \end_layout
@@ -1800,12 +1971,38 @@ GameTest
 
 \begin_layout Standard
 The Game class has been tested by JUNIT tests.
- The tests are not done in complete isolation, but a dedicated test class
- has been made.
+ The tests are not done in complete isolation.
+ A dedicated test class has been made to test this class.
  Two RandomStrategy Local AI players will play a game in this test class.
- The tests are about the current player, if there is a winner of the game
- after it was finished, if the board is not null, etc.
- The tests are done by using assertTrue, assertFalse and assertEquals.
+ 
+\end_layout
+
+\begin_layout Standard
+Before the tests take place a setUp() method creates a new Game.
+ After this the testPlay() methods starts to play the game.
+ While the game is busy playing, multiple tests are done: is the game finished
+ yet (if so: does the game have a winner), what is the current state of
+ the board (is it not null), who is the current player, is the getPlieCount()
+ not null after starting the game.
+ 
+\end_layout
+
+\begin_layout Standard
+These tests are done by using the assertTrue, assertFalse and assertNotNull
+ methods.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Discussion test coverage
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -1845,6 +2042,19 @@ The join(), ready() and doMove() methods have been tested by checking if
  is made injectable in stead of just mocked.
 \end_layout
 
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Discussion test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Paragraph
 FourCharmServerTest
 \end_layout
@@ -1869,6 +2079,19 @@ In this test a FourCharmServer class has been tested by opening sockets
 \begin_layout Standard
 Most of the methods have been tested by making a new Expectations() {{ }}.
  
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Discussion test coverage
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Paragraph
@@ -1898,6 +2121,19 @@ Furthermore making an invalid move and making a valid move while it is not
  your turn are tested.
 \end_layout
 
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Discussion test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Paragraph
 LobbyGroupTest
 \end_layout
@@ -1923,6 +2159,19 @@ The ready() method makes use of new Expectations () {{ }}.
  made with thoses two ClientHandlers.
 \end_layout
 
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Discussion test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Paragraph
 PreLobbyGroupTest
 \end_layout
@@ -1932,6 +2181,41 @@ The PreLobbyGroup class makes use of mocked instances for testing as well.
  The dedicated test class constists of two mocked instances (FourCharmServer
  and CoreClient.Client).
  The test class does not consist of only mocked instances.
+\end_layout
+
+\begin_layout Standard
+The PreLobbyGroup testing methods look like the testing methods from the
+ LobbyGroup and the GameGroup.
+ The ready() test and the doMove test should give an error, because those
+ commands are not valid in the PreLobbyGroup.
+ Thus the expected outcome of these method tests would be an InvalidCommandError.
+\end_layout
+
+\begin_layout Standard
+The only valid command to use in this context is the join command.
+ This is tested by using new Expectations() {{ }} where a situation is created
+ where theServer.hasClientWithName(
+\begin_inset Quotes eld
+\end_inset
+
+Wouter") does not exist.
+ Whenever a client wants to connect to the server and his name is Wouter,
+ he should be allowed and able to do so.
+ The test for joining a server with a existing name should not let the client
+ join the server: this is not allowed.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Discussion test coverage
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -1945,6 +2229,43 @@ In this section the tests of the controller package are shown.
 
 \begin_layout Paragraph
 FourCharmControllerTest
+\end_layout
+
+\begin_layout Standard
+The FourCharmController class uses mocked instances.
+ This dedicated test class has two mocked FourCharmViews and a mocked Game.
+ The class is not tested in complete isolation, because instances of other
+ classes have been called in several testing methods.
+\end_layout
+
+\begin_layout Standard
+Tests are done for the start of a network game and for the start of a local
+ game with human players or AI players.
+ These methods are tested by using new Expectations() {{ }}.
+ The expectations box 'creates' a game and after that the controller will
+ be able to start the game.
+\end_layout
+
+\begin_layout Standard
+Whenever a game shuts down or a client disconnects the controller needs
+ to send a shutdown() command.
+ This is tested in two different methods by using the expectations box in
+ which either the game stops, or the client disconnects.
+ The get and set human / AI move are also tested by expectation boxes and
+ mocked instances.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Discussion test coverage
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -2374,20 +2695,132 @@ Reflection on planning
 Planning influenced by experiences
 \end_layout
 
+\begin_layout Standard
+For every single project we have done this year, we were both part of the
+ same project group.
+ This way it was really easy to make a planning, even though we changed
+ our tactics a little bit.
+ We did more planning than we were used to do for the other projects.
+ 
+\end_layout
+
+\begin_layout Standard
+For this project we sat down and started by looking at the TODO list.
+ What are the requirements for this project.
+\end_layout
+
 \begin_layout Section
 Actual progress
+\end_layout
+
+\begin_layout Standard
+The planning corresponded pretty well to our actual progress.
+ At the beginning of the project we divided the project in a couple of different
+ topics.
+ We made a tight schedule with a lot of extra space at the end of the project
+ weeks, in case we needed more time to work on some of these topics of the
+ project.
+\end_layout
+
+\begin_layout Standard
+The first few days we were exactly on schedule, we even had some time off
+ because we were too fast.
+ We underestimated the amount of work on the documentation and making the
+ report a little bit.
+ But because we had three days left with no work we had more than enough
+ time to make sure the report was done properly as well.
+\end_layout
+
+\begin_layout Standard
+We think we did not spend a lot of time doing nothing while we should have
+ been working on the project (according to the planning).
+ We took our breaks, but after the breaks we went on an on working, typing,
+ fixing bugs, thinking of smart ways to program the Connect Four game and
+ the tests.
+\end_layout
+
+\begin_layout Standard
+While we were busy programming we spend some time every single morning to
+ review what had been done and what we still needed to do.
+ 
 \end_layout
 
 \begin_layout Section
 Countermeasures
 \end_layout
 
+\begin_layout Standard
+We took those countermeasures even before we started the project: we planned
+ 3 free days (excluding the weekend, so including the weekend that would
+ be 5 days) if we would not be ready according to our planning.
+ This way it was really easy to change our actual planning and make sure
+ everything was done in time.
+\end_layout
+
+\begin_layout Standard
+Because we took our time and reviewed what we still needed to do every single
+ morning, we were able to change the planning a little bit.
+ 
+\end_layout
+
 \begin_layout Section
 What did we learn
 \end_layout
 
+\begin_layout Standard
+From this experience we learned that it was really nice having some free
+ time at the end of the project, right before the deadline.
+ If you try to do everything at the last possible moment you will hit your
+ head.
+ This will give a lot of stress and we sure did not have any stress at all.
+ We worked hard and that has been rewarded: we finished everything in time
+ and we were even able to do some extra's (GUI, extra tests, etc.).
+\end_layout
+
+\begin_layout Standard
+A planning is not a final work of art.
+ You are still able to change it later on, so you will be able to make the
+ most out of your time.
+\end_layout
+
 \begin_layout Section
-Next year's student assistent
+Next year's student assistant
+\end_layout
+
+\begin_layout Standard
+If we would be student assistants next year we would tell the first years
+ the next things:
+\end_layout
+
+\begin_layout Paragraph
+Do's:
+\end_layout
+
+\begin_layout Itemize
+Make sure you plan some free time at the end of the project, right before
+ the deadline.
+ If you are not finished yet, at least you will have some time to make sure
+ it will be completely done before you hand your work in.
+\end_layout
+
+\begin_layout Itemize
+Make sure you have a couple of meetings during the project: you will be
+ able to see what still needs to be done and what is already finished.
+ This way you will be able to change your planning during the course according
+ to what would be best for you and your group to make sure you're done in
+ time.
+\end_layout
+
+\begin_layout Paragraph
+Dont's:
+\end_layout
+
+\begin_layout Itemize
+Blablalba
+\end_layout
+
+\begin_layout Itemize
+Blablaa
 \end_layout
 
 \begin_layout Chapter
@@ -2955,6 +3388,49 @@ As can be seen in the numbering of board positions, there is a gap of one
  For a valid board this operation always return 0.
  If however one of the columns overflowed, this operation returns 1.
  Therefore it is simply tested if this operation returns 0;
+\end_layout
+
+\begin_layout Subsection
+Detecting horizontal rows
+\end_layout
+
+\begin_layout Standard
+Operation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:"
+
+\end_inset
+
+ shows how value y gets determined.
+ We take 
+\begin_inset Formula $ROW=1000000100000010000001_{2}$
+\end_inset
+
+ , this value represents a board for a player who has a horizontal row on
+ indexes 0,7,14,21.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y=color[player]\, AND\,(color[player]\,\gg H1)\label{eq:}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y\, AND\,(y\gg(2*H1))\label{eq:-1}
+\end{equation}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

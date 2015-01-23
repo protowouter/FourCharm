@@ -193,6 +193,8 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
                     aiMark = Mark.P2;
                 }
                 ai = new LocalAIPlayer(strategy, aiMark);
+            } else {
+                ai = null;
             }
             game = new Game(BinaryBoard.class, player1, player2);
             controller.setGame(game);
