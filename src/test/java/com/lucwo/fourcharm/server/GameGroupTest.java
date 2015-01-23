@@ -80,9 +80,9 @@ public class GameGroupTest {
         gameGroup.doMove(c2, 5);
     }
 
-    @Test
+    @Test(expected = InvalidCommandError.class)
     public void testReady() throws Exception {
-
+        gameGroup.ready(c3);
     }
 
     @Test
@@ -96,7 +96,7 @@ public class GameGroupTest {
     }
 
     @Test
-    public void testUpdate() throws Exception {
+    public void testUpdate() throws Exception
 
-    }
+        //TODO: invullen
 }

@@ -1243,6 +1243,13 @@ The observer pattern is used in multiple places in our application.
  is called, the server notifies all clients in the Game of the current player.
  When the game has ended the server also informs all clients in the GameGroup
  of this.
+ The observer pattern allows us to decouple the game logic from the rest
+ of the system.
+ The model doesn't need to have any knowledge of the the other system components
+ that use is.
+ The view and the controller and the GameGroup however need to know about
+ the Game and how to use it.
+ 
 \end_layout
 
 \begin_layout Subsection
@@ -1250,7 +1257,45 @@ Model View Controller
 \end_layout
 
 \begin_layout Standard
-We have a model, multiple views and a controller.
+In developing of our system we made use of the Model View Controller pattern
+ for the client-side UI.
+ The model consists of the Game, Board, Player and Mark classes.
+ The responsibility of the model is to represent the game logic of our system,
+ it keeps track of the current player, asks the players for moves and makes
+ sure the game state is consistent.
+ The view is responsible for showing the state of the model to the user
+ and for handling user interaction.
+ The controller takes care of the manipulation of the model.
+ In our implementation both the view and the controller are observers of
+ the Game, the view updates the board representation and the controller
+ checks if user input for a move is required.
+\end_layout
+
+\begin_layout Paragraph
+Presenter
+\end_layout
+
+\begin_layout Standard
+For the Graphical User Interface we added an addition layer in the form
+ of presenters.
+ We made use of FXML
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Insert link to FXML
+\end_layout
+
+\end_inset
+
+ views, because these views contain no logic another layer of logic is needed.
+ For this we used a presenter for every view in the GUI collection of views.
+ The presenters are responsible for updating the view elements and responding
+ to user input.
+ The view is just a description of how the model is represented.
+ This division has the added benefit that the appearance can be changed
+ by editing the FXML views without searching in the presenter for the location
+ where the appearance is set.
 \end_layout
 
 \begin_layout Chapter
@@ -1770,6 +1815,23 @@ The ClientHandler class has been tested by JUNIT tests.
  ClientGroup is injectable, so only that instance is mocked.
 \end_layout
 
+\begin_layout Standard
+In this test, the get methods and the set methods have been tested by using
+ assertEquals.
+ If, for instance, setClientGroup(group) should update the current group
+ of the Client, this is tested by making a new group, putting (using the
+ set method) the Client in there and checking if the group has been updated
+ by using the getClientGroup() method.
+\end_layout
+
+\begin_layout Standard
+The join(), ready() and doMove() methods have been tested by checking if
+ the commands have been send to the current group.
+ This is done by making a new Expectations() {{ }}.
+ Tho see if the current group receives the commands, the ClientGroup instance
+ is made injectable in stead of just mocked.
+\end_layout
+
 \begin_layout Paragraph
 FourCharmServerTest
 \end_layout
@@ -1780,6 +1842,20 @@ The FourCharmServer class has been tested by JUNIT tests in isolation from
  The isolation is done by making a dedicated mocked class.
  The PreLobbyGroup, LobbyGroup, GameGroup and ServerSocket are mocked, thus
  all of the instances are mocked instances.
+\end_layout
+
+\begin_layout Standard
+In this test a FourCharmServer class has been tested by opening sockets
+ and starting a new server.
+ When a Client wants to join the server, the FourCharmServerTest class will
+ check is there already is a Client with the same name (i.e.
+ if he name of the Client already exists in server).
+ 
+\end_layout
+
+\begin_layout Standard
+Most of the methods have been tested by making a new Expectations() {{ }}.
+ 
 \end_layout
 
 \begin_layout Paragraph
@@ -1794,6 +1870,21 @@ The GameGroup class has been tested in isolation from other classes by JUNIT
  instances.
 \end_layout
 
+\begin_layout Standard
+The basic commands join doMove and ready are tested whether the Client is
+ allowed to use them in de GameGroup.
+ The join() and ready() methods are not allowed to be used in the GameGroup,
+ so an appropiate error is send (InvalidCommandError).
+ The doMove command is tested by new Expectations() {{ }}.
+ If there is a game and the column where you want to make your move is free,
+ the move should be made.
+\end_layout
+
+\begin_layout Standard
+Furthermore making an invalid move and making a valid move while it is not
+ your turn are tested.
+\end_layout
+
 \begin_layout Paragraph
 LobbyGroupTest
 \end_layout
@@ -1804,6 +1895,19 @@ The LobbyGroup class has been tested by making use of mocked instances.
  mocked.
  This test has been done in isolation by making a dedicated test class LobbyGrou
 pTest.
+\end_layout
+
+\begin_layout Standard
+The LobbyGroup tests look a lot like the GameGroup and PreLobbyGroup tests.
+ If a invalid command is called, an error should be send by the server.
+ In this case the join command and the doMove command are not allowed, so
+ the server will send an InvalidCommandError.
+\end_layout
+
+\begin_layout Standard
+The ready() method makes use of new Expectations () {{ }}.
+ Two ClientHandlers get names in the expectations box and a GameGroup is
+ made with thoses two ClientHandlers.
 \end_layout
 
 \begin_layout Paragraph

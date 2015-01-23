@@ -29,7 +29,6 @@ public class PreLobbyGroupTest {
     @Before
     public void setUp() throws Exception {
 
-        //TODO: the server = new Fourcharmserver zorgt ervoor dat nu de server wel start, maar verder niks doet.
         theServer = new FourCharmServer(8080);
         sock = new Socket();
         lobbyGroup = new LobbyGroup(theServer);
