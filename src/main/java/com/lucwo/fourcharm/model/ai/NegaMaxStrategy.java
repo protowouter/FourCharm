@@ -81,7 +81,8 @@ public class NegaMaxStrategy implements GameStrategy {
     public int determineMove(Board board, Mark mark, int depth) {
         resetCounter();
         // Best and worst move are not know yet so use -infinity for alpha and infinity for beta
-        Result result = negaMax(board, mark, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, depth);
+        Result result = negaMax(board, mark, Double.NEGATIVE_INFINITY,
+                Double.POSITIVE_INFINITY, depth);
         int bestMove = result.column;
         Double bestValue = result.value;
         Logger.getGlobal().fine("Calculated nodes: " + nodeCounter.get());
@@ -96,7 +97,7 @@ public class NegaMaxStrategy implements GameStrategy {
 
     /**
      * Finds the best move on a {@link com.lucwo.fourcharm.model.board.Board}
-     * for a given {@link com.lucwo.fourcharm.model.player.Mark}
+     * for a given {@link com.lucwo.fourcharm.model.player.Mark}.
      * @param board Board on which the NegaMax search will be performed.
      * @param mark The mark of the current player.
      * @param alphaOrig The value of the worst move that has been found for the maximizing player.
@@ -170,7 +171,8 @@ public class NegaMaxStrategy implements GameStrategy {
                 try {
                     Board childBoard = board.deepCopy();
                     childBoard.makemove(col, mark);
-                    double val = -negaMax(childBoard, mark.other(), -beta, -newAlpha, depth - 1).value;
+                    double val = -negaMax(childBoard, mark.other(),
+                            -beta, -newAlpha, depth - 1).value;
                     if (val > bestValue) {
                         bestValue = val;
                         newAlpha = val;
@@ -195,7 +197,8 @@ public class NegaMaxStrategy implements GameStrategy {
      * @param posKey the "hashcode" of the board node.
      * @param result the found Result containing the NegaMax value.
      */
-    private void saveToTransPostTable(double alphaOrig, int depth, double beta, long posKey, Result result) {
+    private void saveToTransPostTable(double alphaOrig, int depth, double beta,
+                                      long posKey, Result result) {
         TransPosEntry ttEntry;
         ttEntry = new TransPosEntry();
         ttEntry.value = result.value;
@@ -408,7 +411,7 @@ public class NegaMaxStrategy implements GameStrategy {
     }
 
     /**
-     * Gives the name of the strategy
+     * Gives the name of the strategy.
      * @return 'NegaMaxStrategy'
      */
     @Override
@@ -419,7 +422,7 @@ public class NegaMaxStrategy implements GameStrategy {
 
     /**
      * Flag used to determine if a value in the transposition value can be used as the value(EXACT),
-     * as alpha (LOWER_BOUND) or beta (UPPER_BOUND)
+     * as alpha (LOWER_BOUND) or beta (UPPER_BOUND).
      */
     enum Flag {
 
@@ -427,7 +430,7 @@ public class NegaMaxStrategy implements GameStrategy {
     }
 
     /**
-     * Models an result of the NegaMax algorithm (best move and value)
+     * Models an result of the NegaMax algorithm (best move and value).
      */
     public static class Result {
         int column;

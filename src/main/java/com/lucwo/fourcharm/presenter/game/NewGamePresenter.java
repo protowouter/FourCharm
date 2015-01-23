@@ -11,6 +11,8 @@ import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.presenter.FourCharmPresenter;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -22,7 +24,7 @@ import javafx.scene.control.TextField;
 import java.util.logging.Logger;
 
 /**
- * TODO newgamepresenter javadoc
+ * TODO newgamepresenter javadoc.
  */
 public class NewGamePresenter {
     // ------------------ Instance variables ----------------
@@ -71,26 +73,28 @@ public class NewGamePresenter {
         p1Select.getItems().addAll("Human", "Computer");
         p1Select.getSelectionModel().select(1);
         p1Select.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    showPlayerFields();
-                }
+            (observable) -> {
+                showPlayerFields();
+            }
         );
         p2Select.getItems().addAll("Human", "Computer");
         p2Select.getSelectionModel().select(1);
         p2Select.getSelectionModel().selectedItemProperty().addListener(
-                    (observable, oldValue, newValue) -> {
-                        showPlayerFields();
-                    }
+            (observable) -> {
+                showPlayerFields();
+            }
         );
-        p1Strategy.getItems().addAll(new MTDfStrategy(), new RandomStrategy(), new NegaMaxStrategy(12));
-        p2Strategy.getItems().addAll(new MTDfStrategy(), new RandomStrategy(), new NegaMaxStrategy(12));
+        p1Strategy.getItems().addAll(new MTDfStrategy(),
+                new RandomStrategy(), new NegaMaxStrategy(12));
+        p2Strategy.getItems().addAll(new MTDfStrategy(),
+                new RandomStrategy(), new NegaMaxStrategy(12));
 
-        ChangeListener<GameStrategy> playahlistener = (observableValue, oldValue, newValue) -> checkAbleToPlayah();
+        InvalidationListener playahlistener = (observable) -> checkAbleToPlayah();
         p1Strategy.getSelectionModel().selectedItemProperty().addListener(playahlistener);
         p2Strategy.getSelectionModel().selectedItemProperty().addListener(playahlistener);
 
 
-        ChangeListener<String> stringPlayahListener = (observableValue, oldValue, newValue) -> checkAbleToPlayah();
+        InvalidationListener stringPlayahListener = (observable) -> checkAbleToPlayah();
         p1Name.textProperty().addListener(stringPlayahListener);
         p2Name.textProperty().addListener(stringPlayahListener);
         serverAddress.textProperty().addListener(stringPlayahListener);
@@ -153,7 +157,8 @@ public class NewGamePresenter {
     }
 
     private void enableP2Fields(boolean computer) {
-        boolean localGame = localNetworkChoice.getSelectionModel().getSelectedItem().equals("Local");
+        boolean localGame = localNetworkChoice.getSelectionModel().
+                getSelectedItem().equals("Local");
         if (localGame) {
             p2Strategy.setDisable(!computer);
             p2Strategy.setVisible(computer);
@@ -234,9 +239,11 @@ public class NewGamePresenter {
         }
 
         try {
-            fourCharmPresenter.getFourCharmController().startNetworkGame(host, port, name, strategy);
+            fourCharmPresenter.getFourCharmController().
+                    startNetworkGame(host, port, name, strategy);
         } catch (ServerConnectionException e) {
-            // TODO: Show Error message
+            Logger.getGlobal().throwing(getClass().toString(), "startNetworkGame", e);
+            fourCharmPresenter.getFourCharmController().showError(e.getMessage());
         }
     }
 
@@ -260,7 +267,8 @@ public class NewGamePresenter {
             p2Strat = p2Strategy.getSelectionModel().getSelectedItem();
         }
 
-        fourCharmPresenter.getFourCharmController().startLocalGame(player1Name, player2Name, p1Strat, p2Strat);
+        fourCharmPresenter.getFourCharmController().
+                startLocalGame(player1Name, player2Name, p1Strat, p2Strat);
 
     }
 

@@ -7,7 +7,7 @@ package com.lucwo.fourcharm.cucumber;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
-public class RegexMatcher extends BaseMatcher {
+public class RegexMatcher extends BaseMatcher<String> {
     private final String regex;
 
     public RegexMatcher(String regex) {

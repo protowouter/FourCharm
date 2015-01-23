@@ -50,7 +50,8 @@ public class LobbyGroup extends ClientGroup {
      * @throws C4Exception is already in the LobbyGroup
      */
     @Override
-    public void join(ClientHandler client, String pName, int gNumber, Set<Extension> exts) throws C4Exception {
+    public void join(ClientHandler client, String pName, int gNumber, Set<Extension> exts)
+            throws C4Exception {
 
         throw new InvalidCommandError("You are not allowed to use this command now.");
     }
@@ -78,8 +79,8 @@ public class LobbyGroup extends ClientGroup {
         if (readyClient == null) {
             readyClient = client;
         } else if (readyClient == client) {
-            throw new InvalidCommandError("You are already waiting and not allowed to play against yourself. " +
-                    "Please be patient.");
+            throw new InvalidCommandError("You are already waiting and not " +
+                    "allowed to play against yourself. Please be patient.");
         } else {
             GameGroup game = new GameGroup(server, readyClient, client);
             server.addGame(game);
@@ -91,7 +92,8 @@ public class LobbyGroup extends ClientGroup {
 
     /**
      * Handles the removal of a client from the group.
-     * @param client The {@link com.lucwo.fourcharm.server.ClientHandler} which will has been removed from the group.
+     * @param client The {@link com.lucwo.fourcharm.server.ClientHandler}
+     *               which will has been removed from the group.
      */
     @Override
     public synchronized void removeClientCallback(ClientHandler client) {

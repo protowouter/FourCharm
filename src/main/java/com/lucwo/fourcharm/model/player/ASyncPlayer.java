@@ -8,6 +8,7 @@ import com.lucwo.fourcharm.model.board.Board;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Logger;
 
 /**
  * The ASyncPlayer class 'makes' a human player. To play a game of
@@ -50,7 +51,8 @@ public class ASyncPlayer implements Player {
         try {
             column = rij.take();
         } catch (InterruptedException e) {
-            // TODO: doe iets;
+            Logger.getGlobal().throwing(getClass().toString(), "determineMove", e);
+            column = determineMove(board);
         }
         return column;
 
@@ -64,7 +66,8 @@ public class ASyncPlayer implements Player {
         try {
             rij.put(col);
         } catch (InterruptedException e) {
-            // TODO: doe iets
+            Logger.getGlobal().throwing(getClass().toString(), "queueMove", e);
+            queueMove(col);
         }
     }
 

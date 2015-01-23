@@ -9,8 +9,9 @@ import com.lucwo.fourcharm.model.board.Board;
 
 /**
  * A participant in a game of connect four. A player has a {@link Mark} and can
- * be asked to make a move on a {@link com.lucwo.fourcharm.model.board.Board} or asked what move is best
- * to make on a given {@link com.lucwo.fourcharm.model.board.Board}.
+ * be asked to make a move on a {@link com.lucwo.fourcharm.model.board.Board}
+ * or asked what move is best to make on a given
+ * {@link com.lucwo.fourcharm.model.board.Board}.
  *
  * @author Luce Sandfort and Wouter Timmermans
  */
@@ -28,7 +29,8 @@ public interface Player {
     /**
      * Makes a move.
      * @param board The current board.
-     * @throws InvalidMoveException If the move is not allowed, an InvalidMoveException will be thrown.
+     * @throws InvalidMoveException If the move is not allowed,
+     * an InvalidMoveException will be thrown.
      */
     public default void doMove(Board board) throws InvalidMoveException {
         board.makemove(determineMove(board), getMark());

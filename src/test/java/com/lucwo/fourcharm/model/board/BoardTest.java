@@ -162,9 +162,7 @@ public class BoardTest {
         int p1 = 0;
         int p2 = columns - 1;
 
-        if (p1 == p2) {
-            //Unwinnable board
-        } else {
+        if (p1 != p2) {
             Mark mark = Mark.P1;
             for (int i = 0; i < (winstreak - 1); i++) {
                 board.makemove(p1, mark);

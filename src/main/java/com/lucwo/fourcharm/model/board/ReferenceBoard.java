@@ -264,9 +264,8 @@ public class ReferenceBoard extends Board {
     // ----------------------- Commands ---------------------
 
     /**
-     *
+     * Makes a move on the board for the given player.
      * @param col column in which a piece will be placed
-     * @requires gets called for the player which current turn it is
      */
     @Override
     public void makemove(int col, Mark mark) throws InvalidMoveException {

@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 
 
 /**
- * TODO spacepresenter javadoc
+ * TODO spacepresenter javadoc.
  *
  * @author Luce Sandfort and Wouter Timmermans
  */
@@ -44,8 +44,8 @@ public class SpacePresenter {
 
     // ----------------------- Commands ---------------------
 
-    public void setBoardPresenter(BoardPresenter boardPresenter) {
-        this.boardPresenter = boardPresenter;
+    public void setBoardPresenter(BoardPresenter newBoardPresenter) {
+        boardPresenter = newBoardPresenter;
     }
 
     public void setMark(Mark m) {
@@ -53,10 +53,12 @@ public class SpacePresenter {
 
         if (m == Mark.P1) {
             spaceButton.textProperty().setValue("");
-            spaceButton.setBackground(new Background(new BackgroundFill(Color.PINK, new CornerRadii(PIECE_RADIUS), null)));
+            spaceButton.setBackground(new Background(new BackgroundFill(Color.PINK,
+                    new CornerRadii(PIECE_RADIUS), null)));
         } else if (m == Mark.P2) {
             spaceButton.textProperty().setValue("");
-            spaceButton.setBackground(new Background(new BackgroundFill(Color.SKYBLUE, new CornerRadii(PIECE_RADIUS), null)));
+            spaceButton.setBackground(new Background(new BackgroundFill(Color.SKYBLUE,
+                    new CornerRadii(PIECE_RADIUS), null)));
         } else {
             spaceButton.textProperty().setValue(m.toString());
         }

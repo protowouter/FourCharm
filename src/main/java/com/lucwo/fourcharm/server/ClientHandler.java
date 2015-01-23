@@ -17,9 +17,9 @@ import java.util.logging.Logger;
 
 /**
  * A ClientHandler is responsible for maintaining a connection with a client and passing received
- * commands to the {@link ClientGroup} the ClientHandler currently resides in. For parsing the received
- * commands from the client the C4 Protocol module is used. The ClientHandler can also be used by other
- * parts of the server to send commands to the client.
+ * commands to the {@link ClientGroup} the ClientHandler currently resides in.
+ * For parsing the received commands from the client the C4 Protocol module is used.
+ * The ClientHandler can also be used by other parts of the server to send commands to the client.
  *
  * @author Luce Sandfort and Wouter Timmermans
  */

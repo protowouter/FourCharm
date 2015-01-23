@@ -46,7 +46,7 @@ public class PreLobbyGroup extends ClientGroup {
     // ----------------------- Commands ---------------------
 
     /**
-     * The client wants to join the LobbyGroup
+     * The client wants to join the LobbyGroup.
      *
      * @param client  The client which performed this command.
      * @param pName   Player name
@@ -93,7 +93,8 @@ public class PreLobbyGroup extends ClientGroup {
 
     /**
      * Handles the removal of a client from the group.
-     * @param client The {@link com.lucwo.fourcharm.server.ClientHandler} which will has been removed from the group.
+     * @param client The {@link com.lucwo.fourcharm.server.ClientHandler}
+     *               which will has been removed from the group.
      */
     @Override
     public void removeClientCallback(ClientHandler client) {

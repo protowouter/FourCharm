@@ -14,7 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 
 /**
- * TODO: Fourcharmpresenter javadoc
+ * TODO: Fourcharmpresenter javadoc.
  *
  * @author Luce Sandfort and Wouter Timmermans
  */

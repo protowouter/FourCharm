@@ -26,7 +26,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
 /**
- * TODO gamepresenter javadoc
+ * TODO gamepresenter javadoc.
  */
 public class GamePresenter implements Observer {
 
@@ -88,7 +88,8 @@ public class GamePresenter implements Observer {
 
     private void updateGame(Game game) {
         String color = colorMap.get(game.getCurrent().getMark());
-        currentPlayer.textProperty().setValue(game.getCurrent().toString() + "'s turn (" + color + ")");
+        currentPlayer.textProperty().setValue(game.getCurrent().toString() +
+                "'s turn (" + color + ")");
         boardPresenter.drawBoard(game.getBoard());
     }
 

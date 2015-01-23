@@ -8,12 +8,12 @@ import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.player.Mark;
 
 /**
- * The Board class Models a gameboard for the game of Connect4 and provides facilities for making moves and checking
- * if a player has won. BinaryBoard and ReferenceBoard extend the Board class.This class makes use of the
- * InvalidMoveException class which extends Exception. Before making a move, the Board class will check if the move
+ * The Board class Models a gameboard for the game of Connect4
+ * and provides facilities for making moves and checking
+ * if a player has won. BinaryBoard and ReferenceBoard extend the Board class.
+ * This class makes use of the InvalidMoveException class which extends Exception.
+ * Before making a move, the Board class will check if the move
  * if allowed or not. It will throw the InvalidMoveException if a move is not valid.
- *
- *
  * The board positions are numbered as follows:
  * <pre>
  *       1  2  3  4  5  6  7
@@ -50,7 +50,8 @@ public abstract class Board {
      * |0|1|2|3|4|5|6|
      *
      * @param col the column for which the free space will be checked
-     * @return return false if there is no more free space left {@code false} otherwise {@code true}.
+     * @return return false if there is no more free space left {@code false}
+     * otherwise {@code true}.
      */
     public abstract boolean columnHasFreeSpace(int col);
 
@@ -71,7 +72,8 @@ public abstract class Board {
 
 
     /**
-     * Returns true if the given {@link com.lucwo.fourcharm.model.player.Mark} has won on this board.
+     * Returns true if the given {@link com.lucwo.fourcharm.model.player.Mark}
+     * has won on this board.
      * @param mark The player to check.
      * @return {@code true} if the player has won, otherwise {@code false}.
      */

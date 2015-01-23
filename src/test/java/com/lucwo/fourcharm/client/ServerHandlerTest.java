@@ -52,7 +52,7 @@ public class ServerHandlerTest {
     public void testJoinServer() throws Exception {
 
         new Expectations() {{
-            serverClient.join("Wouter", 23, withAny(new HashSet<Extension>()));
+            serverClient.join("Wouter", 23, withAny(new HashSet<>()));
         }};
 
         handler.joinServer();

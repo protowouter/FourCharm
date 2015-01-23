@@ -14,7 +14,7 @@ import javafx.scene.layout.GridPane;
 import java.io.IOException;
 
 /**
- * TODO: boardpresenter javadoc
+ * TODO: boardpresenter javadoc.
  */
 
 public class BoardPresenter {
@@ -55,7 +55,8 @@ public class BoardPresenter {
 
         for (int col = 0; col < board.getColumns(); col++) {
             for (int row = 0; row < board.getRows(); row++) {
-                FXMLLoader fxmlLoader = new FXMLLoader(classloader.getResource("views/space/show.fxml"));
+                FXMLLoader fxmlLoader =
+                        new FXMLLoader(classloader.getResource("views/space/show.fxml"));
 
                 try {
                     fxmlLoader.load();

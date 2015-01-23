@@ -38,7 +38,7 @@ public interface FourCharmView {
     public void showRematch();
 
     /**
-     * Enables the input
+     * Enables the input.
      */
     public void enableInput();
 

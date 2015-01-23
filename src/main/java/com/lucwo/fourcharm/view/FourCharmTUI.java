@@ -151,6 +151,9 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
             case EXIT:
                 running = false;
                 break;
+            default:
+                showError("Command not recognized");
+                break;
         }
     }
 
@@ -317,8 +320,10 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
      */
     private enum Command {
         CHAT(new String[]{"Chatmessage"}),
-        CONNECT(new String[]{"Host", "Port", "Playername", "| -m (MTDF) | -r (Random) | -h (Human)"}),
-        LOCAL(new String[]{"Playername | -m (MTDF) | -r (Random)", "Playername | -m (MTDF) | -r (Random)"}),
+        CONNECT(new String[]{"Host", "Port", "Playername",
+                "| -m (MTDF) | -r (Random) | -h (Human)"}),
+        LOCAL(new String[]{"Playername | -m (MTDF) | -r (Random)",
+                "Playername | -m (MTDF) | -r (Random)"}),
         HINT(new String[0]),
         EXIT(new String[0]),
         CHALLENGE(new String[]{"Player name"}),

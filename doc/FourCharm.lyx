@@ -1349,17 +1349,14 @@ Presenter
 \begin_layout Standard
 For the Graphical User Interface we added an addition layer in the form
  of presenters.
- We made use of FXML
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Insert link to FXML
-\end_layout
+ We made use of FXML 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "fxml-intro"
 
 \end_inset
 
- views, because these views contain no logic another layer of logic is needed.
+views, because these views contain no logic another layer of logic is needed.
  For this we used a presenter for every view in the GUI collection of views.
  The presenters are responsible for updating the view elements and responding
  to user input.
@@ -1746,22 +1743,42 @@ Unit testing
 \end_layout
 
 \begin_layout Standard
-For Unit testing we mainly made use of dedicated test classes.
- We also made use of Mocking.
- Mocking is testing a unit in isolation or create a sufficient environment.
- To do so, you have to create and simulate mocked objects (replacements
- for collaborators in a test-oriented way).
- The Mock Objects simulate the object that is replaced.
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-LINK naar mocked.comorgnl
+For unit testing our system we mainly made use of dedicated test classes.
+ We did these unit tests with JUnit.
+ Unit test are meant to test your units of code in isolation.
+ Quickly however we ran into issues isolating our test classes from its
+ dependencies on other parts of our system or external code.
+ It is not desirable to test the dependencies of the unit under test and
+ the unit under test at the same time.
+ One of the benefits of isolated units tests is that it can be used to quickly
+ pinpoint where errors in the code are.
+ When the unit test are too much dependent on each other a single error
+ could cause a lot of tests to fail, if the tests are performed in perfect
+ isolation only the test for the class that contains the error fails.
+ It also improves the maintainability of the tests because they are less
+ dependent on the API of the dependencies.
 \end_layout
+
+\begin_layout Standard
+To help isolate the class under test from its dependencies we made use of
+ a technique called mocking.
+ Mocking allows the programmer to inject 'fake' mocked objects in place
+ of the dependencies, the tester then can have full control over the behavior
+ of these mocked dependencies.
+ We made use of JMockit 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "jmockit"
 
 \end_inset
 
-
+ because it uses the JVM Instrumentation feature to inject the mocked object
+ at runtime and therefore we don't need to change our code.
+ Mocking allows us to specify which commands are expected to be called on
+ the dependencies and what the results are of these method calls.
+ This has allowed us to test parts of the system which would be hard to
+ test otherwise.
+ 
 \end_layout
 
 \begin_layout Subsection
@@ -2036,10 +2053,10 @@ In this test, the get methods and the set methods have been tested by using
 
 \begin_layout Standard
 The join(), ready() and doMove() methods have been tested by checking if
- the commands have been send to the current group.
+ the commands are being sent to the current group.
  This is done by making a new Expectations() {{ }}.
- Tho see if the current group receives the commands, the ClientGroup instance
- is made injectable in stead of just mocked.
+ To see if the current group receives the commands, the ClientGroup instance
+ is made injectable in stead of mocked.
 \end_layout
 
 \begin_layout Standard

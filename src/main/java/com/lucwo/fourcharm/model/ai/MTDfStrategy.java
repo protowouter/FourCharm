@@ -99,7 +99,8 @@ public class MTDfStrategy implements GameStrategy {
                         bestMoveCurrentIteration = valFut.getKey();
                         bestValueCurrentIteration = value;
                     }
-                    Logger.getGlobal().finest("Depth: " + achievedDepth + " Col: " + valFut.getKey() + " Value: " + value);
+                    Logger.getGlobal().finest("Depth: " + achievedDepth +
+                            " Col: " + valFut.getKey() + " Value: " + value);
                 }
                 bestMove = bestMoveCurrentIteration;
                 bestValue = bestValueCurrentIteration;
@@ -125,8 +126,8 @@ public class MTDfStrategy implements GameStrategy {
 
 
     /**
-     * The method gives the NegaMax value in less steps than the NegaMax algorithm by using a zero width
-     * alpha beta window.
+     * The method gives the NegaMax value in less steps than the NegaMax algorithm
+     * by using a zero width alpha beta window.
      * @param board The board that is used by the game.
      * @param mark The mark of the current player.
      * @param depth The maximum search depth of the algorithm.
@@ -140,9 +141,9 @@ public class MTDfStrategy implements GameStrategy {
         //@ invariant lowerBound < upperBound;
         double lowerBound = Double.NEGATIVE_INFINITY;
 
-        final int TIMEOUT = 10;
+        final int timeout = 10;
 
-        while (lowerBound < upperBound && System.currentTimeMillis() - TIMEOUT < endTime) {
+        while (lowerBound < upperBound && System.currentTimeMillis() - timeout < endTime) {
             double beta;
 
             if (guess == lowerBound) {

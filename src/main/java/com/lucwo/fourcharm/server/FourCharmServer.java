@@ -105,7 +105,7 @@ public class FourCharmServer {
     }
 
     /**
-     * Adds a game to the GameGroup
+     * Adds a game to the GameGroup.
      * @param game the game that will be added
      */
     public void addGame(GameGroup game) {

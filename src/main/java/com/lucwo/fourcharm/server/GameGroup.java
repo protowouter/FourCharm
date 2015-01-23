@@ -78,13 +78,14 @@ public class GameGroup extends ClientGroup implements Observer {
      *                     InvalidCommandError will be thrown.
      */
     @Override
-    public void join(ClientHandler client, String pName, int gNumber, Set<Extension> exts) throws C4Exception {
+    public void join(ClientHandler client, String pName, int gNumber, Set<Extension> exts)
+            throws C4Exception {
 
         throw new InvalidCommandError("You are not allowed to use this command now.");
     }
 
     /**
-     * Makes a move for a specific client
+     * Makes a move for a specific client.
      *
      * @param client the client that is about to make a move
      * @param col    the column the move will be about
@@ -130,12 +131,14 @@ public class GameGroup extends ClientGroup implements Observer {
     /**
      * Handles the removal of a client from the group.
      *
-     * @param client The {@link com.lucwo.fourcharm.server.ClientHandler} which will has been removed from the group.
+     * @param client The {@link com.lucwo.fourcharm.server.ClientHandler}
+     *               which will has been removed from the group.
      */
     @Override
     public void removeClientCallback(ClientHandler client) {
         for (ClientHandler cH : getClients()) {
-            C4Exception e = new PlayerDisconnectError("Player " + client.getName() + " disconnected");
+            C4Exception e = new PlayerDisconnectError("Player " +
+                    client.getName() + " disconnected");
             try {
                 cH.getClient().error(e.getErrorCode(), e.getMessage());
             } catch (C4Exception e1) {

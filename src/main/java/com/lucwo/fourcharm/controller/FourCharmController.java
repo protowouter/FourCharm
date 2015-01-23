@@ -82,7 +82,7 @@ public class FourCharmController implements Observer {
     }
 
     /**
-     * Returns the current {@link com.lucwo.fourcharm.view.FourCharmView} used by this controller
+     * Returns the current {@link com.lucwo.fourcharm.view.FourCharmView} used by this controller.
      *
      * @return the current view
      */
@@ -108,7 +108,9 @@ public class FourCharmController implements Observer {
      * @param strategy   The strategy that will be used for the ai or null of no ai will be used.
      * @throws ServerConnectionException When unable to connect to a server.
      */
-    public void startNetworkGame(String hostName, String port, String playerName, GameStrategy strategy) throws ServerConnectionException {
+    public void startNetworkGame(String hostName, String port,
+                                 String playerName, GameStrategy strategy)
+            throws ServerConnectionException {
         serverClient = new ServerHandler(playerName, hostName, port, this);
         serverClient.setStrategy(strategy);
         new Thread(serverClient).start();
@@ -117,8 +119,8 @@ public class FourCharmController implements Observer {
 
 
     /**
-     * Starts a local game, without making use of a server. This method requires that exactly two parameters are
-     * null and two not null.
+     * Starts a local game, without making use of a server.
+     * This method requires that exactly two parameters are null and two not null.
      * @param humanName1 name of a human player1, or null if player 1 is an AI
      * @param humanName2 name of a human player2, or null if player 2 is an AI
      * @param stratp1 strategy used by AI player1, or null if player 1 is a human
@@ -127,7 +129,8 @@ public class FourCharmController implements Observer {
     /*@ requires stratp1 == null && stratp2 == null || humanName1 == null && humanName2 == null
         || humanName1 == null && stratp2 == null || humanName2 == null && stratp1 == null
      */
-    public void startLocalGame(String humanName1, String humanName2, GameStrategy stratp1, GameStrategy stratp2) {
+    public void startLocalGame(String humanName1, String humanName2,
+                               GameStrategy stratp1, GameStrategy stratp2) {
         if (humanName1 != null) {
             player1 = new LocalHumanPlayer(humanName1, Mark.P1);
         } else {

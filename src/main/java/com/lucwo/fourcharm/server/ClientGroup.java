@@ -85,7 +85,7 @@ public abstract class ClientGroup {
                               Set<Extension> exts) throws C4Exception;
 
     /**
-     * Makes a move
+     * Makes a move.
      * @param client the client that will make the move
      * @param col the column the move is about
      * @throws C4Exception
@@ -102,7 +102,8 @@ public abstract class ClientGroup {
 
     /**
      * Handles the removal of a client from the group.
-     * @param client The {@link com.lucwo.fourcharm.server.ClientHandler} which will has been removed from the group.
+     * @param client The {@link com.lucwo.fourcharm.server.ClientHandler}
+     *               which will has been removed from the group.
      */
     public abstract void removeClientCallback(ClientHandler client);
 
