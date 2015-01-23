@@ -1668,6 +1668,11 @@ LINK naar mocked.comorgnl
 Client
 \end_layout
 
+\begin_layout Standard
+In this section the tests of the Client package are shown and discussed.
+ This is the test of the ServerHandlerTest in the Client package.
+\end_layout
+
 \begin_layout Paragraph
 ServerHandlerTest
 \end_layout
@@ -1731,7 +1736,7 @@ Board
 \end_layout
 
 \begin_layout Standard
-These are the tests of the board package in the model package.
+This is the test of the board package in the model package.
 \end_layout
 
 \begin_layout Paragraph
@@ -1785,6 +1790,10 @@ The LocalAIPlayer class has been tested by JUNIT tests.
 Game
 \end_layout
 
+\begin_layout Standard
+This is the game test of the game package.
+\end_layout
+
 \begin_layout Paragraph
 GameTest
 \end_layout
@@ -1801,6 +1810,10 @@ The Game class has been tested by JUNIT tests.
 
 \begin_layout Subsection
 Server
+\end_layout
+
+\begin_layout Standard
+In this section the tests of the server package are shown and discussed.
 \end_layout
 
 \begin_layout Paragraph
@@ -1923,6 +1936,11 @@ The PreLobbyGroup class makes use of mocked instances for testing as well.
 
 \begin_layout Subsection
 Controller
+\end_layout
+
+\begin_layout Standard
+In this section the tests of the controller package are shown.
+ This is the controller test of the controller package.
 \end_layout
 
 \begin_layout Paragraph
