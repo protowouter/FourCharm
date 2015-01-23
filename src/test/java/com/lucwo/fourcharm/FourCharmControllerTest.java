@@ -5,13 +5,14 @@
 package com.lucwo.fourcharm;
 
 import com.lucwo.fourcharm.client.ServerHandler;
+import com.lucwo.fourcharm.controller.FourCharmController;
 import com.lucwo.fourcharm.model.Game;
-import com.lucwo.fourcharm.model.LocalAIPlayer;
-import com.lucwo.fourcharm.model.LocalHumanPlayer;
-import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
+import com.lucwo.fourcharm.model.player.LocalAIPlayer;
+import com.lucwo.fourcharm.model.player.LocalHumanPlayer;
+import com.lucwo.fourcharm.model.player.Mark;
 import com.lucwo.fourcharm.view.FourCharmTUI;
 import com.lucwo.fourcharm.view.FourCharmView;
 import mockit.Expectations;

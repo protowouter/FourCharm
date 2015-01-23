@@ -2,7 +2,7 @@
  * Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
  */
 
-package com.lucwo.fourcharm.model;
+package com.lucwo.fourcharm.model.player;
 
 /**
  * The Mark enums responsibility is to switch the current player

@@ -5,8 +5,8 @@
 package com.lucwo.fourcharm.model.ai;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
-import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.board.Board;
+import com.lucwo.fourcharm.model.player.Mark;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -96,7 +96,7 @@ public class NegaMaxStrategy implements GameStrategy {
 
     /**
      * Finds the best move on a {@link com.lucwo.fourcharm.model.board.Board}
-     * for a given {@link com.lucwo.fourcharm.model.Mark}
+     * for a given {@link com.lucwo.fourcharm.model.player.Mark}
      * @param board Board on which the NegaMax search will be performed.
      * @param mark The mark of the current player.
      * @param alphaOrig The value of the worst move that has been found for the maximizing player.

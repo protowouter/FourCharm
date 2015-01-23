@@ -4,10 +4,10 @@
 
 package com.lucwo.fourcharm.server;
 
-import com.lucwo.fourcharm.model.ASyncPlayer;
 import com.lucwo.fourcharm.model.Game;
-import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
+import com.lucwo.fourcharm.model.player.ASyncPlayer;
+import com.lucwo.fourcharm.model.player.Mark;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidMoveError;

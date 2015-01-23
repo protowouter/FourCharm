@@ -4,7 +4,7 @@
 
 package com.lucwo.fourcharm.view;
 
-import com.lucwo.fourcharm.FourCharmController;
+import com.lucwo.fourcharm.controller.FourCharmController;
 import com.lucwo.fourcharm.exception.ServerConnectionException;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.ai.GameStrategy;

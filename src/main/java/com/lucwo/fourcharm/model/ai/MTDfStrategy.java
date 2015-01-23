@@ -5,8 +5,8 @@
 package com.lucwo.fourcharm.model.ai;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
-import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.board.Board;
+import com.lucwo.fourcharm.model.player.Mark;
 
 import java.util.Map;
 import java.util.TreeMap;

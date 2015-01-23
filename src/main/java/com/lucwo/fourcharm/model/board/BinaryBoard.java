@@ -5,7 +5,7 @@
 package com.lucwo.fourcharm.model.board;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
-import com.lucwo.fourcharm.model.Mark;
+import com.lucwo.fourcharm.model.player.Mark;
 
 import java.util.Arrays;
 
@@ -227,7 +227,7 @@ public class BinaryBoard extends Board {
      * get a mark for an internal index.
      *
      * @param internalIndex The index number.
-     * @return The {@link com.lucwo.fourcharm.model.Mark} on the given index.
+     * @return The {@link com.lucwo.fourcharm.model.player.Mark} on the given index.
      */
     private Mark getInternalMark(int internalIndex) {
 

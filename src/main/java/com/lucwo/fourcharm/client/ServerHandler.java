@@ -4,11 +4,15 @@
 
 package com.lucwo.fourcharm.client;
 
-import com.lucwo.fourcharm.FourCharmController;
+import com.lucwo.fourcharm.controller.FourCharmController;
 import com.lucwo.fourcharm.exception.ServerConnectionException;
-import com.lucwo.fourcharm.model.*;
+import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
+import com.lucwo.fourcharm.model.player.ASyncPlayer;
+import com.lucwo.fourcharm.model.player.LocalAIPlayer;
+import com.lucwo.fourcharm.model.player.Mark;
+import com.lucwo.fourcharm.model.player.Player;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidMoveError;

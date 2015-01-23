@@ -5,7 +5,7 @@
 package com.lucwo.fourcharm.model.board;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
-import com.lucwo.fourcharm.model.Mark;
+import com.lucwo.fourcharm.model.player.Mark;
 
 /**
  * The Board class Models a gameboard for the game of Connect4 and provides facilities for making moves and checking
@@ -57,7 +57,7 @@ public abstract class Board {
     /**
      * Returns the mark that is on the position of the board.
      * @param index the index for which the
-     * @return the {@link com.lucwo.fourcharm.model.Mark} which is on this position.
+     * @return the {@link com.lucwo.fourcharm.model.player.Mark} which is on this position.
      */
     public abstract Mark getMark(int index);
 
@@ -71,7 +71,7 @@ public abstract class Board {
 
 
     /**
-     * Returns true if the given {@link com.lucwo.fourcharm.model.Mark} has won on this board.
+     * Returns true if the given {@link com.lucwo.fourcharm.model.player.Mark} has won on this board.
      * @param mark The player to check.
      * @return {@code true} if the player has won, otherwise {@code false}.
      */
@@ -122,7 +122,7 @@ public abstract class Board {
 
 
     /**
-     * Returns the amount of pieces a {@link com.lucwo.fourcharm.model.Player} needs
+     * Returns the amount of pieces a {@link com.lucwo.fourcharm.model.player.Player} needs
      * to have in a row to win the game.
      * @return The win streak of this {@link Board}.
      */
@@ -155,7 +155,7 @@ public abstract class Board {
 
     /**
      * Makes a move on a given column and fills the lowest spot of that column with the
-     * {@link com.lucwo.fourcharm.model.Mark}.
+     * {@link com.lucwo.fourcharm.model.player.Mark}.
      * @param col The column where a move will be made.
      * @throws InvalidMoveException when a invalid move is entered or the column
      * does not exist.

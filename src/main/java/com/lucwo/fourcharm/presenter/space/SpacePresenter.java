@@ -4,7 +4,7 @@
 
 package com.lucwo.fourcharm.presenter.space;
 
-import com.lucwo.fourcharm.model.Mark;
+import com.lucwo.fourcharm.model.player.Mark;
 import com.lucwo.fourcharm.presenter.board.BoardPresenter;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

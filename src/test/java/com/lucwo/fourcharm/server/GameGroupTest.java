@@ -4,9 +4,9 @@
 
 package com.lucwo.fourcharm.server;
 
-import com.lucwo.fourcharm.model.ASyncPlayer;
 import com.lucwo.fourcharm.model.Game;
-import com.lucwo.fourcharm.model.Mark;
+import com.lucwo.fourcharm.model.player.ASyncPlayer;
+import com.lucwo.fourcharm.model.player.Mark;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;

@@ -2,7 +2,7 @@
  * Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
  */
 
-package com.lucwo.fourcharm.model;
+package com.lucwo.fourcharm.model.player;
 
 /**
  * LocalHumanPlayer extends AsyncPlayer and is used to distinguish AI and Human players.

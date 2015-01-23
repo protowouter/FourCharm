@@ -5,7 +5,7 @@
 package com.lucwo.fourcharm.presenter.game;
 
 import com.lucwo.fourcharm.model.Game;
-import com.lucwo.fourcharm.model.Mark;
+import com.lucwo.fourcharm.model.player.Mark;
 import com.lucwo.fourcharm.presenter.FourCharmPresenter;
 import com.lucwo.fourcharm.presenter.board.BoardPresenter;
 import javafx.application.Platform;

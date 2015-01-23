@@ -5,13 +5,13 @@
 package com.lucwo.fourcharm.benchmark;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
-import com.lucwo.fourcharm.model.LocalAIPlayer;
-import com.lucwo.fourcharm.model.Mark;
-import com.lucwo.fourcharm.model.Player;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.model.board.Board;
 import com.lucwo.fourcharm.model.board.ReferenceBoard;
+import com.lucwo.fourcharm.model.player.LocalAIPlayer;
+import com.lucwo.fourcharm.model.player.Mark;
+import com.lucwo.fourcharm.model.player.Player;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;

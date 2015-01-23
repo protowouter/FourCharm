@@ -4,7 +4,7 @@
 
 package com.lucwo.fourcharm.presenter;
 
-import com.lucwo.fourcharm.FourCharmController;
+import com.lucwo.fourcharm.controller.FourCharmController;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.presenter.game.GamePresenter;
 import com.lucwo.fourcharm.presenter.game.NewGamePresenter;

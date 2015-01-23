@@ -4,9 +4,9 @@
 
 package com.lucwo.fourcharm.model.ai;
 
-import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.model.board.Board;
+import com.lucwo.fourcharm.model.player.Mark;
 import org.junit.Before;
 import org.junit.Test;
 

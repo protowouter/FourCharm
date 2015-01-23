@@ -2,7 +2,7 @@
  * Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
  */
 
-package com.lucwo.fourcharm.model;
+package com.lucwo.fourcharm.model.player;
 
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.board.Board;

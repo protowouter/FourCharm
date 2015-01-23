@@ -52,7 +52,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.lucwo.fourcharm.FourCharmController</mainClass>
+                            <mainClass>com.lucwo.fourcharm.controller.FourCharmController</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -73,7 +73,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.lucwo.fourcharm.FourCharmController</mainClass>
+                            <mainClass>com.lucwo.fourcharm.controller.FourCharmController</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -135,7 +135,7 @@
                                 <limit implementation="org.jacoco.report.check.Limit">
                                     <counter>INSTRUCTION</counter>
                                     <value>COVEREDRATIO</value>
-                                    <minimum>0.30</minimum>
+                                    <minimum>0.50</minimum>
                                 </limit>
                             </limits>
                         </rule>

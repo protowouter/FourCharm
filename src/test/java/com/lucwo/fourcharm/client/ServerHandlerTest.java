@@ -4,13 +4,13 @@
 
 package com.lucwo.fourcharm.client;
 
-import com.lucwo.fourcharm.FourCharmController;
-import com.lucwo.fourcharm.model.ASyncPlayer;
+import com.lucwo.fourcharm.controller.FourCharmController;
 import com.lucwo.fourcharm.model.Game;
-import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
+import com.lucwo.fourcharm.model.player.ASyncPlayer;
+import com.lucwo.fourcharm.model.player.Mark;
 import mockit.Expectations;
 import mockit.Mocked;
 import nl.woutertimmermans.connect4.protocol.fgroup.CoreServer;
@@ -65,6 +65,7 @@ public class ServerHandlerTest {
         new Expectations() {{
             anyReader.readLine();
             returns("hoi", "hallo", null);
+
         }};
 
         handler.handleServerCommands();
@@ -103,7 +104,7 @@ public class ServerHandlerTest {
             anyPlayer.getName();
             returns("start", "game");
         }};
-        handler.startGame("start", "game");
+        handler.startGame("accept 23", "start_game frits henkie");
         handler.doneMove("start", 3);
 
     }

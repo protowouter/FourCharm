@@ -6,6 +6,9 @@ package com.lucwo.fourcharm.model;
 
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.model.board.ReferenceBoard;
+import com.lucwo.fourcharm.model.player.LocalAIPlayer;
+import com.lucwo.fourcharm.model.player.Mark;
+import com.lucwo.fourcharm.model.player.Player;
 import org.junit.Before;
 import org.junit.Test;
 

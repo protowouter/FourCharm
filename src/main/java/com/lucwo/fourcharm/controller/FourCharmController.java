@@ -2,13 +2,17 @@
  * Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
  */
 
-package com.lucwo.fourcharm;
+package com.lucwo.fourcharm.controller;
 
 import com.lucwo.fourcharm.client.ServerHandler;
 import com.lucwo.fourcharm.exception.ServerConnectionException;
-import com.lucwo.fourcharm.model.*;
+import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
+import com.lucwo.fourcharm.model.player.LocalAIPlayer;
+import com.lucwo.fourcharm.model.player.LocalHumanPlayer;
+import com.lucwo.fourcharm.model.player.Mark;
+import com.lucwo.fourcharm.model.player.Player;
 import com.lucwo.fourcharm.view.FourCharmGUI;
 import com.lucwo.fourcharm.view.FourCharmTUI;
 import com.lucwo.fourcharm.view.FourCharmView;

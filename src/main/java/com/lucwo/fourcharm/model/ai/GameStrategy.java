@@ -4,8 +4,8 @@
 
 package com.lucwo.fourcharm.model.ai;
 
-import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.board.Board;
+import com.lucwo.fourcharm.model.player.Mark;
 
 /**
  * The strategy used by a computer player. This class makes use of the Mark class

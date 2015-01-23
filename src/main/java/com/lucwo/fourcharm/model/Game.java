@@ -6,6 +6,7 @@ package com.lucwo.fourcharm.model;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.board.Board;
+import com.lucwo.fourcharm.model.player.Player;
 
 import java.util.Observable;
 import java.util.logging.Logger;
