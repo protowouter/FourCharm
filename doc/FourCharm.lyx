@@ -1600,6 +1600,174 @@ Test report
 Unit testing
 \end_layout
 
+\begin_layout Subsection
+Client
+\end_layout
+
+\begin_layout Paragraph
+ServerHandler
+\end_layout
+
+\begin_layout Subsection
+Exception
+\end_layout
+
+\begin_layout Paragraph
+InvalidMoveException
+\end_layout
+
+\begin_layout Paragraph
+ServerConnectionException
+\end_layout
+
+\begin_layout Subsection
+Model
+\end_layout
+
+\begin_layout Subsubsection
+AI
+\end_layout
+
+\begin_layout Paragraph
+MDTfStrategy
+\end_layout
+
+\begin_layout Paragraph
+NegaMaxStrategy
+\end_layout
+
+\begin_layout Paragraph
+RandomStrategy
+\end_layout
+
+\begin_layout Subsubsection
+Board
+\end_layout
+
+\begin_layout Paragraph
+BinaryBoard
+\end_layout
+
+\begin_layout Paragraph
+ReferenceBoard
+\end_layout
+
+\begin_layout Subsubsection
+Player
+\end_layout
+
+\begin_layout Paragraph
+ASyncPlayer
+\end_layout
+
+\begin_layout Paragraph
+LocalAIPlayer
+\end_layout
+
+\begin_layout Paragraph
+LocalHumanPlayer
+\end_layout
+
+\begin_layout Paragraph
+Mark
+\end_layout
+
+\begin_layout Subsubsection
+Game
+\end_layout
+
+\begin_layout Paragraph
+Game
+\end_layout
+
+\begin_layout Subsection
+Presenter
+\end_layout
+
+\begin_layout Subsubsection
+Board
+\end_layout
+
+\begin_layout Paragraph
+BoardPresenter
+\end_layout
+
+\begin_layout Subsubsection
+Game
+\end_layout
+
+\begin_layout Paragraph
+GamePresenter
+\end_layout
+
+\begin_layout Paragraph
+NewGamePresenter
+\end_layout
+
+\begin_layout Subsubsection
+Space
+\end_layout
+
+\begin_layout Paragraph
+SpacePresenter
+\end_layout
+
+\begin_layout Subsubsection
+Presenter
+\end_layout
+
+\begin_layout Paragraph
+FourCharmFactory
+\end_layout
+
+\begin_layout Paragraph
+FourCharmPresenter
+\end_layout
+
+\begin_layout Subsection
+Server
+\end_layout
+
+\begin_layout Paragraph
+ClientHandler
+\end_layout
+
+\begin_layout Paragraph
+FourCharmServer
+\end_layout
+
+\begin_layout Paragraph
+GameGroup
+\end_layout
+
+\begin_layout Paragraph
+LobbyGroup
+\end_layout
+
+\begin_layout Paragraph
+PreLobbyGroup
+\end_layout
+
+\begin_layout Subsection
+View
+\end_layout
+
+\begin_layout Paragraph
+FourCharmGUI
+\end_layout
+
+\begin_layout Paragraph
+FourCharmTUI
+\end_layout
+
+\begin_layout Subsection
+Controller
+\end_layout
+
+\begin_layout Paragraph
+FourCharmController
+\end_layout
+
 \begin_layout Section
 System testing
 \end_layout
@@ -2013,6 +2181,34 @@ Then the server will send an InvalidParameterError with 7
 Whenever a Client is in a game and it is his turn, but he tries to make
  a invalid move, the server should not allow this to happen.
  The server should send an InvalidParameteError with the attempted move.
+\end_layout
+
+\begin_layout Chapter
+Metrics report
+\end_layout
+
+\begin_layout Chapter
+Reflection on planning
+\end_layout
+
+\begin_layout Section
+Planning influenced by experiences
+\end_layout
+
+\begin_layout Section
+Actual progress
+\end_layout
+
+\begin_layout Section
+Countermeasures
+\end_layout
+
+\begin_layout Section
+What did we learn
+\end_layout
+
+\begin_layout Section
+Next year's student assistent
 \end_layout
 
 \begin_layout Chapter
