@@ -18,6 +18,7 @@ import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.net.Socket;
 import java.util.HashSet;
 
@@ -59,8 +60,14 @@ public class ServerHandlerTest {
     }
 
     @Test
-    public void testHandleServerCommands() throws Exception {
+    public void testHandleServerCommands(@Mocked BufferedReader anyReader) throws Exception {
 
+        new Expectations() {{
+            anyReader.readLine();
+            returns("hoi", "hallo", null);
+        }};
+
+        handler.handleServerCommands();
     }
 
     @Test

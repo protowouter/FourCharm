@@ -169,6 +169,7 @@ public class ServerSteps {
         joinWouter("Wouter");
         inWouter.readLine(); // nomnom accept
         readyWouter();
+        Thread.sleep(100);
         readyLuce();
         inWouter.readLine(); // nomnom start_game
         inLuce.readLine(); // nomnom start_game
