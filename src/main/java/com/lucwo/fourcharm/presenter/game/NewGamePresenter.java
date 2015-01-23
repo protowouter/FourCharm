@@ -12,8 +12,6 @@ import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.presenter.FourCharmPresenter;
 import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -111,7 +109,7 @@ public class NewGamePresenter {
 
     public void localNetworkChoice() {
         String choice = localNetworkChoice.getSelectionModel().getSelectedItem();
-        if (choice.equals("Network")) {
+        if ("Network".equals(choice)) {
             enableNetworkFields(true);
             disablePlayer2Fields();
         } else {
@@ -148,17 +146,17 @@ public class NewGamePresenter {
 
     public void showPlayerFields() {
         String p1Selection = p1Select.getSelectionModel().getSelectedItem();
-        enbaleP1Fields(p1Selection.equals("Computer"));
+        enbaleP1Fields("Computer".equals(p1Selection));
 
         String p2Selection = p2Select.getSelectionModel().getSelectedItem();
-        enableP2Fields(p2Selection.equals("Computer"));
+        enableP2Fields("Computer".equals(p2Selection));
         checkAbleToPlayah();
 
     }
 
     private void enableP2Fields(boolean computer) {
-        boolean localGame = localNetworkChoice.getSelectionModel().
-                getSelectedItem().equals("Local");
+        boolean localGame = "Local".equals(localNetworkChoice.getSelectionModel().
+                getSelectedItem());
         if (localGame) {
             p2Strategy.setDisable(!computer);
             p2Strategy.setVisible(computer);
@@ -182,39 +180,51 @@ public class NewGamePresenter {
         String p2Type = p2Select.getSelectionModel().getSelectedItem();
         boolean canPlay;
         if ("Local".equals(localNetworkChoice.getSelectionModel().getSelectedItem())) {
-            if ("Computer".equals(p1Type)) {
-                canPlay = !p1Strategy.getSelectionModel().isEmpty();
-            } else {
-                canPlay = !"".equals(p1Name.textProperty().get());
-            }
-            if (canPlay) {
-                if ("Computer".equals(p2Type)) {
-                    canPlay = !p2Strategy.getSelectionModel().isEmpty();
-                } else {
-                    canPlay = !"".equals(p2Name.textProperty().get());
-                }
-            }
+            canPlay = checkLocalGame(p1Type, p2Type);
         } else {
-            if ("Computer".equals(p1Type)) {
-                canPlay = !p1Strategy.getSelectionModel().isEmpty();
-            } else {
-                canPlay = !"".equals(p1Name.textProperty().get());
-            }
-            if (canPlay) {
-                canPlay = !"".equals(serverAddress.textProperty().get());
-                if (canPlay) {
-                    try {
-                        Integer.parseInt(serverPort.textProperty().get());
-                    } catch (NumberFormatException e) {
-                        canPlay = false;
-                    }
-
-                }
-
-            }
+            canPlay = checkNetworkGame(p1Type);
         }
 
         playButton.setDisable(!canPlay);
+    }
+
+    private boolean checkNetworkGame(String p1Type) {
+        boolean canPlay;
+        if ("Computer".equals(p1Type)) {
+            canPlay = !p1Strategy.getSelectionModel().isEmpty();
+        } else {
+            canPlay = !"".equals(p1Name.textProperty().get());
+        }
+        if (canPlay) {
+            canPlay = !"".equals(serverAddress.textProperty().get());
+            if (canPlay) {
+                try {
+                    Integer.parseInt(serverPort.textProperty().get());
+                } catch (NumberFormatException e) {
+                    canPlay = false;
+                }
+
+            }
+
+        }
+        return canPlay;
+    }
+
+    private boolean checkLocalGame(String p1Type, String p2Type) {
+        boolean canPlay;
+        if ("Computer".equals(p1Type)) {
+            canPlay = !p1Strategy.getSelectionModel().isEmpty();
+        } else {
+            canPlay = !"".equals(p1Name.textProperty().get());
+        }
+        if (canPlay) {
+            if ("Computer".equals(p2Type)) {
+                canPlay = !p2Strategy.getSelectionModel().isEmpty();
+            } else {
+                canPlay = !"".equals(p2Name.textProperty().get());
+            }
+        }
+        return canPlay;
     }
 
     public void startNewGame() {

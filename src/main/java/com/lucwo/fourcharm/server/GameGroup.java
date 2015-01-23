@@ -106,6 +106,7 @@ public class GameGroup extends ClientGroup implements Observer {
                 }
                 playerMap.get(client).queueMove(col);
             } catch (IllegalStateException e) {
+                Logger.getGlobal().throwing(getClass().toString(), "doMove", e);
                 throw new InvalidMoveError("You are not allowed to make a move right now");
             }
         } else {
@@ -137,11 +138,11 @@ public class GameGroup extends ClientGroup implements Observer {
     @Override
     public void removeClientCallback(ClientHandler client) {
         for (ClientHandler cH : getClients()) {
-            C4Exception e = new PlayerDisconnectError("Player " +
+            C4Exception c4e = new PlayerDisconnectError("Player " +
                     client.getName() + " disconnected");
             try {
-                cH.getClient().error(e.getErrorCode(), e.getMessage());
-            } catch (C4Exception e1) {
+                cH.getClient().error(c4e.getErrorCode(), c4e.getMessage());
+            } catch (C4Exception e) {
                 Logger.getGlobal().throwing(getClass().toString(), "removeClientCallback", e);
             }
         }

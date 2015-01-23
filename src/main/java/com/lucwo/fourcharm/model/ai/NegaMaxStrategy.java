@@ -10,8 +10,6 @@ import com.lucwo.fourcharm.model.player.Mark;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
@@ -32,7 +30,6 @@ public class NegaMaxStrategy implements GameStrategy {
     private static final int FOE_POS_VALUE = -1000;
     private static final int FRIENDLY_POS_VALUE = 1000;
     private static final int EMPTY_POS_VALUE = 10;
-    private static final ExecutorService NEGA_EXEC = ForkJoinPool.commonPool();
     private static final int POS_TABLE_SIZE = 20_000_000;
     private static final Map<Long, TransPosEntry> TRANS_POS_TABLE = new ConcurrentSkipListMap<>();
 

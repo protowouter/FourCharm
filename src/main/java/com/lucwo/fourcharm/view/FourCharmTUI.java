@@ -45,7 +45,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
      */
     public FourCharmTUI(FourCharmController cont) {
 
-        inputScanner = new Scanner(System.in);
+        inputScanner = new Scanner(System.in, "UTF-8");
         gameOn = false;
         running = true;
         controller = cont;
@@ -115,40 +115,36 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
      */
     private void executeCommand(Command command, String[] args) {
         switch (command) {
-            //Use the chat function
             case CHAT:
+                //Use the chat function
                 showError(NOT_IMPLEMENTED);
                 break;
-            //Connect to a server
             case CONNECT:
+                //Connect to a server
                 connect(args);
                 break;
-            //Play a local game
             case LOCAL:
-                if (!gameOn) {
-                    createLocalGame(args);
-                } else {
-                    showError("Currently playing a game!");
-                }
+                //Play a local game
+                createLocalGame(args);
                 break;
-            //Ask for a hint in the current game.
             case HINT:
+                //Ask for a hint in the current game.
                 showError(NOT_IMPLEMENTED);
                 break;
-            //Challenge another player to play a game
             case CHALLENGE:
+                //Challenge another player to play a game
                 showError(NOT_IMPLEMENTED);
                 break;
-            //List all of the players in the lobby
             case LIST_PLAYERS:
+                //List all of the players in the lobby
                 showError(NOT_IMPLEMENTED);
                 break;
-            //List all the available commands
             case HELP:
+                //List all the available commands
                 showHelp();
                 break;
-            //Exit the game
             case EXIT:
+                //Exit the application
                 running = false;
                 break;
             default:
@@ -171,17 +167,22 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
      * @param args The arguments given to play a game (for instance: CHAT, CHALLENGE, etc.).
      */
     private void createLocalGame(String[] args) {
-        GameStrategy p1Strat = parseStrategy(args[0]);
-        GameStrategy p2Strat = parseStrategy(args[1]);
-        if (p1Strat == null && p2Strat == null) {
-            controller.startLocalGame(args[0], args[1], null, null);
-        } else if (p1Strat == null) {
-            controller.startLocalGame(args[0], null, null, p2Strat);
-        } else if (p2Strat == null) {
-            controller.startLocalGame(null, args[1], p1Strat, null);
+        if (!gameOn) {
+            GameStrategy p1Strat = parseStrategy(args[0]);
+            GameStrategy p2Strat = parseStrategy(args[1]);
+            if (p1Strat == null && p2Strat == null) {
+                controller.startLocalGame(args[0], args[1], null, null);
+            } else if (p1Strat == null) {
+                controller.startLocalGame(args[0], null, null, p2Strat);
+            } else if (p2Strat == null) {
+                controller.startLocalGame(null, args[1], p1Strat, null);
+            } else {
+                controller.startLocalGame(null, null, p1Strat, p2Strat);
+            }
         } else {
-            controller.startLocalGame(null, null, p1Strat, p2Strat);
+            showError("Currently playing a game!");
         }
+
     }
 
     /**
@@ -211,6 +212,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
         try {
             controller.startNetworkGame(host, port, playerName, strat);
         } catch (ServerConnectionException e) {
+            Logger.getGlobal().throwing(getClass().toString(), "connect", e);
             showError(e.getMessage());
         }
 
@@ -289,12 +291,12 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     @Override
     public void showNewGame() {
-
+        // Not needed in this TUI
     }
 
     @Override
     public void showRematch() {
-
+        //TODO implement.
     }
 
     @Override
@@ -320,10 +322,8 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
      */
     private enum Command {
         CHAT(new String[]{"Chatmessage"}),
-        CONNECT(new String[]{"Host", "Port", "Playername",
-                "| -m (MTDF) | -r (Random) | -h (Human)"}),
-        LOCAL(new String[]{"Playername | -m (MTDF) | -r (Random)",
-                "Playername | -m (MTDF) | -r (Random)"}),
+        CONNECT(new String[]{"Host", "Port", "Playername", "| -m (MTDF) | -r (Random) | -h (Human)"}),
+        LOCAL(new String[]{"Playername | -m (MTDF) | -r (Random)", "Playername | -m (MTDF) | -r (Random)"}),
         HINT(new String[0]),
         EXIT(new String[0]),
         CHALLENGE(new String[]{"Player name"}),

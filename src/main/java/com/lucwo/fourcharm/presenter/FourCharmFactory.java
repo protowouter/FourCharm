@@ -11,6 +11,7 @@ import com.lucwo.fourcharm.presenter.game.NewGamePresenter;
 import javafx.fxml.FXMLLoader;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * TODO fourcharmfactory javadoc.
@@ -43,7 +44,7 @@ public class FourCharmFactory {
                 fourCharmPresenter.setFourCharmController(controller);
                 fourCharmPresenter.showNewGame();
             } catch (IOException e) {
-                throw new RuntimeException("Unable to load main.fxml", e);
+                Logger.getGlobal().throwing(getClass().toString(), "getFourCharmPresenter", e);
             }
         }
         return fourCharmPresenter;
@@ -62,7 +63,7 @@ public class FourCharmFactory {
                 newGamePresenter.setFourcharmPresenter(fourCharmPresenter);
                 newGamePresenter.init();
             } catch (IOException e) {
-                throw new RuntimeException("Unable to load new.fxml", e);
+                Logger.getGlobal().throwing(getClass().toString(), "getNewGamePresenter", e);
             }
         }
         return newGamePresenter;
@@ -83,7 +84,7 @@ public class FourCharmFactory {
                 gamePresenter.init();
 
             } catch (IOException e) {
-                throw new RuntimeException("Unable to load show.fxml");
+                Logger.getGlobal().throwing(getClass().toString(), "getGamePresenter", e);
             }
         }
 

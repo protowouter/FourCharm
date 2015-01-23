@@ -191,4 +191,26 @@ public abstract class Board {
         return equals;
     }
 
+    /**
+     * @return a hashcode for this object
+     * @see java.lang.Object#hashCode
+     */
+    @Override
+    public int hashCode() {
+        int p1Sum = 0;
+        int p2Sum = 0;
+
+        for (int i = 0; i < getSpotCount(); i++) {
+            Mark m = getMark(i);
+            long value = 1 << i;
+            if (m == Mark.P1) {
+                p1Sum += value;
+            } else if (m == Mark.P2) {
+                p2Sum += value;
+            }
+        }
+
+        return 2 * p1Sum + p2Sum;
+    }
+
 }

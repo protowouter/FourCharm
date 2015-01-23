@@ -120,7 +120,7 @@ public class GamePresenter implements Observer {
 
         try {
             fxmlLoader.load();
-            if (boardPane.getChildren().size() > 0) {
+            if (!boardPane.getChildren().isEmpty()) {
                 boardPane.getChildren().remove(0);
             }
             boardPane.getChildren().add(fxmlLoader.getRoot());

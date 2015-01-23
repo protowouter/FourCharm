@@ -84,6 +84,7 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
             processor = new CoreClient.Processor<>(this);
             serverClient = new CoreServer.Client(out);
         } catch (IOException e) {
+            Logger.getGlobal().throwing(getClass().toString(), "constructor", e);
             throw new ServerConnectionException(e.getMessage());
         }
 
@@ -128,7 +129,7 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
         try {
             serverClient.join(name, GROUP_NUMBER, new HashSet<>());
         } catch (C4Exception e) {
-            Logger.getGlobal().throwing(getClass().toString(), "startGame", e);
+            Logger.getGlobal().throwing(getClass().toString(), "joinServer", e);
         }
     }
 
@@ -146,9 +147,9 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
 
             }
         } catch (IOException e) {
-            Logger.getGlobal().throwing(getClass().toString(), "startGame", e);
+            Logger.getGlobal().throwing(getClass().toString(), "handleServerCommands", e);
         } catch (C4Exception e) {
-            Logger.getGlobal().throwing(getClass().toString(), "startGame", e);
+            Logger.getGlobal().throwing(getClass().toString(), "handleServerCommands", e);
             try {
                 serverClient.error(e.getErrorCode(), e.getMessage());
             } catch (C4Exception c4) {

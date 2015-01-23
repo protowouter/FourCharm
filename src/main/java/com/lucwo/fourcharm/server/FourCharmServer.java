@@ -22,6 +22,8 @@ import java.util.logging.Logger;
  */
 public class FourCharmServer {
 
+    private static final int TIMEOUT = 100;
+
     private ClientGroup lobby;
     private ClientGroup preLobby;
     private Collection<GameGroup> games;
@@ -73,7 +75,7 @@ public class FourCharmServer {
     public void openSocket() {
         try {
             serverSocket = new ServerSocket(poort);
-            serverSocket.setSoTimeout(100);
+            serverSocket.setSoTimeout(TIMEOUT);
             Logger.getGlobal().info("Listening for connections on port " + getSocketPort());
         } catch (IOException e) {
             Logger.getGlobal().warning("Cannot listen on port " + poort);

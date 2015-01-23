@@ -60,9 +60,6 @@ public class FourCharmController implements Observer {
 // ----------------------- Commands ---------------------
 
     public static void main(String[] args) {
-        for (String arg : args) {
-            System.out.println(arg);
-        }
         if (args.length > 0 && "-c".equals(args[0])) {
             FourCharmController con = new FourCharmController();
             FourCharmTUI view = new FourCharmTUI(con);

@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * TODO: boardpresenter javadoc.
@@ -66,7 +67,7 @@ public class BoardPresenter {
                     spaces[col][row].setBoardPresenter(this);
                     spaces[col][row].setCol(col);
                 } catch (IOException exception) {
-                    throw new RuntimeException(exception);
+                    Logger.getGlobal().throwing(getClass().toString(), "initBoard", exception);
                 }
             }
         }

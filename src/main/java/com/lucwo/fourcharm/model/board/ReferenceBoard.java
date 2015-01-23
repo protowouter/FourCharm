@@ -105,7 +105,7 @@ public class ReferenceBoard extends Board {
             int tColumn = column;
             for (int row = 0; (row < ROWS) && (tColumn >= 0)
                     && (streak < WIN_STREAK); row++, tColumn--) {
-                streak = (this.board[tColumn][row] == player) ? (streak + 1) : 0;
+                streak = this.board[tColumn][row] == player ? streak + 1 : 0;
             }
             diag = streak == WIN_STREAK;
         }
@@ -136,7 +136,7 @@ public class ReferenceBoard extends Board {
             for (int row = 0; (row < ROWS) && (tColumn < COLUMNS)
                     && (streak < WIN_STREAK); row++, tColumn++) {
                 Logger.getGlobal().finest("Checking col: " + tColumn + " row: " + row);
-                streak = (this.board[tColumn][row] == player) ? (streak + 1) : 0;
+                streak = this.board[tColumn][row] == player ? streak + 1 : 0;
             }
             diag = streak == WIN_STREAK;
         }
@@ -156,7 +156,7 @@ public class ReferenceBoard extends Board {
         for (int row = 0; (row < ROWS) && !horizontal; row++) {
             int streak = 0;
             for (int column = 0; (column < COLUMNS) && (streak < WIN_STREAK); column++) {
-                streak = (this.board[column][row] == player) ? (streak + 1) : 0;
+                streak = this.board[column][row] == player ? streak + 1 : 0;
             }
             horizontal = streak == WIN_STREAK;
         }
@@ -175,7 +175,7 @@ public class ReferenceBoard extends Board {
         for (int column = 0; (column < COLUMNS) && !vertical; column++) {
             int streak = 0;
             for (int row = 0; (row < ROWS) && (streak < WIN_STREAK); row++) {
-                streak = (this.board[column][row] == player) ? (streak + 1) : 0;
+                streak = this.board[column][row] == player ? streak + 1 : 0;
             }
             Logger.getGlobal().finer("Streak = " + streak);
             vertical = streak == WIN_STREAK;
@@ -196,7 +196,7 @@ public class ReferenceBoard extends Board {
 
     @Override
     public int[] getMoves() {
-        return moves;
+        return Arrays.copyOf(moves, moves.length);
     }
 
     @Override

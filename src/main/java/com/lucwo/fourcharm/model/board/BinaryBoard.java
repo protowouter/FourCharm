@@ -157,7 +157,7 @@ public class BinaryBoard extends Board {
      * @return The moves that are made.
      */
     public int[] getMoves() {
-        return moves;
+        return Arrays.copyOf(moves, moves.length);
     }
 
     /**

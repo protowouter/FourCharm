@@ -29,6 +29,7 @@ public class MTDfStrategy implements GameStrategy {
     private static final double FIRST_GUESS = 17880;
     private static final int[] COLS = new int[]{3, 4, 2, 5, 1, 6, 0};
     private static final int DEPTH_STEP = 2;
+    private static final int TIMEOUT = 10;
 
     // ------------------ Instance variables ----------------
     private long endTime;
@@ -108,7 +109,7 @@ public class MTDfStrategy implements GameStrategy {
             } catch (InterruptedException | ExecutionException e) {
                 Logger.getGlobal().throwing(getClass().toString(), "determineMove", e);
             } catch (TimeoutException e) {
-                Logger.getGlobal().finer("Time's up: " + e.toString());
+                Logger.getGlobal().throwing(getClass().toString(), "determineMove", e);
             }
 
         }
@@ -141,9 +142,7 @@ public class MTDfStrategy implements GameStrategy {
         //@ invariant lowerBound < upperBound;
         double lowerBound = Double.NEGATIVE_INFINITY;
 
-        final int timeout = 10;
-
-        while (lowerBound < upperBound && System.currentTimeMillis() - timeout < endTime) {
+        while (lowerBound < upperBound && System.currentTimeMillis() - TIMEOUT < endTime) {
             double beta;
 
             if (guess == lowerBound) {
