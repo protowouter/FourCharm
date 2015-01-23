@@ -45,7 +45,7 @@ public class Game extends Observable implements Runnable {
         player1 = p1;
         player2 = p2;
         running = true;
-        current = p1;
+        current = p2;
     }
 
     /**
@@ -71,6 +71,7 @@ public class Game extends Observable implements Runnable {
         boolean fairplay = true;
 
         while (running && fairplay && !hasFinished()) {
+            current = nextPlayer();
             setChanged();
             notifyObservers();
             try {
@@ -79,7 +80,6 @@ public class Game extends Observable implements Runnable {
                 Logger.getGlobal().warning("This is not fair!1!111!!");
                 fairplay = false;
             }
-            current = nextPlayer();
 
         }
 

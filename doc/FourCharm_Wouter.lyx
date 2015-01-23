@@ -118,7 +118,7 @@ Overall Design
 \begin_layout Standard
 Early on in the design of our system we recognized that the protocol that
  would handle the communication between the client and server could be extracted
- from the game system.
+ from the rest of the system.
  This protocol implementation is available at Github.com 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -127,7 +127,7 @@ key "c4-protocol"
 \end_inset
 
 .
- 
+ Our system therefore consists of two parts: FourCharm and C4 Protocol.
 \end_layout
 
 \begin_layout Section
@@ -555,7 +555,59 @@ Server package
 \end_layout
 
 \begin_layout Section
-Requirements overview
+Requirements
+\end_layout
+
+\begin_layout Standard
+This section includes a description of the way we implemented the Functional
+ requirements of the application.
+ For an general overview you can refer to table 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "tab:The-requirements-for"
+
+\end_inset
+
+ for the server requirements and table 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "tab:The-requirements-for-1"
+
+\end_inset
+
+ for the client.
+\end_layout
+
+\begin_layout Subparagraph
+Server
+\end_layout
+
+\begin_layout Standard
+The entry point for the server is the FourCharmServer class.
+ This class accept clients and creates a ClientHandler to take care of sending
+ and receiving the commands.
+ ClientHandler uses a C4 Protocol C4Processor to convert incoming command
+ strings to method calls on the ClientHandler.
+ C4 Protocol checks all parameters and parses them to native Java types.
+ When one of the parameters is not correct a C4Exception is thrown, that
+ error is then sent to the client.
+ C4 Protocol also makes sure that the error never sends a command that doesn't
+ respect the protocol because it throws a C4Exception when this is attempted.
+ 
+\end_layout
+
+\begin_layout Standard
+Games, the Lobby and the PreLobby are modeled as ClientGroups.
+ A ClientGroup is just a collection of ClientHandlers, it allows adding
+ and removing of ClientHandlers and checking if a particular name already
+ exists in the group.
+ The FourCharmServer maintains a list of all running games.
+ Because of this the server supports the runing of an arbitrary amount of
+ games simultaneously.
+ The clienthandlers forward the received commands to the current group the
+ clienthandler is in.
+ The FourCharmServer class offers an minimal UI for monitoring communication
+ messages and entering or chaning the port number the server listens on.
 \end_layout
 
 \begin_layout Standard
@@ -563,7 +615,7 @@ Requirements overview
 \begin_inset Float table
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align left
@@ -771,7 +823,7 @@ All communication messages are written to System.out
 \begin_inset Text
 
 \begin_layout Plain Layout
-FourCharmTUI
+FourCharmServer
 \end_layout
 
 \end_inset
@@ -815,6 +867,12 @@ C4 Protocol
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:The-requirements-for"
+
+\end_inset
+
 The requirements for the server
 \end_layout
 
@@ -830,6 +888,20 @@ The requirements for the server
 \end_inset
 
 
+\end_layout
+
+\begin_layout Paragraph
+Client
+\end_layout
+
+\begin_layout Standard
+The entry point for the client portion of our system is the FourCharmController
+ class.
+ Dependent on the program arguments given to the main method the controller
+ starts a GUI or a TUI.
+ The client also uses the model collection of classes for the game logic.
+ The user friendliness of the responisbilty of the FourCharmTUI and the
+ FourCharmGUI.
 \end_layout
 
 \begin_layout Standard
@@ -1208,6 +1280,12 @@ C4 Protocol
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:The-requirements-for-1"
+
+\end_inset
+
 The requirements for the client
 \end_layout
 
