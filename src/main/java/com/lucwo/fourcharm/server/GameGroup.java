@@ -44,7 +44,6 @@ public class GameGroup extends ClientGroup implements Observer {
      * @param client2   The second ClientHandler that will be player 2 in the Game.
      */
     public GameGroup(FourCharmServer theServer, ClientHandler client1, ClientHandler client2) {
-        // TODO: refactor to make use of ASyncPlayer.getMoveRequester()
         server = theServer;
         playerMap = new HashMap<>();
         ASyncPlayer player1 = new ASyncPlayer(client1.getName(), Mark.P1);
@@ -58,13 +57,9 @@ public class GameGroup extends ClientGroup implements Observer {
         game.addObserver(this);
         try {
             client1.getClient().startGame(client1.getName(), client2.getName());
-        } catch (C4Exception e) {
-            e.printStackTrace();
-        }
-        try {
             client2.getClient().startGame(client1.getName(), client2.getName());
         } catch (C4Exception e) {
-            e.printStackTrace();
+            Logger.getGlobal().throwing(getClass().toString(), "constructor", e);
         }
     }
 

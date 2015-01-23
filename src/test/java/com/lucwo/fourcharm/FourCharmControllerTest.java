@@ -12,11 +12,16 @@ import com.lucwo.fourcharm.model.Mark;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
+import com.lucwo.fourcharm.view.FourCharmTUI;
 import com.lucwo.fourcharm.view.FourCharmView;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
 
@@ -122,18 +127,102 @@ public class FourCharmControllerTest {
     }
 
     @Test
-    public void testUpdate() throws Exception {
+    public void testUpdateHumanPlayer() throws Exception {
+        final LocalHumanPlayer p1 = new LocalHumanPlayer("Henkie", Mark.P1);
+        final LocalAIPlayer p2 = new LocalAIPlayer(new RandomStrategy(), Mark.P2);
+        final Game game = new Game(BinaryBoard.class, p1, p2);
 
+        new Expectations() {
+            {
+                game.getCurrent();
+                result = p1;
+                view.enableInput();
+            }
+        };
+
+        controller.update(game, null);
+
+    }
+
+    @Test
+    public void testUpdateAIPlayer() throws Exception {
+        final LocalAIPlayer p1 = new LocalAIPlayer(new RandomStrategy(), Mark.P1);
+
+        new Expectations() {
+            {
+                game.getCurrent();
+                result = p1;
+            }
+        };
+        controller.update(game, null);
+    }
+
+    @Test
+    public void testUpdateFinishedGame() throws Exception {
+
+        new Expectations() {{
+            game.hasFinished();
+            result = true;
+            view.showRematch();
+        }};
+
+        controller.update(game, null);
     }
 
     @Test
     public void testRematch() throws Exception {
 
+        new Expectations() {{
+            new Game(BinaryBoard.class, null, null);
+        }};
+
+        controller.rematch();
+
     }
 
     @Test
-    public void testShutdown() throws Exception {
+    public void testShutdownClient(@Mocked ServerHandler anyHandler) throws Exception {
 
+        new Expectations() {{
+            anyHandler.disconnect();
+        }};
+
+        controller.startNetworkGame("localhost", "8080", "pietje", new RandomStrategy());
+        controller.shutdown();
+    }
+
+    @Test
+    public void testShutdownGame() throws Exception {
+
+        new Expectations() {{
+            game.shutdown();
+        }};
+
+        controller.setGame(game);
+        controller.shutdown();
+    }
+
+    @Test
+    public void testMain() throws Exception {
+
+        new Expectations() {{
+            new FourCharmTUI(controller);
+        }};
+
+        FourCharmController.main(new String[]{"-c"});
+    }
+
+    @Test
+    public void testMainVerbose(@Mocked Logger anyLogger, @Mocked ConsoleHandler anyHandler) throws Exception {
+
+        new Expectations() {{
+            Logger.getGlobal().setLevel(Level.FINEST);
+            ConsoleHandler c1 = new ConsoleHandler();
+            c1.setLevel(Level.FINEST);
+            Logger.getGlobal().addHandler(c1);
+        }};
+
+        FourCharmController.main(new String[]{"-c", "-v"});
     }
 
     @Test

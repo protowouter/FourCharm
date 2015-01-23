@@ -39,6 +39,8 @@ public class FourCharmController implements Observer {
     private FourCharmView view;
     private Game game;
     private ServerHandler serverClient;
+    private Player player1;
+    private Player player2;
 
 // --------------------- Constructors -------------------
 
@@ -122,8 +124,6 @@ public class FourCharmController implements Observer {
         || humanName1 == null && stratp2 == null || humanName2 == null && stratp1 == null
      */
     public void startLocalGame(String humanName1, String humanName2, GameStrategy stratp1, GameStrategy stratp2) {
-        Player player1;
-        Player player2;
         if (humanName1 != null) {
             player1 = new LocalHumanPlayer(humanName1, Mark.P1);
         } else {
@@ -185,7 +185,7 @@ public class FourCharmController implements Observer {
      *
      */
     public void rematch() {
-        // TODO Implement
+        setGame(new Game(BinaryBoard.class, player1, player2));
     }
 
 
