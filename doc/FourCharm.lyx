@@ -887,7 +887,7 @@ The entry point for the client portion of our system is the FourCharmController
  via a server.
  The class ServerHandler is responsible for communicating with the server
  using C4 Protocol.
- C4 Protocol again makes shure that only valid commands are processed and
+ C4 Protocol again makes sure that only valid commands are processed and
  that no invalid commands are being sent.
  The ServerHandler class is the only class that has access to the C4 Protocol
  Server Client and is therefore responsible for all communications with
@@ -1423,7 +1423,7 @@ ServerConnectionException
 \end_layout
 
 \begin_layout Standard
-Signals that a ServerConnectionException of some sort has occured.
+Signals that a ServerConnectionException of some sort has occurred.
  
 \end_layout
 
@@ -1482,7 +1482,7 @@ BinaryBoard
 \end_layout
 
 \begin_layout Standard
-Class for modelling a board for the game connect four.
+Class for modeling a board for the game connect four.
  The responsibility of this class is to keep the state of the board.
  For efficiency reasons the board state is implemented in an array of 2
  longs.
@@ -1896,10 +1896,10 @@ The Board class is tested in isolation.
 \end_layout
 
 \begin_layout Standard
-A lot of testing has been done for the checking if a player has a winstreak:
+A lot of testing has been done for the checking if a player has a win streak:
  the player needs to have at least 4 slots in a row (vertical, horizontal
  and or diagonal).
- The positioncode of the same move and of a different move have been tested
+ The position code of the same move and of a different move have been tested
  as well.
  Almost all of the tests are done by using assertEquals, assertTrue and
  assertFalse.
@@ -2110,7 +2110,7 @@ The GameGroup class has been tested in isolation from other classes by JUNIT
 The basic commands join doMove and ready are tested whether the Client is
  allowed to use them in de GameGroup.
  The join() and ready() methods are not allowed to be used in the GameGroup,
- so an appropiate error is send (InvalidCommandError).
+ so an appropriate error is send (InvalidCommandError).
  The doMove command is tested by new Expectations() {{ }}.
  If there is a game and the column where you want to make your move is free,
  the move should be made.
@@ -2156,7 +2156,7 @@ The LobbyGroup tests look a lot like the GameGroup and PreLobbyGroup tests.
 \begin_layout Standard
 The ready() method makes use of new Expectations () {{ }}.
  Two ClientHandlers get names in the expectations box and a GameGroup is
- made with thoses two ClientHandlers.
+ made with those two ClientHandlers.
 \end_layout
 
 \begin_layout Standard
@@ -2178,7 +2178,7 @@ PreLobbyGroupTest
 
 \begin_layout Standard
 The PreLobbyGroup class makes use of mocked instances for testing as well.
- The dedicated test class constists of two mocked instances (FourCharmServer
+ The dedicated test class consists of two mocked instances (FourCharmServer
  and CoreClient.Client).
  The test class does not consist of only mocked instances.
 \end_layout
@@ -2680,7 +2680,7 @@ Then the server will send an InvalidParameterError with 7
 \begin_layout Standard
 Whenever a Client is in a game and it is his turn, but he tries to make
  a invalid move, the server should not allow this to happen.
- The server should send an InvalidParameteError with the attempted move.
+ The server should send an InvalidParameterError with the attempted move.
 \end_layout
 
 \begin_layout Chapter
@@ -2834,6 +2834,45 @@ name "chap:BinaryBoard"
 BinaryBoard
 \end_layout
 
+\begin_layout Paragraph
+Introduction
+\end_layout
+
+\begin_layout Standard
+For performance reasons we have chosen to implement the board in 64-bit
+ integers in stead of a one or two dimensional array.
+ For normal operation this would not be so important, however we have also
+ developed an AI that tries a lot of moves.
+ Good performance is therefore paramount.
+ We have seen an 30 fold performance increase compared to a two dimensional
+ array board implementation.
+ This implementation is much more efficient for the computer, it is however
+ not particularly programmer efficient.
+ To increase understanding of our implementation for the maintainer and
+ therefore maintainability of our code we include a description of our implement
+ation.
+ This is an informal description of the implementation, no mathematical
+ proofs are given for the correctness of this implementation.
+ The board is however thoroughly tested to ensure it performs according
+ to specifications.
+\end_layout
+
+\begin_layout Section
+State
+\end_layout
+
+\begin_layout Subsection
+Auxiliary fields
+\end_layout
+
+\begin_layout Standard
+These fields get used multiple times in the calculations of this implementation.
+ The values of these fields are dependent on the amount of columns and row
+ of the given board.
+ The values here below correspond to a board with seven columns and six
+ rows.
+\end_layout
+
 \begin_layout Standard
 \begin_inset Formula $H1=111_{2}$
 \end_inset
@@ -2888,11 +2927,6 @@ BinaryBoard
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-The static variables above are corresponding to values COLUMNS = 7 and ROWS
- = 6
 \end_layout
 
 \begin_layout Subsection
@@ -3311,8 +3345,14 @@ The following board position numbering will be used:
 
 \end_layout
 
+\begin_layout Standard
+When a player has a piece on a given index the 'bit' corresponding to the
+ index according to the above numbering is placed in the color array element
+ of that player.
+\end_layout
+
 \begin_layout Subsection
-Keeping state
+Main fields
 \end_layout
 
 \begin_layout Standard
@@ -3334,8 +3374,12 @@ byte array height: for each column in the board keeps the index of the lowest
 \end_layout
 
 \begin_layout Itemize
-long array color: for each of the two players an long keeping the current
+long array color: for each of the two players a long keeping the current
  piece configuration
+\end_layout
+
+\begin_layout Section
+Making moves
 \end_layout
 
 \begin_layout Subsection
@@ -3348,9 +3392,9 @@ The following procedure is used to save the making of an move:
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
+\begin{equation}
 color[player]\: XOR\,1\ll height[col]
-\]
+\end{equation}
 
 \end_inset
 
@@ -3358,7 +3402,11 @@ color[player]\: XOR\,1\ll height[col]
 \end_layout
 
 \begin_layout Standard
-This says as much as set an one at the bit index of the board position
+This says as much as set an one at the bit index of the board position.
+ The height array is used to determine at which precise index the bit will
+ be set, this is needed because a move consists of a column.
+ After saving the move in the color array the height of the column gets
+ incremented by one.
 \end_layout
 
 \begin_layout Subsection
@@ -3367,17 +3415,38 @@ Detecting column overflow
 
 \begin_layout Standard
 The 'AND' operator is used on the long for the player and TOP.
+ As you may have noticed or read, there is a gap of one between the index
+ of the highest row of a column and the index of the lowest row of the following
+ column.
+ This is no accident.
+ Because of this gap it is very easy to check the validity of a move.
+ On a valid board operation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:overflow"
+
+\end_inset
+
+ will always return zero because a valid board never has a bit set on one
+ of the reserved indexes.
+ The field top however has all the bits set on the reserved indexes.
+ When the AND operator gets used with these two values it returns 0 for
+ a valid board and not zero for an invalid board.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-color[player]\: AND\: TOP
-\]
+\begin{equation}
+color[player]\: AND\: TOP\label{eq:overflow}
+\end{equation}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Section
+Determining winner
 \end_layout
 
 \begin_layout Standard
@@ -3398,7 +3467,7 @@ Detecting horizontal rows
 Operation 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:"
+reference "eq:horiz-1"
 
 \end_inset
 
@@ -3409,12 +3478,21 @@ reference "eq:"
 
  , this value represents a board for a player who has a horizontal row on
  indexes 0,7,14,21.
+ First a logical right shift of 7 is performed (amount of rows + 1 because
+ of the overflow detection) .
+ This results in 100000010000001, if one ANDS this with ROW you get the
+ same result as the first operation.
+ So we have 
+\begin_inset Formula $y=100000010000001$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-y=color[player]\, AND\,(color[player]\,\gg H1)\label{eq:}
+y=color[player]\, AND\,(color[player]\,\gg H1)\label{eq:horiz-1}
 \end{equation}
 
 \end_inset
@@ -3423,14 +3501,41 @@ y=color[player]\, AND\,(color[player]\,\gg H1)\label{eq:}
 \end_layout
 
 \begin_layout Standard
+Then it's time for the next step.
+ y get's right shifted by 14 which results in 1.
+ This result gets then ANDed with y which results again in 1.
+ To test if a particular user has a horizontal row, the system checks if
+ operation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:horiz-2"
+
+\end_inset
+
+ returns a non zero result.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-y\, AND\,(y\gg(2*H1))\label{eq:-1}
+y\, AND\,(y\gg(2*H1))\label{eq:horiz-2}
 \end{equation}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Detecting vertical rows
+\end_layout
+
+\begin_layout Subsection
+Detecting left down right up diagonals
+\end_layout
+
+\begin_layout Subsection
+Detecting left up right down diagonals
 \end_layout
 
 \begin_layout Standard
