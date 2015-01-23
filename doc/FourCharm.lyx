@@ -1627,6 +1627,15 @@ Client
 ServerHandlerTest
 \end_layout
 
+\begin_layout Standard
+The ServerHandler has been tested in isolation by using mocked instances.
+ The CoreClient.Client, FourCharmController and Socket instances are mocked
+ instances.
+ The startGame() en gameEnd() methods have been tested as well as the joinServer
+(), accept(), doneMove(), handleServerCommands() and setStrategy() methods.
+ These tests are done by JUNIT testing.
+\end_layout
+
 \begin_layout Subsection
 Model
 \end_layout
@@ -1687,7 +1696,23 @@ BoardTest
 \begin_layout Standard
 The Board class is tested in isolation.
  This class is one of the most complex classes that needed a lot of testing.
+ A lot of different states of the board can be seen in the dedicated test
+ class.
+ For instance if a column is full, then the columnHasFreeSpace(col) method
+ should report false.
+ The deepcopy() method has also been tested by checking if the 'new/deepcopy'
+ board equals the old board.
  
+\end_layout
+
+\begin_layout Standard
+A lot of testing has been done for the checking if a player has a winstreak:
+ the player needs to have at least 4 slots in a row (vertical, horizontal
+ and or diagonal).
+ The positioncode of the same move and of a different move have been tested
+ as well.
+ Almost all of the tests are done by using assertEquals, assertTrue and
+ assertFalse.
 \end_layout
 
 \begin_layout Subsubsection

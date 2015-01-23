@@ -27,9 +27,9 @@ import static org.junit.Assert.assertNull;
 
 public class ServerHandlerTest {
 
+    private ServerHandler handler;
     @Mocked
     CoreServer.Client serverClient;
-    private ServerHandler handler;
     @Mocked
     private FourCharmController controller;
     @Mocked
