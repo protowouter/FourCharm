@@ -18,9 +18,9 @@ import static org.junit.Assert.assertNotNull;
 
 public class ClientHandlerTest {
 
+    private ClientHandler clientHandler;
     @Mocked
     Socket socket;
-    private ClientHandler clientHandler;
     @Injectable
     private ClientGroup group;
 

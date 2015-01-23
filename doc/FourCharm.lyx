@@ -1600,76 +1600,116 @@ Test report
 Unit testing
 \end_layout
 
+\begin_layout Standard
+For Unit testing we mainly made use of dedicated test classes.
+ We also made use of Mocking.
+ Mocking is testing a unit in isolation or create a sufficient environment.
+ To do so, you have to create and simulate mocked objects (replacements
+ for collaborators in a test-oriented way).
+ The Mock Objects simulate the object that is replaced.
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+LINK naar mocked.comorgnl
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Client
 \end_layout
 
 \begin_layout Paragraph
-ServerHandler
-\end_layout
-
-\begin_layout Subsection
-Exception
-\end_layout
-
-\begin_layout Paragraph
-InvalidMoveException
-\end_layout
-
-\begin_layout Paragraph
-ServerConnectionException
+ServerHandlerTest
 \end_layout
 
 \begin_layout Subsection
 Model
 \end_layout
 
+\begin_layout Standard
+In this section the tests of the model package are shown and discussed.
+ 
+\end_layout
+
 \begin_layout Subsubsection
 AI
 \end_layout
 
-\begin_layout Paragraph
-MDTfStrategy
+\begin_layout Standard
+These are the tests of the strategies of the computer player in the AI package
+ in the model package.
 \end_layout
 
 \begin_layout Paragraph
-NegaMaxStrategy
+NegaMaxStrategyTest
+\end_layout
+
+\begin_layout Standard
+The NegaMaxStrategy class has been tested by using JUNIT tests.
+ A dedicated test class has been made.
+ The only method that has been tested is the doMove() method of the NegaMaxStrat
+egy class.
+ An assertTrue checks if the column has free space left and determines a
+ move.
+ This class is not tested in isolation: the class makes use of the Board
+ class.
 \end_layout
 
 \begin_layout Paragraph
-RandomStrategy
+RandomStrategyTest
+\end_layout
+
+\begin_layout Standard
+The RandomStrategy class has been tested the same way as the NegaMaxStrategy.
+ The dedicated test class was not tested in isolation because the class
+ makes use of the Board class to make a move.
+ The doMove() method is the only method that is tested.
+ This method is tested the same way as the NegaMaxStrategy with an assertTrue.
 \end_layout
 
 \begin_layout Subsubsection
 Board
 \end_layout
 
-\begin_layout Paragraph
-BinaryBoard
+\begin_layout Standard
+These are the tests of the board package in the model package.
 \end_layout
 
 \begin_layout Paragraph
-ReferenceBoard
+BoardTest
+\end_layout
+
+\begin_layout Standard
+The Board class is tested in isolation.
+ This class is one of the most complex classes that needed a lot of testing.
+ 
 \end_layout
 
 \begin_layout Subsubsection
 Player
 \end_layout
 
-\begin_layout Paragraph
-ASyncPlayer
+\begin_layout Standard
+These are the tests of the player package in the model package.
 \end_layout
 
 \begin_layout Paragraph
-LocalAIPlayer
+LocalAIPlayerTest
 \end_layout
 
-\begin_layout Paragraph
-LocalHumanPlayer
-\end_layout
-
-\begin_layout Paragraph
-Mark
+\begin_layout Standard
+The LocalAIPlayer class has been tested by JUNIT tests.
+ It is not tested in complete isolation, but a dedicated test class has
+ been made.
+ Two RandomStrategy Local AI players will play a game in this test class.
+ The tests are about the current player, if there is a winner of the game
+ after it was finished, if the board is not null, etc.
+ The tests are done by using assertTrue, assertFalse and assertEquals.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1677,51 +1717,16 @@ Game
 \end_layout
 
 \begin_layout Paragraph
-Game
+GameTest
 \end_layout
 
-\begin_layout Subsection
-Presenter
-\end_layout
-
-\begin_layout Subsubsection
-Board
-\end_layout
-
-\begin_layout Paragraph
-BoardPresenter
-\end_layout
-
-\begin_layout Subsubsection
-Game
-\end_layout
-
-\begin_layout Paragraph
-GamePresenter
-\end_layout
-
-\begin_layout Paragraph
-NewGamePresenter
-\end_layout
-
-\begin_layout Subsubsection
-Space
-\end_layout
-
-\begin_layout Paragraph
-SpacePresenter
-\end_layout
-
-\begin_layout Subsubsection
-Presenter
-\end_layout
-
-\begin_layout Paragraph
-FourCharmFactory
-\end_layout
-
-\begin_layout Paragraph
-FourCharmPresenter
+\begin_layout Standard
+The Game class has been tested by JUNIT tests.
+ The tests are not done in complete isolation, but a dedicated test class
+ has been made.
+ By using assertTrue and assertEquals the methods doMove() and getMark()
+ are tested to see if they do what they should do.
+ 
 \end_layout
 
 \begin_layout Subsection
@@ -1729,35 +1734,62 @@ Server
 \end_layout
 
 \begin_layout Paragraph
-ClientHandler
+ClientHandlerTest
+\end_layout
+
+\begin_layout Standard
+The ClientHandler class has been tested by JUNIT tests.
+ It has been tested in isolation by making a dedicated test class.
+ In this test, the Socket and Clientgroup are mocked.
+ Socket is mocked, so all of the instances are mocked instances.
+ ClientGroup is injectable, so only that instance is mocked.
 \end_layout
 
 \begin_layout Paragraph
-FourCharmServer
+FourCharmServerTest
+\end_layout
+
+\begin_layout Standard
+The FourCharmServer class has been tested by JUNIT tests in isolation from
+ the other classes.
+ The isolation is done by making a dedicated mocked class.
+ The PreLobbyGroup, LobbyGroup, GameGroup and ServerSocket are mocked, thus
+ all of the instances are mocked instances.
 \end_layout
 
 \begin_layout Paragraph
-GameGroup
+GameGroupTest
+\end_layout
+
+\begin_layout Standard
+The GameGroup class has been tested in isolation from other classes by JUNIT
+ tests.
+ The dedicated mocked class has multiple mocked instances.
+ The FourCharmServer, ClientHandler and game instances are mocked, so simulated
+ instances.
 \end_layout
 
 \begin_layout Paragraph
-LobbyGroup
+LobbyGroupTest
+\end_layout
+
+\begin_layout Standard
+The LobbyGroup class has been tested by making use of mocked instances.
+ The Socket and ClientGroup instances are the only instances that are not
+ mocked.
+ This test has been done in isolation by making a dedicated test class LobbyGrou
+pTest.
 \end_layout
 
 \begin_layout Paragraph
-PreLobbyGroup
+PreLobbyGroupTest
 \end_layout
 
-\begin_layout Subsection
-View
-\end_layout
-
-\begin_layout Paragraph
-FourCharmGUI
-\end_layout
-
-\begin_layout Paragraph
-FourCharmTUI
+\begin_layout Standard
+The PreLobbyGroup class makes use of mocked instances for testing as well.
+ The dedicated test class constists of two mocked instances (FourCharmServer
+ and CoreClient.Client).
+ The test class does not consist of only mocked instances.
 \end_layout
 
 \begin_layout Subsection
@@ -1765,7 +1797,7 @@ Controller
 \end_layout
 
 \begin_layout Paragraph
-FourCharmController
+FourCharmControllerTest
 \end_layout
 
 \begin_layout Section
