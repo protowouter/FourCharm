@@ -88,7 +88,7 @@ FourCharm: A client-server Connect4 Game
 \begin_layout Author
 Luce Sandfort 
 \begin_inset ERT
-status open
+status collapsed
 
 \begin_layout Plain Layout
 
@@ -562,7 +562,7 @@ Requirements overview
 \begin_inset Float table
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align left
@@ -1251,6 +1251,768 @@ Model View Controller
 
 \begin_layout Standard
 We have a model, multiple views and a controller.
+\end_layout
+
+\begin_layout Chapter
+Classes
+\end_layout
+
+\begin_layout Standard
+In this chapter, every class in our system of the game Connect Four will
+ be discussed.
+ The discussion will be about the role of the class in the system, the responsib
+ilities of the class and the other classes this class uses to fulfill its
+ responsibilities.
+ Furthermore, special cases in the classes contract and any precautions
+ taken to fulfill the preconditions in the contract of the server classes
+ will be discussed where necessary.
+\end_layout
+
+\begin_layout Standard
+The classes are divided in packages by putting classes together that are
+ doing a similar job.
+ The sections in this chapter will represent the different packages.
+\end_layout
+
+\begin_layout Section
+Client
+\end_layout
+
+\begin_layout Paragraph
+ServerHandler
+\end_layout
+
+\begin_layout Standard
+Handles the connection to the server from the perspective of the client.
+ This class makes use of the Protocol classes, the Board Model classes and
+ the strategy classes to achieve its responsibilities.
+\end_layout
+
+\begin_layout Section
+Exception
+\end_layout
+
+\begin_layout Paragraph
+InvalidMoveException
+\end_layout
+
+\begin_layout Standard
+Exception that gets thrown when an invalid move is attempted to be made.
+ This class extends the normal Exception class and is used by the Board
+ class.
+\end_layout
+
+\begin_layout Paragraph
+ServerConnectionException
+\end_layout
+
+\begin_layout Standard
+Signals that a ServerConnectionException of some sort has occured.
+ 
+\end_layout
+
+\begin_layout Section
+Model
+\end_layout
+
+\begin_layout Subsection
+AI
+\end_layout
+
+\begin_layout Paragraph
+MDTfStrategy
+\end_layout
+
+\begin_layout Standard
+This MTDfStrategy class makes use of the interface GameStrategy.
+ This is a specific strategy a computer player (LocalAIPlayer class) can
+ use.
+ So this class is responsible for giving the computer player brains.
+ This way the computer player can think ahead and foresee certain moves.
+ This class also uses the NegaMaxStrategy class to come up with new moves.
+\end_layout
+
+\begin_layout Paragraph
+NegaMaxStrategy
+\end_layout
+
+\begin_layout Standard
+The NegaMaxStrategy class implements the GameStrategy interface.
+ This combination is used by the LocalAIPlayer class to make the computer
+ player 'smart' and to make the computer player able to win games by foreseeing
+ moves.
+ The algorithm used by the NegaMaxStrategy class is the NegaMax algorithm.
+ This implementation makes use of Alpha-Beta pruning and a transposition
+ table to optimize performance.
+\end_layout
+
+\begin_layout Paragraph
+RandomStrategy
+\end_layout
+
+\begin_layout Standard
+The RandomStrategy class implements GameStrategy and is another way to make
+ the computer player of the LocalAIPlayer class 'smarter'.
+ Well, maybe not exactly smarter because the strategy is random, so it will
+ take a lucky guess to win a game.
+\end_layout
+
+\begin_layout Subsection
+Board
+\end_layout
+
+\begin_layout Paragraph
+BinaryBoard
+\end_layout
+
+\begin_layout Standard
+Class for modelling a board for the game connect four.
+ The responsibility of this class is to keep the state of the board.
+ For efficiency reasons the board state is implemented in an array of 2
+ longs.
+ This class makes use of the Board class to achieve its responsibilities.
+\end_layout
+
+\begin_layout Paragraph
+ReferenceBoard
+\end_layout
+
+\begin_layout Standard
+Class for modeling a board for the game connect four.
+ This class's responsibility is to keep the state of the board.
+ This is the reference implementation implemented using an 2D array.
+ This class makes use of the Board class.
+\end_layout
+
+\begin_layout Subsection
+Player
+\end_layout
+
+\begin_layout Paragraph
+ASyncPlayer
+\end_layout
+
+\begin_layout Paragraph
+LocalAIPlayer
+\end_layout
+
+\begin_layout Standard
+Create an Artificial Intelligence (AI) player given a strategy.
+ This class is responsible for making a (smart) computer player.
+ The LocalAIPlayer class makes use of the GameStrategy Interface and the
+ classes belonging to this interface (the MDTDfStrategy class, the NegaMaxStrate
+gy class and the RandomStrategy class).
+\end_layout
+
+\begin_layout Paragraph
+LocalHumanPlayer
+\end_layout
+
+\begin_layout Standard
+LocalHumanPlayer extends AsyncPlayer and is used to distinguish AI and Human
+ players.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Mark
+\end_layout
+
+\begin_layout Standard
+The Mark enums responsibility is to switch the current player and the next
+ player by using the method 'other()'.
+ This way the first player is allowed to go first, and the other player
+ will go second.
+ It doesn't matter which player is player 1.
+ The other player will always be player 2.
+\end_layout
+
+\begin_layout Subsection
+Game
+\end_layout
+
+\begin_layout Paragraph
+Game
+\end_layout
+
+\begin_layout Standard
+The Game class models a game of Connect4.
+ This class makes use of Observable and Runnable.
+ Furthermore this class uses the Board class in the constructor, so a new
+ board will be made for this specific game.
+ Using these classes and interfaces, the main priority of this Game class
+ is to create, play and end a game of Connect4.
+\end_layout
+
+\begin_layout Section
+Presenter
+\end_layout
+
+\begin_layout Subsection
+Board
+\end_layout
+
+\begin_layout Paragraph
+BoardPresenter
+\end_layout
+
+\begin_layout Subsection
+Game
+\end_layout
+
+\begin_layout Paragraph
+GamePresenter
+\end_layout
+
+\begin_layout Paragraph
+NewGamePresenter
+\end_layout
+
+\begin_layout Subsection
+Space
+\end_layout
+
+\begin_layout Paragraph
+SpacePresenter
+\end_layout
+
+\begin_layout Subsection
+Presenter
+\end_layout
+
+\begin_layout Paragraph
+FourCharmFactory
+\end_layout
+
+\begin_layout Paragraph
+FourCharmPresenter
+\end_layout
+
+\begin_layout Section
+Server
+\end_layout
+
+\begin_layout Paragraph
+ClientHandler
+\end_layout
+
+\begin_layout Standard
+A ClientHandler is responsible for maintaining a connection with a client
+ and passing received commands to the ClientGroup the ClientHandler currently
+ resides in.
+ For parsing the received commands from the client the C4 Protocol module
+ is used.
+ The ClientHandler can also be used by other parts of the server to send
+ commands to the client.
+ 
+\end_layout
+
+\begin_layout Paragraph
+FourCharmServer
+\end_layout
+
+\begin_layout Standard
+The FourCharmServer class that is responsible for the server.
+ The FourCharmServer makes sure that at a given time there are no players
+ with the same name.
+ This class also maintains a list of GameGroups and uses the PreLobbyGroup
+ and LobbyGroup to model the state of clients.
+ 
+\end_layout
+
+\begin_layout Paragraph
+GameGroup
+\end_layout
+
+\begin_layout Standard
+The GameGroup class extends the ClientGroup abstract class and implements
+ Observer.
+ This class uses the Protocol classes as well.
+ Two Clients play against each other in the GameGroup.
+\end_layout
+
+\begin_layout Paragraph
+LobbyGroup
+\end_layout
+
+\begin_layout Standard
+The LobbyGroup class extends the ClientGroup abstract class.
+ It makes a Lobby and adds Clients to the LobbyGroup.
+ From these Clients, whenever they are ready, 2 are chosen and they will
+ be added to the GameGroup to start a new game.
+ Before a Client can enter the LobbyGroup, he will be in the PreLobbyGroup
+ as long as he did not give the command 'join'.
+\end_layout
+
+\begin_layout Paragraph
+PreLobbyGroup
+\end_layout
+
+\begin_layout Standard
+The PreLobbyGroup class extends the ClientGroup abstract class.
+ Every Client that wants to play a game has to enter the PreLobbyGroup first.
+ After this, by using the command join, the Client will be able to move
+ to the LobbyGroup to find a partner to play a game with.
+ This class makes use of the Protocol classes as well.
+\end_layout
+
+\begin_layout Section
+View
+\end_layout
+
+\begin_layout Paragraph
+FourCharmGUI
+\end_layout
+
+\begin_layout Standard
+The FourCharmGUI is the Graphical User Interface of the FourCharm Connect4
+ game.
+ It makes use of the FourCharmController, Presenter, Factory and Game class.
+\end_layout
+
+\begin_layout Paragraph
+FourCharmTUI
+\end_layout
+
+\begin_layout Standard
+The FourCharmTUI is the Textual User Interface of the FourCharm Connect4
+ game.
+ It makes use of the FourCharmController, and Game class, as well as the
+ AI strategies.
+ The TUI takes care of communication with a user and uses the controller
+ for communication with the rest of the system.
+ 
+\end_layout
+
+\begin_layout Section
+Controller
+\end_layout
+
+\begin_layout Paragraph
+FourCharmController
+\end_layout
+
+\begin_layout Chapter
+Test report
+\end_layout
+
+\begin_layout Section
+Unit testing
+\end_layout
+
+\begin_layout Section
+System testing
+\end_layout
+
+\begin_layout Standard
+The main point of system testing is to test the server and additionally
+ a small part of the board has been tested.
+ The system has been tested by using integration tests.
+ We thought of features the server should have and came up with some different
+ scenarios.
+ Each scenario is accompanied by a 'Given', 'When' and 'Then' part.
+ Given something, when I do another thing, then the server should do this.
+\end_layout
+
+\begin_layout Subsection
+Testing commands
+\end_layout
+
+\begin_layout Standard
+In this test, the feature 'the server recognizes invalid commands' has been
+ tested.
+ The different scenarios and test result are shown below.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Scenario: The server sends an error when a invalid command is sent.
+\end_layout
+
+\begin_layout Verse
+Given a empty server 
+\end_layout
+
+\begin_layout Verse
+When I send the command 'bogus' 
+\end_layout
+
+\begin_layout Verse
+Then the server will send an InvalidCommandError
+\end_layout
+
+\begin_layout Standard
+The command bogus is a command that does not exist.
+ The server should send an InvalidCommandError whenever the not existing
+ command has been received.
+\end_layout
+
+\begin_layout Paragraph
+Scenario: Client sends ready in connected state 
+\end_layout
+
+\begin_layout Verse
+Given a empty server 
+\end_layout
+
+\begin_layout Verse
+When I send the ready command 
+\end_layout
+
+\begin_layout Verse
+Then the server will send an InvalidCommandError
+\end_layout
+
+\begin_layout Standard
+The Client needs to join the lobby first before he will be able to send
+ the ready command.
+ The server should handle this with an InvalidCommandError.
+\end_layout
+
+\begin_layout Paragraph
+Scenario: Client sends ready twice 
+\end_layout
+
+\begin_layout Verse
+Given a empty server 
+\end_layout
+
+\begin_layout Verse
+When I join the server with name Wouter 
+\end_layout
+
+\begin_layout Verse
+And I send the ready command 
+\end_layout
+
+\begin_layout Verse
+Then the server will accept me 
+\end_layout
+
+\begin_layout Verse
+And I send the ready command 
+\end_layout
+
+\begin_layout Verse
+Then the server will send an InvalidCommandError
+\end_layout
+
+\begin_layout Standard
+The Client is not allowed to send the ready command twice in a row.
+ He is not allowed to play against himself.
+ The server needs to make sure this does not happen by sending an InvalidCommand
+Error.
+\end_layout
+
+\begin_layout Paragraph
+Scenario: Client sends join in lobby state 
+\end_layout
+
+\begin_layout Verse
+Given a empty server 
+\end_layout
+
+\begin_layout Verse
+When I join the server with name Wouter 
+\end_layout
+
+\begin_layout Verse
+Then the server will accept me 
+\end_layout
+
+\begin_layout Verse
+And I join the server with name Frits 
+\end_layout
+
+\begin_layout Verse
+Then the server will send an InvalidCommandError
+\end_layout
+
+\begin_layout Standard
+The Client has already joined the server and is not allowed to enter the
+ server once more (even though the name of the Client is different).
+ The server should send the InvalidCommandError and refuse the Client to
+ join again.
+\end_layout
+
+\begin_layout Subsection
+Testing disconnects from the server
+\end_layout
+
+\begin_layout Standard
+In this test, the server is tested for handling disconnects from clients.
+ The only scenario that needed to be tested is shown below.
+\end_layout
+
+\begin_layout Paragraph
+Scenario: Client disconnects while in a game 
+\end_layout
+
+\begin_layout Verse
+Given the client is in a game with another player 
+\end_layout
+
+\begin_layout Verse
+When I disconnect from the server 
+\end_layout
+
+\begin_layout Verse
+Then the server sends a PlayerDisconnectError to the other player 
+\end_layout
+
+\begin_layout Verse
+And the server sends an end_game command
+\end_layout
+
+\begin_layout Standard
+If a Client disconnects in a game, the server needs to stop the game and
+ send the PlayerDisconnectError to the other player to let him know what
+ happened and why the game stopped.
+\end_layout
+
+\begin_layout Subsection
+Testing joins to the server
+\end_layout
+
+\begin_layout Standard
+This test is about the way the server handles the join command from the
+ clients.
+ The scenarios and results are shown below.
+\end_layout
+
+\begin_layout Paragraph
+Scenario: Name not yet exists in server 
+\end_layout
+
+\begin_layout Verse
+Given a empty server 
+\end_layout
+
+\begin_layout Verse
+When I join the server with name Wouter 
+\end_layout
+
+\begin_layout Verse
+Then the server will accept me
+\end_layout
+
+\begin_layout Standard
+If the Client enters a server with a non existing name, the server should
+ allow the Client to join.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Scenario: Name exists in server 
+\end_layout
+
+\begin_layout Verse
+Given a server with one connected client 
+\end_layout
+
+\begin_layout Verse
+When I join the server with the same name 
+\end_layout
+
+\begin_layout Verse
+Then the server will send an InvalidUserName error
+\end_layout
+
+\begin_layout Standard
+Whenever the Client tries to join the server with a name that already exists
+ in the server, the server should not allow the Client to join.
+ An InvalidUsernameError should be send by the server.
+\end_layout
+
+\begin_layout Paragraph
+Scenario: Name is not valid according to protocol 
+\end_layout
+
+\begin_layout Verse
+Given a empty server 
+\end_layout
+
+\begin_layout Verse
+When I join the server with name Wouter@ 
+\end_layout
+
+\begin_layout Verse
+Then the server will send an InvalidParameterError with Wouter@
+\end_layout
+
+\begin_layout Standard
+If the Client wants to join the server, but the name is not according to
+ the protocol, the Client is not allowed to join the server.
+ The server will send an InvalidParameterError with the 'wrong' name.
+\end_layout
+
+\begin_layout Subsection
+Testing starting a game
+\end_layout
+
+\begin_layout Standard
+This test is about starting a game.
+ The server needs to have at least two players who sent the ready command
+ to start a game.
+ The scenarios and results of this test are shown below.
+\end_layout
+
+\begin_layout Paragraph
+Scenario: The client sends a 'ready' command 
+\end_layout
+
+\begin_layout Verse
+Given a server with one other ready player 
+\end_layout
+
+\begin_layout Verse
+When I join the server with name Wouter 
+\end_layout
+
+\begin_layout Verse
+Then the server will accept me 
+\end_layout
+
+\begin_layout Verse
+And I send the ready command 
+\end_layout
+
+\begin_layout Verse
+Then the server starts a game with the other ready player and me
+\end_layout
+
+\begin_layout Standard
+The server should start a game whenever there are two players ready.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Scenario: The client sends a 'ready' command 
+\end_layout
+
+\begin_layout Verse
+Given a server with no other ready players 
+\end_layout
+
+\begin_layout Verse
+When I send the ready command 
+\end_layout
+
+\begin_layout Verse
+Then the server waits with putting me in a game until another player is
+ ready as well
+\end_layout
+
+\begin_layout Standard
+If the Client sends the ready command, but there is not another ready player,
+ the server should wait with starting a game until there is another player
+ ready.
+\end_layout
+
+\begin_layout Subsection
+Testing making a move
+\end_layout
+
+\begin_layout Standard
+This test is about making moves: when and where the Client is allowed to
+ make a specific move.
+ The different scenarios and results are shown below.
+\end_layout
+
+\begin_layout Paragraph
+Scenario: Client is in a game and it's his turn 
+\end_layout
+
+\begin_layout Verse
+Given a game with two players and it's the clients turn 
+\end_layout
+
+\begin_layout Verse
+When I send a 'do move 4' command 
+\end_layout
+
+\begin_layout Verse
+Then the server sends the move 4 to both the players 
+\end_layout
+
+\begin_layout Verse
+And the server sends a requestmove to the other player
+\end_layout
+
+\begin_layout Standard
+Whenever a Client is in a game and it's his turn, the server should allow
+ him to make a valid move.
+ The server needs to receive the move and send it to both the players.
+ After this it will be the other players turn, so the server should send
+ a requestmove to the other player.
+\end_layout
+
+\begin_layout Paragraph
+Scenario: Client is in a game, but it's not his turn
+\end_layout
+
+\begin_layout Verse
+Given a game with two players and it's not the clients turn 
+\end_layout
+
+\begin_layout Verse
+When I send a 'do move 4' command 
+\end_layout
+
+\begin_layout Verse
+Then the server will send an InvalidMoveError 
+\end_layout
+
+\begin_layout Standard
+If a Client is in a game, but it not his turn, the server should not allow
+ him to make a move.
+ An InvalidMoveError should be send whenever the Client tries to make the
+ move while it is not his turn.
+\end_layout
+
+\begin_layout Paragraph
+Scenario: Client is not in a game 
+\end_layout
+
+\begin_layout Verse
+Given a client that is in a server, but not yet in a game 
+\end_layout
+
+\begin_layout Verse
+When I send a 'do move 4' command 
+\end_layout
+
+\begin_layout Verse
+Then the server will send an InvalidCommandError
+\end_layout
+
+\begin_layout Standard
+If the Client is not in a game, he is not allowed to make a move.
+ This would be a invalid command.
+ The server should send an InvalidCommandError and not allow the Client
+ to do this command.
+\end_layout
+
+\begin_layout Paragraph
+Scenario: Client is in a game, but sends a invalid move 
+\end_layout
+
+\begin_layout Verse
+Given a game with two players and it's the clients turn 
+\end_layout
+
+\begin_layout Verse
+When I send a 'do move 7' command 
+\end_layout
+
+\begin_layout Verse
+Then the server will send an InvalidParameterError with 7
+\end_layout
+
+\begin_layout Standard
+Whenever a Client is in a game and it is his turn, but he tries to make
+ a invalid move, the server should not allow this to happen.
+ The server should send an InvalidParameteError with the attempted move.
 \end_layout
 
 \begin_layout Chapter
