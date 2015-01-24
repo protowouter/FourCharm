@@ -31,7 +31,6 @@ public class GameGroup extends ClientGroup implements Observer {
 
     Map<ClientHandler, ASyncPlayer> playerMap;
     Game game;
-    FourCharmServer server;
 
 
     // --------------------- Constructors -------------------
@@ -44,7 +43,7 @@ public class GameGroup extends ClientGroup implements Observer {
      * @param client2   The second ClientHandler that will be player 2 in the Game.
      */
     public GameGroup(FourCharmServer theServer, ClientHandler client1, ClientHandler client2) {
-        server = theServer;
+        super(theServer);
         playerMap = new HashMap<>();
         ASyncPlayer player1 = new ASyncPlayer(client1.getName(), Mark.P1);
         ASyncPlayer player2 = new ASyncPlayer(client2.getName(), Mark.P2);
@@ -56,8 +55,8 @@ public class GameGroup extends ClientGroup implements Observer {
         game = new Game(BinaryBoard.class, player1, player2);
         game.addObserver(this);
         try {
-            client1.getClient().startGame(client1.getName(), client2.getName());
-            client2.getClient().startGame(client1.getName(), client2.getName());
+            client1.getCoreClient().startGame(client1.getName(), client2.getName());
+            client2.getCoreClient().startGame(client1.getName(), client2.getName());
         } catch (C4Exception e) {
             Logger.getGlobal().throwing(getClass().toString(), "constructor", e);
         }
@@ -102,7 +101,7 @@ public class GameGroup extends ClientGroup implements Observer {
 
             try {
                 for (ClientHandler c : getClients()) {
-                    c.getClient().doneMove(client.getName(), col);
+                    c.getCoreClient().doneMove(client.getName(), col);
                 }
                 playerMap.get(client).queueMove(col);
             } catch (IllegalStateException e) {
@@ -141,7 +140,7 @@ public class GameGroup extends ClientGroup implements Observer {
             C4Exception c4e = new PlayerDisconnectError("Player " +
                     client.getName() + " disconnected");
             try {
-                cH.getClient().error(c4e.getErrorCode(), c4e.getMessage());
+                cH.getCoreClient().error(c4e.getErrorCode(), c4e.getMessage());
             } catch (C4Exception e) {
                 Logger.getGlobal().throwing(getClass().toString(), "removeClientCallback", e);
             }
@@ -170,13 +169,13 @@ public class GameGroup extends ClientGroup implements Observer {
         List<ClientHandler> clients = new LinkedList<>(getClients());
         try {
             for (ClientHandler client : clients) {
-                client.getClient().gameEnd(winnerName);
-                server.getLobby().addHandler(client);
+                client.getCoreClient().gameEnd(winnerName);
+                getServer().getLobby().addHandler(client);
             }
         } catch (C4Exception e) {
             Logger.getGlobal().throwing("GameGroup", "startGame()", e);
         }
-        server.removeGame(this);
+        getServer().removeGame(this);
 
     }
 
@@ -203,7 +202,7 @@ public class GameGroup extends ClientGroup implements Observer {
                 if (client != null) {
                     for (ClientHandler c : getClients()) {
                         try {
-                            c.getClient().requestMove(currentName);
+                            c.getCoreClient().requestMove(currentName);
                         } catch (C4Exception e) {
                             Logger.getGlobal().throwing(getClass().toString(), "update", e);
                         }

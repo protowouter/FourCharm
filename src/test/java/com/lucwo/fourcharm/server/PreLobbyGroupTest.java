@@ -8,7 +8,7 @@ import mockit.Expectations;
 import mockit.Mocked;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidUsernameError;
-import nl.woutertimmermans.connect4.protocol.fgroup.CoreClient;
+import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreClient;
 import org.junit.Before;
 import org.junit.Test;
 

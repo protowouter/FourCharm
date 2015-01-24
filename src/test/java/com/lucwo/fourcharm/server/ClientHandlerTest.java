@@ -18,9 +18,9 @@ import static org.junit.Assert.assertNotNull;
 
 public class ClientHandlerTest {
 
-    private ClientHandler clientHandler;
     @Mocked
     Socket socket;
+    private ClientHandler clientHandler;
     @Injectable
     private ClientGroup group;
 
@@ -39,7 +39,7 @@ public class ClientHandlerTest {
 
     @Test
     public void testGetClient() throws Exception {
-        assertNotNull(clientHandler.getClient());
+        assertNotNull(clientHandler.getCoreClient());
     }
 
     @Test

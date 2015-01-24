@@ -22,8 +22,10 @@ import java.util.Set;
 public abstract class ClientGroup {
 
     private Map<String, ClientHandler> clientCollection;
+    private FourCharmServer server;
 
-    public ClientGroup() {
+    public ClientGroup(FourCharmServer theServer) {
+        server = theServer;
         clientCollection = new HashMap<>();
     }
 
@@ -100,14 +102,31 @@ public abstract class ClientGroup {
      */
     public abstract void ready(ClientHandler client) throws C4Exception;
 
+
+    public void localChat(ClientHandler client, String message) throws C4Exception {
+        broadcastChat(client, message);
+    }
+
+    public void broadcastChat(ClientHandler client, String message) throws C4Exception {
+        for (ClientHandler clientHandler : getClients()) {
+            clientHandler.getChatClient().message(client.getName(), message);
+        }
+    }
+
+    public void globalChat(ClientHandler client, String message) throws C4Exception {
+        server.globalChat(client, message);
+    }
+
+    public FourCharmServer getServer() {
+        return server;
+    }
+
     /**
      * Handles the removal of a client from the group.
      * @param client The {@link com.lucwo.fourcharm.server.ClientHandler}
      *               which will has been removed from the group.
      */
     public abstract void removeClientCallback(ClientHandler client);
-
-
 
 
 }

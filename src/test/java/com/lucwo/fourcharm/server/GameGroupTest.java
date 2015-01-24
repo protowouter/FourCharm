@@ -18,7 +18,6 @@ import org.junit.Test;
 public class GameGroupTest {
 
 
-    private GameGroup gameGroup;
     @Mocked
     FourCharmServer server;
     @Mocked
@@ -29,6 +28,7 @@ public class GameGroupTest {
     ClientHandler c3;
     @Mocked
     Game game;
+    private GameGroup gameGroup;
 
     @Before
     public void setUp() throws Exception {
@@ -89,7 +89,7 @@ public class GameGroupTest {
     public void testRemoveClientCallback() throws Exception {
 
         new NonStrictExpectations() {{
-            c1.getClient();
+            c1.getCoreClient();
         }};
         gameGroup.removeClientCallback(c2);
 

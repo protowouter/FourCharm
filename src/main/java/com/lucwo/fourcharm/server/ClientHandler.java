@@ -6,8 +6,11 @@ package com.lucwo.fourcharm.server;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
-import nl.woutertimmermans.connect4.protocol.fgroup.CoreClient;
-import nl.woutertimmermans.connect4.protocol.fgroup.CoreServer;
+import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
+import nl.woutertimmermans.connect4.protocol.fgroup.chat.ChatClient;
+import nl.woutertimmermans.connect4.protocol.fgroup.chat.ChatServer;
+import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreClient;
+import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreServer;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 
 import java.io.*;
@@ -25,15 +28,17 @@ import java.util.logging.Logger;
  * @author Luce Sandfort and Wouter Timmermans
  */
 
-public class ClientHandler implements CoreServer.Iface, Runnable {
+public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnable {
 
 // ------------------ Instance variables ----------------
 
     private ClientGroup group;
     private String name;
     private Socket socket;
-    private CoreClient.Client client;
+    private CoreClient.Client coreClient;
+    private ChatClient.Client chatClient;
     private BufferedReader in;
+    private BufferedWriter out;
     private boolean running;
 
 // --------------------- Constructors -------------------
@@ -67,11 +72,11 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
     }
 
     /**
-     * Returns the protocol @{link C4Client} to communicate with the client.
-     * @return the client
+     * Returns the protocol @{link C4Client} to communicate with the coreClient.
+     * @return the coreClient
      */
-    public CoreClient.Client getClient() {
-        return client;
+    public CoreClient.Client getCoreClient() {
+        return coreClient;
     }
 
 
@@ -142,7 +147,7 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
     }
 
     /**
-     * Starts the input handling of this client.
+     * Starts the input handling of this coreClient.
      * @see Thread#run()
      */
     @Override
@@ -158,11 +163,9 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
 
         final String mName = "handleClient";
 
-        CoreServer.Processor processor = new CoreServer.Processor<>(this);
-
         try {
 
-            processCommands(processor);
+            processCommands();
 
         } catch (IOException e) {
             Logger.getGlobal().throwing(getClass().toString(), mName, e);
@@ -178,22 +181,28 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
 
     }
 
-    private void processCommands(CoreServer.Processor processor) throws IOException {
+    private void processCommands() throws IOException {
+        CoreServer.Processor coreProcessor = new CoreServer.Processor<>(this);
+        ChatServer.Processor chatProcessor = new ChatServer.Processor<>(this);
+
         String input = in == null ? null : in.readLine();
         while (running && input != null) {
             Logger.getGlobal().info("Processing input " + input);
             try {
-                boolean processed = processor.process(input);
+                boolean processed = coreProcessor.process(input);
+                if (!processed) {
+                    processed = chatProcessor.process(input);
+                }
                 if (!processed) {
                     Logger.getGlobal().warning("This command is not recognized");
                     C4Exception error = new InvalidCommandError(input + " is not recognized");
-                    client.error(error.getErrorCode(), error.getMessage());
+                    coreClient.error(error.getErrorCode(), error.getMessage());
                 }
             } catch (C4Exception e) {
 
                 Logger.getGlobal().info("Sending exception " + e.getMessage());
                 try {
-                    client.error(e.getErrorCode(), e.getMessage());
+                    coreClient.error(e.getErrorCode(), e.getMessage());
                 } catch (C4Exception e1) {
                     Logger.getGlobal().throwing(getClass().toString(), "processCommands", e1);
                 }
@@ -213,7 +222,7 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
     }
 
     public void init() {
-        BufferedWriter out = null;
+        out = null;
         in = null;
         try {
             out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), Charset.forName("UTF-8")));
@@ -222,6 +231,44 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
             Logger.getGlobal().throwing("FourCharmServer", "init", e);
         }
 
-        client = new CoreClient.Client(out);
+        coreClient = new CoreClient.Client(out);
+        chatClient = new ChatClient.Client(null);
+    }
+
+    public void registerExtensions(Set<Extension> extensions) {
+        Extension chat = new Extension();
+        try {
+            chat.setValue("Chat");
+        } catch (InvalidParameterError e) {
+            Logger.getGlobal().throwing(getClass().toString(), "registerExtensions", e);
+        }
+
+        if (extensions != null && extensions.contains(chat)) {
+            chatClient = new ChatClient.Client(out);
+        }
+    }
+
+    /**
+     * Used by clients to send messages to other clients in the local environment.
+     *
+     * @param message The message that will be sent.
+     */
+    @Override
+    public void chatLocal(String message) throws C4Exception {
+        group.localChat(this, message);
+    }
+
+    /**
+     * Used by clients to send messages that will probably to clients in any environment.
+     *
+     * @param message The message that will be sent.
+     */
+    @Override
+    public void chatGlobal(String message) throws C4Exception {
+        group.globalChat(this, message);
+    }
+
+    public ChatClient.Client getChatClient() {
+        return chatClient;
     }
 }

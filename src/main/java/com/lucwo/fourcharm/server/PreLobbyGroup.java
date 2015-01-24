@@ -6,10 +6,13 @@ package com.lucwo.fourcharm.server;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
+import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidUsernameError;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 
+import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * The PreLobbyGroup class extends the ClientGroup abstract class. Every Client
@@ -23,11 +26,13 @@ import java.util.Set;
 
 public class PreLobbyGroup extends ClientGroup {
 
+    private static final int LUCWO_GROUP_NUMBER = 23;
+
 
     // ------------------ Instance variables ----------------
 
-    ClientGroup lobby;
-    FourCharmServer server;
+    private ClientGroup lobby;
+    private Set<Extension> extensions;
 
     // --------------------- Constructors -------------------
 
@@ -37,8 +42,17 @@ public class PreLobbyGroup extends ClientGroup {
      * @param theServer The server the PreLobbyGroup will be on.
      */
     public PreLobbyGroup(ClientGroup lob, FourCharmServer theServer) {
+        super(theServer);
         lobby = lob;
-        server = theServer;
+
+        Extension chat = new Extension();
+        try {
+            chat.setValue("Chat");
+        } catch (InvalidParameterError e) {
+            Logger.getGlobal().throwing(getClass().toString(), "constructor", e);
+        }
+        extensions = new HashSet<>();
+        extensions.add(chat);
     }
 
     // ----------------------- Queries ----------------------
@@ -55,13 +69,14 @@ public class PreLobbyGroup extends ClientGroup {
      * @throws C4Exception
      */
     @Override
-    public void join(ClientHandler client, String pName, int gNumber,
+    public synchronized void join(ClientHandler client, String pName, int gNumber,
                      Set<Extension> exts) throws C4Exception {
-        if (server.hasClientWithName(pName)) {
+        if (getServer().hasClientWithName(pName)) {
             throw new InvalidUsernameError("The username " + pName + " is already in use");
         } else {
             client.setName(pName);
-            client.getClient().accept(gNumber, exts);
+            client.registerExtensions(exts);
+            client.getCoreClient().accept(LUCWO_GROUP_NUMBER, extensions);
             lobby.addHandler(client);
         }
 

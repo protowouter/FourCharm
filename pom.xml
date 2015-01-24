@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>FourCharm</groupId>
     <artifactId>FourCharm</artifactId>
-    <version>v0.6.1-SNAPSHOT</version>
+    <version>v0.6.2-SNAPSHOT</version>
     <build>
         <plugins>
             <plugin>
@@ -177,7 +177,7 @@
         <dependency>
             <groupId>nl.woutertimmermans.connect4</groupId>
             <artifactId>c4-protocol</artifactId>
-            <version>0.7.2</version>
+            <version>0.8.0</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

@@ -33,6 +33,7 @@ public class LobbyGroup extends ClientGroup {
      * @param theServer The server the LobbyGroup is constructed on.
      */
     public LobbyGroup(FourCharmServer theServer) {
+        super(theServer);
         readyClient = null;
         server = theServer;
     }

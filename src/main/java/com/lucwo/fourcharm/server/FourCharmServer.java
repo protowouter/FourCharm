@@ -6,6 +6,7 @@ package com.lucwo.fourcharm.server;
 
 
 import com.lucwo.fourcharm.exception.ServerStartException;
+import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -23,6 +24,8 @@ import java.util.logging.Logger;
  * @author Luce Sandfort and Wouter Timmermans
  */
 public class FourCharmServer {
+
+    public static final Logger SERVER_LOGGER = Logger.getLogger("FourCharmServer");
 
     private ClientGroup lobby;
     private ClientGroup preLobby;
@@ -141,4 +144,11 @@ public class FourCharmServer {
         return lobby;
     }
 
+    public void globalChat(ClientHandler client, String message) throws C4Exception {
+        lobby.broadcastChat(client, message);
+        for (GameGroup game : games) {
+            game.broadcastChat(client, message);
+        }
+
+    }
 }
