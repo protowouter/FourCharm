@@ -4,9 +4,12 @@
 
 package com.lucwo.fourcharm.view;
 
+import com.lucwo.fourcharm.controller.FourCharmServerController;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class FourCharmServerTUI implements Runnable {
 
@@ -17,13 +20,15 @@ public class FourCharmServerTUI implements Runnable {
 
     private boolean running;
     private Scanner inputScanner;
+    private FourCharmServerController controller;
 
 
 // --------------------- Constructors -------------------
 
-    public FourCharmServerTUI() {
+    public FourCharmServerTUI(FourCharmServerController cont) {
         running = true;
         inputScanner = new Scanner(System.in);
+        controller = cont;
     }
 
 // ----------------------- Queries ----------------------
@@ -44,6 +49,21 @@ public class FourCharmServerTUI implements Runnable {
             parseCommand(inputScanner.nextLine());
             showPrompt();
         }
+    }
+
+    /**
+     * Performs the starting of the server.
+     *
+     * @param args an array with at least 1 element that can be parsed to a port number.
+     */
+    private void handleStart(String[] args) {
+        try {
+            controller.startServer(Integer.parseInt(args[0]));
+        } catch (NumberFormatException e) {
+            Logger.getGlobal().throwing(getClass().toString(), "handleStart", e);
+            showError(args[0] + " is not a valid port number");
+        }
+
     }
 
     private void showPrompt() {
@@ -131,11 +151,15 @@ public class FourCharmServerTUI implements Runnable {
     private void executeCommand(Command command, String[] args) {
         switch (command) {
             case START:
-                showError(NOT_IMPLEMENTED);
+                handleStart(args);
+                break;
+            case EXIT:
+                showMessage("Goodbye");
+                controller.stopServer();
+                running = false;
                 break;
             case STOP:
-                showMessage("Goodbye");
-                running = false;
+                controller.stopServer();
                 break;
             case CHANGE_PORT:
                 showError(NOT_IMPLEMENTED);
@@ -156,8 +180,9 @@ public class FourCharmServerTUI implements Runnable {
      * Enum class that 'holds' the commands of the Connect4 game.
      */
     private enum Command {
-        START(),
-        STOP("port number"),
+        START("port number"),
+        STOP(),
+        EXIT(),
         CHANGE_PORT("port number"),
         HELP(),
         LIST_PLAYER();

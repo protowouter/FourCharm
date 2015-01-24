@@ -34,6 +34,7 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
     private Socket socket;
     private CoreClient.Client client;
     private BufferedReader in;
+    private boolean running;
 
 // --------------------- Constructors -------------------
 
@@ -44,6 +45,7 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
      */
     public ClientHandler(Socket sock) {
         socket = sock;
+        running = true;
     }
 
 // ----------------------- Queries ----------------------
@@ -159,28 +161,8 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
         CoreServer.Processor processor = new CoreServer.Processor<>(this);
 
         try {
-            String input = in == null ? null : in.readLine();
-            while (input != null) {
-                Logger.getGlobal().info("Processing input " + input);
-                try {
-                    boolean processed = processor.process(input);
-                    if (!processed) {
-                        Logger.getGlobal().warning("This command is not recognized");
-                        C4Exception error = new InvalidCommandError(input + " is not recognized");
-                        client.error(error.getErrorCode(), error.getMessage());
-                    }
-                } catch (C4Exception e) {
 
-                    Logger.getGlobal().info("Sending exception " + e.getMessage());
-                    try {
-                        client.error(e.getErrorCode(), e.getMessage());
-                    } catch (C4Exception e1) {
-                        Logger.getGlobal().throwing(getClass().toString(), mName, e1);
-                    }
-
-                }
-                input = in.readLine();
-            }
+            processCommands(processor);
 
         } catch (IOException e) {
             Logger.getGlobal().throwing(getClass().toString(), mName, e);
@@ -194,6 +176,40 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
         }
 
 
+    }
+
+    private void processCommands(CoreServer.Processor processor) throws IOException {
+        String input = in == null ? null : in.readLine();
+        while (running && input != null) {
+            Logger.getGlobal().info("Processing input " + input);
+            try {
+                boolean processed = processor.process(input);
+                if (!processed) {
+                    Logger.getGlobal().warning("This command is not recognized");
+                    C4Exception error = new InvalidCommandError(input + " is not recognized");
+                    client.error(error.getErrorCode(), error.getMessage());
+                }
+            } catch (C4Exception e) {
+
+                Logger.getGlobal().info("Sending exception " + e.getMessage());
+                try {
+                    client.error(e.getErrorCode(), e.getMessage());
+                } catch (C4Exception e1) {
+                    Logger.getGlobal().throwing(getClass().toString(), "processCommands", e1);
+                }
+
+            }
+            input = in.readLine();
+        }
+    }
+
+    public void shutdown() {
+        try {
+            in.close();
+        } catch (IOException e) {
+            Logger.getGlobal().throwing(getClass().toString(), "shutdown", e);
+        }
+        running = false;
     }
 
     public void init() {

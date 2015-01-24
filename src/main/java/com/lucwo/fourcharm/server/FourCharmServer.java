@@ -5,6 +5,8 @@
 package com.lucwo.fourcharm.server;
 
 
+import com.lucwo.fourcharm.exception.ServerStartException;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -21,8 +23,6 @@ import java.util.logging.Logger;
  * @author Luce Sandfort and Wouter Timmermans
  */
 public class FourCharmServer {
-
-    private static final int TIMEOUT = 100;
 
     private ClientGroup lobby;
     private ClientGroup preLobby;
@@ -41,14 +41,6 @@ public class FourCharmServer {
         games = new ArrayList<>();
         running = true;
         poort = port;
-    }
-
-    public static void main(String[] args) {
-
-        FourCharmServer server = new FourCharmServer(8080);
-        server.openSocket();
-        server.startServer();
-
     }
 
     public int getSocketPort() {
@@ -72,14 +64,13 @@ public class FourCharmServer {
         return nameExistsinGame || lobby.clientNameExists(name);
     }
 
-    public void openSocket() {
+    public void openSocket() throws ServerStartException {
         try {
             serverSocket = new ServerSocket(poort);
-            serverSocket.setSoTimeout(TIMEOUT);
             Logger.getGlobal().info("Listening for connections on port " + getSocketPort());
         } catch (IOException e) {
-            Logger.getGlobal().warning("Cannot listen on port " + poort);
             Logger.getGlobal().throwing("FourCharmServer", "main", e);
+            throw new ServerStartException("Unable to start server on port " + poort);
         }
     }
 
@@ -98,7 +89,7 @@ public class FourCharmServer {
                 preLobby.addHandler(client);
                 new Thread(client).start();
             } catch (IOException e) {
-                Logger.getGlobal().throwing("FourCharmServer", "main", e);
+                Logger.getGlobal().throwing("FourCharmServer", "startServer", e);
             }
         }
 
@@ -128,6 +119,14 @@ public class FourCharmServer {
      */
     public void stop() {
         running = false;
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            Logger.getGlobal().throwing(getClass().toString(), "stop", e);
+        }
+        lobby.getClients().forEach(ClientHandler::shutdown);
+        preLobby.getClients().forEach(ClientHandler::shutdown);
+        games.forEach((cG) -> cG.getClients().forEach(ClientHandler::shutdown));
     }
 
     /**
