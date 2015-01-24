@@ -350,19 +350,19 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
      * Enum class that 'holds' the commands of the Connect4 game.
      */
     private enum Command {
-        CHAT(new String[]{"Chatmessage"}),
-        CONNECT(new String[]{"Host", "Port", "Playername", "| -m (MTDF) | -r (Random) | -h (Human)"}),
-        LOCAL(new String[]{"Playername | -m (MTDF) | -r (Random)", "Playername | -m (MTDF) | -r (Random)"}),
-        HINT(new String[0]),
-        EXIT(new String[0]),
-        CHALLENGE(new String[]{"Player name"}),
-        HELP(new String[0]),
-        LIST_PLAYERS(new String[0]);
+        CHAT("Chatmessage"),
+        CONNECT("Host", "Port", "Playername", "| -m (MTDF) | -r (Random) | -h (Human)"),
+        LOCAL("Playername | -m (MTDF) | -r (Random)", "Playername | -m (MTDF) | -r (Random)"),
+        HINT(),
+        EXIT(),
+        CHALLENGE("Player name"),
+        HELP(),
+        LIST_PLAYERS();
 
 
         String[] parameterNames;
 
-        Command(String[] cNames) {
+        Command(String... cNames) {
             parameterNames = cNames;
         }
 
