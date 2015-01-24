@@ -75,6 +75,7 @@ public class GamePresenter implements Observer {
         initBoardPane();
         game.addObserver(this);
         boardPresenter.initBoard(game.getBoard());
+        updateGame(game);
     }
 
 
@@ -88,9 +89,21 @@ public class GamePresenter implements Observer {
 
     private void updateGame(Game game) {
         String color = colorMap.get(game.getCurrent().getMark());
-        currentPlayer.textProperty().setValue(game.getCurrent().toString() +
-                "'s turn (" + color + ")");
+        String currentText;
+        if (game.hasFinished()) {
+            if(game.hasWinner()) {
+                currentText = game.getWinner().getName() + " won (" + color + ")";
+            } else {
+                currentText = "the game was a tie";
+            }
+        } else {
+            currentText = (game.getCurrent().toString() +
+                    "'s turn (" + color + ")");
+            ;
+        }
+        currentPlayer.textProperty().setValue(currentText);
         boardPresenter.drawBoard(game.getBoard());
+
     }
 
     public void doPlayerMove(int col) {
