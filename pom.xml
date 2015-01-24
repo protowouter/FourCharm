@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>FourCharm</groupId>
     <artifactId>FourCharm</artifactId>
-    <version>v0.5.6-SNAPSHOT</version>
+    <version>v0.6.0</version>
     <build>
         <plugins>
             <plugin>
@@ -135,7 +135,7 @@
                                 <limit implementation="org.jacoco.report.check.Limit">
                                     <counter>INSTRUCTION</counter>
                                     <value>COVEREDRATIO</value>
-                                    <minimum>0.50</minimum>
+                                    <minimum>0.40</minimum>
                                 </limit>
                             </limits>
                         </rule>
