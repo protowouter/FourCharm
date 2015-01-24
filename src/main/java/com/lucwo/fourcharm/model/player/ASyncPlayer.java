@@ -11,12 +11,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
 /**
- * The ASyncPlayer class 'makes' a human player. To play a game of
- * Connect4 as a human, the Game class makes use of the interface
- * Player. The ASyncPlayer class implements Player. The main priority
- * of this class is get the input of the human player to the board.
- * // TODO klopt niet. ASyncPlayer hoeft geen mens te zijn.
- *
+ * The AsyncPlayer class models a player that makes its decision
+ * for a move in a different 'Thread' than the game class.
+ * This could for instance be a human connected to the local
+ * computer or a player on the other end of a server connection.
+ * This class uses in internal queue to provide synchronisation
+ * between the game thread and the thread which receives the input
+ * from the actual player.
  *
  * @author Luce Sandfort and Wouter Timmermans
  *

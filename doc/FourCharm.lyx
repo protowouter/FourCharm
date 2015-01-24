@@ -1079,7 +1079,7 @@ The client provides a 'hint' functionality.
 \begin_inset Text
 
 \begin_layout Plain Layout
-TODO
+FourCharmView
 \end_layout
 
 \end_inset
@@ -1109,7 +1109,7 @@ The 'hint' functionality is a possible move and may only be proposed to
 \begin_inset Text
 
 \begin_layout Plain Layout
-TODO
+FourCharmController
 \end_layout
 
 \end_inset

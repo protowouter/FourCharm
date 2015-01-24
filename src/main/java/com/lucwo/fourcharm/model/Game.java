@@ -72,8 +72,6 @@ public class Game extends Observable implements Runnable {
         notifyObservers();
         boolean fairplay = true;
 
-        // TODO current should be player1 before entering the loop
-
         while (running && fairplay && !hasFinished()) {
             current = nextPlayer();
             moveMade = true;
