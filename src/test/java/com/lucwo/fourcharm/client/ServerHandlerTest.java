@@ -13,8 +13,7 @@ import com.lucwo.fourcharm.model.player.ASyncPlayer;
 import com.lucwo.fourcharm.model.player.Mark;
 import mockit.Expectations;
 import mockit.Mocked;
-import nl.woutertimmermans.connect4.protocol.fgroup.CoreServer;
-import nl.woutertimmermans.connect4.protocol.parameters.Extension;
+import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreServer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,9 +26,9 @@ import static org.junit.Assert.assertNull;
 
 public class ServerHandlerTest {
 
-    private ServerHandler handler;
     @Mocked
     CoreServer.Client serverClient;
+    private ServerHandler handler;
     @Mocked
     private FourCharmController controller;
     @Mocked

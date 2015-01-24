@@ -16,8 +16,8 @@ import com.lucwo.fourcharm.model.player.Player;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidMoveError;
-import nl.woutertimmermans.connect4.protocol.fgroup.CoreClient;
-import nl.woutertimmermans.connect4.protocol.fgroup.CoreServer;
+import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreClient;
+import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreServer;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 
 import java.io.*;
