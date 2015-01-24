@@ -80,6 +80,7 @@ public class FourCharmServer {
     public void startServer() {
 
         Logger.getGlobal().info("Starting Fourcharm server");
+        int clientCount = 0;
 
 
         while (running) {
@@ -87,7 +88,10 @@ public class FourCharmServer {
                 Socket sock = serverSocket.accept();
                 ClientHandler client = new ClientHandler(sock);
                 preLobby.addHandler(client);
-                new Thread(client).start();
+                Thread t = new Thread(client);
+                t.setName("ClientHandler-" + clientCount);
+                t.start();
+                clientCount++;
             } catch (IOException e) {
                 Logger.getGlobal().throwing("FourCharmServer", "startServer", e);
             }

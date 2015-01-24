@@ -8,6 +8,9 @@ import com.lucwo.fourcharm.exception.ServerStartException;
 import com.lucwo.fourcharm.server.FourCharmServer;
 import com.lucwo.fourcharm.view.FourCharmServerTUI;
 
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FourCharmServerController {
@@ -34,6 +37,13 @@ public class FourCharmServerController {
 // ----------------------- Commands ---------------------
 
     public static void main(String[] args) {
+        Logger.getGlobal().setLevel(Level.FINEST);
+        ConsoleHandler cH = new ConsoleHandler();
+        cH.setLevel(Level.FINEST);
+        Logger.getGlobal().addHandler(cH);
+        for (Handler h : Logger.getGlobal().getHandlers()) {
+            Logger.getGlobal().removeHandler(h);
+        }
         new FourCharmServerController();
     }
 
@@ -41,7 +51,9 @@ public class FourCharmServerController {
         try {
             server = new FourCharmServer(port);
             server.openSocket();
-            new Thread(server::startServer).start();
+            Thread serverThread = new Thread(server::startServer);
+            serverThread.setName("serverThread");
+            serverThread.start();
         } catch (ServerStartException e) {
             Logger.getGlobal().throwing(getClass().toString(), "startServer", e);
             view.showError(e.getMessage());

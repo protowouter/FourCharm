@@ -205,7 +205,7 @@ public class ClientHandler implements CoreServer.Iface, Runnable {
 
     public void shutdown() {
         try {
-            in.close();
+            socket.close();
         } catch (IOException e) {
             Logger.getGlobal().throwing(getClass().toString(), "shutdown", e);
         }
