@@ -73,6 +73,14 @@ public class FourCharmPresenter {
         contentArea.setCenter(gamePresenter.getView());
     }
 
+    public void enableHint() {
+        Platform.runLater(gamePresenter::enableHint);
+    }
+
+    public void disableHint() {
+        Platform.runLater(gamePresenter::disableHint);
+    }
+
     public void showRematch() {
         Platform.runLater(gamePresenter::showRematch);
     }

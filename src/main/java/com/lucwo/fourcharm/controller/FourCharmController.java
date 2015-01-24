@@ -8,6 +8,7 @@ import com.lucwo.fourcharm.client.ServerHandler;
 import com.lucwo.fourcharm.exception.ServerConnectionException;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
+import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.model.player.LocalAIPlayer;
 import com.lucwo.fourcharm.model.player.LocalHumanPlayer;
@@ -18,6 +19,7 @@ import com.lucwo.fourcharm.view.FourCharmTUI;
 import com.lucwo.fourcharm.view.FourCharmView;
 import javafx.application.Application;
 
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.ConsoleHandler;
@@ -37,6 +39,7 @@ import java.util.logging.Logger;
 public class FourCharmController implements Observer {
 
     public static final int MAX_PLAYERS = 2;
+    private static final GameStrategy HINT_AI = new MTDfStrategy();
 
 // ------------------ Instance variables ----------------
 
@@ -60,20 +63,27 @@ public class FourCharmController implements Observer {
 // ----------------------- Commands ---------------------
 
     public static void main(String[] args) {
-        if (args.length > 0 && "-c".equals(args[0])) {
+        boolean tui = false;
+        boolean verbose = false;
+
+        for (String arg : args) {
+            tui = "-c".equals(arg) || tui;
+            verbose = "-v".equals(arg) || verbose;
+        }
+        if (verbose) {
+            Logger.getGlobal().setLevel(Level.FINEST);
+            ConsoleHandler cH = new ConsoleHandler();
+            cH.setLevel(Level.FINEST);
+            Logger.getGlobal().addHandler(cH);
+        }
+
+        if (tui) {
             FourCharmController con = new FourCharmController();
             FourCharmTUI view = new FourCharmTUI(con);
             con.setView(view);
             new Thread(view).start();
         } else {
             Application.launch(FourCharmGUI.class);
-        }
-
-        if (args.length > 1 && "-v".equals(args[1])) {
-            Logger.getGlobal().setLevel(Level.FINEST);
-            ConsoleHandler cH = new ConsoleHandler();
-            cH.setLevel(Level.FINEST);
-            Logger.getGlobal().addHandler(cH);
         }
 
     }
@@ -205,8 +215,21 @@ public class FourCharmController implements Observer {
     private void handlePlayerTurn(Player player) {
         if (player instanceof LocalHumanPlayer) {
             view.enableInput();
+            view.enableHint();
             ((LocalHumanPlayer) player).queueMove(view.requestMove());
+            view.disableHint();
         }
+    }
+
+    /**
+     * Returns the best move according to a AI. This can be used by views when
+     * a human user wants a hint on the best next move.
+     * @return The best move for the current board. The move is zero based. The leftmost column would
+     * be move 0.
+     */
+    public int getHint() {
+        view.disableHint();
+        return HINT_AI.determineMove(game.getBoard(), game.getCurrent().getMark());
     }
 
     /**

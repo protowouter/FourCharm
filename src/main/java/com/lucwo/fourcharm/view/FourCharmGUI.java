@@ -102,6 +102,23 @@ public class FourCharmGUI extends Application implements FourCharmView {
         fourCharmPresenter.enableInput();
     }
 
+    /**
+     * Enable the hint functionality.
+     * This must only be done if it is the current turn of a human.
+     */
+    @Override
+    public void enableHint() {
+        fourCharmPresenter.enableHint();
+    }
+
+    /**
+     * Disables the hint functionality.
+     */
+    @Override
+    public void disableHint() {
+        fourCharmPresenter.disableHint();
+    }
+
     @Override
     public int requestMove() {
         return fourCharmPresenter.requestMove();

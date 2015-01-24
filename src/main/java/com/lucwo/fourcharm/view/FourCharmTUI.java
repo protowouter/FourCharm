@@ -36,6 +36,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
     private FourCharmController controller;
     private boolean moveNeeded;
     private LinkedBlockingQueue<Integer> moveQueue;
+    private boolean hintEnabled;
     
     // --------------------- Constructors -------------------
 
@@ -51,6 +52,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
         controller = cont;
         moveNeeded = false;
         moveQueue = new LinkedBlockingQueue<>(1);
+        hintEnabled = false;
     }
 
     // ----------------------- Commands ---------------------
@@ -129,7 +131,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
                 break;
             case HINT:
                 //Ask for a hint in the current game.
-                showError(NOT_IMPLEMENTED);
+                handleHint();
                 break;
             case CHALLENGE:
                 //Challenge another player to play a game
@@ -302,6 +304,33 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
     @Override
     public void enableInput() {
         moveNeeded = true;
+    }
+
+    /**
+     * Enable the hint functionality.
+     * This must only be done if it is the current turn of a human.
+     */
+    @Override
+    public void enableHint() {
+        hintEnabled = true;
+    }
+
+    /**
+     * Disables the hint functionality.
+     */
+    @Override
+    public void disableHint() {
+        hintEnabled = false;
+    }
+
+    private void handleHint() {
+        if (hintEnabled) {
+            // Increment the move because the result is zero based, and the UI is one based.
+            showMessage("Calculating, please be patient...");
+            showMessage("Best move: " + (controller.getHint() + 1));
+        } else {
+            showError("The current player is not allowed to use a hint");
+        }
     }
 
     @Override
