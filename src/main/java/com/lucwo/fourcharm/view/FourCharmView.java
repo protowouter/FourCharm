@@ -42,6 +42,18 @@ public interface FourCharmView {
      */
     public void enableInput();
 
+
+    /**
+     * Enable the hint functionality.
+     * This must only be done if it is the current turn of a human.
+     */
+    public void enableHint();
+
+    /**
+     * Disables the hint functionality.
+     */
+    public void disableHint();
+
     /**
      * Request a move.
      * @return The requested column number (a.k.a. move).

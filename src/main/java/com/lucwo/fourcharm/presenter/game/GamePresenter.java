@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +42,8 @@ public class GamePresenter implements Observer {
     private Label currentPlayer;
     @FXML
     private Button rematch;
+    @FXML
+    private Button hintButton;
     @FXML
     private Button newGame;
     private BoardPresenter boardPresenter;
@@ -91,15 +94,14 @@ public class GamePresenter implements Observer {
         String color = colorMap.get(game.getCurrent().getMark());
         String currentText;
         if (game.hasFinished()) {
-            if(game.hasWinner()) {
+            if (game.hasWinner()) {
                 currentText = game.getWinner().getName() + " won (" + color + ")";
             } else {
                 currentText = "the game was a tie";
             }
         } else {
-            currentText = (game.getCurrent().toString() +
-                    "'s turn (" + color + ")");
-            ;
+            currentText = game.getCurrent().toString() +
+                    "'s turn (" + color + ")";
         }
         currentPlayer.textProperty().setValue(currentText);
         boardPresenter.drawBoard(game.getBoard());
@@ -156,6 +158,26 @@ public class GamePresenter implements Observer {
         newGame.setDisable(true);
         rematch.setVisible(false);
         newGame.setVisible(false);
+    }
+
+    public void enableHint() {
+        hintButton.setDisable(false);
+        hintButton.setVisible(true);
+    }
+
+    public void disableHint() {
+        hintButton.setVisible(false);
+        hintButton.setDisable(true);
+    }
+
+    public void provideHint() {
+        String prevText = currentPlayer.textProperty().get();
+        currentPlayer.textProperty().setValue("Calculating hint...");
+        new Thread(() -> {
+                int hint = fourCharmPresenter.getFourCharmController().getHint();
+                Platform.runLater(() -> boardPresenter.highlightColumn(hint));
+            }).start();
+        currentPlayer.textProperty().setValue(prevText);
     }
 
     public void handleNewGame() {

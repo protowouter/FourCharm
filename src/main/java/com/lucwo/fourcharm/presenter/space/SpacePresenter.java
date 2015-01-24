@@ -8,10 +8,9 @@ import com.lucwo.fourcharm.model.player.Mark;
 import com.lucwo.fourcharm.presenter.board.BoardPresenter;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 
 /**
@@ -25,6 +24,9 @@ public class SpacePresenter {
     // ------------------ Instance variables ----------------
 
     private static final double PIECE_RADIUS = 100;
+
+
+    private static final Border HIGHLIGHT_BORDER = new Border(new BorderStroke(Paint.valueOf("Blue"), BorderStrokeStyle.SOLID, new CornerRadii(0,0,0,0, true),new BorderWidths(1)));
 
     @FXML
     private Button spaceButton;
@@ -49,6 +51,7 @@ public class SpacePresenter {
     }
 
     public void setMark(Mark m) {
+        spaceButton.setBorder(Border.EMPTY);
         mark = m;
 
         if (m == Mark.P1) {
@@ -84,6 +87,10 @@ public class SpacePresenter {
             spaceButton.disableProperty().set(false);
         }
 
+    }
+
+    public void highlight() {
+        spaceButton.setBorder(HIGHLIGHT_BORDER);
     }
 
     public void setCol(int column) {

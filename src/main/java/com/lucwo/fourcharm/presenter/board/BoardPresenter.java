@@ -85,6 +85,17 @@ public class BoardPresenter {
 
     }
 
+
+    /**
+     * Highlight a column to indicate a hint.
+     * @param col Value between zero and the amount of columns of the board.
+     */
+    public void highlightColumn(int col) {
+        for (SpacePresenter space : spaces[col]) {
+            space.highlight();
+        }
+    }
+
     public void disableSpaces() {
         for (SpacePresenter[] sAr : spaces) {
             for (SpacePresenter sContr : sAr) {
