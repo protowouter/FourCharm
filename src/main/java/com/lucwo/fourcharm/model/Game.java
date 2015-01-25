@@ -6,6 +6,7 @@ package com.lucwo.fourcharm.model;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.board.Board;
+import com.lucwo.fourcharm.model.player.ASyncPlayer;
 import com.lucwo.fourcharm.model.player.Player;
 
 import java.util.Observable;
@@ -179,6 +180,9 @@ public class Game extends Observable implements Runnable {
      */
     public void shutdown() {
         running = false;
+        if (current instanceof ASyncPlayer) {
+            ((ASyncPlayer) current).abortMove();
+        }
     }
 
 }

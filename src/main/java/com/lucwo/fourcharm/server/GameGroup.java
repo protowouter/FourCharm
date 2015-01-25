@@ -135,7 +135,7 @@ public class GameGroup extends ClientGroup implements Observer {
      *               which will has been removed from the group.
      */
     @Override
-    public void removeClientCallback(ClientHandler client) {
+    public synchronized void removeClientCallback(ClientHandler client) {
         for (ClientHandler cH : getClients()) {
             C4Exception c4e = new PlayerDisconnectError("Player " +
                     client.getName() + " disconnected");
@@ -154,6 +154,7 @@ public class GameGroup extends ClientGroup implements Observer {
     public void startGame() {
 
         Thread gameThread = new Thread(game);
+        gameThread.setName("Game" + SimpleTimeZone.UTC_TIME);
         gameThread.start();
     }
 
@@ -161,14 +162,13 @@ public class GameGroup extends ClientGroup implements Observer {
      * Ends a game that started before.
      */
     private void endGame() {
-
+        game.shutdown();
         String winnerName = null;
         if (game.hasWinner()) {
             winnerName = game.getWinner().getName();
         }
-        List<ClientHandler> clients = new LinkedList<>(getClients());
         try {
-            for (ClientHandler client : clients) {
+            for (ClientHandler client : getClients()) {
                 client.getCoreClient().gameEnd(winnerName);
                 getServer().getLobby().addHandler(client);
             }

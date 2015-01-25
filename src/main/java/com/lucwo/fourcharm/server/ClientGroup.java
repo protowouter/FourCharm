@@ -8,9 +8,9 @@ import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Interface for modeling a group of clients. This could be a LobbyGroup, a GameGroup or a
@@ -26,7 +26,7 @@ public abstract class ClientGroup {
 
     public ClientGroup(FourCharmServer theServer) {
         server = theServer;
-        clientCollection = new HashMap<>();
+        clientCollection = new ConcurrentHashMap<>();
     }
 
     /**

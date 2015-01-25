@@ -51,6 +51,8 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
     public ClientHandler(Socket sock) {
         socket = sock;
         running = true;
+        name = sock.toString();
+        System.out.println(sock.toString());
     }
 
 // ----------------------- Queries ----------------------

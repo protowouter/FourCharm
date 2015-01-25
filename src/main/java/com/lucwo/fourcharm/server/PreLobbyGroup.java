@@ -106,6 +106,16 @@ public class PreLobbyGroup extends ClientGroup {
         throw new InvalidCommandError("You are not allowed to use this command now.");
     }
 
+    @Override
+    public void localChat(ClientHandler client, String message) throws C4Exception {
+        throw new InvalidCommandError("You are not allowed to send a chat message at this time");
+    }
+
+    @Override
+    public void globalChat(ClientHandler client, String message) throws C4Exception {
+        throw new InvalidCommandError("You are not allowed to send a chat message at this time");
+    }
+
     /**
      * Handles the removal of a client from the group.
      * @param client The {@link com.lucwo.fourcharm.server.ClientHandler}

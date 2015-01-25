@@ -5,13 +5,13 @@
 package com.lucwo.fourcharm.server;
 
 
+import com.google.common.collect.ConcurrentHashMultiset;
 import com.lucwo.fourcharm.exception.ServerStartException;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Logger;
 
@@ -41,7 +41,7 @@ public class FourCharmServer {
     public FourCharmServer(int port) {
         lobby = new LobbyGroup(this);
         preLobby = new PreLobbyGroup(lobby, this);
-        games = new ArrayList<>();
+        games = ConcurrentHashMultiset.create();
         running = true;
         poort = port;
     }
@@ -131,9 +131,11 @@ public class FourCharmServer {
         } catch (IOException e) {
             Logger.getGlobal().throwing(getClass().toString(), "stop", e);
         }
-        lobby.getClients().forEach(ClientHandler::shutdown);
+        games.forEach(cG -> cG.getClients().forEach(ClientHandler::shutdown));
         preLobby.getClients().forEach(ClientHandler::shutdown);
-        games.forEach((cG) -> cG.getClients().forEach(ClientHandler::shutdown));
+        lobby.getClients().forEach(ClientHandler::shutdown);
+
+
     }
 
     /**

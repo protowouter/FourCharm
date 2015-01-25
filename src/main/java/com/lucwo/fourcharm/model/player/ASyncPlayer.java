@@ -8,6 +8,7 @@ import com.lucwo.fourcharm.model.board.Board;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /**
@@ -27,6 +28,7 @@ public class ASyncPlayer implements Player {
     private final Mark mark;
     private BlockingQueue<Integer> rij;
     private String name;
+    private boolean waiting;
 
     /**
      * Create an new humanplayer given an way to communicate with the player.
@@ -48,15 +50,22 @@ public class ASyncPlayer implements Player {
      */
     public int determineMove(Board board) {
 
-        int column = -1;
-        try {
-            column = rij.take();
-        } catch (InterruptedException e) {
-            Logger.getGlobal().throwing(getClass().toString(), "determineMove", e);
-            column = determineMove(board);
+        Integer column = null;
+        waiting = true;
+        while (waiting && column == null) {
+            try {
+                column = rij.poll(1, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Logger.getGlobal().throwing(getClass().toString(), "determineMove", e);
+                column = determineMove(board);
+            }
         }
-        return column;
+        return column == null ? -1 : column;
 
+    }
+
+    public void abortMove() {
+        waiting = false;
     }
 
     /**
