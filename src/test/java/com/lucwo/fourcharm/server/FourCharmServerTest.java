@@ -67,7 +67,7 @@ public class FourCharmServerTest {
     public void testOpenSocket(@Mocked ServerSocket anySocket) throws Exception {
 
         new Expectations() {{
-            new ServerSocket(0);
+            new ServerSocket(0, anyInt, null);
         }};
 
         server.openSocket();
@@ -80,7 +80,7 @@ public class FourCharmServerTest {
 
         new Expectations() {{
 
-            ServerSocket socket1 = new ServerSocket(0);
+            ServerSocket socket1 = new ServerSocket(0, anyInt, null);
             socket1.accept();
             returns(sock);
             //preLobby.removeHandler(null);

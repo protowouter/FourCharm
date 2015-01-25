@@ -10,6 +10,7 @@ import com.lucwo.fourcharm.exception.ServerStartException;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collection;
@@ -69,7 +70,7 @@ public class FourCharmServer {
 
     public void openSocket() throws ServerStartException {
         try {
-            serverSocket = new ServerSocket(poort);
+            serverSocket = new ServerSocket(poort, 10, InetAddress.getLocalHost());
             Logger.getGlobal().info("Listening for connections on port " + getSocketPort());
         } catch (IOException e) {
             Logger.getGlobal().throwing("FourCharmServer", "main", e);

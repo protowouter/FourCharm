@@ -91,7 +91,7 @@ public class ServerSteps {
     @Then("^the server will accept me$")
     public void the_server_will_accept_me() throws Throwable {
         String accept = inWouter.readLine();
-        assertEquals("Server should send accept", "accept 23", accept);
+        assertThat(accept, matches("accept 23.*"));
     }
 
     @Given("^a server with one connected client$")

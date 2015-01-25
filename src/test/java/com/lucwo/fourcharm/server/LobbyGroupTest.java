@@ -6,6 +6,7 @@ package com.lucwo.fourcharm.server;
 
 import mockit.Expectations;
 import mockit.Mocked;
+import mockit.NonStrictExpectations;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +26,12 @@ public class LobbyGroupTest {
 
     @Before
     public void setUp() throws Exception {
+        new NonStrictExpectations() {{
+            clientje1.getName();
+            result = "John";
+            clientje2.getName();
+            result = "Mary";
+        }};
         sock = new Socket();
         lobbyGroup = new LobbyGroup(theServer);
         clientje1 = new ClientHandler(sock);
@@ -44,16 +51,10 @@ public class LobbyGroupTest {
     }
 
     @Test
-    public void testReady() throws Exception {
+    public void testReady(@Mocked GameGroup anyGameGroup) throws Exception {
         new Expectations() {
-            GameGroup game;
-
             {
-                clientje1.getName();
-                result = "hoi";
-                clientje2.getName();
-                result = "hallo";
-                new GameGroup(theServer, clientje1, clientje2);// expect constructor
+                new GameGroup(theServer, clientje2, clientje1);// expect constructor
                 //theServer.addGame(game);
             }
         };

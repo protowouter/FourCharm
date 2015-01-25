@@ -178,7 +178,7 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
      */
     @Override
     public void accept(int gNumber, Set<Extension> exts) {
-        if (exts.contains(ExtensionFactory.chat())) {
+        if (exts != null && exts.contains(ExtensionFactory.chat())) {
             chatServerClient = new ChatServer.Client(out);
         }
         try {

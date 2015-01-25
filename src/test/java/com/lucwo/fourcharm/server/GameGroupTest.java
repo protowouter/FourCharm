@@ -33,6 +33,15 @@ public class GameGroupTest {
     @Before
     public void setUp() throws Exception {
 
+        new NonStrictExpectations() {{
+            c1.getName();
+            result = "Wouter";
+            c2.getName();
+            result = "Luce";
+            c3.getName();
+            result = "Frits";
+        }};
+
         gameGroup = new GameGroup(server, c1, c2);
 
     }
@@ -48,12 +57,10 @@ public class GameGroupTest {
     public void testDoMove() throws Exception {
 
         new Expectations() {{
-            c1.getName();
-            result = "Frits";
             game.getBoard().columnHasFreeSpace(5);
             result = true;
             game.getCurrent();
-            result = new ASyncPlayer("Frits", Mark.P1);
+            result = new ASyncPlayer("Wouter", Mark.P1);
         }};
 
         gameGroup.doMove(c1, 5);
@@ -69,8 +76,6 @@ public class GameGroupTest {
     public void testDoMoveWrongPlayer() throws Exception {
 
         new Expectations() {{
-            c2.getName();
-            result = "Henk";
             game.getBoard().columnHasFreeSpace(5);
             result = true;
             game.getCurrent();
