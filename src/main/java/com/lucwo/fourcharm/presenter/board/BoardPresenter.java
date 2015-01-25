@@ -9,7 +9,8 @@ import com.lucwo.fourcharm.presenter.game.GamePresenter;
 import com.lucwo.fourcharm.presenter.space.SpacePresenter;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +29,7 @@ public class BoardPresenter {
 
 
     @FXML
-    private GridPane spacesPane;
+    private VBox spacesPane;
 
     private SpacePresenter[][] spaces;
 
@@ -57,14 +58,15 @@ public class BoardPresenter {
 
         ClassLoader classloader = getClass().getClassLoader();
 
-        for (int col = 0; col < board.getColumns(); col++) {
-            for (int row = 0; row < board.getRows(); row++) {
+        for (int row = board.getRows() - 1; row >= 0; row--) {
+            HBox rowBox = new HBox();
+            for (int col = 0; col < board.getColumns(); col++) {
                 FXMLLoader fxmlLoader =
                         new FXMLLoader(classloader.getResource("views/space/show.fxml"));
 
                 try {
                     fxmlLoader.load();
-                    spacesPane.add(fxmlLoader.getRoot(), col, board.getRows() - row);
+                    rowBox.getChildren().add(fxmlLoader.getRoot());
                     spaces[col][row] = fxmlLoader.getController();
                     spaces[col][row].setMark(board.getMark(col, row));
                     spaces[col][row].setBoardPresenter(this);
@@ -73,6 +75,7 @@ public class BoardPresenter {
                     LOGGER.trace("initBoard", exception);
                 }
             }
+            spacesPane.getChildren().add(rowBox);
         }
 
     }

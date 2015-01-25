@@ -11,7 +11,7 @@ import com.lucwo.fourcharm.presenter.game.NewGamePresenter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 
 /**
  * TODO: Fourcharmpresenter javadoc.
@@ -24,7 +24,7 @@ public class FourCharmPresenter {
     @FXML
     private Parent root;
     @FXML
-    private BorderPane contentArea;
+    private VBox contentArea;
 
     private NewGamePresenter newGamePresenter;
     private GamePresenter gamePresenter;
@@ -57,7 +57,10 @@ public class FourCharmPresenter {
 
 
     public void showNewGame() {
-        Platform.runLater(() -> contentArea.setCenter(newGamePresenter.getView()));
+        Platform.runLater(() -> {
+            contentArea.getChildren().retainAll(newGamePresenter.getView());
+            contentArea.getChildren().add(newGamePresenter.getView());
+        });
     }
 
     public void enableInput() {
@@ -70,7 +73,8 @@ public class FourCharmPresenter {
 
     public void showGame(Game game) {
         gamePresenter.showGame(game);
-        contentArea.setCenter(gamePresenter.getView());
+        contentArea.getChildren().retainAll(gamePresenter.getView());
+        contentArea.getChildren().add(gamePresenter.getView());
     }
 
     public void shutdown()  { gamePresenter.abortMove(); }

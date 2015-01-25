@@ -7,10 +7,10 @@ package com.lucwo.fourcharm.presenter.space;
 import com.lucwo.fourcharm.model.player.Mark;
 import com.lucwo.fourcharm.presenter.board.BoardPresenter;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.layout.*;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 
 
 /**
@@ -23,17 +23,16 @@ public class SpacePresenter {
 
     // ------------------ Instance variables ----------------
 
-    private static final double PIECE_RADIUS = 100;
-
-
-    private static final Border HIGHLIGHT_BORDER = new Border(new BorderStroke(Paint.valueOf("Blue"), BorderStrokeStyle.SOLID, new CornerRadii(0,0,0,0, true),new BorderWidths(1)));
-
     @FXML
-    private Button spaceButton;
+    private VBox parent;
+    @FXML
+    private Circle space;
     private Mark mark;
     private BoardPresenter boardPresenter;
 
     private int col;
+
+    private Paint current;
 
     // --------------------- Constructors -------------------
 
@@ -51,19 +50,15 @@ public class SpacePresenter {
     }
 
     public void setMark(Mark m) {
-        spaceButton.setBorder(Border.EMPTY);
+        unHighlight();
         mark = m;
 
         if (m == Mark.P1) {
-            spaceButton.textProperty().setValue("");
-            spaceButton.setBackground(new Background(new BackgroundFill(Color.PINK,
-                    new CornerRadii(PIECE_RADIUS), null)));
+            space.setFill(Color.PINK);
         } else if (m == Mark.P2) {
-            spaceButton.textProperty().setValue("");
-            spaceButton.setBackground(new Background(new BackgroundFill(Color.SKYBLUE,
-                    new CornerRadii(PIECE_RADIUS), null)));
+            space.setFill(Color.SKYBLUE);
         } else {
-            spaceButton.textProperty().setValue(m.toString());
+            space.setFill(Color.WHITE);
         }
 
 
@@ -79,18 +74,25 @@ public class SpacePresenter {
     }
 
     public void disable() {
-        spaceButton.disableProperty().setValue(true);
+        space.disableProperty().setValue(true);
     }
 
     public void enable() {
         if (mark == Mark.EMPTY) {
-            spaceButton.disableProperty().set(false);
+            space.disableProperty().set(false);
         }
 
     }
 
     public void highlight() {
-        spaceButton.setBorder(HIGHLIGHT_BORDER);
+        current = space.getFill();
+        space.setStroke(Color.CORNFLOWERBLUE);
+        space.setFill(Color.BEIGE);
+    }
+
+    public void unHighlight() {
+        space.setFill(current);
+        space.setStroke(Color.BLACK);
     }
 
     public void setCol(int column) {

@@ -24,8 +24,6 @@ import javafx.stage.Stage;
 
 public class FourCharmGUI extends Application implements FourCharmView {
 
-    private static final int HEIGHT = 1000;
-    private static final int WIDTH = 1000;
 
     // ---------------- Instance Variables ------------------
 
@@ -70,7 +68,7 @@ public class FourCharmGUI extends Application implements FourCharmView {
 
         Pane root = (Pane) fourCharmPresenter.getView();
 
-        stage.setScene(new Scene(root, HEIGHT, WIDTH));
+        stage.setScene(new Scene(root));
         stage.setTitle("FourCharmGUI");
         stage.show();
     }
