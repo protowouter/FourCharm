@@ -18,7 +18,14 @@ import com.lucwo.fourcharm.view.FourCharmGUI;
 import com.lucwo.fourcharm.view.FourCharmTUI;
 import com.lucwo.fourcharm.view.FourCharmView;
 import javafx.application.Application;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceEvent;
+import javax.jmdns.ServiceInfo;
+import javax.jmdns.ServiceListener;
+import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -36,6 +43,7 @@ public class FourCharmController implements Observer {
 
     public static final int MAX_PLAYERS = 2;
     private static final GameStrategy HINT_AI = new MTDfStrategy();
+    private static final Logger LOGGER = LoggerFactory.getLogger(FourCharmController.class);
 
 // ------------------ Instance variables ----------------
 
@@ -44,19 +52,48 @@ public class FourCharmController implements Observer {
     private ServerHandler serverClient;
     private Player player1;
     private Player player2;
+    private JmDNS serverDiscoverer;
 
 // --------------------- Constructors -------------------
+private ServiceListener fourCharmServiceListener = new ServiceListener() {
+    @Override
+    public void serviceAdded(ServiceEvent serviceEvent) {
+        LOGGER.info(serviceEvent.getName());
+        serverDiscoverer.requestServiceInfo(serviceEvent.getType(), serviceEvent.getName());
+
+    }
+
+    @Override
+    public void serviceRemoved(ServiceEvent serviceEvent) {
+
+    }
+
+    @Override
+    public void serviceResolved(ServiceEvent serviceEvent) {
+        LOGGER.info(serviceEvent.getInfo().getNiceTextString());
+    }
+};
+
+// ----------------------- Queries ----------------------
+
+// ----------------------- Commands ---------------------
 
     /**
      * Constructs a new controller.
      */
     public FourCharmController() {
-
+        try {
+            serverDiscoverer = JmDNS.create();
+            serverDiscoverer.addServiceListener("_c4._tcp.local", fourCharmServiceListener);
+            serverDiscoverer.addServiceListener("_ssh._tcp.local", fourCharmServiceListener);
+            for (ServiceInfo info : serverDiscoverer.list("_ssh._tcp.local")) {
+                System.out.println(info.toString());
+            }
+            // Retrieve service info from either ServiceInfo[] returned here or listener callback method above.
+        } catch (IOException e) {
+            LOGGER.trace("constructor", e);
+        }
     }
-
-// ----------------------- Queries ----------------------
-
-// ----------------------- Commands ---------------------
 
     public static void main(String[] args) {
         boolean tui = false;
@@ -114,7 +151,6 @@ public class FourCharmController implements Observer {
 
     }
 
-
     /**
      * Starts a local game, without making use of a server.
      * This method requires that exactly two parameters are null and two not null.
@@ -155,7 +191,6 @@ public class FourCharmController implements Observer {
         gameThread.start();
     }
 
-
     /**
      * Enables the move input of the view and retrieves the move from the view.
      *
@@ -165,7 +200,6 @@ public class FourCharmController implements Observer {
         view.enableInput();
         return view.requestMove();
     }
-
 
     /**
      * This method is called whenever the observed object is changed. An
@@ -193,7 +227,6 @@ public class FourCharmController implements Observer {
     public void rematch() {
         setGame(new Game(BinaryBoard.class, player1, player2));
     }
-
 
     /**
      * When playing a local game this method is used to retrieve the current move from
@@ -254,4 +287,5 @@ public class FourCharmController implements Observer {
             serverClient.globalChat(message);
         }
     }
+
 }
