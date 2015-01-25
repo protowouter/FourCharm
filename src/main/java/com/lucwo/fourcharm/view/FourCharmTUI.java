@@ -13,6 +13,7 @@ import com.lucwo.fourcharm.model.ai.RandomStrategy;
 
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /**
@@ -37,7 +38,8 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
     private boolean moveNeeded;
     private LinkedBlockingQueue<Integer> moveQueue;
     private boolean hintEnabled;
-    
+    private boolean waitingForMove;
+
     // --------------------- Constructors -------------------
 
     /**
@@ -274,8 +276,8 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
             parseCommand(inputScanner.nextLine());
             showPrompt();
         }
+        abortMove();
         controller.shutdown();
-        System.exit(0);
     }
 
     /**
@@ -337,13 +339,21 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
     public int requestMove() {
         showMessage("Enter a move (1-7)");
         showPrompt();
-        int move = -1;
-        try {
-            move = moveQueue.take();
-        } catch (InterruptedException e) {
-            Logger.getGlobal().throwing(getClass().toString(), "requestMove", e);
+        Integer move = null;
+        waitingForMove = true;
+        while (waitingForMove && move == null) {
+            try {
+                move = moveQueue.poll(1, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Logger.getGlobal().throwing(getClass().toString(), "requestMove", e);
+            }
         }
-        return move;
+
+        return move == null ? -1 : move;
+    }
+
+    private void abortMove() {
+        waitingForMove = false;
     }
 
     /**

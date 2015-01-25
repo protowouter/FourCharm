@@ -24,6 +24,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /**
@@ -50,6 +51,7 @@ public class GamePresenter implements Observer {
     private BlockingQueue<Integer> moveQueue;
     private Map<Mark, String> colorMap;
     private FourCharmPresenter fourCharmPresenter;
+    private boolean waitingForMove;
 
 
     // ----------------------- Queries ----------------------
@@ -118,13 +120,21 @@ public class GamePresenter implements Observer {
     }
 
     public int getPlayerMove() {
-        int move = -1;
-        try {
-            move = moveQueue.take();
-        } catch (InterruptedException e) {
-            Logger.getGlobal().throwing(getClass().toString(), "GamePresenter", e);
+        Integer move = null;
+        waitingForMove = true;
+        while (waitingForMove && move == null) {
+            try {
+                move = moveQueue.poll(1, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Logger.getGlobal().throwing(getClass().toString(), "GamePresenter", e);
+            }
         }
-        return move;
+
+        return move == null ? -1 : move;
+    }
+
+    public void abortMove() {
+        waitingForMove = false;
     }
     private void initBoardPane() {
 

@@ -81,7 +81,9 @@ public class FourCharmController implements Observer {
             FourCharmController con = new FourCharmController();
             FourCharmTUI view = new FourCharmTUI(con);
             con.setView(view);
-            new Thread(view).start();
+            Thread viewThread = new Thread(view);
+            viewThread.setName("FourTui");
+            viewThread.start();
         } else {
             Application.launch(FourCharmGUI.class);
         }
@@ -160,7 +162,9 @@ public class FourCharmController implements Observer {
         game = g;
         game.addObserver(this);
         view.showGame(game);
-        new Thread(game).start();
+        Thread gameThread = new Thread(game);
+        gameThread.setName("GameThread");
+        gameThread.start();
     }
 
 
