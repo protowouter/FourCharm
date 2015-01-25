@@ -21,9 +21,6 @@ import javafx.application.Application;
 
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Functions as the Controller part of MVC for the FourCharm system.
@@ -63,17 +60,9 @@ public class FourCharmController implements Observer {
 
     public static void main(String[] args) {
         boolean tui = false;
-        boolean verbose = false;
 
         for (String arg : args) {
             tui = "-c".equals(arg) || tui;
-            verbose = "-v".equals(arg) || verbose;
-        }
-        if (verbose) {
-            Logger.getGlobal().setLevel(Level.FINEST);
-            ConsoleHandler cH = new ConsoleHandler();
-            cH.setLevel(Level.FINEST);
-            Logger.getGlobal().addHandler(cH);
         }
 
         if (tui) {

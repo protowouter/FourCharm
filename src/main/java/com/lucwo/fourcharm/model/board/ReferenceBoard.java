@@ -6,9 +6,12 @@ package com.lucwo.fourcharm.model.board;
 
 import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.player.Mark;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 import java.util.Arrays;
-import java.util.logging.Logger;
 
 /**
  * Class for modeling a board for the game connect four. This class's
@@ -27,6 +30,9 @@ public class ReferenceBoard extends Board {
      * Amount of spots in the board.
      */
     public static final int SIZE = COLUMNS * ROWS;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReferenceBoard.class);
+    private static final Marker BOARD_DEBUG = MarkerFactory.getMarker("BOARD_DEBUG");
 
     // ------------------ Instance variables ----------------
     // Array with moves since the start of the game
@@ -135,7 +141,7 @@ public class ReferenceBoard extends Board {
             int tColumn = column;
             for (int row = 0; (row < ROWS) && (tColumn < COLUMNS)
                     && (streak < WIN_STREAK); row++, tColumn++) {
-                Logger.getGlobal().finest("Checking col: " + tColumn + " row: " + row);
+                LOGGER.debug(BOARD_DEBUG, "Checking col: {} row: {}", tColumn, row);
                 streak = this.board[tColumn][row] == player ? streak + 1 : 0;
             }
             diag = streak == WIN_STREAK;
@@ -177,7 +183,7 @@ public class ReferenceBoard extends Board {
             for (int row = 0; (row < ROWS) && (streak < WIN_STREAK); row++) {
                 streak = this.board[column][row] == player ? streak + 1 : 0;
             }
-            Logger.getGlobal().finer("Streak = " + streak);
+            LOGGER.debug(BOARD_DEBUG, "Streak = {}", streak);
             vertical = streak == WIN_STREAK;
         }
         return vertical;

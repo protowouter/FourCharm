@@ -7,13 +7,12 @@ package com.lucwo.fourcharm.controller;
 import com.lucwo.fourcharm.exception.ServerStartException;
 import com.lucwo.fourcharm.server.FourCharmServer;
 import com.lucwo.fourcharm.view.FourCharmServerTUI;
-
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FourCharmServerController {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(FourCharmServerController.class);
 
 // ------------------ Instance variables ----------------
 
@@ -37,13 +36,6 @@ public class FourCharmServerController {
 // ----------------------- Commands ---------------------
 
     public static void main(String[] args) {
-        Logger.getGlobal().setLevel(Level.FINEST);
-        ConsoleHandler cH = new ConsoleHandler();
-        cH.setLevel(Level.FINEST);
-        Logger.getGlobal().addHandler(cH);
-        for (Handler h : Logger.getGlobal().getHandlers()) {
-            Logger.getGlobal().removeHandler(h);
-        }
         new FourCharmServerController();
     }
 
@@ -51,18 +43,27 @@ public class FourCharmServerController {
         try {
             server = new FourCharmServer(port);
             server.openSocket();
+            view.showMessage("Listening for connections on port " + server.getSocketPort());
             Thread serverThread = new Thread(server::startServer);
             serverThread.setName("serverThread");
             serverThread.start();
         } catch (ServerStartException e) {
-            Logger.getGlobal().throwing(getClass().toString(), "startServer", e);
+            LOGGER.trace("startServer", e);
             view.showError(e.getMessage());
+            server = null;
         }
 
     }
 
     public void stopServer() {
-        server.stop();
+        if (server != null) {
+            server.stop();
+            server = null;
+            view.showMessage("Shutting down server");
+        } else {
+            view.showError("There was no server running");
+        }
+
     }
 
 }

@@ -15,8 +15,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +26,13 @@ import java.util.Observer;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 /**
  * TODO gamepresenter javadoc.
  */
 public class GamePresenter implements Observer {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GamePresenter.class);
 
     // ------------------ Instance variables ----------------
 
@@ -114,7 +116,7 @@ public class GamePresenter implements Observer {
         try {
             moveQueue.put(col);
         } catch (InterruptedException e) {
-            Logger.getGlobal().throwing(getClass().toString(), "GamePresenter", e);
+            LOGGER.trace("doPlayerMove", e);
         }
         boardPresenter.disableSpaces();
     }
@@ -126,7 +128,7 @@ public class GamePresenter implements Observer {
             try {
                 move = moveQueue.poll(1, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
-                Logger.getGlobal().throwing(getClass().toString(), "GamePresenter", e);
+                LOGGER.trace("getPlayerMove", e);
             }
         }
 
@@ -152,7 +154,7 @@ public class GamePresenter implements Observer {
             boardPresenter = fxmlLoader.getController();
             boardPresenter.setGamePresenter(this);
         } catch (IOException e) {
-            Logger.getGlobal().throwing(this.getClass().getSimpleName(), "initBoardPane", e);
+            LOGGER.trace("initBoardPane", e);
         }
     }
 

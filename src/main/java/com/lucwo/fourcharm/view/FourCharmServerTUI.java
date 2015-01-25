@@ -5,15 +5,17 @@
 package com.lucwo.fourcharm.view;
 
 import com.lucwo.fourcharm.controller.FourCharmServerController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
 public class FourCharmServerTUI implements Runnable {
 
     private static final String NOT_IMPLEMENTED = "Not yet implemented";
+    private static final Logger LOGGER = LoggerFactory.getLogger(FourCharmServerTUI.class);
 
 
 // ------------------ Instance variables ----------------
@@ -60,7 +62,7 @@ public class FourCharmServerTUI implements Runnable {
         try {
             controller.startServer(Integer.parseInt(args[0]));
         } catch (NumberFormatException e) {
-            Logger.getGlobal().throwing(getClass().toString(), "handleStart", e);
+            LOGGER.trace("handleStart", e);
             showError(args[0] + " is not a valid port number");
         }
 
@@ -75,7 +77,7 @@ public class FourCharmServerTUI implements Runnable {
      *
      * @param message the given message
      */
-    private void showMessage(String message) {
+    public void showMessage(String message) {
         System.out.println(message);
     }
 

@@ -22,6 +22,8 @@ import nl.woutertimmermans.connect4.protocol.fgroup.chat.ChatServer;
 import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreServer;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -30,7 +32,6 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * Handles the connection to the server from the perspective of the client.
@@ -43,6 +44,7 @@ import java.util.logging.Logger;
 public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnable {
 
     private static final int GROUP_NUMBER = 23;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServerHandler.class);
 
 // ------------------ Instance variables ----------------
 
@@ -92,7 +94,7 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
             coreServerClient = new CoreServer.Client(out);
             chatServerClient = new ChatServer.Client(null);
         } catch (IOException e) {
-            Logger.getGlobal().throwing(getClass().toString(), "constructor", e);
+            LOGGER.trace("constructor", e);
             throw new ServerConnectionException(e.getMessage());
         }
 
@@ -139,7 +141,7 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
         try {
             coreServerClient.join(name, GROUP_NUMBER, extensions);
         } catch (C4Exception e) {
-            Logger.getGlobal().throwing(getClass().toString(), "joinServer", e);
+            LOGGER.trace("joinServer", e);
         }
     }
 
@@ -151,7 +153,7 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
         try {
             String input = in.readLine();
             while (running && input != null) {
-                Logger.getGlobal().fine("Processing input " + input);
+                LOGGER.debug("Processing input {}", input);
                 boolean processed = coreProcessor.process(input);
                 if (!processed) {
                     chatProcessor.process(input);
@@ -160,13 +162,13 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
 
             }
         } catch (IOException e) {
-            Logger.getGlobal().throwing(getClass().toString(), "handleServerCommands", e);
+            LOGGER.trace("handleServerCommands", e);
         } catch (C4Exception e) {
-            Logger.getGlobal().throwing(getClass().toString(), "handleServerCommands", e);
+            LOGGER.trace("handleServerCommands", e);
             try {
                 coreServerClient.error(e.getErrorCode(), e.getMessage());
             } catch (C4Exception c4) {
-                Logger.getGlobal().throwing(getClass().toString(), "startGame", c4);
+                LOGGER.trace("handleServerCommands", e);
             }
         }
     }
@@ -184,7 +186,7 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
         try {
             coreServerClient.ready();
         } catch (C4Exception e) {
-            Logger.getGlobal().throwing("ServerHandler", "accept", e);
+            LOGGER.trace("accept", e);
         }
     }
 
@@ -197,7 +199,7 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
     @Override
     public void startGame(String p1, String p2) throws C4Exception {
         if (game == null || game.hasFinished()) {
-            Logger.getGlobal().info("Starting game with players " + p1 + " " + p2);
+            LOGGER.info("Starting a game with players {} and {}", p1, p2);
             ASyncPlayer player1 = new ASyncPlayer(p1, Mark.P1);
             ASyncPlayer player2 = new ASyncPlayer(p2, Mark.P2);
             playerMap.put(player1.getName(), player1);
@@ -248,7 +250,7 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
             try {
                 coreServerClient.doMove(move);
             } catch (C4Exception e) {
-                Logger.getGlobal().throwing(getClass().toString(), "requestMove", e);
+                LOGGER.trace("requestMove", e);
             }
         }
     }

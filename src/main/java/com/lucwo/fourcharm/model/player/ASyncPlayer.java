@@ -5,11 +5,12 @@
 package com.lucwo.fourcharm.model.player;
 
 import com.lucwo.fourcharm.model.board.Board;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 /**
  * The AsyncPlayer class models a player that makes its decision
@@ -24,6 +25,8 @@ import java.util.logging.Logger;
  *
  */
 public class ASyncPlayer implements Player {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ASyncPlayer.class);
 
     private final Mark mark;
     private BlockingQueue<Integer> rij;
@@ -56,7 +59,7 @@ public class ASyncPlayer implements Player {
             try {
                 column = rij.poll(1, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
-                Logger.getGlobal().throwing(getClass().toString(), "determineMove", e);
+                LOGGER.trace("determineMove", e);
                 column = determineMove(board);
             }
         }
@@ -76,7 +79,7 @@ public class ASyncPlayer implements Player {
         try {
             rij.put(col);
         } catch (InterruptedException e) {
-            Logger.getGlobal().throwing(getClass().toString(), "queueMove", e);
+            LOGGER.trace("queueMove", e);
             queueMove(col);
         }
     }

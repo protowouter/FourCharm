@@ -20,10 +20,6 @@ import mockit.Mocked;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import static org.junit.Assert.assertEquals;
 
 public class FourCharmControllerTest {
@@ -211,19 +207,6 @@ public class FourCharmControllerTest {
         }};
 
         FourCharmController.main(new String[]{"-c"});
-    }
-
-    @Test
-    public void testMainVerbose(@Mocked Logger anyLogger, @Mocked ConsoleHandler anyHandler) throws Exception {
-
-        new Expectations() {{
-            Logger.getGlobal().setLevel(Level.FINEST);
-            ConsoleHandler c1 = new ConsoleHandler();
-            c1.setLevel(Level.FINEST);
-            Logger.getGlobal().addHandler(c1);
-        }};
-
-        FourCharmController.main(new String[]{"-c", "-v"});
     }
 
     @Test

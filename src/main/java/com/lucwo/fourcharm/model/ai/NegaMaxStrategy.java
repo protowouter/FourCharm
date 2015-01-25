@@ -7,11 +7,14 @@ package com.lucwo.fourcharm.model.ai;
 import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.board.Board;
 import com.lucwo.fourcharm.model.player.Mark;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Logger;
 
 /**
  * The NegaMaxStrategy class implements the GameStrategy interface. This combination
@@ -23,10 +26,14 @@ import java.util.logging.Logger;
  * @author Luce Sandfort and Wouter Timmermans
  */
 public class NegaMaxStrategy implements GameStrategy {
+
     /**
      * Default search depth for the NegaMax algorithm.
      */
     public static final int DEF_DEPTH = 6;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MTDfStrategy.class);
+    private static final Marker AI_DEBUG = MarkerFactory.getMarker("AI_DEBUG");
+    private static final Marker AI_INFO = MarkerFactory.getMarker("AI_INFO");
     private static final int FOE_POS_VALUE = -1000;
     private static final int FRIENDLY_POS_VALUE = 1000;
     private static final int EMPTY_POS_VALUE = 10;
@@ -82,8 +89,8 @@ public class NegaMaxStrategy implements GameStrategy {
                 Double.POSITIVE_INFINITY, depth);
         int bestMove = result.column;
         Double bestValue = result.value;
-        Logger.getGlobal().fine("Calculated nodes: " + nodeCounter.get());
-        Logger.getGlobal().fine("Best move: " + bestMove + " Value: " + bestValue);
+        LOGGER.debug(AI_DEBUG, "Calculated nodes: {}", nodeCounter.get());
+        LOGGER.debug(AI_INFO, "Best move: {} Value: {}", bestMove, bestValue);
         if (bestMove == -1) {
             bestMove = new RandomStrategy().determineMove(board, mark);
         }
@@ -178,7 +185,7 @@ public class NegaMaxStrategy implements GameStrategy {
                     searching = newAlpha < beta;
 
                 } catch (InvalidMoveException e) {
-                    Logger.getGlobal().throwing(getClass().toString(), "getNegaResult", e);
+                    LOGGER.trace("getNegaResult", e);
                 }
             }
         }

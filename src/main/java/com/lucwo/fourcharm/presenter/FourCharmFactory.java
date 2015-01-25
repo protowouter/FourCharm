@@ -9,9 +9,10 @@ import com.lucwo.fourcharm.controller.FourCharmController;
 import com.lucwo.fourcharm.presenter.game.GamePresenter;
 import com.lucwo.fourcharm.presenter.game.NewGamePresenter;
 import javafx.fxml.FXMLLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 /**
  * TODO fourcharmfactory javadoc.
@@ -19,6 +20,8 @@ import java.util.logging.Logger;
  * @author Luce Sandfort and Wouter Timmermans
  */
 public class FourCharmFactory {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FourCharmFactory.class);
 
     // ------------------ Instance variables ----------------
     private FourCharmPresenter fourCharmPresenter;
@@ -44,7 +47,7 @@ public class FourCharmFactory {
                 fourCharmPresenter.setFourCharmController(controller);
                 fourCharmPresenter.showNewGame();
             } catch (IOException e) {
-                Logger.getGlobal().throwing(getClass().toString(), "getFourCharmPresenter", e);
+                LOGGER.trace("getFourCharmPresenter", e);
             }
         }
         return fourCharmPresenter;
@@ -63,7 +66,7 @@ public class FourCharmFactory {
                 newGamePresenter.setFourcharmPresenter(fourCharmPresenter);
                 newGamePresenter.init();
             } catch (IOException e) {
-                Logger.getGlobal().throwing(getClass().toString(), "getNewGamePresenter", e);
+                LOGGER.trace("getNewGamePresenter", e);
             }
         }
         return newGamePresenter;
@@ -83,7 +86,7 @@ public class FourCharmFactory {
                 gamePresenter.init();
 
             } catch (IOException e) {
-                Logger.getGlobal().throwing(getClass().toString(), "getGamePresenter", e);
+                LOGGER.trace("getGamePresenter", e);
             }
         }
 

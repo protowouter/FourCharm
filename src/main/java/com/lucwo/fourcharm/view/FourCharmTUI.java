@@ -10,11 +10,12 @@ import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 /**
  * The FourCharmTUI is the Textual User Interface of the FourCharm
@@ -27,6 +28,7 @@ import java.util.logging.Logger;
 public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     private static final String NOT_IMPLEMENTED = "Not yet implemented";
+    private static final Logger LOGGER = LoggerFactory.getLogger(FourCharmTUI.class);
 
 
     // ------------------ Instance variables ----------------
@@ -104,7 +106,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
                     moveQueue.put(move);
                     moveNeeded = false;
                 } catch (NumberFormatException | InterruptedException e) {
-                    Logger.getGlobal().throwing(getClass().toString(), "checkCommand", e);
+                    LOGGER.trace("checkCommand", e);
                     showError("This command has no power here!");
                 }
             } else {
@@ -223,7 +225,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
         try {
             controller.startNetworkGame(host, port, playerName, strat);
         } catch (ServerConnectionException e) {
-            Logger.getGlobal().throwing(getClass().toString(), "connect", e);
+            LOGGER.trace("connect", e);
             showError(e.getMessage());
         }
 
@@ -254,7 +256,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     @Override
     public void update(Observable o, Object arg) {
-        Logger.getGlobal().finer("Tui is getting message from: " + o.toString());
+        LOGGER.debug("Tui is getting message from: {}" + o);
         if (o instanceof Game) {
             gameOn = true;
             Game newGame = (Game) o;
@@ -357,7 +359,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
             try {
                 move = moveQueue.poll(1, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
-                Logger.getGlobal().throwing(getClass().toString(), "requestMove", e);
+                LOGGER.trace("requestMove", e);
             }
         }
 

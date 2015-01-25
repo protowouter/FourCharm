@@ -8,13 +8,14 @@ package com.lucwo.fourcharm.server;
 import com.google.common.collect.ConcurrentHashMultiset;
 import com.lucwo.fourcharm.exception.ServerStartException;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collection;
-import java.util.logging.Logger;
 
 /**
  * The FourCharmServer class that is responsible for the server. The FourCharmServer makes sure that
@@ -26,7 +27,7 @@ import java.util.logging.Logger;
  */
 public class FourCharmServer {
 
-    public static final Logger SERVER_LOGGER = Logger.getLogger("FourCharmServer");
+    public static final Logger LOGGER = LoggerFactory.getLogger(FourCharmServer.class);
 
     private ClientGroup lobby;
     private ClientGroup preLobby;
@@ -71,9 +72,9 @@ public class FourCharmServer {
     public void openSocket() throws ServerStartException {
         try {
             serverSocket = new ServerSocket(poort, 10, InetAddress.getLocalHost());
-            Logger.getGlobal().info("Listening for connections on port " + getSocketPort());
+            LOGGER.info("Listening for connections on port {}", getSocketPort());
         } catch (IOException e) {
-            Logger.getGlobal().throwing("FourCharmServer", "main", e);
+            LOGGER.trace("main", e);
             throw new ServerStartException("Unable to start server on port " + poort);
         }
     }
@@ -83,13 +84,14 @@ public class FourCharmServer {
      */
     public void startServer() {
 
-        Logger.getGlobal().info("Starting Fourcharm server");
+        LOGGER.info("Starting Fourcharm server");
         int clientCount = 0;
 
 
         while (running) {
             try {
                 Socket sock = serverSocket.accept();
+                LOGGER.debug("Incoming connection from {}", sock.getInetAddress());
                 ClientHandler client = new ClientHandler(sock);
                 preLobby.addHandler(client);
                 Thread t = new Thread(client);
@@ -97,11 +99,11 @@ public class FourCharmServer {
                 t.start();
                 clientCount++;
             } catch (IOException e) {
-                Logger.getGlobal().throwing("FourCharmServer", "startServer", e);
+                LOGGER.trace("startServer", e);
             }
         }
 
-        Logger.getGlobal().info("Shutting down Fourcharm server");
+        LOGGER.info("Shutting down FourCharm server");
 
     }
 
@@ -130,7 +132,7 @@ public class FourCharmServer {
         try {
             serverSocket.close();
         } catch (IOException e) {
-            Logger.getGlobal().throwing(getClass().toString(), "stop", e);
+            LOGGER.trace("stop", e);
         }
         games.forEach(cG -> cG.getClients().forEach(ClientHandler::shutdown));
         preLobby.getClients().forEach(ClientHandler::shutdown);

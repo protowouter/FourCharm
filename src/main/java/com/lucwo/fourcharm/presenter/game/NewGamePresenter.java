@@ -18,13 +18,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * TODO newgamepresenter javadoc.
  */
 public class NewGamePresenter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(NewGamePresenter.class);
     // ------------------ Instance variables ----------------
 
     @FXML
@@ -61,7 +63,7 @@ public class NewGamePresenter {
     // ----------------------- Queries ----------------------
 
     public Parent getView() {
-        Logger.getGlobal().fine("Retrieving newGameView");
+        LOGGER.debug("Retrieving newGameView");
         return root;
     }
 
@@ -252,7 +254,7 @@ public class NewGamePresenter {
             fourCharmPresenter.getFourCharmController().
                     startNetworkGame(host, port, name, strategy);
         } catch (ServerConnectionException e) {
-            Logger.getGlobal().throwing(getClass().toString(), "startNetworkGame", e);
+            LOGGER.trace("startNetworkGame", e);
             fourCharmPresenter.getFourCharmController().showError(e.getMessage());
         }
     }

@@ -8,9 +8,10 @@ import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.board.Board;
 import com.lucwo.fourcharm.model.player.ASyncPlayer;
 import com.lucwo.fourcharm.model.player.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Observable;
-import java.util.logging.Logger;
 
 /**
  * The Game class models a game of Connect4. This class makes use of Observable
@@ -22,6 +23,9 @@ import java.util.logging.Logger;
  * @author Luce Sandfort and Wouter Timmermans
  */
 public class Game extends Observable implements Runnable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Game.class);
+
     private Board board;
     private Player winner;
     private Player player1;
@@ -60,7 +64,7 @@ public class Game extends Observable implements Runnable {
         try {
             board = boardClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            Logger.getGlobal().throwing("Game", "initBoard", e);
+            LOGGER.trace("initBoard", e);
         }
 
     }
@@ -81,7 +85,7 @@ public class Game extends Observable implements Runnable {
             try {
                 current.doMove(board);
             } catch (InvalidMoveException e) {
-                Logger.getGlobal().throwing(getClass().toString(), "player", e);
+                LOGGER.trace("player", e);
                 fairplay = false;
             }
 
@@ -93,7 +97,7 @@ public class Game extends Observable implements Runnable {
             notifyObservers();
         }
 
-        Logger.getGlobal().fine("Game ended, winner: " + winner);
+        LOGGER.info("Game ended, winner: {}", winner);
 
     }
 

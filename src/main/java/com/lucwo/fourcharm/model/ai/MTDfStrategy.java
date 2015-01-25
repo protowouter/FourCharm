@@ -7,11 +7,14 @@ package com.lucwo.fourcharm.model.ai;
 import com.lucwo.fourcharm.exception.InvalidMoveException;
 import com.lucwo.fourcharm.model.board.Board;
 import com.lucwo.fourcharm.model.player.Mark;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.*;
-import java.util.logging.Logger;
 
 /**
  * This MTDfStrategy class makes use of the interface GameStrategy. This
@@ -24,6 +27,10 @@ import java.util.logging.Logger;
  */
 
 public class MTDfStrategy implements GameStrategy {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MTDfStrategy.class);
+    private static final Marker AI_DEBUG = MarkerFactory.getMarker("AI_DEBUG");
+    private static final Marker AI_INFO = MarkerFactory.getMarker("AI_INFO");
 
     private static final int MAX_DURATION = 10_000;
     private static final double FIRST_GUESS = 17880;
@@ -87,7 +94,7 @@ public class MTDfStrategy implements GameStrategy {
                                 .submit(() -> -mtdf(cBoard, mark.other(), mtDepth));
                         valueFutures.put(col, valFut);
                     } catch (InvalidMoveException e) {
-                        Logger.getGlobal().throwing(getClass().toString(), "determineMove", e);
+                        LOGGER.trace("determineMove", e);
                     }
                 }
             }
@@ -100,16 +107,13 @@ public class MTDfStrategy implements GameStrategy {
                         bestMoveCurrentIteration = valFut.getKey();
                         bestValueCurrentIteration = value;
                     }
-                    Logger.getGlobal().finest("Depth: " + achievedDepth +
-                            " Col: " + valFut.getKey() + " Value: " + value);
+                    LOGGER.debug(AI_DEBUG, "Depth: {} Col: {} Value: {}", achievedDepth, valFut.getKey(), value);
                 }
                 bestMove = bestMoveCurrentIteration;
                 bestValue = bestValueCurrentIteration;
                 achievedDepth = depth;
-            } catch (InterruptedException | ExecutionException e) {
-                Logger.getGlobal().throwing(getClass().toString(), "determineMove", e);
-            } catch (TimeoutException e) {
-                Logger.getGlobal().throwing(getClass().toString(), "determineMove", e);
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                LOGGER.trace("determineMove", e);
             }
 
         }
@@ -118,10 +122,10 @@ public class MTDfStrategy implements GameStrategy {
         } else {
             prevValue = bestValue;
         }
-        Logger.getGlobal().fine("Evaluated nodes: " + nega.getCounter());
-        Logger.getGlobal().fine("Search achieved a depth of " + achievedDepth);
-        Logger.getGlobal().fine("Best move: " + bestMove);
-        Logger.getGlobal().fine("Best move value: " + bestValue);
+        LOGGER.debug(AI_DEBUG, "Evaluated nodes: {}", nega.getCounter());
+        LOGGER.debug(AI_DEBUG, "Search achieved a depth of {}", achievedDepth);
+        LOGGER.debug(AI_INFO, "Best move {}", bestMove);
+        LOGGER.debug(AI_DEBUG, "Best move value {}", bestValue);
         return bestMove;
     }
 

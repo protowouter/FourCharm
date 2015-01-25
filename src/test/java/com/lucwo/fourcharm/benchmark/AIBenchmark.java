@@ -12,22 +12,15 @@ import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.model.player.LocalAIPlayer;
 import com.lucwo.fourcharm.model.player.Mark;
 import com.lucwo.fourcharm.model.player.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.logging.Logger;
 
-
-// ------------------ Instance variables ----------------
-
-// --------------------- Constructors -------------------
-
-// ----------------------- Queries ----------------------
-
-// ----------------------- Commands ---------------------
 public class AIBenchmark {
 
     /**
@@ -38,6 +31,7 @@ public class AIBenchmark {
      * How many times the current percentage should be shown.
      */
     public static final double STEP_PERCENTAGE = 0.01;
+    private static Logger logger = LoggerFactory.getLogger(AIBenchmark.class);
 
 
     private AIBenchmark() {
@@ -67,7 +61,7 @@ public class AIBenchmark {
             if (((gCount % step) == 0) && (gCount != 0)) {
                 float percent = ((float) gCount / (float) total) * 100;
                 int intPercent = (int) percent;
-                Logger.getGlobal().info(intPercent + "%");
+                logger.info("{}%", intPercent);
             }
 
             Game game;
@@ -90,16 +84,16 @@ public class AIBenchmark {
                 if (game.getWinner() == smartPlayer1 || game.getWinner() == smartPlayer2) {
                     wins++;
                 } else {
-                    Logger.getGlobal().info(Integer.toString(game.getBoard().getPlieCount()));
-                    Logger.getGlobal().info(Arrays.toString(game.getBoard().getMoves()));
-                    Logger.getGlobal().info("Player 1: " + (switchPlayer ? dumbPlayer1 : smartPlayer1).toString());
-                    Logger.getGlobal().info("Player 2: " + (!switchPlayer ? dumbPlayer1 : smartPlayer1).toString());
-                    Logger.getGlobal().info(game.getBoard().toString());
+                    logger.info(Integer.toString(game.getBoard().getPlieCount()));
+                    logger.info(Arrays.toString(game.getBoard().getMoves()));
+                    logger.info("Player 1: {}", (switchPlayer ? dumbPlayer1 : smartPlayer1).toString());
+                    logger.info("Player 2: {}", (!switchPlayer ? dumbPlayer1 : smartPlayer1).toString());
+                    logger.info(game.getBoard().toString());
                     loss++;
                 }
             } else {
                 ties++;
-                Logger.getGlobal().info("Tie: " + game.getBoard().toString());
+                logger.info("Tie: {}", game.getBoard().toString());
             }
 
         }
@@ -122,8 +116,7 @@ public class AIBenchmark {
         DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
         symbols.setGroupingSeparator(' ');
 
-        Logger.getGlobal().info("Running Benchmark with "
-                + formatter.format(ITERATIONS) + " iterations");
+        logger.info("Running Benchmark with {} iterations", formatter.format(ITERATIONS));
 
         long start = System.currentTimeMillis();
 
@@ -132,13 +125,13 @@ public class AIBenchmark {
         double percentage = ((double) (score[0] + score[1]) / ITERATIONS) * 100;
 
 
-        Logger.getGlobal().info("\n\n\nResults:\n-----------\n");
+        logger.info("\n\n\nResults:\n-----------\n");
 
-        Logger.getGlobal().info("wins: " + score[0] + "\nties: " + score[1] + "\nlosses: " + score[2]);
-        Logger.getGlobal().info("percentage (win + tie): " + percentage + "%");
+        logger.info("wins: " + score[0] + "\nties: " + score[1] + "\nlosses: " + score[2]);
+        logger.info("percentage (win + tie): " + percentage + "%");
 
         long duration = System.currentTimeMillis() - start;
-        Logger.getGlobal().info("mps: " + ((double) score[3]) / duration * 1000);
+        logger.info("mps: " + ((double) score[3]) / duration * 1000);
 
     }
 }

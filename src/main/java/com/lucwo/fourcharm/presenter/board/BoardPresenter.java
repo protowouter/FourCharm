@@ -10,15 +10,18 @@ import com.lucwo.fourcharm.presenter.space.SpacePresenter;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.GridPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 /**
  * TODO: boardpresenter javadoc.
  */
 
 public class BoardPresenter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BoardPresenter.class);
 
 
 // ------------------ Instance variables ----------------
@@ -67,7 +70,7 @@ public class BoardPresenter {
                     spaces[col][row].setBoardPresenter(this);
                     spaces[col][row].setCol(col);
                 } catch (IOException exception) {
-                    Logger.getGlobal().throwing(getClass().toString(), "initBoard", exception);
+                    LOGGER.trace("initBoard", exception);
                 }
             }
         }

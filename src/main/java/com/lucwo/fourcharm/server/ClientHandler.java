@@ -12,12 +12,13 @@ import nl.woutertimmermans.connect4.protocol.fgroup.chat.ChatServer;
 import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreServer;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * A ClientHandler is responsible for maintaining a connection with a client and passing received
@@ -29,6 +30,8 @@ import java.util.logging.Logger;
  */
 
 public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientHandler.class);
 
 // ------------------ Instance variables ----------------
 
@@ -52,7 +55,6 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
         socket = sock;
         running = true;
         name = sock.toString();
-        System.out.println(sock.toString());
     }
 
 // ----------------------- Queries ----------------------
@@ -109,7 +111,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      */
     @Override
     public void join(String pName, int gNumber, Set<Extension> exts) throws C4Exception {
-        Logger.getGlobal().info("Received join for user " + pName);
+        LOGGER.info("Received join for user {}", pName);
         group.join(this, pName, gNumber, exts);
 
     }
@@ -121,7 +123,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      */
     @Override
     public void ready() throws C4Exception {
-        Logger.getGlobal().info("Received ready for user " + getName());
+        LOGGER.info("Received ready for user {}", getName());
         group.ready(this);
     }
 
@@ -132,7 +134,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      */
     @Override
     public void doMove(int col) throws C4Exception {
-        Logger.getGlobal().info("Received doMove for user " + getName());
+        LOGGER.info("Received doMove for user ", getName());
         group.doMove(this, col);
     }
 
@@ -145,7 +147,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      */
     @Override
     public void error(int errorCode, String message) throws C4Exception {
-        Logger.getGlobal().info(errorCode + " " + message);
+        LOGGER.info("{} {}", errorCode, message);
     }
 
     /**
@@ -170,13 +172,14 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
             processCommands();
 
         } catch (IOException e) {
-            Logger.getGlobal().throwing(getClass().toString(), mName, e);
+            LOGGER.trace("handleClient", e);
         } finally {
             try {
                 socket.close();
                 group.removeHandler(this);
+                LOGGER.debug("Client {} disconnected", getName());
             } catch (IOException e) {
-                Logger.getGlobal().throwing(getClass().toString(), mName, e);
+                LOGGER.trace("handleClient", e);
             }
         }
 
@@ -189,24 +192,24 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 
         String input = in == null ? null : in.readLine();
         while (running && input != null) {
-            Logger.getGlobal().info("Processing input " + input);
+            LOGGER.info("Processing input {}", input);
             try {
                 boolean processed = coreProcessor.process(input);
                 if (!processed) {
                     processed = chatProcessor.process(input);
                 }
                 if (!processed) {
-                    Logger.getGlobal().warning("This command is not recognized");
+                    LOGGER.warn("The command {} is not recognized", input);
                     C4Exception error = new InvalidCommandError(input + " is not recognized");
                     coreClient.error(error.getErrorCode(), error.getMessage());
                 }
             } catch (C4Exception e) {
 
-                Logger.getGlobal().info("Sending exception " + e.getMessage());
+                LOGGER.warn("Sending exception: {}", e.getMessage());
                 try {
                     coreClient.error(e.getErrorCode(), e.getMessage());
                 } catch (C4Exception e1) {
-                    Logger.getGlobal().throwing(getClass().toString(), "processCommands", e1);
+                    LOGGER.trace("processCommands", e1);
                 }
 
             }
@@ -218,7 +221,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
         try {
             socket.close();
         } catch (IOException e) {
-            Logger.getGlobal().throwing(getClass().toString(), "shutdown", e);
+            LOGGER.trace("shutdown", e);
         }
         running = false;
     }
@@ -230,7 +233,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
             out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), Charset.forName("UTF-8")));
             in = new BufferedReader(new InputStreamReader(socket.getInputStream(), Charset.forName("UTF-8")));
         } catch (IOException e) {
-            Logger.getGlobal().throwing("FourCharmServer", "init", e);
+            LOGGER.trace("init", e);
         }
 
         coreClient = new CoreClient.Client(out);
@@ -242,7 +245,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
         try {
             chat.setValue("Chat");
         } catch (InvalidParameterError e) {
-            Logger.getGlobal().throwing(getClass().toString(), "registerExtensions", e);
+            LOGGER.trace("registerExtension", e);
         }
 
         if (extensions != null && extensions.contains(chat)) {

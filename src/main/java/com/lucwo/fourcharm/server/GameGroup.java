@@ -13,9 +13,10 @@ import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidMoveError;
 import nl.woutertimmermans.connect4.protocol.exceptions.PlayerDisconnectError;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * TODO: GameGroup class javadoc verder uitbreiden.
@@ -26,6 +27,8 @@ import java.util.logging.Logger;
  * @author Luce Sandfort and Wouter Timmermans
  */
 public class GameGroup extends ClientGroup implements Observer {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameGroup.class);
 
 // ------------------ Instance variables ----------------
 
@@ -58,7 +61,7 @@ public class GameGroup extends ClientGroup implements Observer {
             client1.getCoreClient().startGame(client1.getName(), client2.getName());
             client2.getCoreClient().startGame(client1.getName(), client2.getName());
         } catch (C4Exception e) {
-            Logger.getGlobal().throwing(getClass().toString(), "constructor", e);
+            LOGGER.trace("constructor", e);
         }
     }
 
@@ -105,7 +108,7 @@ public class GameGroup extends ClientGroup implements Observer {
                 }
                 playerMap.get(client).queueMove(col);
             } catch (IllegalStateException e) {
-                Logger.getGlobal().throwing(getClass().toString(), "doMove", e);
+                LOGGER.trace("doMove", e);
                 throw new InvalidMoveError("You are not allowed to make a move right now");
             }
         } else {
@@ -142,7 +145,7 @@ public class GameGroup extends ClientGroup implements Observer {
             try {
                 cH.getCoreClient().error(c4e.getErrorCode(), c4e.getMessage());
             } catch (C4Exception e) {
-                Logger.getGlobal().throwing(getClass().toString(), "removeClientCallback", e);
+                LOGGER.trace("removeClientCallback", e);
             }
         }
         endGame();
@@ -173,7 +176,7 @@ public class GameGroup extends ClientGroup implements Observer {
                 getServer().getLobby().addHandler(client);
             }
         } catch (C4Exception e) {
-            Logger.getGlobal().throwing("GameGroup", "startGame()", e);
+            LOGGER.trace("startGame", e);
         }
         getServer().removeGame(this);
 
@@ -204,7 +207,7 @@ public class GameGroup extends ClientGroup implements Observer {
                         try {
                             c.getCoreClient().requestMove(currentName);
                         } catch (C4Exception e) {
-                            Logger.getGlobal().throwing(getClass().toString(), "update", e);
+                            LOGGER.trace("update", e);
                         }
                     }
 
