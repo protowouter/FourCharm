@@ -116,7 +116,7 @@ public class FourCharmServer {
     private void announceServer(int port) {
         try {
             jmDNS = JmDNS.create();
-            ServiceInfo info = ServiceInfo.create("_c4._tcp.local", "FourCharm", port, "FourCharm game server");
+            ServiceInfo info = ServiceInfo.create("_c4._tcp.local.", "FourCharm", port, "FourCharm game server");
             jmDNS.registerService(info);
 
         } catch (IOException e) {

@@ -58,7 +58,7 @@ public class FourCharmController implements Observer {
 private ServiceListener fourCharmServiceListener = new ServiceListener() {
     @Override
     public void serviceAdded(ServiceEvent serviceEvent) {
-        LOGGER.info(serviceEvent.getName());
+        LOGGER.info("Service added: {} {}", serviceEvent.getName(), serviceEvent.getType());
         serverDiscoverer.requestServiceInfo(serviceEvent.getType(), serviceEvent.getName());
 
     }
@@ -70,7 +70,11 @@ private ServiceListener fourCharmServiceListener = new ServiceListener() {
 
     @Override
     public void serviceResolved(ServiceEvent serviceEvent) {
-        LOGGER.info(serviceEvent.getInfo().getNiceTextString());
+        try {
+            LOGGER.info("service Resolved: {}", serviceEvent.getDNS().getInterface());
+        } catch (IOException e) {
+            LOGGER.trace("serviceResolved", e);
+        }
     }
 };
 
@@ -84,8 +88,8 @@ private ServiceListener fourCharmServiceListener = new ServiceListener() {
     public FourCharmController() {
         try {
             serverDiscoverer = JmDNS.create();
-            serverDiscoverer.addServiceListener("_c4._tcp.local", fourCharmServiceListener);
-            serverDiscoverer.addServiceListener("_ssh._tcp.local", fourCharmServiceListener);
+            serverDiscoverer.addServiceListener("_c4._tcp.local.", fourCharmServiceListener);
+            serverDiscoverer.addServiceListener("_ssh._tcp.local.", fourCharmServiceListener);
             for (ServiceInfo info : serverDiscoverer.list("_ssh._tcp.local")) {
                 System.out.println(info.toString());
             }
@@ -266,6 +270,12 @@ private ServiceListener fourCharmServiceListener = new ServiceListener() {
         }
         if (serverClient != null) {
             serverClient.disconnect();
+        }
+        serverDiscoverer.removeServiceListener("_c4._tcp.local.", fourCharmServiceListener);
+        try {
+            serverDiscoverer.close();
+        } catch (IOException e) {
+            LOGGER.trace("shutdown", e);
         }
     }
 
