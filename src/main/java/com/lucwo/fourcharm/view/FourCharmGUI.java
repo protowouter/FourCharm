@@ -92,6 +92,11 @@ public class FourCharmGUI extends Application implements FourCharmView {
     }
 
     @Override
+    public void showLobby() {
+        Platform.runLater(fourCharmPresenter::showLobby);
+    }
+
+    @Override
     public void showRematch() {
         fourCharmPresenter.showRematch();
     }
@@ -125,12 +130,12 @@ public class FourCharmGUI extends Application implements FourCharmView {
 
     @Override
     public void showError(String errorMessage) {
-        //TODO implement.
+        fourCharmPresenter.showMessage(errorMessage);
     }
 
     @Override
     public void showChat(String playerName, String message) {
-        //TODO implement.
+        Platform.runLater(() -> fourCharmPresenter.showMessage("[" + playerName + "] " + message));
     }
 }
 

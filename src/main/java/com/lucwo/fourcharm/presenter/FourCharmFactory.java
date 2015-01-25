@@ -8,6 +8,7 @@ package com.lucwo.fourcharm.presenter;
 import com.lucwo.fourcharm.controller.FourCharmController;
 import com.lucwo.fourcharm.presenter.game.GamePresenter;
 import com.lucwo.fourcharm.presenter.game.NewGamePresenter;
+import com.lucwo.fourcharm.presenter.lobby.LobbyPresenter;
 import javafx.fxml.FXMLLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ public class FourCharmFactory {
     private FourCharmPresenter fourCharmPresenter;
     private NewGamePresenter newGamePresenter;
     private GamePresenter gamePresenter;
+    private LobbyPresenter lobbyPresenter;
 
     // ----------------------- Commands ---------------------
 
@@ -44,6 +46,7 @@ public class FourCharmFactory {
                 fourCharmPresenter = loader.getController();
                 fourCharmPresenter.setGamePresenter(getGamePresenter());
                 fourCharmPresenter.setNewGamePresenter(getNewGamePresenter());
+                fourCharmPresenter.setLobbyPresenter(getLobbyPresenter());
                 fourCharmPresenter.setFourCharmController(controller);
                 fourCharmPresenter.showNewGame();
             } catch (IOException e) {
@@ -91,6 +94,23 @@ public class FourCharmFactory {
         }
 
         return gamePresenter;
+    }
+
+    public LobbyPresenter getLobbyPresenter() {
+        if (lobbyPresenter == null) {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.load(getClass().getClassLoader().getResourceAsStream("views/lobby/show.fxml"));
+                lobbyPresenter = loader.getController();
+                lobbyPresenter.setFourCharmPresenter(fourCharmPresenter);
+                lobbyPresenter.setGamePresenter(gamePresenter);
+            } catch (IOException e) {
+                LOGGER.trace("getGamePresenter", e);
+            }
+
+        }
+
+        return lobbyPresenter;
     }
 
 }

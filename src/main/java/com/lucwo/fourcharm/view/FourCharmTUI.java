@@ -313,6 +313,11 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
     }
 
     @Override
+    public void showLobby() {
+        // TODO Print message of all users.
+    }
+
+    @Override
     public void showRematch() {
         //TODO implement.
     }

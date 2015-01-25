@@ -8,6 +8,7 @@ import com.lucwo.fourcharm.controller.FourCharmController;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.presenter.game.GamePresenter;
 import com.lucwo.fourcharm.presenter.game.NewGamePresenter;
+import com.lucwo.fourcharm.presenter.lobby.LobbyPresenter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -29,6 +30,7 @@ public class FourCharmPresenter {
     private NewGamePresenter newGamePresenter;
     private GamePresenter gamePresenter;
     private FourCharmController fourCharmController;
+    private LobbyPresenter lobbyPresenter;
 
     // ----------------------- Queries ----------------------
 
@@ -72,9 +74,14 @@ public class FourCharmPresenter {
     }
 
     public void showGame(Game game) {
-        gamePresenter.showGame(game);
-        contentArea.getChildren().retainAll(gamePresenter.getView());
-        contentArea.getChildren().add(gamePresenter.getView());
+        if (fourCharmController.inLobby()) {
+            lobbyPresenter.showGame(game);
+            contentArea.getChildren().setAll(lobbyPresenter.getView());
+        } else {
+            gamePresenter.showGame(game);
+            contentArea.getChildren().setAll(gamePresenter.getView());
+        }
+
     }
 
     public void shutdown()  { gamePresenter.abortMove(); }
@@ -89,5 +96,23 @@ public class FourCharmPresenter {
 
     public void showRematch() {
         Platform.runLater(gamePresenter::showRematch);
+    }
+
+    public void showLobby() {
+        contentArea.getChildren().setAll(lobbyPresenter.getView());
+    }
+
+    public LobbyPresenter getLobbyPresenter() {
+        return lobbyPresenter;
+    }
+
+    public void setLobbyPresenter(LobbyPresenter lPresenter) {
+        lobbyPresenter = lPresenter;
+    }
+
+    public void showMessage(String message) {
+        if (fourCharmController.inLobby()) {
+            lobbyPresenter.showMessage(message);
+        }
     }
 }

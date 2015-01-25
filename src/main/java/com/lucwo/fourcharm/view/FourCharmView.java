@@ -32,6 +32,8 @@ public interface FourCharmView {
      */
     public void showNewGame();
 
+    public void showLobby();
+
     /**
      * Shows a rematch.
      */
