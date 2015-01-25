@@ -66,4 +66,5 @@ public interface FourCharmView {
      */
     public void showError(String errorMessage);
 
+    void showChat(String playerName, String message);
 }

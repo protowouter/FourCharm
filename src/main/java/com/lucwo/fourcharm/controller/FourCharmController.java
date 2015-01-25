@@ -19,7 +19,6 @@ import com.lucwo.fourcharm.view.FourCharmTUI;
 import com.lucwo.fourcharm.view.FourCharmView;
 import javafx.application.Application;
 
-import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.ConsoleHandler;
@@ -255,5 +254,15 @@ public class FourCharmController implements Observer {
      */
     public void showError(String message) {
         view.showError(message);
+    }
+
+    public void showChat(String playerName, String message) {
+        view.showChat(playerName, message);
+    }
+
+    public void globalChat(String message) {
+        if (serverClient != null) {
+            serverClient.globalChat(message);
+        }
     }
 }

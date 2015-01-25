@@ -13,9 +13,12 @@ import com.lucwo.fourcharm.model.player.ASyncPlayer;
 import com.lucwo.fourcharm.model.player.LocalAIPlayer;
 import com.lucwo.fourcharm.model.player.Mark;
 import com.lucwo.fourcharm.model.player.Player;
+import com.lucwo.fourcharm.util.ExtensionFactory;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidMoveError;
+import nl.woutertimmermans.connect4.protocol.fgroup.chat.ChatClient;
+import nl.woutertimmermans.connect4.protocol.fgroup.chat.ChatServer;
 import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreServer;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
@@ -25,7 +28,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -38,7 +40,7 @@ import java.util.logging.Logger;
  * @author Luce Sandfort and Wouter Timmermans.
  */
 
-public class ServerHandler implements CoreClient.Iface, Runnable {
+public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnable {
 
     private static final int GROUP_NUMBER = 23;
 
@@ -46,14 +48,18 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
 
     private String name;
     private BufferedReader in;
-    private CoreServer.Client serverClient;
-    private CoreClient.Processor<ServerHandler> processor;
+    private BufferedWriter out;
+    private CoreServer.Client coreServerClient;
+    private ChatServer.Client chatServerClient;
+    private CoreClient.Processor<ServerHandler> coreProcessor;
+    private ChatClient.Processor<ServerHandler> chatProcessor;
     private FourCharmController controller;
     private Map<String, ASyncPlayer> playerMap;
     private GameStrategy strategy;
     private Player ai;
     private Game game;
     private boolean running;
+    private Set<Extension> extensions;
 
 // --------------------- Constructors -------------------
 
@@ -79,14 +85,18 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
             Socket sock = new Socket(host, port);
             in = new BufferedReader(new InputStreamReader(sock.getInputStream(),
                     Charset.forName("UTF-8")));
-            BufferedWriter out = new BufferedWriter(
+            out = new BufferedWriter(
                     new OutputStreamWriter(sock.getOutputStream(), Charset.forName("UTF-8")));
-            processor = new CoreClient.Processor<>(this);
-            serverClient = new CoreServer.Client(out);
+            coreProcessor = new CoreClient.Processor<>(this);
+            chatProcessor = new ChatClient.Processor<>(this);
+            coreServerClient = new CoreServer.Client(out);
+            chatServerClient = new ChatServer.Client(null);
         } catch (IOException e) {
             Logger.getGlobal().throwing(getClass().toString(), "constructor", e);
             throw new ServerConnectionException(e.getMessage());
         }
+
+        extensions = ExtensionFactory.createExtensionSet();
 
 
     }
@@ -127,7 +137,7 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
      */
     public void joinServer() {
         try {
-            serverClient.join(name, GROUP_NUMBER, new HashSet<>());
+            coreServerClient.join(name, GROUP_NUMBER, extensions);
         } catch (C4Exception e) {
             Logger.getGlobal().throwing(getClass().toString(), "joinServer", e);
         }
@@ -142,7 +152,10 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
             String input = in.readLine();
             while (running && input != null) {
                 Logger.getGlobal().fine("Processing input " + input);
-                processor.process(input);
+                boolean processed = coreProcessor.process(input);
+                if (!processed) {
+                    chatProcessor.process(input);
+                }
                 input = in.readLine();
 
             }
@@ -151,7 +164,7 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
         } catch (C4Exception e) {
             Logger.getGlobal().throwing(getClass().toString(), "handleServerCommands", e);
             try {
-                serverClient.error(e.getErrorCode(), e.getMessage());
+                coreServerClient.error(e.getErrorCode(), e.getMessage());
             } catch (C4Exception c4) {
                 Logger.getGlobal().throwing(getClass().toString(), "startGame", c4);
             }
@@ -165,8 +178,11 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
      */
     @Override
     public void accept(int gNumber, Set<Extension> exts) {
+        if (exts.contains(ExtensionFactory.chat())) {
+            chatServerClient = new ChatServer.Client(out);
+        }
         try {
-            serverClient.ready();
+            coreServerClient.ready();
         } catch (C4Exception e) {
             Logger.getGlobal().throwing("ServerHandler", "accept", e);
         }
@@ -230,7 +246,7 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
                 move = controller.getHumanPlayerMove();
             }
             try {
-                serverClient.doMove(move);
+                coreServerClient.doMove(move);
             } catch (C4Exception e) {
                 Logger.getGlobal().throwing(getClass().toString(), "requestMove", e);
             }
@@ -282,5 +298,24 @@ public class ServerHandler implements CoreClient.Iface, Runnable {
     public void error(int eCode, String message) {
         controller.showError("Error " + eCode + ": " + message);
 
+    }
+
+    /**
+     * Used by the server to relay messages from a client to other clients.
+     *
+     * @param playerName The name of the user that sent the message.
+     * @param message    The message that another client has sent.
+     */
+    @Override
+    public void message(String playerName, String message) throws C4Exception {
+        controller.showChat(playerName, message);
+    }
+
+    public void globalChat(String message) {
+        try {
+            chatServerClient.chatGlobal(message);
+        } catch (C4Exception e) {
+            e.printStackTrace(); // TODO better error handling
+        }
     }
 }

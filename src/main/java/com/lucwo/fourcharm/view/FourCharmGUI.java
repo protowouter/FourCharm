@@ -14,8 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.util.logging.Logger;
-
 /**TODO: fourcharmgui javadoc verder uitwerken.
  * The FourCharmGUI is the Graphical User Interface of the FourCharm
  * Connect4 game. It makes use of the FourCharmController, Presenter,
@@ -129,6 +127,11 @@ public class FourCharmGUI extends Application implements FourCharmView {
 
     @Override
     public void showError(String errorMessage) {
+        //TODO implement.
+    }
+
+    @Override
+    public void showChat(String playerName, String message) {
         //TODO implement.
     }
 }

@@ -87,7 +87,9 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
     private void checkCommand(String commandString, String[] args) {
         Command command = Command.parseString(commandString);
         if (command != null) {
-            if (args.length == command.argCount()) {
+            if (command == Command.CHAT) {
+                handleGlobalChat(args);
+            } else if (args.length == command.argCount()) {
                 executeCommand(command, args);
             } else {
                 showError("The command " + command.toString()
@@ -119,10 +121,6 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
      */
     private void executeCommand(Command command, String[] args) {
         switch (command) {
-            case CHAT:
-                //Use the chat function
-                showError(NOT_IMPLEMENTED);
-                break;
             case CONNECT:
                 //Connect to a server
                 connect(args);
@@ -155,6 +153,15 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
                 showError("Command not recognized");
                 break;
         }
+    }
+
+    private void handleGlobalChat(String[] args) {
+        StringBuilder mes = new StringBuilder();
+        for (String w : args) {
+            mes.append(w);
+        }
+        controller.globalChat(new String(mes));
+
     }
 
 
@@ -238,6 +245,11 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
      */
     public void showError(String message) {
         System.err.println(message);
+    }
+
+    @Override
+    public void showChat(String playerName, String message) {
+        showMessage("[" + playerName + "] " + message);
     }
 
     @Override

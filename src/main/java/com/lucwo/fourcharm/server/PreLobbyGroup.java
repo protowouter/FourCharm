@@ -4,15 +4,13 @@
 
 package com.lucwo.fourcharm.server;
 
+import com.lucwo.fourcharm.util.ExtensionFactory;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
-import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidUsernameError;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 
-import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * The PreLobbyGroup class extends the ClientGroup abstract class. Every Client
@@ -44,15 +42,7 @@ public class PreLobbyGroup extends ClientGroup {
     public PreLobbyGroup(ClientGroup lob, FourCharmServer theServer) {
         super(theServer);
         lobby = lob;
-
-        Extension chat = new Extension();
-        try {
-            chat.setValue("Chat");
-        } catch (InvalidParameterError e) {
-            Logger.getGlobal().throwing(getClass().toString(), "constructor", e);
-        }
-        extensions = new HashSet<>();
-        extensions.add(chat);
+        extensions = ExtensionFactory.createExtensionSet();
     }
 
     // ----------------------- Queries ----------------------
