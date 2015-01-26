@@ -76,7 +76,7 @@ public class MTDfStrategy implements GameStrategy {
         int bestMove = -1;
         int achievedDepth = 0;
 
-        for (int depth = DEPTH_STEP; System.currentTimeMillis() < endTime && depth < freeSpots - 1;
+        for (int depth = DEPTH_STEP - 1; System.currentTimeMillis() < endTime && depth < freeSpots - 1;
              depth += DEPTH_STEP) {
             int bestMoveCurrentIteration = -1;
             double bestValueCurrentIteration = Double.NEGATIVE_INFINITY;
@@ -112,6 +112,9 @@ public class MTDfStrategy implements GameStrategy {
                 bestMove = bestMoveCurrentIteration;
                 bestValue = bestValueCurrentIteration;
                 achievedDepth = depth;
+                if (bestValue == Double.POSITIVE_INFINITY) {
+                    break;
+                }
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 LOGGER.trace("determineMove", e);
             }
