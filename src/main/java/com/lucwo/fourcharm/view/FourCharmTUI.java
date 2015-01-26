@@ -4,6 +4,7 @@
 
 package com.lucwo.fourcharm.view;
 
+import com.lucwo.fourcharm.controller.C4Server;
 import com.lucwo.fourcharm.controller.FourCharmController;
 import com.lucwo.fourcharm.exception.ServerConnectionException;
 import com.lucwo.fourcharm.model.Game;
@@ -259,6 +260,13 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
     @Override
     public void showChat(String playerName, String message) {
         showMessage("[" + playerName + "] " + message);
+    }
+
+    @Override
+    public void updateServers(Collection<C4Server> serverList) {
+        for (C4Server c : serverList) {
+            showMessage(c.getAddress() + ":" + c.getPort());
+        }
     }
 
     @Override

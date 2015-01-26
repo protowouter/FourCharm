@@ -25,11 +25,13 @@ import org.slf4j.LoggerFactory;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
-import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 /**
  * Functions as the Controller part of MVC for the FourCharm system.
@@ -56,6 +58,7 @@ public class FourCharmController implements Observer {
     private Player player2;
     private JmDNS serverDiscoverer;
     private LobbyList lobbyStateList;
+    private Set<C4Server> servers;
 
 // --------------------- Constructors -------------------
 
@@ -69,16 +72,21 @@ public class FourCharmController implements Observer {
 
         @Override
         public void serviceRemoved(ServiceEvent serviceEvent) {
+            final int port = serviceEvent.getInfo().getPort();
+            for (InetAddress iA : serviceEvent.getInfo().getInet4Addresses()){
+                servers.removeIf(server -> server.getAddress() == iA && server.getPort() == port);
+            }
+            view.updateServers(servers);
 
         }
 
         @Override
         public void serviceResolved(ServiceEvent serviceEvent) {
-            try {
-                LOGGER.info("service Resolved: {}", serviceEvent.getDNS().getInterface());
-            } catch (IOException e) {
-                LOGGER.trace("serviceResolved", e);
+            for (InetAddress iA : serviceEvent.getInfo().getInet4Addresses()) {
+                servers.add(new C4Server(serviceEvent.getName(), iA, serviceEvent.getInfo().getPort()));
             }
+            view.updateServers(servers);
+
         }
     };
 
@@ -92,14 +100,10 @@ public class FourCharmController implements Observer {
     public FourCharmController() {
 
         lobbyStateList = new LobbyList();
+        servers = new HashSet<>();
         try {
             serverDiscoverer = JmDNS.create();
             serverDiscoverer.addServiceListener("_c4._tcp.local.", fourCharmServiceListener);
-            serverDiscoverer.addServiceListener("_ssh._tcp.local.", fourCharmServiceListener);
-            for (ServiceInfo info : serverDiscoverer.list("_ssh._tcp.local")) {
-                System.out.println(info.toString());
-            }
-            // Retrieve service info from either ServiceInfo[] returned here or listener callback method above.
         } catch (IOException e) {
             LOGGER.trace("constructor", e);
         }

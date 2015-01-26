@@ -4,6 +4,7 @@
 
 package com.lucwo.fourcharm.presenter;
 
+import com.lucwo.fourcharm.controller.C4Server;
 import com.lucwo.fourcharm.controller.FourCharmController;
 import com.lucwo.fourcharm.controller.LobbyList;
 import com.lucwo.fourcharm.model.Game;
@@ -17,9 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import nl.woutertimmermans.connect4.protocol.parameters.LobbyState;
 
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 /**
  * TODO: Fourcharmpresenter javadoc.
@@ -176,5 +175,9 @@ public class FourCharmPresenter implements Observer {
             }
             Platform.runLater(() -> lobbyArea.textProperty().setValue(new String(players)));
         }
+    }
+
+    public void updateServers(Collection<C4Server> serverList) {
+        Platform.runLater(() -> newGamePresenter.updateServers(serverList));
     }
 }

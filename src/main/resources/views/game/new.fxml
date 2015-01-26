@@ -4,12 +4,12 @@
   ~ Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
   -->
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<javafx.scene.layout.VBox xmlns:fx="http://javafx.com/fxml/1" fx:id="root" maxHeight="Infinity" maxWidth="Infinity"
-                          xmlns="http://javafx.com/javafx/8"
-                          fx:controller="com.lucwo.fourcharm.presenter.game.NewGamePresenter">
+
+<javafx.scene.layout.VBox fx:id="root" maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lucwo.fourcharm.presenter.game.NewGamePresenter">
     <children>
         <BorderPane maxHeight="Infinity" maxWidth="Infinity">
             <center>
@@ -17,88 +17,79 @@
                     <children>
                         <VBox maxHeight="Infinity" maxWidth="Infinity" HBox.hgrow="ALWAYS">
                             <children>
-                                <Label alignment="CENTER" maxWidth="Infinity" prefHeight="16.0" prefWidth="142.0"
-                                       text="Player 1"/>
-                                <ChoiceBox fx:id="p1Select" maxHeight="Infinity" maxWidth="Infinity" prefHeight="0.0"
-                                           prefWidth="120.0">
+                                <Label alignment="CENTER" maxWidth="Infinity" prefHeight="16.0" prefWidth="142.0" text="Player 1" />
+                                <ChoiceBox fx:id="p1Select" maxHeight="Infinity" maxWidth="Infinity" prefHeight="0.0" prefWidth="120.0">
                                     <VBox.margin>
-                                        <Insets bottom="20.0" top="20.0"/>
+                                        <Insets bottom="20.0" top="20.0" />
                                     </VBox.margin>
                                 </ChoiceBox>
-                                <ChoiceBox fx:id="p1Strategy" disable="true" maxHeight="Infinity" maxWidth="Infinity"
-                                           prefWidth="120.0" visible="false">
+                                <ChoiceBox fx:id="p1Strategy" disable="true" maxHeight="Infinity" maxWidth="Infinity" prefWidth="120.0" visible="false">
                                     <VBox.margin>
-                                        <Insets bottom="20.0" top="20.0"/>
+                                        <Insets bottom="20.0" top="20.0" />
                                     </VBox.margin>
                                 </ChoiceBox>
                                 <TextField fx:id="p1Name" disable="true" promptText="Enter player name" visible="false">
                                     <VBox.margin>
-                                        <Insets bottom="20.0" top="20.0"/>
+                                        <Insets bottom="20.0" top="20.0" />
                                     </VBox.margin>
                                 </TextField>
                             </children>
                             <padding>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                             </padding>
                         </VBox>
                         <VBox maxHeight="Infinity" maxWidth="Infinity" HBox.hgrow="ALWAYS">
                             <children>
-                                <ChoiceBox fx:id="localNetworkChoice" maxHeight="Infinity"
-                                           maxWidth="1.7976931348623157E308" prefWidth="120.0"/>
-                                <TextField fx:id="serverAddress" disable="true" maxHeight="1.7976931348623157E308"
-                                           maxWidth="1.7976931348623157E308" promptText="Enter server address"
-                                           visible="false">
+                                <ChoiceBox fx:id="localNetworkChoice" maxHeight="Infinity" maxWidth="1.7976931348623157E308" prefWidth="120.0" />
+                        <ChoiceBox fx:id="serverChoice" maxWidth="1.7976931348623157E308">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </ChoiceBox>
+                                <TextField fx:id="serverAddress" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Enter server address" visible="false">
                                     <VBox.margin>
-                                        <Insets bottom="20.0" top="20.0"/>
+                                        <Insets bottom="20.0" top="20.0" />
                                     </VBox.margin>
                                 </TextField>
-                                <TextField fx:id="serverPort" disable="true" maxHeight="1.7976931348623157E308"
-                                           maxWidth="1.7976931348623157E308" promptText="Enter port number"
-                                           visible="false"/>
+                                <TextField fx:id="serverPort" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Enter port number" visible="false" />
                             </children>
                             <HBox.margin>
-                                <Insets/>
+                                <Insets />
                             </HBox.margin>
                             <padding>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                             </padding>
                         </VBox>
                         <VBox maxHeight="Infinity" maxWidth="Infinity" HBox.hgrow="ALWAYS">
                             <children>
-                                <Label fx:id="player2Label" alignment="CENTER" maxWidth="Infinity" text="Player 2"
-                                       visible="false"/>
-                                <ChoiceBox fx:id="p2Select" disable="true" maxHeight="Infinity" maxWidth="Infinity"
-                                           prefWidth="120.0" visible="false">
+                                <Label fx:id="player2Label" alignment="CENTER" maxWidth="Infinity" text="Player 2" visible="false" />
+                                <ChoiceBox fx:id="p2Select" disable="true" maxHeight="Infinity" maxWidth="Infinity" prefWidth="120.0" visible="false">
                                     <VBox.margin>
-                                        <Insets bottom="20.0" top="20.0"/>
+                                        <Insets bottom="20.0" top="20.0" />
                                     </VBox.margin>
                                 </ChoiceBox>
-                                <ChoiceBox fx:id="p2Strategy" disable="true" maxHeight="Infinity" maxWidth="Infinity"
-                                           prefWidth="120.0" visible="false">
+                                <ChoiceBox fx:id="p2Strategy" disable="true" maxHeight="Infinity" maxWidth="Infinity" prefWidth="120.0" visible="false">
                                     <VBox.margin>
-                                        <Insets bottom="20.0" top="20.0"/>
+                                        <Insets bottom="20.0" top="20.0" />
                                     </VBox.margin>
                                 </ChoiceBox>
-                                <TextField fx:id="p2Name" disable="true" maxHeight="Infinity" maxWidth="Infinity"
-                                           promptText="Enter player name" visible="false">
+                                <TextField fx:id="p2Name" disable="true" maxHeight="Infinity" maxWidth="Infinity" promptText="Enter player name" visible="false">
                                     <VBox.margin>
-                                        <Insets bottom="20.0" top="20.0"/>
+                                        <Insets bottom="20.0" top="20.0" />
                                     </VBox.margin>
                                 </TextField>
                             </children>
                             <padding>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                             </padding>
                         </VBox>
                     </children>
                 </HBox>
             </center>
             <bottom>
-                <Button fx:id="playButton" disable="true" maxHeight="Infinity" maxWidth="200.0" mnemonicParsing="false"
-                        onMouseClicked="#startNewGame" text="Play" BorderPane.alignment="CENTER"
-                        GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+                <Button fx:id="playButton" disable="true" maxHeight="Infinity" maxWidth="200.0" mnemonicParsing="false" onMouseClicked="#startNewGame" text="Play" BorderPane.alignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
                     <BorderPane.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </BorderPane.margin>
                 </Button>
             </bottom>

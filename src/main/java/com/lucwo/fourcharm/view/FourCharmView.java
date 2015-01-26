@@ -4,7 +4,12 @@
 
 package com.lucwo.fourcharm.view;
 
+import com.lucwo.fourcharm.controller.C4Server;
 import com.lucwo.fourcharm.model.Game;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Interface for the views (graphical and textual) of FourCharm Connect4.
@@ -71,4 +76,6 @@ public interface FourCharmView {
     public void showMessage(String message);
 
     void showChat(String playerName, String message);
+
+    void updateServers(Collection<C4Server> serverList);
 }

@@ -5,6 +5,7 @@
 package com.lucwo.fourcharm.presenter.game;
 
 
+import com.lucwo.fourcharm.controller.C4Server;
 import com.lucwo.fourcharm.exception.ServerConnectionException;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
@@ -12,6 +13,7 @@ import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.presenter.FourCharmPresenter;
 import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -20,6 +22,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
 
 /**
  * TODO newgamepresenter javadoc.
@@ -53,6 +57,8 @@ public class NewGamePresenter {
     private TextField serverPort;
     @FXML
     private Label player2Label;
+    @FXML
+    private ChoiceBox<C4Server> serverChoice;
 
 
     private FourCharmPresenter fourCharmPresenter;
@@ -106,6 +112,11 @@ public class NewGamePresenter {
                 (observableValue, oldValue, newValue) -> localNetworkChoice());
         localNetworkChoice();
         showPlayerFields();
+        serverChoice.getSelectionModel().selectedItemProperty().addListener(observable -> {
+                C4Server selected = serverChoice.getSelectionModel().selectedItemProperty().get();
+                serverAddress.textProperty().setValue(selected.getAddress().getHostAddress());
+                serverPort.textProperty().setValue(Integer.toString(selected.getPort()));
+            });
 
     }
 
@@ -285,6 +296,10 @@ public class NewGamePresenter {
 
     public void setFourcharmPresenter(FourCharmPresenter newFourCharmPresenter) {
         fourCharmPresenter = newFourCharmPresenter;
+    }
+
+    public void updateServers(Collection<C4Server> servers) {
+        serverChoice.getItems().setAll(servers);
     }
 
 }

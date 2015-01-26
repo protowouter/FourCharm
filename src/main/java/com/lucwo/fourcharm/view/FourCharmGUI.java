@@ -4,6 +4,7 @@
 
 package com.lucwo.fourcharm.view;
 
+import com.lucwo.fourcharm.controller.C4Server;
 import com.lucwo.fourcharm.controller.FourCharmController;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.presenter.FourCharmFactory;
@@ -12,6 +13,10 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**TODO: fourcharmgui javadoc verder uitwerken.
  * The FourCharmGUI is the Graphical User Interface of the FourCharm
@@ -142,6 +147,11 @@ public class FourCharmGUI extends Application implements FourCharmView {
     @Override
     public void showChat(String playerName, String message) {
         fourCharmPresenter.showMessage("[" + playerName + "] " + message);
+    }
+
+    @Override
+    public void updateServers(Collection<C4Server> serverList) {
+        fourCharmPresenter.updateServers(serverList);
     }
 }
 
