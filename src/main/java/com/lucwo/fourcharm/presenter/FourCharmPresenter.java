@@ -8,11 +8,10 @@ import com.lucwo.fourcharm.controller.FourCharmController;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.presenter.game.GamePresenter;
 import com.lucwo.fourcharm.presenter.game.NewGamePresenter;
-import com.lucwo.fourcharm.presenter.lobby.LobbyPresenter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 /**
@@ -26,12 +25,11 @@ public class FourCharmPresenter {
     @FXML
     private Parent root;
     @FXML
-    private VBox contentArea;
+    private BorderPane gamePane;
 
     private NewGamePresenter newGamePresenter;
     private GamePresenter gamePresenter;
     private FourCharmController fourCharmController;
-    private LobbyPresenter lobbyPresenter;
     private Stage stage;
 
     // ----------------------- Queries ----------------------
@@ -62,8 +60,7 @@ public class FourCharmPresenter {
 
     public void showNewGame() {
         Platform.runLater(() -> {
-            contentArea.getChildren().retainAll(newGamePresenter.getView());
-            contentArea.getChildren().add(newGamePresenter.getView());
+            gamePane.setCenter(newGamePresenter.getView());
         });
     }
 
@@ -76,13 +73,8 @@ public class FourCharmPresenter {
     }
 
     public void showGame(Game game) {
-        if (fourCharmController.inLobby()) {
-            lobbyPresenter.showGame(game);
-            contentArea.getChildren().setAll(lobbyPresenter.getView());
-        } else {
             gamePresenter.showGame(game);
-            contentArea.getChildren().setAll(gamePresenter.getView());
-        }
+        gamePane.setCenter(gamePresenter.getView());
 
     }
 
@@ -100,21 +92,10 @@ public class FourCharmPresenter {
         Platform.runLater(gamePresenter::showRematch);
     }
 
-    public void showLobby() {
-        contentArea.getChildren().setAll(lobbyPresenter.getView());
-    }
-
-    public LobbyPresenter getLobbyPresenter() {
-        return lobbyPresenter;
-    }
-
-    public void setLobbyPresenter(LobbyPresenter lPresenter) {
-        lobbyPresenter = lPresenter;
-    }
 
     public void showMessage(String message) {
         if (fourCharmController.inLobby()) {
-            lobbyPresenter.showMessage(message);
+            //lobbyPresenter.showMessage(message);
         }
     }
 

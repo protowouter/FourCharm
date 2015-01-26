@@ -4,16 +4,13 @@
   ~ Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
   -->
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
-<BorderPane fx:id="root" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lucwo.fourcharm.presenter.FourCharmPresenter">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="root" maxHeight="Infinity" maxWidth="Infinity"
+            minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/8" fx:controller="com.lucwo.fourcharm.presenter.FourCharmPresenter">
     <top>
         <HBox maxWidth="1.7976931348623157E308">
             <children>
@@ -31,7 +28,33 @@
             </padding>
         </HBox>
     </top>
+    <left>
+        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="Lobby"
+                       textAlignment="CENTER"/>
+                <ScrollPane prefHeight="200.0" prefWidth="200.0"/>
+            </children>
+        </VBox>
+    </left>
+    <right>
+        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Chat"/>
+                <ScrollPane/>
+            </children>
+        </VBox>
+    </right>
     <center>
-        <VBox fx:id="contentArea" BorderPane.alignment="CENTER" />
+        <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" fx:id="gamePane">
+            <bottom>
+                <HBox BorderPane.alignment="CENTER">
+                    <children>
+                        <TextField/>
+                        <Button mnemonicParsing="false" text="Button"/>
+                    </children>
+                </HBox>
+            </bottom>
+        </BorderPane>
     </center>
 </BorderPane>
