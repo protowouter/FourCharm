@@ -169,6 +169,7 @@ public class FourCharmController implements Observer {
         } else {
             view.showMessage("The game was a tie");
         }
+        view.showLobby();
     }
 
     public void sendReady() {
