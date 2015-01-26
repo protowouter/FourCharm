@@ -138,6 +138,7 @@ public class GamePresenter implements Observer {
     public void abortMove() {
         waitingForMove = false;
     }
+
     private void initBoardPane() {
 
         ClassLoader classloader = getClass().getClassLoader();
@@ -183,9 +184,9 @@ public class GamePresenter implements Observer {
         String prevText = currentPlayer.textProperty().get();
         currentPlayer.textProperty().setValue("Calculating hint...");
         new Thread(() -> {
-                int hint = fourCharmPresenter.getFourCharmController().getHint();
-                Platform.runLater(() -> boardPresenter.highlightColumn(hint));
-            }).start();
+            int hint = fourCharmPresenter.getFourCharmController().getHint();
+            Platform.runLater(() -> boardPresenter.highlightColumn(hint));
+        }).start();
         currentPlayer.textProperty().setValue(prevText);
     }
 

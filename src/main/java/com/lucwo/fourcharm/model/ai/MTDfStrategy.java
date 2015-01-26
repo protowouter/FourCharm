@@ -63,8 +63,9 @@ public class MTDfStrategy implements GameStrategy {
     /**
      * Determines the next moves given a maximum thinking time. Every spot gets a value
      * and the spot with the highest value is the best move to make.
+     *
      * @param board The current board state used to determine the best move.
-     * @param mark The mark of the current player.
+     * @param mark  The mark of the current player.
      * @return The best move possible for the current situation on the board.
      */
     @Override
@@ -136,8 +137,9 @@ public class MTDfStrategy implements GameStrategy {
     /**
      * The method gives the NegaMax value in less steps than the NegaMax algorithm
      * by using a zero width alpha beta window.
+     *
      * @param board The board that is used by the game.
-     * @param mark The mark of the current player.
+     * @param mark  The mark of the current player.
      * @param depth The maximum search depth of the algorithm.
      * @return The NegaMax value of the current board.
      */
@@ -174,6 +176,7 @@ public class MTDfStrategy implements GameStrategy {
 
     /**
      * The name of the strategy.
+     *
      * @return The name of the strategy.
      */
     @Override

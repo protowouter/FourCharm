@@ -22,13 +22,14 @@ public class InvalidMoveException extends Exception {
         super();
 
     }
-        
+
     /**
      * InvalidMoveException with a message.
+     *
      * @param message used for displaying helpful error messages to user
      */
     public InvalidMoveException(String message) {
-        super(message); 
+        super(message);
     }
 
 }

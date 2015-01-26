@@ -47,6 +47,7 @@ public abstract class ClientGroup {
     /**
      * Adds a ClientHandler to this collection of Clients and informs the
      * ClientHandler of this change.
+     *
      * @param client the ClientHandler that will be added.
      */
     public void addHandler(ClientHandler client) {
@@ -63,6 +64,7 @@ public abstract class ClientGroup {
     /**
      * Removes a ClientHandler from this collection of Clients and informs the
      * ClientHandler of this change.
+     *
      * @param client the Clienthandler that will be removed.
      */
     public void removeHandler(ClientHandler client) {
@@ -74,6 +76,7 @@ public abstract class ClientGroup {
     /**
      * Handles the join command from a client. The implementation is left to Classes
      * which extend ClientGroup.
+     *
      * @param client  The client which performed this command.
      * @param pName   Player name
      * @param gNumber Group number
@@ -84,8 +87,9 @@ public abstract class ClientGroup {
 
     /**
      * Makes a move.
+     *
      * @param client the client that will make the move
-     * @param col the column the move is about
+     * @param col    the column the move is about
      * @throws C4Exception
      */
     public abstract void doMove(ClientHandler client, int col) throws C4Exception;
@@ -93,6 +97,7 @@ public abstract class ClientGroup {
 
     /**
      * If the client is ready to start a game, this method will be called.
+     *
      * @param client the client that is ready to start a game
      * @throws C4Exception
      */
@@ -123,6 +128,7 @@ public abstract class ClientGroup {
 
     /**
      * Handles the removal of a client from the group.
+     *
      * @param client The {@link com.lucwo.fourcharm.server.ClientHandler}
      *               which will has been removed from the group.
      */

@@ -66,6 +66,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 
     /**
      * Returns the name of this ClientHandler.
+     *
      * @return the name of this ClientHandler
      */
     public String getName() {
@@ -74,6 +75,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 
     /**
      * Sets the name of this ClientHandler.
+     *
      * @param newName the name of the ClientHandler
      */
     public void setName(String newName) {
@@ -82,6 +84,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 
     /**
      * Returns the protocol @{link C4Client} to communicate with the coreClient.
+     *
      * @return the coreClient
      */
     public CoreClient.Client getCoreClient() {
@@ -93,6 +96,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 
     /**
      * Returns the ClientGroup of this ClientHandler.
+     *
      * @return the ClientGroup of this ClientHandler
      */
     public ClientGroup getClientGroup() {
@@ -101,6 +105,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 
     /**
      * Sets the ClientGroup of this ClientHandler.
+     *
      * @param cG The clientgroup this ClientHandler will belong to.
      */
     public void setClientGroup(ClientGroup cG) {
@@ -109,9 +114,10 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 
     /**
      * Join the lobby.
-     * @param pName the name of the player
+     *
+     * @param pName   the name of the player
      * @param gNumber the groupnumber
-     * @param exts extensions
+     * @param exts    extensions
      * @throws C4Exception
      */
     @Override
@@ -124,6 +130,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
     /**
      * When the client is ready, he will send a ready command to get in a queue.
      * When two clients are ready a new game will be started.
+     *
      * @throws C4Exception
      */
     @Override
@@ -134,6 +141,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 
     /**
      * Makes a move.
+     *
      * @param col the column the move is about
      * @throws C4Exception
      */
@@ -157,6 +165,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 
     /**
      * Starts the input handling of this coreClient.
+     *
      * @see Thread#run()
      */
     @Override

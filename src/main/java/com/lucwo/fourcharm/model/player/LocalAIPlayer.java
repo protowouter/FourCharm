@@ -23,9 +23,8 @@ public class LocalAIPlayer implements Player {
 
     /**
      * Create an new LocalAIPlayer using a strategy to do moves on the board.
-     * 
-     * @param computerStrategy
-     *            strategy to be used by this player
+     *
+     * @param computerStrategy strategy to be used by this player
      */
     public LocalAIPlayer(GameStrategy computerStrategy, Mark theMark) {
 

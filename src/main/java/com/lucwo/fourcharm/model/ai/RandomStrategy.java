@@ -23,8 +23,9 @@ public class RandomStrategy implements GameStrategy {
 
     /**
      * Determines the next move.
+     *
      * @param board The current board.
-     * @param mark The mark of the current player.
+     * @param mark  The mark of the current player.
      * @return The best move.
      */
     public int determineMove(Board board, Mark mark) {
@@ -41,6 +42,7 @@ public class RandomStrategy implements GameStrategy {
 
     /**
      * Gives the name of the strategy.
+     *
      * @return The name of the strategy ('RandomStrategy').
      */
     @Override

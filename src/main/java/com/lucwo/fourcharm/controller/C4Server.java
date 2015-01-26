@@ -24,7 +24,7 @@ public class C4Server {
 
 // ----------------------- Queries ----------------------
 
-    public InetAddress getAddress(){
+    public InetAddress getAddress() {
         return address;
     }
 

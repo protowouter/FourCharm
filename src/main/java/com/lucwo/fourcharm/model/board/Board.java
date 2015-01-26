@@ -29,7 +29,7 @@ import com.lucwo.fourcharm.model.player.Mark;
  * @author Luce Sandfort and Wouter Timmermans
  */
 public abstract class Board {
-    
+
     /**
      * Amount of columns of the board.
      */
@@ -57,6 +57,7 @@ public abstract class Board {
 
     /**
      * Returns the mark that is on the position of the board.
+     *
      * @param index the index for which the
      * @return the {@link com.lucwo.fourcharm.model.player.Mark} which is on this position.
      */
@@ -74,6 +75,7 @@ public abstract class Board {
     /**
      * Returns true if the given {@link com.lucwo.fourcharm.model.player.Mark}
      * has won on this board.
+     *
      * @param mark The player to check.
      * @return {@code true} if the player has won, otherwise {@code false}.
      */
@@ -82,6 +84,7 @@ public abstract class Board {
 
     /**
      * Returns {@code true} if the board is full.
+     *
      * @return {@code true} if the board is full, otherwise {@code false}.
      */
     public abstract boolean isFull();
@@ -95,6 +98,7 @@ public abstract class Board {
 
     /**
      * Returns an array of the moves made on the board.
+     *
      * @return Array of moves.
      */
     public abstract int[] getMoves();
@@ -102,6 +106,7 @@ public abstract class Board {
 
     /**
      * Returns the amount of columns this {@link Board} has.
+     *
      * @return The amount of columns of this board.
      */
     /*@
@@ -113,6 +118,7 @@ public abstract class Board {
 
     /**
      * Returns the amount of rows this {@link Board} has.
+     *
      * @return The amount of rows of this board.
      */
     /*@
@@ -126,6 +132,7 @@ public abstract class Board {
     /**
      * Returns the amount of pieces a {@link com.lucwo.fourcharm.model.player.Player} needs
      * to have in a row to win the game.
+     *
      * @return The win streak of this {@link Board}.
      */
     /*@
@@ -138,6 +145,7 @@ public abstract class Board {
 
     /**
      * Returns the amount of spots this board has.
+     *
      * @return The amount of spots of this board
      */
     /*@
@@ -151,6 +159,7 @@ public abstract class Board {
     /**
      * Returns an unique long encoding of this {@link Board}. This encoding depends only on the
      * spots the players occupy. Not in which order the moves were made.
+     *
      * @return an unique long encoding of the {@link Board}.
      */
     public abstract long positionCode();
@@ -158,14 +167,16 @@ public abstract class Board {
     /**
      * Makes a move on a given column and fills the lowest spot of that column with the
      * {@link com.lucwo.fourcharm.model.player.Mark}.
+     *
      * @param col The column where a move will be made.
      * @throws InvalidMoveException when a invalid move is entered or the column
-     * does not exist.
+     *                              does not exist.
      */
     public abstract void makemove(int col, Mark mark) throws InvalidMoveException;
 
     /**
      * Returns a deepcopy of the board.
+     *
      * @return deepcopy of this board
      */
      /*@

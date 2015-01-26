@@ -31,6 +31,7 @@ public class LobbyGroup extends ClientGroup {
 
     /**
      * Constructs a new LobbyGroup.
+     *
      * @param theServer The server the LobbyGroup is constructed on.
      */
     public LobbyGroup(FourCharmServer theServer) {
@@ -45,6 +46,7 @@ public class LobbyGroup extends ClientGroup {
 
     /**
      * ServerHandler wants to go from the PreLobbyGroup to the LobbyGroup.
+     *
      * @param client  The client which performed this command.
      * @param pName   Player name
      * @param gNumber Group number
@@ -60,6 +62,7 @@ public class LobbyGroup extends ClientGroup {
 
     /**
      * Makes a move if a client is in a game. This is not allowed in the LobbyGroup.
+     *
      * @param client the client that wants to make a move.
      * @param col    the column number the clients wants to use to make a move
      * @throws C4Exception throws InvalidCommandError because this command is not allowed
@@ -72,6 +75,7 @@ public class LobbyGroup extends ClientGroup {
     /**
      * Sets the status of the player to ready. If there is another player ready as well,
      * a new game will be started.
+     *
      * @param client the client that wants to play a game
      * @throws C4Exception
      */
@@ -95,6 +99,7 @@ public class LobbyGroup extends ClientGroup {
 
     /**
      * Handles the removal of a client from the group.
+     *
      * @param client The {@link com.lucwo.fourcharm.server.ClientHandler}
      *               which will has been removed from the group.
      */

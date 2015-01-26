@@ -21,6 +21,7 @@ public interface Player {
     /**
      * Given a board, determine a move to be made, implementing types can use
      * artificial or human intelligence (or lack thereof) to accomplish this.
+     *
      * @param board The board used to determine the move.
      * @return A (intelligent) legal move for the given board.
      */
@@ -28,9 +29,10 @@ public interface Player {
 
     /**
      * Makes a move.
+     *
      * @param board The current board.
      * @throws InvalidMoveException If the move is not allowed,
-     * an InvalidMoveException will be thrown.
+     *                              an InvalidMoveException will be thrown.
      */
     public default void doMove(Board board) throws InvalidMoveException {
         board.makemove(determineMove(board), getMark());
@@ -38,12 +40,14 @@ public interface Player {
 
     /**
      * Gives the name.
+     *
      * @return The name.
      */
     public String getName();
 
     /**
      * Give the mark.
+     *
      * @return The mark.
      */
     public Mark getMark();

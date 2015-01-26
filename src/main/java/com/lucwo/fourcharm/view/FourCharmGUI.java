@@ -15,10 +15,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
-/**TODO: fourcharmgui javadoc verder uitwerken.
+/**
+ * TODO: fourcharmgui javadoc verder uitwerken.
  * The FourCharmGUI is the Graphical User Interface of the FourCharm
  * Connect4 game. It makes use of the FourCharmController, Presenter,
  * Factory and Game class.
@@ -40,6 +39,7 @@ public class FourCharmGUI extends Application implements FourCharmView {
 
     /**
      * Constructs a FourCharmGUI with a given controller.
+     *
      * @param contr The given FourCharmController.
      */
     public FourCharmGUI(FourCharmController contr) {
@@ -63,6 +63,7 @@ public class FourCharmGUI extends Application implements FourCharmView {
 
     /**
      * Starts the Graphical User Interface.
+     *
      * @param stage the JavaFX stage
      * @throws Exception All sorts of exceptions thrown by JavaFX
      */

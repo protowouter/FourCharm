@@ -47,6 +47,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     /**
      * Constructs a new FourCharmTUI given a controller.
+     *
      * @param cont The given FourCharmController.
      */
     public FourCharmTUI(FourCharmController cont) {
@@ -64,6 +65,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     /**
      * Reads the command and places it in an array.
+     *
      * @param commandString the command in string format.
      */
     private void parseCommand(String commandString) {
@@ -84,8 +86,9 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     /**
      * Checks if the given command is valid.
+     *
      * @param commandString the command in string format.
-     * @param args the amount of commands.
+     * @param args          the amount of commands.
      */
     private void checkCommand(String commandString, String[] args) {
         Command command = Command.parseString(commandString);
@@ -119,8 +122,9 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     /**
      * Executes the given command.
+     *
      * @param command the given command
-     * @param args string array of arguments
+     * @param args    string array of arguments
      */
     private void executeCommand(Command command, String[] args) {
         switch (command) {
@@ -177,6 +181,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     /**
      * Shows the given message.
+     *
      * @param message the given message
      */
     public void showMessage(String message) {
@@ -185,6 +190,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     /**
      * Creates a local game.
+     *
      * @param args The arguments given to play a game (for instance: CHAT, CHALLENGE, etc.).
      */
     private void createLocalGame(String[] args) {
@@ -208,6 +214,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     /**
      * Parses the input string to a strategy.
+     *
      * @param strat The input String strategy (-m, -r).
      * @return The strategy.
      */
@@ -223,6 +230,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     /**
      * Connects a networkgame.
+     *
      * @param args The arguments given to play a game (for instance: CHAT, CHALLENGE, etc.).
      */
     private void connect(String[] args) {
@@ -251,6 +259,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     /**
      * Shows the (error) message.
+     *
      * @param message the (error) message
      */
     public void showError(String message) {

@@ -33,6 +33,7 @@ public class FourCharmFactory {
     /**
      * Gives the FourCharmPresenter given a fourcharmcontroller. Throws and catches a
      * IOException if the input if wrong. Throws a RuntimeException.
+     *
      * @param controller The given FourCharmController.
      * @return The FourCharmPresenter
      */
@@ -56,6 +57,7 @@ public class FourCharmFactory {
 
     /**
      * Gives the newGamePresenter. Throws a new RuntimeException if the input if wrong.
+     *
      * @return The newGamePresenter.
      */
     public NewGamePresenter getNewGamePresenter() {
@@ -75,6 +77,7 @@ public class FourCharmFactory {
 
     /**
      * Gives the gamePresenter. Throws a RuntimeException if the input is wrong.
+     *
      * @return The GamePresenter.
      */
     public GamePresenter getGamePresenter() {

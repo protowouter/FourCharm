@@ -40,8 +40,8 @@ public class Game extends Observable implements Runnable {
      * given type.
      *
      * @param boardClass Class to use as board implementation
-     * @param p1 The first player who wil play this game
-     * @param p2 The second player who wil play this game
+     * @param p1         The first player who wil play this game
+     * @param p2         The second player who wil play this game
      */
     public Game(Class<? extends Board> boardClass, Player p1, Player p2) {
         super();
@@ -56,8 +56,7 @@ public class Game extends Observable implements Runnable {
     }
 
     /**
-     * @param boardClass
-     *            Class to use as board implementation
+     * @param boardClass Class to use as board implementation
      */
     private void initBoard(Class<? extends Board> boardClass) {
 
@@ -104,7 +103,7 @@ public class Game extends Observable implements Runnable {
     /**
      * Returns the amount of plies that have been made since the start of the
      * game.
-     * 
+     *
      * @return 0..boardClass.SIZE
      */
     public int plieCount() {
@@ -118,7 +117,7 @@ public class Game extends Observable implements Runnable {
      * true the player wich has won the game is the last player to make a move
      * because the rules of connect4 offers no possibility to let an other player
      * win solely based on the move you make.
-     * 
+     *
      * @return true if a player has won the game; otherwise false
      */
     public boolean hasWinner() {
@@ -128,6 +127,7 @@ public class Game extends Observable implements Runnable {
 
     /**
      * Returns the winner of the game, if there is a winner.
+     *
      * @return The Player who won the game, null if there is no winner (yet)
      */
     public Player getWinner() {
@@ -140,6 +140,7 @@ public class Game extends Observable implements Runnable {
 
     /**
      * Return wether or not the game has ended.
+     *
      * @return true if board is full or a player won the game
      */
     public boolean hasFinished() {
@@ -147,9 +148,10 @@ public class Game extends Observable implements Runnable {
         return board.isFull() || hasWinner();
 
     }
-    
+
     /**
      * Give a copy of the board.
+     *
      * @return copy of the board used for the game state
      */
     public Board getBoard() {
@@ -158,6 +160,7 @@ public class Game extends Observable implements Runnable {
 
     /**
      * Gives the next player.
+     *
      * @return The player who is next.
      */
     private Player nextPlayer() {

@@ -53,6 +53,7 @@ public class NegaMaxStrategy implements GameStrategy {
 
     /**
      * Constructs a new NegaMaxStrategy with the given depth.
+     *
      * @param depth The depth the NegaMaxStrategy will use.
      */
     /*@
@@ -64,8 +65,9 @@ public class NegaMaxStrategy implements GameStrategy {
 
     /**
      * Determine the move to be made using the NegaMax algorithm.
+     *
      * @param board The board for which the best move will be determined.
-     * @param mark The mark of the current player.
+     * @param mark  The mark of the current player.
      * @return The best move according to the negamax algorithm.
      */
     @Override
@@ -78,7 +80,7 @@ public class NegaMaxStrategy implements GameStrategy {
      * thinking time / depth.
      *
      * @param board The board for which the best move will be determined.
-     * @param mark The mark of the current player.
+     * @param mark  The mark of the current player.
      * @param depth The search depth for the NegaMax algorithm.
      * @return The best move according to the negamax algorithm.
      */
@@ -102,11 +104,12 @@ public class NegaMaxStrategy implements GameStrategy {
     /**
      * Finds the best move on a {@link com.lucwo.fourcharm.model.board.Board}
      * for a given {@link com.lucwo.fourcharm.model.player.Mark}.
-     * @param board Board on which the NegaMax search will be performed.
-     * @param mark The mark of the current player.
+     *
+     * @param board     Board on which the NegaMax search will be performed.
+     * @param mark      The mark of the current player.
      * @param alphaOrig The value of the worst move that has been found for the maximizing player.
-     * @param betaOrig The value of the best move that has been found for the minimizing player.
-     * @param depth Depth at which will be searched for the best move
+     * @param betaOrig  The value of the best move that has been found for the minimizing player.
+     * @param depth     Depth at which will be searched for the best move
      * @return The negamax value of the current board state and the best move
      */
     public Result negaMax(Board board, Mark mark, double alphaOrig, double betaOrig, int depth) {
@@ -154,11 +157,12 @@ public class NegaMaxStrategy implements GameStrategy {
 
     /**
      * Performs the actual NegaMax search.
+     *
      * @param board The current board.
-     * @param mark The mark of the current player.
+     * @param mark  The mark of the current player.
      * @param depth The maximum searching depth.
      * @param alpha The value of the worst move that has been found for the maximizing player.
-     * @param beta The value of the best move that has been found for the minimizing player.
+     * @param beta  The value of the best move that has been found for the minimizing player.
      * @return The best move and its value. This value will be the highest value.
      */
 
@@ -195,11 +199,12 @@ public class NegaMaxStrategy implements GameStrategy {
 
     /**
      * Saves the found NegaMax value in the ranspositiontable.
+     *
      * @param alphaOrig the original value of alpha.
-     * @param depth the depth at which the value was found.
-     * @param beta the beta value when the value was found.
-     * @param posKey the "hashcode" of the board node.
-     * @param result the found Result containing the NegaMax value.
+     * @param depth     the depth at which the value was found.
+     * @param beta      the beta value when the value was found.
+     * @param posKey    the "hashcode" of the board node.
+     * @param result    the found Result containing the NegaMax value.
      */
     private void saveToTransPostTable(double alphaOrig, int depth, double beta,
                                       long posKey, Result result) {
@@ -221,8 +226,9 @@ public class NegaMaxStrategy implements GameStrategy {
 
     /**
      * Calculates the value of a specific board node (board configuration).
+     *
      * @param board The current board.
-     * @param mark The mark of the current player.
+     * @param mark  The mark of the current player.
      * @return The calculated value.
      */
     public double nodeValue(Board board, Mark mark) {
@@ -250,10 +256,11 @@ public class NegaMaxStrategy implements GameStrategy {
 
     /**
      * Calculates the horizontal value of a spot.
+     *
      * @param board The current board.
-     * @param mark The mark of the current player.
-     * @param vCol The column of the spot.
-     * @param vRow The row of the spot.
+     * @param mark  The mark of the current player.
+     * @param vCol  The column of the spot.
+     * @param vRow  The row of the spot.
      * @return The calculated horizontal value.
      */
     private double horizontalValue(Board board, Mark mark, int vCol, int vRow) {
@@ -275,10 +282,11 @@ public class NegaMaxStrategy implements GameStrategy {
 
     /**
      * Calculates the vertical value of a spot.
+     *
      * @param board The current board.
-     * @param mark The mark of the current player.
-     * @param vCol The column of the spot.
-     * @param vRow The row of the spot.
+     * @param mark  The mark of the current player.
+     * @param vCol  The column of the spot.
+     * @param vRow  The row of the spot.
      * @return The calculated vertical value.
      */
     private double verticalValue(Board board, Mark mark, int vCol, int vRow) {
@@ -305,10 +313,11 @@ public class NegaMaxStrategy implements GameStrategy {
      * . . . . @ . .
      * . . . . . @ .
      * . . . . . . @
+     *
      * @param board The current board.
-     * @param mark The mark of the current player.
-     * @param vCol The columns of the spot.
-     * @param vRow The rows of the spot.
+     * @param mark  The mark of the current player.
+     * @param vCol  The columns of the spot.
+     * @param vRow  The rows of the spot.
      * @return The calculated diagonal value.
      */
 
@@ -342,12 +351,13 @@ public class NegaMaxStrategy implements GameStrategy {
      * . . . @ . . .
      * . . @ . . . .
      * . @ . . . . .
-     * @ . . . . . .
+     *
      * @param board The current board.
-     * @param mark The mark of the current player.
-     * @param vCol The columns of the spot.
-     * @param vRow The rows of the spot.
+     * @param mark  The mark of the current player.
+     * @param vCol  The columns of the spot.
+     * @param vRow  The rows of the spot.
      * @return The calculated diagonal value.
+     * @ . . . . . .
      */
     private double rLDiagonalValue(Board board, Mark mark, int vCol, int vRow) {
 
@@ -374,10 +384,11 @@ public class NegaMaxStrategy implements GameStrategy {
 
     /**
      * Calculates a position value.
+     *
      * @param board The current board.
-     * @param mark The mark of the current player.
-     * @param col The column of the move.
-     * @param row The row of the move.
+     * @param mark  The mark of the current player.
+     * @param col   The column of the move.
+     * @param row   The row of the move.
      * @return The calculated postion value.
      */
     private int positionValue(Board board, Mark mark, int col, int row) {
@@ -401,6 +412,7 @@ public class NegaMaxStrategy implements GameStrategy {
 
     /**
      * Gives the current nodeCounter value.
+     *
      * @return the nodeCounter.
      */
     public long getCounter() {
@@ -416,6 +428,7 @@ public class NegaMaxStrategy implements GameStrategy {
 
     /**
      * Gives the name of the strategy.
+     *
      * @return 'NegaMaxStrategy'
      */
     @Override

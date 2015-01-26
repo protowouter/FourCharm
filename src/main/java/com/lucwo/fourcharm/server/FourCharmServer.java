@@ -45,6 +45,7 @@ public class FourCharmServer {
 
     /**
      * Constructs a new FourCharmServer given a specific port.
+     *
      * @param port The port the new server will use.
      */
     public FourCharmServer(int port) {
@@ -62,6 +63,7 @@ public class FourCharmServer {
 
     /**
      * Checks if there is already a client with the same name.
+     *
      * @param name the name that will be checked
      * @return true if there exists another client with the same name,
      * false if there does not exist another client with the same name.
@@ -132,6 +134,7 @@ public class FourCharmServer {
 
     /**
      * Adds a game to the GameGroup.
+     *
      * @param game the game that will be added
      */
     public void addGame(GameGroup game) {
@@ -141,6 +144,7 @@ public class FourCharmServer {
     /**
      * Removes a game from the GameGroup whenever a game is finished,
      * or when a game stopped.
+     *
      * @param game the game that will be removed
      */
     public void removeGame(GameGroup game) {
@@ -167,6 +171,7 @@ public class FourCharmServer {
 
     /**
      * Gives the specific lobby.
+     *
      * @return the lobby you've asked for
      */
     public ClientGroup getLobby() {
@@ -176,12 +181,12 @@ public class FourCharmServer {
     public void globalChat(ClientHandler client, String message) throws C4Exception {
         lobby.broadcastChat(client, message);
         games.forEach(game -> {
-                try {
-                    game.broadcastChat(client, message);
-                } catch (C4Exception e) {
-                    LOGGER.trace("globalChat", e);
-                }
-            });
+            try {
+                game.broadcastChat(client, message);
+            } catch (C4Exception e) {
+                LOGGER.trace("globalChat", e);
+            }
+        });
 
     }
 

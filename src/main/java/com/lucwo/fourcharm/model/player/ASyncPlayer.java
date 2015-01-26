@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
  * from the actual player.
  *
  * @author Luce Sandfort and Wouter Timmermans
- *
  */
 public class ASyncPlayer implements Player {
 
@@ -35,6 +34,7 @@ public class ASyncPlayer implements Player {
 
     /**
      * Create an new humanplayer given an way to communicate with the player.
+     *
      * @param namePie The given name of the player.
      * @param themark The mark of the player.
      */
@@ -48,6 +48,7 @@ public class ASyncPlayer implements Player {
 
     /**
      * Determines a move.
+     *
      * @param board The board used to determine the move.
      * @return The determint move (column).
      */
@@ -73,6 +74,7 @@ public class ASyncPlayer implements Player {
 
     /**
      * Puts a move in the queueMove.
+     *
      * @param col The move.
      */
     public void queueMove(int col) {
@@ -86,6 +88,7 @@ public class ASyncPlayer implements Player {
 
     /**
      * Gives the current mark.
+     *
      * @return The mark.
      */
     public Mark getMark() {
@@ -94,6 +97,7 @@ public class ASyncPlayer implements Player {
 
     /**
      * Gives the name of the current player.
+     *
      * @return The name.
      */
     public String getName() {
@@ -102,6 +106,7 @@ public class ASyncPlayer implements Player {
 
     /**
      * Gives back string representation.
+     *
      * @return The string.
      */
     public String toString() {

@@ -18,9 +18,8 @@ import java.util.Arrays;
  * responsibility is to keep the state of the board. This is the reference
  * implementation implemented using an 2D array. This class makes use of
  * the Board class.
- * 
- * @author Luce Sandfort and Wouter Timmermans
  *
+ * @author Luce Sandfort and Wouter Timmermans
  */
 
 public class ReferenceBoard extends Board {
@@ -38,7 +37,7 @@ public class ReferenceBoard extends Board {
     // Array with moves since the start of the game
     private int[] moves;
     // Amount of turns since the start of the game
-    private int nplies; 
+    private int nplies;
     // Holds bitboard for every color
     private Mark[][] board;
 
@@ -126,10 +125,10 @@ public class ReferenceBoard extends Board {
      * . . . @ . . .
      * . . @ . . . .
      * . @ . . . . .
-     * @ . . . . . .
      *
      * @param player The (mark of the) current player.
      * @return True if there exists a RLDiagonal, false if not.
+     * @ . . . . . .
      */
 
     private boolean hasRLDiagonal(Mark player) {
@@ -152,6 +151,7 @@ public class ReferenceBoard extends Board {
 
     /**
      * Finds the horizontal 'four in a row's of the game.
+     *
      * @param player The (mark of the) current player.
      * @return True if there exists a horizontal row, false if not.
      */
@@ -171,6 +171,7 @@ public class ReferenceBoard extends Board {
 
     /**
      * Finds the vertical 'four in a row's of the game.
+     *
      * @param player The (mark of the) current player.
      * @return True if there exists a vertical row, false if not.
      */
@@ -271,6 +272,7 @@ public class ReferenceBoard extends Board {
 
     /**
      * Makes a move on the board for the given player.
+     *
      * @param col column in which a piece will be placed
      */
     @Override

@@ -73,7 +73,7 @@ public class FourCharmController implements Observer {
         @Override
         public void serviceRemoved(ServiceEvent serviceEvent) {
             final int port = serviceEvent.getInfo().getPort();
-            for (InetAddress iA : serviceEvent.getInfo().getInet4Addresses()){
+            for (InetAddress iA : serviceEvent.getInfo().getInet4Addresses()) {
                 servers.removeIf(server -> server.getAddress() == iA && server.getPort() == port);
             }
             view.updateServers(servers);
@@ -108,7 +108,6 @@ public class FourCharmController implements Observer {
             LOGGER.trace("constructor", e);
         }
     }
-
 
 
     public static void main(String[] args) {
@@ -172,10 +171,11 @@ public class FourCharmController implements Observer {
     /**
      * Starts a local game, without making use of a server.
      * This method requires that exactly two parameters are null and two not null.
+     *
      * @param humanName1 name of a human player1, or null if player 1 is an AI
      * @param humanName2 name of a human player2, or null if player 2 is an AI
-     * @param stratp1 strategy used by AI player1, or null if player 1 is a human
-     * @param stratp2 strategy used by AI player2, or null if player 2 is a human
+     * @param stratp1    strategy used by AI player1, or null if player 1 is a human
+     * @param stratp2    strategy used by AI player2, or null if player 2 is a human
      */
     /*@ requires stratp1 == null && stratp2 == null || humanName1 == null && humanName2 == null
         || humanName1 == null && stratp2 == null || humanName2 == null && stratp1 == null
@@ -296,6 +296,7 @@ public class FourCharmController implements Observer {
     /**
      * Returns the best move according to a AI. This can be used by views when
      * a human user wants a hint on the best next move.
+     *
      * @return The best move for the current board. The move is zero based. The leftmost column would
      * be move 0.
      */

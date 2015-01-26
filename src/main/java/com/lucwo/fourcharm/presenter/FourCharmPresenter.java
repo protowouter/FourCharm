@@ -18,7 +18,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import nl.woutertimmermans.connect4.protocol.parameters.LobbyState;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * TODO: Fourcharmpresenter javadoc.

@@ -72,12 +72,13 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, LobbyC
 
     /**
      * Constructs a serverHandler.
-     * @param namepie The name of the serverHandler.
+     *
+     * @param namepie    The name of the serverHandler.
      * @param hostString The host of the serverHandler (the IP address).
      * @param portString The port the serverHandler will use.
-     * @param contr The FourCharmController of the serverHandler.
+     * @param contr      The FourCharmController of the serverHandler.
      * @throws ServerConnectionException If the ServerHandler cannot
-     * make a connection to the server.
+     *                                   make a connection to the server.
      */
     public ServerHandler(String namepie, String hostString, String portString,
                          FourCharmController contr) throws ServerConnectionException {
@@ -123,6 +124,7 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, LobbyC
 
     /**
      * Gives the strategy that is used by the computerplayer.
+     *
      * @return The used strategy (this is either MDTf strategy or a random strategy).
      */
     public GameStrategy getStrategy() {
@@ -133,6 +135,7 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, LobbyC
 
     /**
      * Changes the strategy that is used by the computerplayer.
+     *
      * @param strat The strategy that will be used from now on (this is either a MDTf strategy or
      *              a random strategy).
      */
@@ -184,8 +187,9 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, LobbyC
 
     /**
      * Accepts a client. If the client is accepted, his state will change to the 'ready' state.
+     *
      * @param gNumber The given group number of the client that is joining the server.
-     * @param exts The arguments given by the client that is joining the server.
+     * @param exts    The arguments given by the client that is joining the server.
      */
     @Override
     public void accept(int gNumber, Set<Extension> exts) {
@@ -203,6 +207,7 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, LobbyC
     /**
      * The method that starts a new game. It takes the input and starts a game with the
      * two players specified in the input.
+     *
      * @param p1 The name of the first player.
      * @param p2 The name of the second player.
      */
@@ -235,6 +240,7 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, LobbyC
 
     /**
      * Requests a move from the given player. The method starts a new Thread to do so.
+     *
      * @param player The player that needs to do a move.
      */
     @Override
@@ -247,6 +253,7 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, LobbyC
     /**
      * Handles the request move method. The method will use the AI if there is one,
      * otherwise the serverHandler will get the move from the controller.
+     *
      * @param player The player who's turn it is.
      */
     private void handleRequestMove(String player) {
@@ -268,8 +275,9 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, LobbyC
     /**
      * If a move is done by a player, this method handles the move. If the player exists,
      * the move will be put in the queueMove. Else an error is caught.
+     *
      * @param playerName The player who did the move.
-     * @param col The move which has been received from the server.
+     * @param col        The move which has been received from the server.
      */
     @Override
     public void doneMove(String playerName, int col) throws C4Exception {
@@ -299,6 +307,7 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, LobbyC
 
     /**
      * Ends a game if a player disconnects.
+     *
      * @param player The player that disconnects.
      */
     @Override
@@ -309,7 +318,8 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, LobbyC
 
     /**
      * This method gives an error.
-     * @param eCode The error code.
+     *
+     * @param eCode   The error code.
      * @param message The error message.
      */
     @Override

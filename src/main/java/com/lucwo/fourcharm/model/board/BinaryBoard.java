@@ -70,10 +70,11 @@ public class BinaryBoard extends Board {
 
     /**
      * Private constructor to be used in making deepcopies.
-     * @param origMoves Moves from original board.
+     *
+     * @param origMoves  Moves from original board.
      * @param origNplies Amount of moves made on the original board.
      * @param origHeight Array of colunm heights of the original board.
-     * @param origColor Array of player bitmasks of the original board.
+     * @param origColor  Array of player bitmasks of the original board.
      */
     private BinaryBoard(int[] origMoves, int origNplies, byte[] origHeight, long[] origColor) {
         super();
@@ -98,6 +99,7 @@ public class BinaryBoard extends Board {
 
     /**
      * Checks if the column has free space.
+     *
      * @param col the column for which the free space will be checked.
      * @return True is the column has free space, false if not.
      */
@@ -110,6 +112,7 @@ public class BinaryBoard extends Board {
 
     /**
      * Checks if the board is legal.
+     *
      * @param newBoard The board that will be checked.
      * @return True if the board is legal, false if not.
      */
@@ -121,6 +124,7 @@ public class BinaryBoard extends Board {
 
     /**
      * Checks if a player has won.
+     *
      * @param mark The player to check.
      * @return True if the player has won, false if not.
      */
@@ -134,6 +138,7 @@ public class BinaryBoard extends Board {
 
     /**
      * Checks if the board is full.
+     *
      * @return True if full, false if not full.
      */
     public boolean isFull() {
@@ -144,6 +149,7 @@ public class BinaryBoard extends Board {
 
     /**
      * Gives the plieCount.
+     *
      * @return The plieCount.
      */
     public int getPlieCount() {
@@ -154,6 +160,7 @@ public class BinaryBoard extends Board {
 
     /**
      * Gives an int array of the moves that are made.
+     *
      * @return The moves that are made.
      */
     public int[] getMoves() {
@@ -162,6 +169,7 @@ public class BinaryBoard extends Board {
 
     /**
      * Checks if the board has a diagonal (four in a row).
+     *
      * @param newBoard The board that will be checked.
      * @return True if there are four connected spots on a diagonal line, false if not.
      */
@@ -174,6 +182,7 @@ public class BinaryBoard extends Board {
 
     /**
      * Checks if the board has a diagonal (four in a row).
+     *
      * @param newBoard The board that will be checked.
      * @return True if there are four connected spots on a diagonal line, false if not.
      */
@@ -186,6 +195,7 @@ public class BinaryBoard extends Board {
 
     /**
      * Checks if the board has a horizontal row.
+     *
      * @param newBoard The board that will be checked.
      * @return True if there are four connected spots on a horizontal line, false if not.
      */
@@ -198,6 +208,7 @@ public class BinaryBoard extends Board {
 
     /**
      * Checks if the board has a vertical row.
+     *
      * @param newBoard The board that will be checked.
      * @return True if there are four connected spots on a vertical line, false if not.
      */
@@ -211,6 +222,7 @@ public class BinaryBoard extends Board {
 
     /**
      * Gives the mark of a spot on the board.
+     *
      * @param index The index of the spot on the board.
      * @return The mark of a spot.
      */
@@ -244,6 +256,7 @@ public class BinaryBoard extends Board {
 
     /**
      * Gives the integer of the player index.
+     *
      * @param m The given mark.
      * @return The int of the player index.
      */
@@ -260,7 +273,8 @@ public class BinaryBoard extends Board {
 
     /**
      * Makes a move.
-     * @param col The column where a move will be made.
+     *
+     * @param col  The column where a move will be made.
      * @param mark The current mark.
      * @throws InvalidMoveException if the move is not allowed.
      */
@@ -291,6 +305,7 @@ public class BinaryBoard extends Board {
 
     /**
      * Makes a string representation.
+     *
      * @return The representation.
      */
     public String toString() {
@@ -317,6 +332,7 @@ public class BinaryBoard extends Board {
 
     /**
      * Gives the positioncode.
+     *
      * @return The position code.
      */
     public long positionCode() {
@@ -327,6 +343,7 @@ public class BinaryBoard extends Board {
 
     /**
      * Makes a deepcopy of the board.
+     *
      * @return A deepcopy of the current board.
      */
     public Board deepCopy() {

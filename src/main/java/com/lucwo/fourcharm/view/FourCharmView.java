@@ -8,8 +8,6 @@ import com.lucwo.fourcharm.controller.C4Server;
 import com.lucwo.fourcharm.model.Game;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Interface for the views (graphical and textual) of FourCharm Connect4.
@@ -28,6 +26,7 @@ public interface FourCharmView {
 
     /**
      * Shows a game that is given as a parameter.
+     *
      * @param game The given game.
      */
     public void showGame(Game game);
@@ -63,12 +62,14 @@ public interface FourCharmView {
 
     /**
      * Request a move.
+     *
      * @return The requested column number (a.k.a. move).
      */
     public int requestMove();
 
     /**
      * Shows an error message.
+     *
      * @param errorMessage The given message.
      */
     public void showError(String errorMessage);

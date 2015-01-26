@@ -11,7 +11,7 @@ package com.lucwo.fourcharm.model.player;
  * will go second. It doesn't matter which player is player 1. The
  * other player will always be player 2.
  *
- *@author Luce Sandfort and Wouter Timmermans
+ * @author Luce Sandfort and Wouter Timmermans
  */
 
 public enum Mark {
@@ -28,6 +28,7 @@ public enum Mark {
 
     /**
      * Gives the other mark.
+     *
      * @return The other mark.
      */
     public Mark other() {

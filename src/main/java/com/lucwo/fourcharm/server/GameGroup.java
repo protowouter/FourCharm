@@ -188,7 +188,7 @@ public class GameGroup extends ClientGroup implements Observer {
             } catch (C4Exception e) {
                 LOGGER.trace("startGame", e);
             }
-                getServer().getLobby().addHandler(client);
+            getServer().getLobby().addHandler(client);
         });
         getServer().removeGame(this);
 

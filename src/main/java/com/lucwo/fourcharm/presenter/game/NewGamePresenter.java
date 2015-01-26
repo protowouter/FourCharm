@@ -13,7 +13,6 @@ import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import com.lucwo.fourcharm.presenter.FourCharmPresenter;
 import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -79,16 +78,16 @@ public class NewGamePresenter {
         p1Select.getItems().addAll("Human", "Computer");
         p1Select.getSelectionModel().select(1);
         p1Select.getSelectionModel().selectedItemProperty().addListener(
-            (observable) -> {
-                showPlayerFields();
-            }
+                (observable) -> {
+                    showPlayerFields();
+                }
         );
         p2Select.getItems().addAll("Human", "Computer");
         p2Select.getSelectionModel().select(1);
         p2Select.getSelectionModel().selectedItemProperty().addListener(
-            (observable) -> {
-                showPlayerFields();
-            }
+                (observable) -> {
+                    showPlayerFields();
+                }
         );
         p1Strategy.getItems().addAll(new MTDfStrategy(),
                 new RandomStrategy(), new NegaMaxStrategy(12));
@@ -113,10 +112,10 @@ public class NewGamePresenter {
         localNetworkChoice();
         showPlayerFields();
         serverChoice.getSelectionModel().selectedItemProperty().addListener(observable -> {
-                C4Server selected = serverChoice.getSelectionModel().selectedItemProperty().get();
-                serverAddress.textProperty().setValue(selected.getAddress().getHostAddress());
-                serverPort.textProperty().setValue(Integer.toString(selected.getPort()));
-            });
+            C4Server selected = serverChoice.getSelectionModel().selectedItemProperty().get();
+            serverAddress.textProperty().setValue(selected.getAddress().getHostAddress());
+            serverPort.textProperty().setValue(Integer.toString(selected.getPort()));
+        });
 
     }
 
