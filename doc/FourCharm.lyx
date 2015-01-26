@@ -2072,6 +2072,19 @@ Discussion test coverage
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Discussion test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Paragraph
 FourCharmServerTest
 \end_layout
@@ -2174,6 +2187,19 @@ The LobbyGroup tests look a lot like the GameGroup and PreLobbyGroup tests.
 The ready() method makes use of new Expectations () {{ }}.
  Two ClientHandlers get names in the expectations box and a GameGroup is
  made with those two ClientHandlers.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Discussion test coverage
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

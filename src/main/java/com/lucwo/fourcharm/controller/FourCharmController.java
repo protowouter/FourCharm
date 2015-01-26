@@ -111,7 +111,6 @@ public class FourCharmController implements Observer {
         serverClient = new ServerHandler(playerName, hostName, port, this);
         serverClient.setStrategy(strategy);
         new Thread(serverClient).start();
-        view.showLobby();
 
     }
 
@@ -235,10 +234,6 @@ public class FourCharmController implements Observer {
         if (serverClient != null) {
             serverClient.disconnect();
         }
-    }
-
-    public boolean inLobby() {
-        return serverClient != null;
     }
 
     /**

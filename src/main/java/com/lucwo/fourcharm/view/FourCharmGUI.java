@@ -134,6 +134,11 @@ public class FourCharmGUI extends Application implements FourCharmView {
     }
 
     @Override
+    public void showMessage(String message) {
+        //TODO implement.
+    }
+
+    @Override
     public void showChat(String playerName, String message) {
         Platform.runLater(() -> fourCharmPresenter.showMessage("[" + playerName + "] " + message));
     }
