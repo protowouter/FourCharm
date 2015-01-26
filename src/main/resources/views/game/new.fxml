@@ -13,9 +13,9 @@
     <children>
         <BorderPane maxHeight="Infinity" maxWidth="Infinity">
             <center>
-                <HBox maxHeight="Infinity" maxWidth="Infinity">
+                <HBox maxHeight="Infinity" maxWidth="Infinity" BorderPane.alignment="CENTER">
                     <children>
-                        <VBox maxHeight="Infinity" maxWidth="Infinity">
+                        <VBox maxHeight="Infinity" maxWidth="Infinity" HBox.hgrow="ALWAYS">
                             <children>
                                 <Label alignment="CENTER" maxWidth="Infinity" prefHeight="16.0" prefWidth="142.0"
                                        text="Player 1"/>
@@ -34,7 +34,7 @@
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                             </padding>
                         </VBox>
-                        <VBox maxHeight="Infinity" maxWidth="Infinity">
+                        <VBox maxHeight="Infinity" maxWidth="Infinity" HBox.hgrow="ALWAYS">
                             <children>
                                 <ChoiceBox fx:id="localNetworkChoice" maxHeight="Infinity"
                                            maxWidth="1.7976931348623157E308" prefWidth="120.0"/>
@@ -56,9 +56,9 @@
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                             </padding>
                         </VBox>
-                        <VBox maxHeight="Infinity" maxWidth="Infinity">
+                        <VBox maxHeight="Infinity" maxWidth="Infinity" HBox.hgrow="ALWAYS">
                             <children>
-                                <Label fx:id="player2Label" maxWidth="Infinity" alignment="CENTER" text="Player 2"
+                                <Label fx:id="player2Label" alignment="CENTER" maxWidth="Infinity" text="Player 2"
                                        visible="false"/>
                                 <ChoiceBox fx:id="p2Select" disable="true" maxHeight="Infinity" maxWidth="Infinity"
                                            prefWidth="120.0" visible="false">

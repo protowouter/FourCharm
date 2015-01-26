@@ -94,7 +94,7 @@ public class FourCharmGUI extends Application implements FourCharmView {
 
     @Override
     public void showLobby() {
-        Platform.runLater(fourCharmPresenter::showLobby);
+        fourCharmPresenter.showLobby();
     }
 
     @Override

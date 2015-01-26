@@ -52,8 +52,8 @@ public class SpacePresenter {
     }
 
     private void calculateRadius() {
-        double widthRadius = boardPresenter.getGamePresenter().getFourCharmPresenter().getStage().widthProperty().divide(15).get();
-        double heigthRadius = boardPresenter.getGamePresenter().getFourCharmPresenter().getStage().heightProperty().divide(17).get();
+        double widthRadius = boardPresenter.getGamePresenter().getFourCharmPresenter().getStage().widthProperty().subtract(200).divide(15).get();
+        double heigthRadius = boardPresenter.getGamePresenter().getFourCharmPresenter().getStage().heightProperty().divide(20).get();
         double radius = widthRadius < heigthRadius ? widthRadius : heigthRadius;
         space.radiusProperty().setValue(radius);
     }

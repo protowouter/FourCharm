@@ -11,7 +11,11 @@ import com.lucwo.fourcharm.presenter.game.NewGamePresenter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -26,6 +30,14 @@ public class FourCharmPresenter {
     private Parent root;
     @FXML
     private BorderPane gamePane;
+    @FXML
+    private TextField chatField;
+    @FXML
+    private TextArea chatArea;
+    @FXML
+    private Button chatButton;
+    @FXML
+    private TextArea lobbyArea;
 
     private NewGamePresenter newGamePresenter;
     private GamePresenter gamePresenter;
@@ -92,11 +104,18 @@ public class FourCharmPresenter {
         Platform.runLater(gamePresenter::showRematch);
     }
 
+    public void showLobby() {
+        Platform.runLater(() -> gamePane.setCenter(new VBox()));
+    }
+
 
     public void showMessage(String message) {
-        if (fourCharmController.inLobby()) {
-            //lobbyPresenter.showMessage(message);
-        }
+        chatArea.textProperty().setValue(chatArea.textProperty().get() + "\n" + message);
+    }
+
+    public void sendChat() {
+        fourCharmController.globalChat(chatField.textProperty().getValue());
+        chatField.textProperty().setValue("");
     }
 
     public Stage getStage() {
