@@ -65,6 +65,7 @@ public class FourCharmGUI extends Application implements FourCharmView {
     public void start(Stage stage) throws Exception {
 
         fourCharmPresenter = fourCharmFactory.getFourCharmPresenter(controller);
+        fourCharmPresenter.setStage(stage);
 
         Pane root = (Pane) fourCharmPresenter.getView();
 

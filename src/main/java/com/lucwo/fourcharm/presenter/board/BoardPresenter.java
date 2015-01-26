@@ -7,9 +7,11 @@ package com.lucwo.fourcharm.presenter.board;
 import com.lucwo.fourcharm.model.board.Board;
 import com.lucwo.fourcharm.presenter.game.GamePresenter;
 import com.lucwo.fourcharm.presenter.space.SpacePresenter;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +52,16 @@ public class BoardPresenter {
         this.gamePresenter = newGamePresenter;
     }
 
+    public ReadOnlyDoubleProperty widthProperty() {
+        return spacesPane.widthProperty();
+    }
+
+    public ReadOnlyDoubleProperty heigthProperty() {
+        return spacesPane.heightProperty();
+    }
+
     public void initBoard(Board board) {
+        VBox.setVgrow(spacesPane, Priority.ALWAYS);
 
         spaces = new SpacePresenter[board.getColumns()][board.getRows()];
 
@@ -60,6 +71,7 @@ public class BoardPresenter {
 
         for (int row = board.getRows() - 1; row >= 0; row--) {
             HBox rowBox = new HBox();
+            HBox.setHgrow(rowBox, Priority.ALWAYS);
             for (int col = 0; col < board.getColumns(); col++) {
                 FXMLLoader fxmlLoader =
                         new FXMLLoader(classloader.getResource("views/space/show.fxml"));
@@ -68,8 +80,8 @@ public class BoardPresenter {
                     fxmlLoader.load();
                     rowBox.getChildren().add(fxmlLoader.getRoot());
                     spaces[col][row] = fxmlLoader.getController();
-                    spaces[col][row].setMark(board.getMark(col, row));
                     spaces[col][row].setBoardPresenter(this);
+                    spaces[col][row].setMark(board.getMark(col, row));
                     spaces[col][row].setCol(col);
                 } catch (IOException exception) {
                     LOGGER.trace("initBoard", exception);

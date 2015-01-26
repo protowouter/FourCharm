@@ -14,7 +14,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,7 @@ public class GamePresenter implements Observer {
     @FXML
     private Parent root;
     @FXML
-    private FlowPane boardPane;
+    private VBox boardPane;
     @FXML
     private Label currentPlayer;
     @FXML
@@ -66,6 +67,7 @@ public class GamePresenter implements Observer {
     // ----------------------- Commands ---------------------
 
     public void init() {
+        VBox.setVgrow(boardPane, Priority.ALWAYS);
         colorMap = new HashMap<>();
         colorMap.put(Mark.P1, "RoseRoze");
         colorMap.put(Mark.P2, "Babyblauw");
@@ -198,6 +200,10 @@ public class GamePresenter implements Observer {
 
     public void handleRematch() {
         fourCharmPresenter.getFourCharmController().rematch();
+    }
+
+    public FourCharmPresenter getFourCharmPresenter() {
+        return fourCharmPresenter;
     }
 
     public void setFourCharmPresenter(FourCharmPresenter presenter) {

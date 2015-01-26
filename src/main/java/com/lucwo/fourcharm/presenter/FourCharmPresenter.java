@@ -13,6 +13,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
  * TODO: Fourcharmpresenter javadoc.
@@ -31,6 +32,7 @@ public class FourCharmPresenter {
     private GamePresenter gamePresenter;
     private FourCharmController fourCharmController;
     private LobbyPresenter lobbyPresenter;
+    private Stage stage;
 
     // ----------------------- Queries ----------------------
 
@@ -114,5 +116,13 @@ public class FourCharmPresenter {
         if (fourCharmController.inLobby()) {
             lobbyPresenter.showMessage(message);
         }
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage s) {
+        stage = s;
     }
 }
