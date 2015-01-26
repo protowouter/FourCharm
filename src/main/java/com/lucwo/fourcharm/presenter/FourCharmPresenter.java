@@ -12,13 +12,12 @@ import com.lucwo.fourcharm.presenter.game.NewGamePresenter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import nl.woutertimmermans.connect4.protocol.parameters.LobbyState;
 
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -28,6 +27,9 @@ import java.util.Observer;
  * @author Luce Sandfort and Wouter Timmermans
  */
 public class FourCharmPresenter implements Observer {
+
+    public static final String GLOBAL = "Global";
+    public static final String LOCAL = "Local";
     // ------------------ Instance variables ----------------
 
     @FXML
@@ -42,6 +44,8 @@ public class FourCharmPresenter implements Observer {
     private Button chatButton;
     @FXML
     private TextArea lobbyArea;
+    @FXML
+    private ChoiceBox<String> chatContextChoice;
 
     private NewGamePresenter newGamePresenter;
     private GamePresenter gamePresenter;
@@ -64,6 +68,10 @@ public class FourCharmPresenter implements Observer {
         fourCharmController = contr;
     }
 
+    public void init() {
+        chatContextChoice.getItems().addAll(LOCAL, GLOBAL);
+
+    }
 
     public void setNewGamePresenter(NewGamePresenter newNewGamePresenter) {
         newGamePresenter = newNewGamePresenter;
@@ -129,7 +137,12 @@ public class FourCharmPresenter implements Observer {
     }
 
     public void sendChat() {
-        fourCharmController.globalChat(chatField.textProperty().getValue());
+        String context = chatContextChoice.getSelectionModel().getSelectedItem();
+        if (context.equals(LOCAL)) {
+            fourCharmController.localChat(chatField.textProperty().getValue());
+        } else {
+            fourCharmController.globalChat(chatField.textProperty().getValue());
+        }
         chatField.textProperty().setValue("");
     }
 
@@ -154,8 +167,11 @@ public class FourCharmPresenter implements Observer {
     public void update(Observable o, Object arg) {
         if (o instanceof LobbyList) {
             StringBuilder players = new StringBuilder();
-            for (String name : ((LobbyList) o).getLobbyState().keySet()) {
-                players.append(name);
+            for (Map.Entry<String, LobbyState> e : ((LobbyList) o).getLobbyState().entrySet()) {
+                players.append(e.getKey());
+                players.append(" [");
+                players.append(e.getValue());
+                players.append("]");
                 players.append("\n");
             }
             Platform.runLater(() -> lobbyArea.textProperty().setValue(new String(players)));

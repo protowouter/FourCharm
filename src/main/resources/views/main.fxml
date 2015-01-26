@@ -62,6 +62,7 @@
             <bottom>
                 <HBox BorderPane.alignment="CENTER">
                     <children>
+                        <ChoiceBox prefHeight="26.0" prefWidth="63.0" fx:id="chatContextChoice"/>
                         <TextField fx:id="chatField" HBox.hgrow="ALWAYS"/>
                         <Button fx:id="chatButton" mnemonicParsing="false" onAction="#sendChat" text="Send"/>
                     </children>

@@ -278,6 +278,7 @@ public class FourCharmController implements Observer {
             serverClient.disconnect();
             serverClient = null;
             view.showMessage("You are now disconnected from the server");
+            view.showNewGame();
         } else {
             showError("You are not connected to a server");
         }
@@ -299,6 +300,12 @@ public class FourCharmController implements Observer {
     public void globalChat(String message) {
         if (serverClient != null) {
             serverClient.globalChat(message);
+        }
+    }
+
+    public void localChat(String message) {
+        if (serverClient != null) {
+            serverClient.localChat(message);
         }
     }
 

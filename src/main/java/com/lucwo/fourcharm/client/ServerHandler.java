@@ -14,6 +14,7 @@ import com.lucwo.fourcharm.model.player.LocalAIPlayer;
 import com.lucwo.fourcharm.model.player.Mark;
 import com.lucwo.fourcharm.model.player.Player;
 import com.lucwo.fourcharm.util.ExtensionFactory;
+import nl.woutertimmermans.connect4.protocol.constants.ErrorCodes;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidMoveError;
@@ -313,6 +314,9 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, LobbyC
      */
     @Override
     public void error(int eCode, String message) {
+        if (eCode == ErrorCodes.INVALID_USERNAME) {
+            controller.disconnect();
+        }
         controller.showError("Error " + eCode + ": " + message);
 
     }
@@ -332,7 +336,17 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, LobbyC
         try {
             chatServerClient.chatGlobal(message);
         } catch (C4Exception e) {
-            e.printStackTrace(); // TODO better error handling
+            LOGGER.trace("globalChat", e);
+            controller.showError(e.getMessage());
+        }
+    }
+
+    public void localChat(String message) {
+        try {
+            chatServerClient.chatLocal(message);
+        } catch (C4Exception e) {
+            LOGGER.trace("localChat", e);
+            controller.showError(e.getMessage());
         }
     }
 
