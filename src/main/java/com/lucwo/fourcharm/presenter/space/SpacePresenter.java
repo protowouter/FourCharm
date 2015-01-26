@@ -47,11 +47,19 @@ public class SpacePresenter {
 
     public void setBoardPresenter(BoardPresenter newBoardPresenter) {
         boardPresenter = newBoardPresenter;
-        space.radiusProperty().bind(boardPresenter.getGamePresenter().getFourCharmPresenter().getStage().widthProperty().divide(20));
+        boardPresenter.getGamePresenter().getFourCharmPresenter().getStage().widthProperty().addListener((event) -> calculateRadius());
+        boardPresenter.getGamePresenter().getFourCharmPresenter().getStage().heightProperty().addListener((event) -> calculateRadius());
+    }
+
+    private void calculateRadius() {
+        double widthRadius = boardPresenter.getGamePresenter().getFourCharmPresenter().getStage().widthProperty().divide(15).get();
+        double heigthRadius = boardPresenter.getGamePresenter().getFourCharmPresenter().getStage().heightProperty().divide(17).get();
+        double radius = widthRadius < heigthRadius ? widthRadius : heigthRadius;
+        space.radiusProperty().setValue(radius);
     }
 
     public void setMark(Mark m) {
-        System.out.println(boardPresenter.getGamePresenter().getFourCharmPresenter());
+        calculateRadius();
         unHighlight();
         mark = m;
 
