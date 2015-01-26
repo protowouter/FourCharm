@@ -4,8 +4,12 @@
   ~ Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
   -->
 
-
-<?import javafx.scene.control.Button?>
-<Button xmlns:fx="http://javafx.com/fxml/1" fx:id="spaceButton" mnemonicParsing="false" onMouseClicked="#processClick"
-        prefHeight="75.0" prefWidth="75.0" xmlns="http://javafx.com/javafx/8"
-        fx:controller="com.lucwo.fourcharm.presenter.space.SpacePresenter"/>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+      fx:controller="com.lucwo.fourcharm.presenter.space.SpacePresenter" fx:id="parent">
+    <children>
+        <Circle fx:id="space" fill="#fbfcfa" onMouseClicked="#processClick" onMouseEntered="#highlight"
+                onMouseExited="#unHighlight" radius="35.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0"/>
+    </children>
+</VBox>

@@ -14,6 +14,7 @@ import com.lucwo.fourcharm.model.player.LocalAIPlayer;
 import com.lucwo.fourcharm.model.player.Mark;
 import com.lucwo.fourcharm.model.player.Player;
 import com.lucwo.fourcharm.util.ExtensionFactory;
+import nl.woutertimmermans.connect4.protocol.constants.ErrorCodes;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidMoveError;
@@ -21,7 +22,9 @@ import nl.woutertimmermans.connect4.protocol.fgroup.chat.ChatClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.chat.ChatServer;
 import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreServer;
+import nl.woutertimmermans.connect4.protocol.fgroup.lobby.LobbyClient;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
+import nl.woutertimmermans.connect4.protocol.parameters.LobbyState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +44,7 @@ import java.util.Set;
  * @author Luce Sandfort and Wouter Timmermans.
  */
 
-public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnable {
+public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, LobbyClient.Iface, Runnable {
 
     private static final int GROUP_NUMBER = 23;
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerHandler.class);
@@ -55,6 +58,7 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
     private ChatServer.Client chatServerClient;
     private CoreClient.Processor<ServerHandler> coreProcessor;
     private ChatClient.Processor<ServerHandler> chatProcessor;
+    private LobbyClient.Processor<ServerHandler> lobbyProcessor;
     private FourCharmController controller;
     private Map<String, ASyncPlayer> playerMap;
     private GameStrategy strategy;
@@ -92,6 +96,7 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
                     new OutputStreamWriter(sock.getOutputStream(), Charset.forName("UTF-8")));
             coreProcessor = new CoreClient.Processor<>(this);
             chatProcessor = new ChatClient.Processor<>(this);
+            lobbyProcessor = new LobbyClient.Processor<>(this);
             coreServerClient = new CoreServer.Client(out);
             chatServerClient = new ChatServer.Client(null);
         } catch (IOException e) {
@@ -157,7 +162,10 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
                 LOGGER.debug("Processing input {}", input);
                 boolean processed = coreProcessor.process(input);
                 if (!processed) {
-                    chatProcessor.process(input);
+                    processed = chatProcessor.process(input);
+                }
+                if (!processed) {
+                    processed = lobbyProcessor.process(input);
                 }
                 input = in.readLine();
 
@@ -306,6 +314,9 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
      */
     @Override
     public void error(int eCode, String message) {
+        if (eCode == ErrorCodes.INVALID_USERNAME) {
+            controller.disconnect();
+        }
         controller.showError("Error " + eCode + ": " + message);
 
     }
@@ -325,7 +336,22 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
         try {
             chatServerClient.chatGlobal(message);
         } catch (C4Exception e) {
-            e.printStackTrace(); // TODO better error handling
+            LOGGER.trace("globalChat", e);
+            controller.showError(e.getMessage());
         }
+    }
+
+    public void localChat(String message) {
+        try {
+            chatServerClient.chatLocal(message);
+        } catch (C4Exception e) {
+            LOGGER.trace("localChat", e);
+            controller.showError(e.getMessage());
+        }
+    }
+
+    @Override
+    public void stateChange(String playerName, LobbyState lobbyState) throws C4Exception {
+        controller.stateChange(playerName, lobbyState);
     }
 }

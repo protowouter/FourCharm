@@ -18,6 +18,8 @@ import com.lucwo.fourcharm.view.FourCharmGUI;
 import com.lucwo.fourcharm.view.FourCharmTUI;
 import com.lucwo.fourcharm.view.FourCharmView;
 import javafx.application.Application;
+import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import nl.woutertimmermans.connect4.protocol.parameters.LobbyState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +28,6 @@ import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
 import java.io.IOException;
-import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -54,30 +55,32 @@ public class FourCharmController implements Observer {
     private Player player1;
     private Player player2;
     private JmDNS serverDiscoverer;
+    private LobbyList lobbyStateList;
 
 // --------------------- Constructors -------------------
-private ServiceListener fourCharmServiceListener = new ServiceListener() {
-    @Override
-    public void serviceAdded(ServiceEvent serviceEvent) {
-        LOGGER.info("Service added: {} {}", serviceEvent.getName(), serviceEvent.getType());
-        serverDiscoverer.requestServiceInfo(serviceEvent.getType(), serviceEvent.getName());
 
-    }
+    private ServiceListener fourCharmServiceListener = new ServiceListener() {
+        @Override
+        public void serviceAdded(ServiceEvent serviceEvent) {
+            LOGGER.info("Service added: {} {}", serviceEvent.getName(), serviceEvent.getType());
+            serverDiscoverer.requestServiceInfo(serviceEvent.getType(), serviceEvent.getName());
 
-    @Override
-    public void serviceRemoved(ServiceEvent serviceEvent) {
-
-    }
-
-    @Override
-    public void serviceResolved(ServiceEvent serviceEvent) {
-        try {
-            LOGGER.info("service Resolved: {}", serviceEvent.getDNS().getInterface());
-        } catch (IOException e) {
-            LOGGER.trace("serviceResolved", e);
         }
-    }
-};
+
+        @Override
+        public void serviceRemoved(ServiceEvent serviceEvent) {
+
+        }
+
+        @Override
+        public void serviceResolved(ServiceEvent serviceEvent) {
+            try {
+                LOGGER.info("service Resolved: {}", serviceEvent.getDNS().getInterface());
+            } catch (IOException e) {
+                LOGGER.trace("serviceResolved", e);
+            }
+        }
+    };
 
 // ----------------------- Queries ----------------------
 
@@ -87,6 +90,8 @@ private ServiceListener fourCharmServiceListener = new ServiceListener() {
      * Constructs a new controller.
      */
     public FourCharmController() {
+
+        lobbyStateList = new LobbyList();
         try {
             serverDiscoverer = JmDNS.create();
             serverDiscoverer.addServiceListener("_c4._tcp.local.", fourCharmServiceListener);
@@ -99,6 +104,8 @@ private ServiceListener fourCharmServiceListener = new ServiceListener() {
             LOGGER.trace("constructor", e);
         }
     }
+
+
 
     public static void main(String[] args) {
         boolean tui = false;
@@ -150,14 +157,11 @@ private ServiceListener fourCharmServiceListener = new ServiceListener() {
     public void startNetworkGame(String hostName, String port,
                                  String playerName, GameStrategy strategy)
             throws ServerConnectionException {
-        if (serverClient == null) {
-            serverClient = new ServerHandler(playerName, hostName, port, this);
-            serverClient.setStrategy(strategy);
-            new Thread(serverClient).start();
-            view.showMessage("Hey there handsome, you are now connected to the server");
-        } else {
-            throw new ServerConnectionException("You are already connected to a server!");
-        }
+        serverClient = new ServerHandler(playerName, hostName, port, this);
+        serverClient.setStrategy(strategy);
+        new Thread(serverClient).start();
+        view.showLobby();
+        view.showMessage("Hey there handsome, you are now connected to the server");
 
     }
 
@@ -199,6 +203,30 @@ private ServiceListener fourCharmServiceListener = new ServiceListener() {
         Thread gameThread = new Thread(game);
         gameThread.setName("GameThread");
         gameThread.start();
+    }
+
+    public void gameEnd(String player) {
+        game.shutdown();
+        game = null;
+        if (player != null) {
+            view.showMessage(player + " won the game");
+        } else {
+            view.showMessage("The game was a tie");
+        }
+        view.showLobby();
+    }
+
+    public void sendReady() {
+        if (serverClient != null) {
+            try {
+                serverClient.sendReady();
+            } catch (C4Exception e) {
+                LOGGER.trace("sendReady", e);
+                view.showError(e.getMessage());
+            }
+        } else {
+            view.showError("You are not connected to a server");
+        }
     }
 
     /**
@@ -256,29 +284,10 @@ private ServiceListener fourCharmServiceListener = new ServiceListener() {
         }
     }
 
-    public void gameEnd(String player) {
-        game.shutdown();
-        game = null;
-        if (player != null) {
-            view.showMessage(player + " won the game");
-        } else {
-            view.showMessage("The game was a tie");
-        }
+    public boolean inLobby() {
+        return serverClient != null;
     }
 
-    public void sendReady() {
-        if (serverClient != null) {
-            try {
-                serverClient.sendReady();
-                view.showMessage("Ready you are now");
-            } catch (C4Exception e) {
-                LOGGER.trace("sendReady", e);
-                view.showError(e.getMessage());
-            }
-        } else {
-            view.showError("You are not connected to a server");
-        }
-    }
 
     /**
      * Returns the best move according to a AI. This can be used by views when
@@ -314,6 +323,7 @@ private ServiceListener fourCharmServiceListener = new ServiceListener() {
             serverClient.disconnect();
             serverClient = null;
             view.showMessage("You are now disconnected from the server");
+            view.showNewGame();
         } else {
             showError("You are not connected to a server");
         }
@@ -336,6 +346,20 @@ private ServiceListener fourCharmServiceListener = new ServiceListener() {
         if (serverClient != null) {
             serverClient.globalChat(message);
         }
+    }
+
+    public void localChat(String message) {
+        if (serverClient != null) {
+            serverClient.localChat(message);
+        }
+    }
+
+    public void stateChange(String playerName, LobbyState lobbyState) {
+        lobbyStateList.stateChange(playerName, lobbyState);
+    }
+
+    public LobbyList getLobbyList() {
+        return lobbyStateList;
     }
 
 }

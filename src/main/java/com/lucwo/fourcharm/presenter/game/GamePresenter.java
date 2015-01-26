@@ -11,10 +11,11 @@ import com.lucwo.fourcharm.presenter.board.BoardPresenter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,7 @@ public class GamePresenter implements Observer {
     @FXML
     private Parent root;
     @FXML
-    private FlowPane boardPane;
+    private GridPane boardPane;
     @FXML
     private Label currentPlayer;
     @FXML
@@ -70,7 +71,6 @@ public class GamePresenter implements Observer {
         colorMap.put(Mark.P1, "RoseRoze");
         colorMap.put(Mark.P2, "Babyblauw");
         moveQueue = new LinkedBlockingQueue<>(1);
-        initBoardPane();
     }
 
     public void enableInput() {
@@ -147,10 +147,7 @@ public class GamePresenter implements Observer {
 
         try {
             fxmlLoader.load();
-            if (!boardPane.getChildren().isEmpty()) {
-                boardPane.getChildren().remove(0);
-            }
-            boardPane.getChildren().add(fxmlLoader.getRoot());
+            boardPane.getChildren().setAll((Node) fxmlLoader.getRoot());
             boardPresenter = fxmlLoader.getController();
             boardPresenter.setGamePresenter(this);
         } catch (IOException e) {
@@ -198,6 +195,10 @@ public class GamePresenter implements Observer {
 
     public void handleRematch() {
         fourCharmPresenter.getFourCharmController().rematch();
+    }
+
+    public FourCharmPresenter getFourCharmPresenter() {
+        return fourCharmPresenter;
     }
 
     public void setFourCharmPresenter(FourCharmPresenter presenter) {

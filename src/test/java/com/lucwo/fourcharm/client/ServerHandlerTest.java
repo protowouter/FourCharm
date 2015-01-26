@@ -73,10 +73,6 @@ public class ServerHandlerTest {
     @Test
     public void testAccept() throws Exception {
 
-        new Expectations() {{
-            serverClient.ready();
-        }};
-
         handler.accept(23, null);
 
     }

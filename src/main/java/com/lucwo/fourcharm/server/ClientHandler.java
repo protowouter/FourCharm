@@ -4,14 +4,16 @@
 
 package com.lucwo.fourcharm.server;
 
+import com.lucwo.fourcharm.util.ExtensionFactory;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
-import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 import nl.woutertimmermans.connect4.protocol.fgroup.chat.ChatClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.chat.ChatServer;
 import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreServer;
+import nl.woutertimmermans.connect4.protocol.fgroup.lobby.LobbyClient;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
+import nl.woutertimmermans.connect4.protocol.parameters.LobbyState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,9 +42,11 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
     private Socket socket;
     private CoreClient.Client coreClient;
     private ChatClient.Client chatClient;
+    private LobbyClient.Client lobbyClient;
     private BufferedReader in;
     private BufferedWriter out;
     private boolean running;
+    private FourCharmServer server;
 
 // --------------------- Constructors -------------------
 
@@ -51,10 +55,11 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      *
      * @param sock The socket which will be used to communicate with the client.
      */
-    public ClientHandler(Socket sock) {
+    public ClientHandler(Socket sock, FourCharmServer s) {
         socket = sock;
         running = true;
         name = sock.toString();
+        server = s;
     }
 
 // ----------------------- Queries ----------------------
@@ -177,6 +182,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
             try {
                 socket.close();
                 group.removeHandler(this);
+                server.stateChange(this, LobbyState.OFFLINE);
                 LOGGER.debug("Client {} disconnected", getName());
             } catch (IOException e) {
                 LOGGER.trace("handleClient", e);
@@ -238,19 +244,22 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 
         coreClient = new CoreClient.Client(out);
         chatClient = new ChatClient.Client(null);
+        lobbyClient = new LobbyClient.Client(null);
     }
 
     public void registerExtensions(Set<Extension> extensions) {
-        Extension chat = new Extension();
-        try {
-            chat.setValue("Chat");
-        } catch (InvalidParameterError e) {
-            LOGGER.trace("registerExtension", e);
+        Extension chat = ExtensionFactory.chat();
+        Extension lobby = ExtensionFactory.lobby();
+
+        if (extensions != null) {
+            if (extensions.contains(chat)) {
+                chatClient = new ChatClient.Client(out);
+            }
+            if (extensions.contains(lobby)) {
+                lobbyClient = new LobbyClient.Client(out);
+            }
         }
 
-        if (extensions != null && extensions.contains(chat)) {
-            chatClient = new ChatClient.Client(out);
-        }
     }
 
     /**
@@ -275,5 +284,9 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 
     public ChatClient.Client getChatClient() {
         return chatClient;
+    }
+
+    public LobbyClient.Client getLobbyClient() {
+        return lobbyClient;
     }
 }

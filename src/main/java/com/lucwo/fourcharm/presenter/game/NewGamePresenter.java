@@ -148,7 +148,7 @@ public class NewGamePresenter {
 
     public void showPlayerFields() {
         String p1Selection = p1Select.getSelectionModel().getSelectedItem();
-        enbaleP1Fields("Computer".equals(p1Selection));
+        enableP1Fields("Computer".equals(p1Selection));
 
         String p2Selection = p2Select.getSelectionModel().getSelectedItem();
         enableP2Fields("Computer".equals(p2Selection));
@@ -169,12 +169,14 @@ public class NewGamePresenter {
 
     }
 
-    private void enbaleP1Fields(boolean enabled) {
-        p1Strategy.setDisable(!enabled);
-        p1Strategy.setVisible(enabled);
+    private void enableP1Fields(boolean computer) {
+        boolean netWorkGame = "Network".equals(localNetworkChoice.getSelectionModel().
+                getSelectedItem());
+        p1Strategy.setDisable(!computer);
+        p1Strategy.setVisible(computer);
 
-        p1Name.setDisable(enabled);
-        p1Name.setVisible(!enabled);
+        p1Name.setDisable(computer && !netWorkGame);
+        p1Name.setVisible(!computer || netWorkGame);
     }
 
     public void checkAbleToPlayah() {
@@ -192,10 +194,9 @@ public class NewGamePresenter {
 
     private boolean checkNetworkGame(String p1Type) {
         boolean canPlay;
-        if ("Computer".equals(p1Type)) {
+        canPlay = !"".equals(p1Name.textProperty().get());
+        if (canPlay && "Computer".equals(p1Type)) {
             canPlay = !p1Strategy.getSelectionModel().isEmpty();
-        } else {
-            canPlay = !"".equals(p1Name.textProperty().get());
         }
         if (canPlay) {
             canPlay = !"".equals(serverAddress.textProperty().get());
@@ -245,10 +246,8 @@ public class NewGamePresenter {
         String port = serverPort.textProperty().get();
         if ("Computer".equals(p1Type)) {
             strategy = p1Strategy.getSelectionModel().getSelectedItem();
-            name = strategy.toString();
-        } else {
-            name = p1Name.textProperty().get();
         }
+        name = p1Name.textProperty().get();
 
         try {
             fourCharmPresenter.getFourCharmController().

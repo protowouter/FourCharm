@@ -8,6 +8,7 @@ package com.lucwo.fourcharm.server;
 import com.google.common.collect.ConcurrentHashMultiset;
 import com.lucwo.fourcharm.exception.ServerStartException;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import nl.woutertimmermans.connect4.protocol.parameters.LobbyState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +18,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 /**
  * The FourCharmServer class that is responsible for the server. The FourCharmServer makes sure that
@@ -33,11 +36,12 @@ public class FourCharmServer {
 
     private ClientGroup lobby;
     private ClientGroup preLobby;
-    private Collection<GameGroup> games;
+    private ConcurrentHashMultiset<GameGroup> games;
     private boolean running;
     private ServerSocket serverSocket;
     private int poort;
     private JmDNS jmDNS;
+    private Map<ClientHandler, LobbyState> lobbyStates;
 
     /**
      * Constructs a new FourCharmServer given a specific port.
@@ -49,6 +53,7 @@ public class FourCharmServer {
         games = ConcurrentHashMultiset.create();
         running = true;
         poort = port;
+        lobbyStates = new ConcurrentHashMap<>();
     }
 
     public int getSocketPort() {
@@ -98,7 +103,7 @@ public class FourCharmServer {
             try {
                 Socket sock = serverSocket.accept();
                 LOGGER.debug("Incoming connection from {}", sock.getInetAddress());
-                ClientHandler client = new ClientHandler(sock);
+                ClientHandler client = new ClientHandler(sock, this);
                 preLobby.addHandler(client);
                 Thread t = new Thread(client);
                 t.setName("ClientHandler-" + clientCount);
@@ -153,9 +158,9 @@ public class FourCharmServer {
         } catch (IOException e) {
             LOGGER.trace("stop", e);
         }
-        games.forEach(cG -> cG.getClients().forEach(ClientHandler::shutdown));
-        preLobby.getClients().forEach(ClientHandler::shutdown);
-        lobby.getClients().forEach(ClientHandler::shutdown);
+        games.forEach(cG -> cG.forEveryClient(ClientHandler::shutdown));
+        preLobby.forEveryClient(ClientHandler::shutdown);
+        lobby.forEveryClient(ClientHandler::shutdown);
 
 
     }
@@ -170,9 +175,40 @@ public class FourCharmServer {
 
     public void globalChat(ClientHandler client, String message) throws C4Exception {
         lobby.broadcastChat(client, message);
-        for (GameGroup game : games) {
-            game.broadcastChat(client, message);
-        }
+        games.forEach(game -> {
+                try {
+                    game.broadcastChat(client, message);
+                } catch (C4Exception e) {
+                    LOGGER.trace("globalChat", e);
+                }
+            });
 
+    }
+
+    public void sendCurrentStates(ClientHandler client) {
+        for (Map.Entry<ClientHandler, LobbyState> e : lobbyStates.entrySet()) {
+            try {
+                client.getLobbyClient().stateChange(e.getKey().getName(), e.getValue());
+            } catch (C4Exception e1) {
+                LOGGER.trace("sendCurrentStates", e);
+            }
+        }
+    }
+
+    public synchronized void stateChange(ClientHandler client, LobbyState state) {
+        if (state != LobbyState.OFFLINE) {
+            lobbyStates.put(client, state);
+        } else {
+            lobbyStates.remove(client);
+        }
+        Consumer<ClientHandler> alertStateChange = ch -> {
+            try {
+                ch.getLobbyClient().stateChange(client.getName(), state);
+            } catch (C4Exception e) {
+                LOGGER.trace("stateChange", e);
+            }
+        };
+        lobby.forEveryClient(alertStateChange);
+        games.forEach(game -> game.forEveryClient(alertStateChange));
     }
 }

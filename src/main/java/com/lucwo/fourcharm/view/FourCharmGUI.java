@@ -9,7 +9,6 @@ import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.presenter.FourCharmFactory;
 import com.lucwo.fourcharm.presenter.FourCharmPresenter;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -24,8 +23,6 @@ import javafx.stage.Stage;
 
 public class FourCharmGUI extends Application implements FourCharmView {
 
-    private static final int HEIGHT = 1000;
-    private static final int WIDTH = 1000;
 
     // ---------------- Instance Variables ------------------
 
@@ -67,10 +64,12 @@ public class FourCharmGUI extends Application implements FourCharmView {
     public void start(Stage stage) throws Exception {
 
         fourCharmPresenter = fourCharmFactory.getFourCharmPresenter(controller);
+        fourCharmPresenter.setStage(stage);
+        controller.getLobbyList().addObserver(fourCharmPresenter);
 
         Pane root = (Pane) fourCharmPresenter.getView();
 
-        stage.setScene(new Scene(root, HEIGHT, WIDTH));
+        stage.setScene(new Scene(root));
         stage.setTitle("FourCharmGUI");
         stage.show();
     }
@@ -85,12 +84,17 @@ public class FourCharmGUI extends Application implements FourCharmView {
 
     @Override
     public void showGame(Game game) {
-        Platform.runLater(() -> fourCharmPresenter.showGame(game));
+        fourCharmPresenter.showGame(game);
     }
 
     @Override
     public void showNewGame() {
         fourCharmPresenter.showNewGame();
+    }
+
+    @Override
+    public void showLobby() {
+        fourCharmPresenter.showLobby();
     }
 
     @Override
@@ -127,17 +131,17 @@ public class FourCharmGUI extends Application implements FourCharmView {
 
     @Override
     public void showError(String errorMessage) {
-        //TODO implement.
+        fourCharmPresenter.showMessage(errorMessage);
     }
 
     @Override
     public void showMessage(String message) {
-        //TODO implement.
+        fourCharmPresenter.showMessage("[controller] " + message);
     }
 
     @Override
     public void showChat(String playerName, String message) {
-        //TODO implement.
+        fourCharmPresenter.showMessage("[" + playerName + "] " + message);
     }
 }
 

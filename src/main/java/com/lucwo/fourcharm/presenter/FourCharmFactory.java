@@ -46,6 +46,7 @@ public class FourCharmFactory {
                 fourCharmPresenter.setNewGamePresenter(getNewGamePresenter());
                 fourCharmPresenter.setFourCharmController(controller);
                 fourCharmPresenter.showNewGame();
+                fourCharmPresenter.init();
             } catch (IOException e) {
                 LOGGER.trace("getFourCharmPresenter", e);
             }

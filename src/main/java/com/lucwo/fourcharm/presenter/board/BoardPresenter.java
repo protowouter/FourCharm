@@ -9,7 +9,10 @@ import com.lucwo.fourcharm.presenter.game.GamePresenter;
 import com.lucwo.fourcharm.presenter.space.SpacePresenter;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.GridPane;
+import javafx.geometry.Insets;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +31,7 @@ public class BoardPresenter {
 
 
     @FXML
-    private GridPane spacesPane;
+    private VBox spacesPane;
 
     private SpacePresenter[][] spaces;
 
@@ -46,10 +49,23 @@ public class BoardPresenter {
 // ----------------------- Commands ---------------------
 
     public void setGamePresenter(GamePresenter newGamePresenter) {
-        this.gamePresenter = newGamePresenter;
+        gamePresenter = newGamePresenter;
+        gamePresenter.getFourCharmPresenter().getStage().widthProperty().addListener((event) -> calculateRadius());
+        gamePresenter.getFourCharmPresenter().getStage().heightProperty().addListener((event) -> calculateRadius());
+    }
+
+    private void calculateRadius() {
+
+        double radius = calculatePieceRadius();
+        for (SpacePresenter[] sA : spaces) {
+            for (SpacePresenter s : sA) {
+                s.setRadius(radius);
+            }
+        }
     }
 
     public void initBoard(Board board) {
+        VBox.setVgrow(spacesPane, Priority.ALWAYS);
 
         spaces = new SpacePresenter[board.getColumns()][board.getRows()];
 
@@ -57,23 +73,27 @@ public class BoardPresenter {
 
         ClassLoader classloader = getClass().getClassLoader();
 
-        for (int col = 0; col < board.getColumns(); col++) {
-            for (int row = 0; row < board.getRows(); row++) {
+        for (int row = board.getRows() - 1; row >= 0; row--) {
+            HBox rowBox = new HBox();
+            HBox.setHgrow(rowBox, Priority.ALWAYS);
+            for (int col = 0; col < board.getColumns(); col++) {
                 FXMLLoader fxmlLoader =
                         new FXMLLoader(classloader.getResource("views/space/show.fxml"));
 
                 try {
                     fxmlLoader.load();
-                    spacesPane.add(fxmlLoader.getRoot(), col, board.getRows() - row);
+                    rowBox.getChildren().add(fxmlLoader.getRoot());
                     spaces[col][row] = fxmlLoader.getController();
-                    spaces[col][row].setMark(board.getMark(col, row));
                     spaces[col][row].setBoardPresenter(this);
+                    spaces[col][row].setMark(board.getMark(col, row));
                     spaces[col][row].setCol(col);
                 } catch (IOException exception) {
                     LOGGER.trace("initBoard", exception);
                 }
             }
+            spacesPane.getChildren().add(rowBox);
         }
+        calculateRadius();
 
     }
 
@@ -113,5 +133,21 @@ public class BoardPresenter {
                 sContr.enable();
             }
         }
+    }
+
+    public double calculatePieceRadius() {
+        double width = gamePresenter.getFourCharmPresenter().getStage().widthProperty().get() - 400;
+        double height = gamePresenter.getFourCharmPresenter().getStage().heightProperty().get() - 300;
+
+
+        double wRadius = (width / spaces.length) / 2;
+        double hRadius = (height / spaces[0].length) / 2;
+
+        if (wRadius > hRadius) {
+            double overWidth = width - hRadius * spaces.length * 2;
+            spacesPane.paddingProperty().setValue(new Insets(0, 0, 0, overWidth / 2));
+        }
+
+        return Math.min(wRadius, hRadius);
     }
 }

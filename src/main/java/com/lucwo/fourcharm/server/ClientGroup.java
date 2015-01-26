@@ -6,11 +6,12 @@ package com.lucwo.fourcharm.server;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 /**
  * Interface for modeling a group of clients. This could be a LobbyGroup, a GameGroup or a
@@ -21,12 +22,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class ClientGroup {
 
-    private Map<String, ClientHandler> clientCollection;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientGroup.class);
+
+    private ConcurrentHashMap<String, ClientHandler> clientMap;
     private FourCharmServer server;
 
     public ClientGroup(FourCharmServer theServer) {
         server = theServer;
-        clientCollection = new ConcurrentHashMap<>();
+        clientMap = new ConcurrentHashMap<>();
     }
 
     /**
@@ -36,7 +39,8 @@ public abstract class ClientGroup {
      * @return true if the name already exists, false if not
      */
     public boolean clientNameExists(String name) {
-        return clientCollection.keySet().contains(name);
+        Boolean result = clientMap.searchKeys(4, clientName -> clientName.equals(name));
+        return result != null && result == true;
     }
 
 
@@ -50,8 +54,9 @@ public abstract class ClientGroup {
         if (clientGroup != null) {
             clientGroup.removeHandler(client);
         }
-        clientCollection.put(client.getName(), client);
+        clientMap.put(client.getName(), client);
         client.setClientGroup(this);
+        addClientCallback(client);
     }
 
 
@@ -61,18 +66,9 @@ public abstract class ClientGroup {
      * @param client the Clienthandler that will be removed.
      */
     public void removeHandler(ClientHandler client) {
-        clientCollection.remove(client.getName());
+        clientMap.remove(client.getName());
         client.setClientGroup(null);
         removeClientCallback(client);
-    }
-
-
-    /**
-     * Returns an {@link java.util.Iterator} over the Collection of ClientHandler.
-     * @return an iterator over the clients in this group.
-     */
-    public Collection<ClientHandler> getClients() {
-        return clientCollection.values();
     }
 
     /**
@@ -108,9 +104,13 @@ public abstract class ClientGroup {
     }
 
     public void broadcastChat(ClientHandler client, String message) throws C4Exception {
-        for (ClientHandler clientHandler : getClients()) {
-            clientHandler.getChatClient().message(client.getName(), message);
-        }
+        forEveryClient(clientHandler -> {
+            try {
+                clientHandler.getChatClient().message(client.getName(), message);
+            } catch (C4Exception e) {
+                LOGGER.trace("broadcastChat", e);
+            }
+        });
     }
 
     public void globalChat(ClientHandler client, String message) throws C4Exception {
@@ -127,6 +127,12 @@ public abstract class ClientGroup {
      *               which will has been removed from the group.
      */
     public abstract void removeClientCallback(ClientHandler client);
+
+    public abstract void addClientCallback(ClientHandler client);
+
+    public void forEveryClient(Consumer<ClientHandler> function) {
+        clientMap.forEachValue(4, function);
+    }
 
 
 }

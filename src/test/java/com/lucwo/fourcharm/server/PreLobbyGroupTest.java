@@ -33,8 +33,8 @@ public class PreLobbyGroupTest {
         sock = new Socket();
         lobbyGroup = new LobbyGroup(theServer);
         preLobbyGroup = new PreLobbyGroup(lobbyGroup, theServer);
-        clientje1 = new ClientHandler(sock);
-        clientje2 = new ClientHandler(sock);
+        clientje1 = new ClientHandler(sock, theServer);
+        clientje2 = new ClientHandler(sock, theServer);
         clientje1.init();
         clientje2.init();
     }

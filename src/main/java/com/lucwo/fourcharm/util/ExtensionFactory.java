@@ -19,6 +19,7 @@ public class ExtensionFactory {
     public static Set<Extension> createExtensionSet() {
         Set<Extension> result = new HashSet<>();
         result.add(chat());
+        result.add(lobby());
         return result;
     }
 
@@ -28,6 +29,16 @@ public class ExtensionFactory {
             result.setValue("Chat");
         } catch (InvalidParameterError invalidParameterError) {
             LOGGER.trace("chat", invalidParameterError);
+        }
+        return result;
+    }
+
+    public static Extension lobby() {
+        Extension result = new Extension();
+        try {
+            result.setValue("Lobby");
+        } catch (InvalidParameterError invalidParameterError) {
+            LOGGER.trace("lobby", invalidParameterError);
         }
         return result;
     }
