@@ -116,6 +116,7 @@ public class FourCharmController implements Observer {
             serverClient = new ServerHandler(playerName, hostName, port, this);
             serverClient.setStrategy(strategy);
             new Thread(serverClient).start();
+            view.showMessage("Hey there handsome, you are now connected to the server");
         } else {
             throw new ServerConnectionException("You are already connected to a server!");
         }
@@ -235,6 +236,7 @@ public class FourCharmController implements Observer {
         if (serverClient != null) {
             try {
                 serverClient.sendReady();
+                view.showMessage("Ready you are now");
             } catch (C4Exception e) {
                 LOGGER.trace("sendReady", e);
                 view.showError(e.getMessage());
@@ -264,6 +266,16 @@ public class FourCharmController implements Observer {
         }
         if (serverClient != null) {
             serverClient.disconnect();
+        }
+    }
+
+    public void disconnect() {
+        if (serverClient != null) {
+            serverClient.disconnect();
+            serverClient = null;
+            view.showMessage("You are now disconnected from the server");
+        } else {
+            showError("You are not connected to a server");
         }
     }
 

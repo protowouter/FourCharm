@@ -139,6 +139,9 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
                 //Send ready to the server
                 controller.sendReady();
                 break;
+            case DISCONNECT:
+                controller.disconnect();
+                break;
             case CHALLENGE:
                 //Challenge another player to play a game
                 showError(NOT_IMPLEMENTED);
@@ -383,6 +386,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
         LOCAL("Playername | -m (MTDF) | -r (Random)", "Playername | -m (MTDF) | -r (Random)"),
         HINT(),
         READY(),
+        DISCONNECT(),
         EXIT(),
         CHALLENGE("Player name"),
         HELP(),
