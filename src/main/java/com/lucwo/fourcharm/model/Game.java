@@ -114,9 +114,9 @@ public class Game extends Observable implements Runnable {
     }
 
     /**
-     * Returns wether or not an player has won the game. If this method returns
+     * Returns whether or not an player has won the game. If this method returns
      * true the player wich has won the game is the last player to make a move
-     * because the rules of connect4 offers no posibility to let an other player
+     * because the rules of connect4 offers no possibility to let an other player
      * win solely based on the move you make.
      * 
      * @return true if a player has won the game; otherwise false

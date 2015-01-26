@@ -13,7 +13,7 @@ import com.lucwo.fourcharm.model.player.Mark;
  * if a player has won. BinaryBoard and ReferenceBoard extend the Board class.
  * This class makes use of the InvalidMoveException class which extends Exception.
  * Before making a move, the Board class will check if the move
- * if allowed or not. It will throw the InvalidMoveException if a move is not valid.
+ * is allowed or not. It will throw the InvalidMoveException if a move is not valid.
  * The board positions are numbered as follows:
  * <pre>
  *       1  2  3  4  5  6  7
