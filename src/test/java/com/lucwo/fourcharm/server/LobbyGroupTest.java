@@ -34,8 +34,8 @@ public class LobbyGroupTest {
         }};
         sock = new Socket();
         lobbyGroup = new LobbyGroup(theServer);
-        clientje1 = new ClientHandler(sock);
-        clientje2 = new ClientHandler(sock);
+        clientje1 = new ClientHandler(sock, theServer);
+        clientje2 = new ClientHandler(sock, theServer);
         lobbyGroup.ready(clientje2);
 
     }

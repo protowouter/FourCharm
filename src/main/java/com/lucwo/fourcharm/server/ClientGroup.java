@@ -52,6 +52,7 @@ public abstract class ClientGroup {
         }
         clientCollection.put(client.getName(), client);
         client.setClientGroup(this);
+        addClientCallback(client);
     }
 
 
@@ -127,6 +128,8 @@ public abstract class ClientGroup {
      *               which will has been removed from the group.
      */
     public abstract void removeClientCallback(ClientHandler client);
+
+    public abstract void addClientCallback(ClientHandler client);
 
 
 }

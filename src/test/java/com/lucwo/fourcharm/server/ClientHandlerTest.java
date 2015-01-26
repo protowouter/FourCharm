@@ -23,10 +23,12 @@ public class ClientHandlerTest {
     private ClientHandler clientHandler;
     @Injectable
     private ClientGroup group;
+    @Mocked
+    private FourCharmServer server;
 
     @Before
     public void setup() throws Exception {
-        clientHandler = new ClientHandler(socket);
+        clientHandler = new ClientHandler(socket, server);
         clientHandler.setClientGroup(group);
         clientHandler.init();
     }

@@ -116,5 +116,10 @@ public class PreLobbyGroup extends ClientGroup {
         // No special case when a client disconnects in this state.
     }
 
+    @Override
+    public void addClientCallback(ClientHandler client) {
+        // No special case when a client is added in this state.
+    }
+
 
 }

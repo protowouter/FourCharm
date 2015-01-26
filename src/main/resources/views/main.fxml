@@ -34,10 +34,10 @@
                 <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="Lobby"
                        textAlignment="CENTER"/>
                 <ScrollPane fitToHeight="true" hbarPolicy="NEVER" maxWidth="-Infinity" minWidth="-Infinity"
-                            prefWidth="150.0" VBox.vgrow="ALWAYS">
+                            prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <content>
                         <TextArea fx:id="lobbyArea" disable="true" maxWidth="-Infinity" minWidth="-Infinity"
-                                  prefWidth="150.0"/>
+                                  prefWidth="200.0" wrapText="true"/>
                     </content>
                 </ScrollPane>
             </children>
@@ -48,9 +48,10 @@
             <children>
                 <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Chat"/>
                 <ScrollPane fitToHeight="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308"
-                            maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" VBox.vgrow="ALWAYS">
+                            maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <content>
-                        <TextArea fx:id="chatArea" disable="true" maxWidth="-Infinity" prefWidth="150.0"/>
+                        <TextArea fx:id="chatArea" disable="true" maxWidth="-Infinity" prefWidth="200.0"
+                                  wrapText="true"/>
                     </content>
                 </ScrollPane>
             </children>

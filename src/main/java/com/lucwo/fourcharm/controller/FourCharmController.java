@@ -19,6 +19,7 @@ import com.lucwo.fourcharm.view.FourCharmTUI;
 import com.lucwo.fourcharm.view.FourCharmView;
 import javafx.application.Application;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import nl.woutertimmermans.connect4.protocol.parameters.LobbyState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,7 @@ public class FourCharmController implements Observer {
     private ServerHandler serverClient;
     private Player player1;
     private Player player2;
+    private LobbyList lobbyStateList;
 
 // --------------------- Constructors -------------------
 
@@ -55,7 +57,7 @@ public class FourCharmController implements Observer {
      * Constructs a new controller.
      */
     public FourCharmController() {
-
+        lobbyStateList = new LobbyList();
     }
 
 // ----------------------- Queries ----------------------
@@ -298,5 +300,13 @@ public class FourCharmController implements Observer {
         if (serverClient != null) {
             serverClient.globalChat(message);
         }
+    }
+
+    public void stateChange(String playerName, LobbyState lobbyState) {
+        lobbyStateList.stateChange(playerName, lobbyState);
+    }
+
+    public LobbyList getLobbyList() {
+        return lobbyStateList;
     }
 }

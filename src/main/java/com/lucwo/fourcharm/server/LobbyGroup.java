@@ -7,6 +7,7 @@ package com.lucwo.fourcharm.server;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
+import nl.woutertimmermans.connect4.protocol.parameters.LobbyState;
 
 import java.util.Set;
 
@@ -79,6 +80,7 @@ public class LobbyGroup extends ClientGroup {
 
         if (readyClient == null) {
             readyClient = client;
+            server.stateChange(client, LobbyState.LOBBY_READY);
         } else if (readyClient == client) {
             throw new InvalidCommandError("You are already waiting and not " +
                     "allowed to play against yourself. Please be patient.");
@@ -101,6 +103,12 @@ public class LobbyGroup extends ClientGroup {
         if (readyClient == client) {
             readyClient = null;
         }
+    }
+
+    @Override
+    public void addClientCallback(ClientHandler client) {
+        server.sendCurrentStates(client);
+        server.stateChange(client, LobbyState.LOBBY);
     }
 
 

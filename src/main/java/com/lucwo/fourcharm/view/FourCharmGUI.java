@@ -65,6 +65,7 @@ public class FourCharmGUI extends Application implements FourCharmView {
 
         fourCharmPresenter = fourCharmFactory.getFourCharmPresenter(controller);
         fourCharmPresenter.setStage(stage);
+        controller.getLobbyList().addObserver(fourCharmPresenter);
 
         Pane root = (Pane) fourCharmPresenter.getView();
 

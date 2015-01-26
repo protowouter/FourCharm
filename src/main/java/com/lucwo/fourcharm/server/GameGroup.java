@@ -13,6 +13,7 @@ import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidMoveError;
 import nl.woutertimmermans.connect4.protocol.exceptions.PlayerDisconnectError;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
+import nl.woutertimmermans.connect4.protocol.parameters.LobbyState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -152,6 +153,11 @@ public class GameGroup extends ClientGroup implements Observer {
             endGame();
         }
 
+    }
+
+    @Override
+    public void addClientCallback(ClientHandler client) {
+        getServer().stateChange(client, LobbyState.GAME);
     }
 
     /**

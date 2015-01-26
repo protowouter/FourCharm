@@ -5,6 +5,7 @@
 package com.lucwo.fourcharm.presenter;
 
 import com.lucwo.fourcharm.controller.FourCharmController;
+import com.lucwo.fourcharm.controller.LobbyList;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.presenter.game.GamePresenter;
 import com.lucwo.fourcharm.presenter.game.NewGamePresenter;
@@ -18,12 +19,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * TODO: Fourcharmpresenter javadoc.
  *
  * @author Luce Sandfort and Wouter Timmermans
  */
-public class FourCharmPresenter {
+public class FourCharmPresenter implements Observer {
     // ------------------ Instance variables ----------------
 
     @FXML
@@ -135,5 +139,26 @@ public class FourCharmPresenter {
 
     public void setStage(Stage s) {
         stage = s;
+    }
+
+    /**
+     * This method is called whenever the observed object is changed. An
+     * application calls an <tt>Observable</tt> object's
+     * <code>notifyObservers</code> method to have all the object's
+     * observers notified of the change.
+     *
+     * @param o   the observable object.
+     * @param arg an argument passed to the <code>notifyObservers</code>
+     */
+    @Override
+    public void update(Observable o, Object arg) {
+        if (o instanceof LobbyList) {
+            StringBuilder players = new StringBuilder();
+            for (String name : ((LobbyList) o).getLobbyState().keySet()) {
+                players.append(name);
+                players.append("\n");
+            }
+            Platform.runLater(() -> lobbyArea.textProperty().setValue(new String(players)));
+        }
     }
 }
