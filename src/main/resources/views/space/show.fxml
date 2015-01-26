@@ -10,6 +10,6 @@
       fx:controller="com.lucwo.fourcharm.presenter.space.SpacePresenter" fx:id="parent">
     <children>
         <Circle fx:id="space" fill="#fbfcfa" onMouseClicked="#processClick" onMouseEntered="#highlight"
-                onMouseExited="#unHighlight" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0"/>
+                onMouseExited="#unHighlight" radius="35.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0"/>
     </children>
 </VBox>

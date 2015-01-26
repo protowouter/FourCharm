@@ -18,6 +18,9 @@ import com.lucwo.fourcharm.view.FourCharmGUI;
 import com.lucwo.fourcharm.view.FourCharmTUI;
 import com.lucwo.fourcharm.view.FourCharmView;
 import javafx.application.Application;
+import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -36,6 +39,7 @@ public class FourCharmController implements Observer {
 
     public static final int MAX_PLAYERS = 2;
     private static final GameStrategy HINT_AI = new MTDfStrategy();
+    private static final Logger LOGGER = LoggerFactory.getLogger(FourCharmController.class);
 
 // ------------------ Instance variables ----------------
 
@@ -111,6 +115,7 @@ public class FourCharmController implements Observer {
         serverClient = new ServerHandler(playerName, hostName, port, this);
         serverClient.setStrategy(strategy);
         new Thread(serverClient).start();
+        view.showLobby();
 
     }
 
@@ -153,6 +158,29 @@ public class FourCharmController implements Observer {
         Thread gameThread = new Thread(game);
         gameThread.setName("GameThread");
         gameThread.start();
+    }
+
+    public void gameEnd(String player) {
+        game.shutdown();
+        game = null;
+        if (player != null) {
+            view.showMessage(player + " won the game");
+        } else {
+            view.showMessage("The game was a tie");
+        }
+    }
+
+    public void sendReady() {
+        if (serverClient != null) {
+            try {
+                serverClient.sendReady();
+            } catch (C4Exception e) {
+                LOGGER.trace("sendReady", e);
+                view.showError(e.getMessage());
+            }
+        } else {
+            view.showError("You are not connected to a server");
+        }
     }
 
 
@@ -213,6 +241,11 @@ public class FourCharmController implements Observer {
         }
     }
 
+    public boolean inLobby() {
+        return serverClient != null;
+    }
+
+
     /**
      * Returns the best move according to a AI. This can be used by views when
      * a human user wants a hint on the best next move.
@@ -233,6 +266,16 @@ public class FourCharmController implements Observer {
         }
         if (serverClient != null) {
             serverClient.disconnect();
+        }
+    }
+
+    public void disconnect() {
+        if (serverClient != null) {
+            serverClient.disconnect();
+            serverClient = null;
+            view.showMessage("You are now disconnected from the server");
+        } else {
+            showError("You are not connected to a server");
         }
     }
 
