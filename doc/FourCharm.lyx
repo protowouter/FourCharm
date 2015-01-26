@@ -1397,8 +1397,8 @@ ServerHandler
 
 \begin_layout Standard
 Handles the connection to the server from the perspective of the client.
- This class makes use of the Protocol classes, the Board Model classes and
- the strategy classes to achieve its responsibilities.
+ This class makes use of the C4 Protocol module classes, the Game class
+ and the strategy classes to achieve its responsibilities.
 \end_layout
 
 \begin_layout Section
@@ -1410,7 +1410,7 @@ InvalidMoveException
 \end_layout
 
 \begin_layout Standard
-Exception that gets thrown when an invalid move is attempted to be made.
+Exception that gets thrown when a invalid move is attempted to be made.
  This class extends the normal Exception class and is used by the Board
  class.
 \end_layout
@@ -1421,7 +1421,7 @@ ServerConnectionException
 
 \begin_layout Standard
 Signals that a ServerConnectionException of some sort has occurred.
- 
+ If this exception is thrown, the connection to the server cannot be made.
 \end_layout
 
 \begin_layout Section
@@ -1437,12 +1437,13 @@ MDTfStrategy
 \end_layout
 
 \begin_layout Standard
-This MTDfStrategy class makes use of the interface GameStrategy.
+This MTDfStrategy class implements the interface GameStrategy.
  This is a specific strategy a computer player (LocalAIPlayer class) can
  use.
  So this class is responsible for giving the computer player brains.
  This way the computer player can think ahead and foresee certain moves.
  This class also uses the NegaMaxStrategy class to come up with new moves.
+ The algorithm used by the MDTfStrategy class is the MDTf algorithm.
 \end_layout
 
 \begin_layout Paragraph
@@ -1475,6 +1476,21 @@ Board
 \end_layout
 
 \begin_layout Paragraph
+Board
+\end_layout
+
+\begin_layout Standard
+The Board class Models a gameboard for the game of Connect4 and provides
+ facilities for making moves and checking if a player has won.
+ BinaryBoard and ReferenceBoard extend the Board class.
+ This class makes use of the InvalidMoveException class which extends Exception.
+ Before making a move, the Board class will check if the move is allowed
+ or not.
+ It will throw the InvalidMoveException if a move is not valid.
+ 
+\end_layout
+
+\begin_layout Paragraph
 BinaryBoard
 \end_layout
 
@@ -1483,7 +1499,10 @@ Class for modeling a board for the game connect four.
  The responsibility of this class is to keep the state of the board.
  For efficiency reasons the board state is implemented in an array of 2
  longs.
- This class makes use of the Board class to achieve its responsibilities.
+ This class makes use of the Board abstract class and the Mark class to
+ achieve its responsibilities.
+ In the BinaryBoard class the Mark class is used to determine the mark of
+ the current player.
 \end_layout
 
 \begin_layout Paragraph
@@ -1494,7 +1513,9 @@ ReferenceBoard
 Class for modeling a board for the game connect four.
  This class's responsibility is to keep the state of the board.
  This is the reference implementation implemented using an 2D array.
- This class makes use of the Board class.
+ This class makes use of the Board abstract class and the Mark class.
+ In the ReferenceBoard class the Mark class is used to determine the mark
+ of the current player.
 \end_layout
 
 \begin_layout Subsection
@@ -1505,12 +1526,21 @@ Player
 ASyncPlayer
 \end_layout
 
+\begin_layout Standard
+The AsyncPlayer class models a player that makes its decision for a move
+ in a different 'Thread' than the game class.
+ For instance, this could be a human connected to the local computer or
+ a player on the other end of a server connection.
+ This class uses in internal queue to provide synchronisation between the
+ game thread and the thread which receives the input from the actual player.
+\end_layout
+
 \begin_layout Paragraph
 LocalAIPlayer
 \end_layout
 
 \begin_layout Standard
-Create an Artificial Intelligence (AI) player given a strategy.
+Create a Artificial Intelligence (AI) player given a strategy.
  This class is responsible for making a (smart) computer player.
  The LocalAIPlayer class makes use of the GameStrategy Interface and the
  classes belonging to this interface (the MDTDfStrategy class, the NegaMaxStrate
@@ -1532,12 +1562,13 @@ Mark
 \end_layout
 
 \begin_layout Standard
-The Mark enums responsibility is to switch the current player and the next
- player by using the method 'other()'.
- This way the first player is allowed to go first, and the other player
- will go second.
- It doesn't matter which player is player 1.
- The other player will always be player 2.
+The Mark enums responsibility is to get the other player in a game of Connect
+ four.
+ The first player (the one that is allowed to go first) and second player
+ (the other player) play a game.
+ It doesn't matter which player is player 1: the other player will always
+ be player 2 thanks to the method other().
+ The Mark enum modells the 'color' of the players.
 \end_layout
 
 \begin_layout Subsection
@@ -1557,8 +1588,25 @@ The Game class models a game of Connect4.
  is to create, play and end a game of Connect4.
 \end_layout
 
+\begin_layout Standard
+The Game class makes sure only the current player is allowed to and can
+ make a move.
+ This class will also end the game if one of the players is not playing
+ fair.
+ 
+\end_layout
+
 \begin_layout Section
 Presenter
+\end_layout
+
+\begin_layout Standard
+The presenter classes are smaller versions of the controller and have more
+ specific responsibilities.
+ We chose to create different classes for different functions of the GUI,
+ because putting all of these responsibilities into one class would make
+ that class very confusing.
+ The responsibilities of the different presenters are discussed below.
 \end_layout
 
 \begin_layout Subsection
@@ -1569,6 +1617,13 @@ Board
 BoardPresenter
 \end_layout
 
+\begin_layout Standard
+The BoardPresenter class is the presenter for the board in a game of Connect
+ four.
+ This presenter is able to draw a board, highlight columns and disable and
+ enable spaces in a board.
+\end_layout
+
 \begin_layout Subsection
 Game
 \end_layout
@@ -1577,8 +1632,28 @@ Game
 GamePresenter
 \end_layout
 
+\begin_layout Standard
+The GamePresenter class is the class that presents the game itself in a
+ game of Connect4.
+ This presenter makes the moves of the player visible on the screen.
+ Furthermore this class shows, hides, enables and disables the buttons that
+ are shown in the GUI.
+ For instance, if you win a game, a button will be showed and enabled asking
+ for a rematch when it is a local game.
+ 
+\end_layout
+
 \begin_layout Paragraph
 NewGamePresenter
+\end_layout
+
+\begin_layout Standard
+The NewGamePresenter class is the presenter for the initial view, right
+ after you start the GUI.
+ Here you are able to make a choice between a local game or a network game,
+ human players or computer players, etc.
+ Every single time a game has ended and you do not push the button for rematch,
+ you will be sent back to this screen.
 \end_layout
 
 \begin_layout Subsection
@@ -1589,6 +1664,14 @@ Space
 SpacePresenter
 \end_layout
 
+\begin_layout Standard
+The SpacePresenter class is the class that presents one space in the board
+ of a game of Connect four.
+ This space can be empty, or have a specific color (mark).
+ If the space is clicked, the space will be disabled and the space will
+ be highlighted in the color of the current mark.
+\end_layout
+
 \begin_layout Subsection
 Presenter
 \end_layout
@@ -1597,8 +1680,21 @@ Presenter
 FourCharmFactory
 \end_layout
 
+\begin_layout Standard
+The FourCharmFactory class is the link between the other presenter classes.
+ This class creates a 'presenter' by using the BoardPresenterClass, the
+ Game and NewGamePresenter classes and the SpacePresenter class.
+\end_layout
+
 \begin_layout Paragraph
 FourCharmPresenter
+\end_layout
+
+\begin_layout Standard
+The FourCharmPresenter class is the contact between the GUI and the other
+ presenter classes.
+ This class makes sure to send the messages to the right presenter.
+ It presents the main view of the GUI.
 \end_layout
 
 \begin_layout Section
@@ -1611,7 +1707,7 @@ In this section the classes that make the Server are discussed.
  FourCharmServer and three ClientGroups (GameGroup for the clients in a
  game, LobbyGroup for the clients in the lobby and PreLobbyGroup for the
  clients that open the FourCharm game of Connect Four).
- Every server class makes use of the Protocol classes as well.
+ Every server class makes use of the C4 Protocol module classes as well.
  
 \end_layout
 
@@ -1635,11 +1731,13 @@ FourCharmServer
 \end_layout
 
 \begin_layout Standard
-The FourCharmServer class that is responsible for the server.
+The FourCharmServer class is responsible for the server.
  The FourCharmServer makes sure that at a given time there are no players
  with the same name connected to the server.
  This class also maintains a list of GameGroups and uses the PreLobbyGroup
  and LobbyGroup to model the state of clients.
+ This class has a constructor where you can enter a port number, so you
+ can make a connection to a specific server.
  
 \end_layout
 
@@ -1652,8 +1750,7 @@ The GameGroup class extends the ClientGroup abstract class and implements
  Observer.
  Two Clients play against each other in the GameGroup, so this class 'simulates'
  a game.
- After a game is finished clients are send back to the LobbyGroup (or they
- can start a new game by choosing the option rematch).
+ After a game is finished clients are sent back to the LobbyGroup.
  
 \end_layout
 
@@ -1672,13 +1769,13 @@ LobbyGroup
 The LobbyGroup class extends the ClientGroup abstract class.
  It makes a 'Lobby' and adds Clients to the LobbyGroup.
  Whenever two of those clients are ready (they sent the ready_for_game command
- to the server), the server will add the clients to the GameGroup to start
+ to the server), the server will add the clients to a new GameGroup to start
  a new Game.
 \end_layout
 
 \begin_layout Standard
-Before a Client can enter the LobbyGroup, he will be and stay in the PreLobbyGro
-up as long as he did not give the join command.
+Before a Client can enter the LobbyGroup, he will be in the PreLobbyGroup
+ and stay there as long as he did not give the join command.
 \end_layout
 
 \begin_layout Paragraph
@@ -1734,6 +1831,16 @@ Controller
 FourCharmController
 \end_layout
 
+\begin_layout Standard
+The FourCharmController class makes use of the view classes FourCharmTUI
+ and FourCharmGUI to perfom its job.
+ This class will ask the TUI or GUI class for input.
+ After the input is received, the controller sends this input to the game,
+ so a move will be made.
+ The controller is used by the views to communicate with the other classes
+ of the FourCharm game of Connect four.
+\end_layout
+
 \begin_layout Chapter
 Test report
 \end_layout
@@ -1745,16 +1852,16 @@ Unit testing
 \begin_layout Standard
 For unit testing our system we mainly made use of dedicated test classes.
  We did these unit tests with JUnit.
- Unit test are meant to test your units of code in isolation.
- Quickly however we ran into issues isolating our test classes from its
+ Unit tests are meant to test your units of code in isolation.
+ Quickly however, we ran into issues isolating our test classes from its
  dependencies on other parts of our system or external code.
  It is not desirable to test the dependencies of the unit under test and
  the unit under test at the same time.
  One of the benefits of isolated units tests is that it can be used to quickly
- pinpoint where errors in the code are.
- When the unit test are too much dependent on each other a single error
- could cause a lot of tests to fail, if the tests are performed in perfect
- isolation only the test for the class that contains the error fails.
+ pinpoint the errors in the code.
+ When the unit test depent too much on each other a single error could cause
+ a lot of tests to fail, if the tests are performed in perfect isolation
+ only the test for the class that contains the error fails.
  It also improves the maintainability of the tests because they are less
  dependent on the API of the dependencies.
 \end_layout
@@ -1773,11 +1880,11 @@ key "jmockit"
 \end_inset
 
  because it uses the JVM Instrumentation feature to inject the mocked object
- at runtime and therefore we don't need to change our code.
+ at runtime and therefore we do not need to change our code.
  Mocking allows us to specify which commands are expected to be called on
- the dependencies and what the results are of these method calls.
- This has allowed us to test parts of the system which would be hard to
- test otherwise.
+ the dependencies and see the results of the called methods.
+ This has allowed us to test parts of the system which would have been hard
+ to test otherwise.
  
 \end_layout
 
@@ -1923,11 +2030,156 @@ A lot of testing has been done for the checking if a player has a win streak:
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
+The test coverage of Board.java is not very high.
+ This does not matter, because the method that lowers this percentage is
+ the hashCode() method.
+ It is not necessary to test this method.
+ The test coverage is shown in figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:Board.java-test-coverage"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-Discussion test coverage
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename boardTest coverage.png
+	width 100col%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Board.java-test-coverage"
+
+\end_inset
+
+Board.java test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The test coverage of the ReferenceBoard class (figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:ReferenceBoard.java-test-coverag"
+
+\end_inset
+
+) and the BinaryBoard class (figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:BinaryBoard.java-test-coverage"
+
+\end_inset
+
+) is good enough.
+ Almost every method has been tested.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename referenceboard test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ReferenceBoard.java-test-coverag"
+
+\end_inset
+
+ReferenceBoard.java test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename binaryboard test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:BinaryBoard.java-test-coverage"
+
+\end_inset
+
+BinaryBoard.java test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -1962,11 +2214,53 @@ The doMove() should determine a move if the column has a free space and
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
+The test coverage of LocalAIPlayer is 100%.
+ This is shown in figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:LocalAIPlayer.java-test-coverage"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-Discussion test coverage
+\begin_inset Graphics
+	filename localaiplayer test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:LocalAIPlayer.java-test-coverage"
+
+\end_inset
+
+LocalAIPlayer.java test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -2010,11 +2304,55 @@ These tests are done by using the assertTrue, assertFalse and assertNotNull
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
+The test coverage is shown in figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:Game.java-test-coverage"
+
+\end_inset
+
+.
+ The coverage is not fully 100%, because the shutdown() method was really
+ hard to test.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-Discussion test coverage
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename game test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Game.java-test-coverage"
+
+\end_inset
+
+Game.java test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -2057,6 +2395,19 @@ The join(), ready() and doMove() methods have been tested by checking if
  This is done by making a new Expectations() {{ }}.
  To see if the current group receives the commands, the ClientGroup instance
  is made injectable in stead of mocked.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Discussion test coverage
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2174,6 +2525,19 @@ The LobbyGroup tests look a lot like the GameGroup and PreLobbyGroup tests.
 The ready() method makes use of new Expectations () {{ }}.
  Two ClientHandlers get names in the expectations box and a GameGroup is
  made with those two ClientHandlers.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Discussion test coverage
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

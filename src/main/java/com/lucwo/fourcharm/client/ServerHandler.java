@@ -62,6 +62,7 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
     private Game game;
     private boolean running;
     private Set<Extension> extensions;
+    private Socket sock;
 
 // --------------------- Constructors -------------------
 
@@ -84,7 +85,7 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
         try {
             InetAddress host = InetAddress.getByName(hostString);
             int port = Integer.parseInt(portString);
-            Socket sock = new Socket(host, port);
+            sock = new Socket(host, port);
             in = new BufferedReader(new InputStreamReader(sock.getInputStream(),
                     Charset.forName("UTF-8")));
             out = new BufferedWriter(
@@ -183,11 +184,12 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
         if (exts != null && exts.contains(ExtensionFactory.chat())) {
             chatServerClient = new ChatServer.Client(out);
         }
-        try {
-            coreServerClient.ready();
-        } catch (C4Exception e) {
-            LOGGER.trace("accept", e);
-        }
+    }
+
+    public void sendReady() throws C4Exception {
+
+        coreServerClient.ready();
+
     }
 
     /**
@@ -280,6 +282,11 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
      */
     public void disconnect() {
         running = false;
+        try {
+            sock.close();
+        } catch (IOException e) {
+            LOGGER.trace("disconnect", e);
+        }
     }
 
     /**
@@ -288,7 +295,8 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, Runnab
      */
     @Override
     public void gameEnd(String player) {
-        disconnect();
+        controller.gameEnd(player);
+        game = null;
     }
 
     /**

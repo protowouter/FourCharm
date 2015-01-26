@@ -139,16 +139,19 @@ public class GameGroup extends ClientGroup implements Observer {
      */
     @Override
     public synchronized void removeClientCallback(ClientHandler client) {
-        for (ClientHandler cH : getClients()) {
-            C4Exception c4e = new PlayerDisconnectError("Player " +
-                    client.getName() + " disconnected");
-            try {
-                cH.getCoreClient().error(c4e.getErrorCode(), c4e.getMessage());
-            } catch (C4Exception e) {
-                LOGGER.trace("removeClientCallback", e);
+        if (!game.hasFinished()) {
+            for (ClientHandler cH : getClients()) {
+                C4Exception c4e = new PlayerDisconnectError("Player " +
+                        client.getName() + " disconnected");
+                try {
+                    cH.getCoreClient().error(c4e.getErrorCode(), c4e.getMessage());
+                } catch (C4Exception e) {
+                    LOGGER.trace("removeClientCallback", e);
+                }
             }
+            endGame();
         }
-        endGame();
+
     }
 
     /**

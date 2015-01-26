@@ -135,6 +135,13 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
                 //Ask for a hint in the current game.
                 handleHint();
                 break;
+            case READY:
+                //Send ready to the server
+                controller.sendReady();
+                break;
+            case DISCONNECT:
+                controller.disconnect();
+                break;
             case CHALLENGE:
                 //Challenge another player to play a game
                 showError(NOT_IMPLEMENTED);
@@ -171,7 +178,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
      * Shows the given message.
      * @param message the given message
      */
-    private void showMessage(String message) {
+    public void showMessage(String message) {
         System.out.println(message);
     }
 
@@ -378,6 +385,8 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
         CONNECT("Host", "Port", "Playername", "| -m (MTDF) | -r (Random) | -h (Human)"),
         LOCAL("Playername | -m (MTDF) | -r (Random)", "Playername | -m (MTDF) | -r (Random)"),
         HINT(),
+        READY(),
+        DISCONNECT(),
         EXIT(),
         CHALLENGE("Player name"),
         HELP(),

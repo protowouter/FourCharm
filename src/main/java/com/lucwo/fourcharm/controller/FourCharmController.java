@@ -26,6 +26,7 @@ import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
 import java.io.IOException;
+import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -149,9 +150,14 @@ private ServiceListener fourCharmServiceListener = new ServiceListener() {
     public void startNetworkGame(String hostName, String port,
                                  String playerName, GameStrategy strategy)
             throws ServerConnectionException {
-        serverClient = new ServerHandler(playerName, hostName, port, this);
-        serverClient.setStrategy(strategy);
-        new Thread(serverClient).start();
+        if (serverClient == null) {
+            serverClient = new ServerHandler(playerName, hostName, port, this);
+            serverClient.setStrategy(strategy);
+            new Thread(serverClient).start();
+            view.showMessage("Hey there handsome, you are now connected to the server");
+        } else {
+            throw new ServerConnectionException("You are already connected to a server!");
+        }
 
     }
 
@@ -250,6 +256,30 @@ private ServiceListener fourCharmServiceListener = new ServiceListener() {
         }
     }
 
+    public void gameEnd(String player) {
+        game.shutdown();
+        game = null;
+        if (player != null) {
+            view.showMessage(player + " won the game");
+        } else {
+            view.showMessage("The game was a tie");
+        }
+    }
+
+    public void sendReady() {
+        if (serverClient != null) {
+            try {
+                serverClient.sendReady();
+                view.showMessage("Ready you are now");
+            } catch (C4Exception e) {
+                LOGGER.trace("sendReady", e);
+                view.showError(e.getMessage());
+            }
+        } else {
+            view.showError("You are not connected to a server");
+        }
+    }
+
     /**
      * Returns the best move according to a AI. This can be used by views when
      * a human user wants a hint on the best next move.
@@ -276,6 +306,16 @@ private ServiceListener fourCharmServiceListener = new ServiceListener() {
             serverDiscoverer.close();
         } catch (IOException e) {
             LOGGER.trace("shutdown", e);
+        }
+    }
+
+    public void disconnect() {
+        if (serverClient != null) {
+            serverClient.disconnect();
+            serverClient = null;
+            view.showMessage("You are now disconnected from the server");
+        } else {
+            showError("You are not connected to a server");
         }
     }
 
