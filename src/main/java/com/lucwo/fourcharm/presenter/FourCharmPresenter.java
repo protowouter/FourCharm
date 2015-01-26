@@ -12,10 +12,10 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -71,9 +71,7 @@ public class FourCharmPresenter {
 
 
     public void showNewGame() {
-        Platform.runLater(() -> {
-            gamePane.setCenter(newGamePresenter.getView());
-        });
+        Platform.runLater(() -> gamePane.setCenter(newGamePresenter.getView()));
     }
 
     public void enableInput() {
@@ -85,12 +83,17 @@ public class FourCharmPresenter {
     }
 
     public void showGame(Game game) {
+        Platform.runLater(() -> {
             gamePresenter.showGame(game);
-        gamePane.setCenter(gamePresenter.getView());
+            gamePane.setCenter(gamePresenter.getView());
+        });
+
 
     }
 
-    public void shutdown()  { gamePresenter.abortMove(); }
+    public void shutdown() {
+        gamePresenter.abortMove();
+    }
 
     public void enableHint() {
         Platform.runLater(gamePresenter::enableHint);
@@ -105,12 +108,20 @@ public class FourCharmPresenter {
     }
 
     public void showLobby() {
-        Platform.runLater(() -> gamePane.setCenter(new VBox()));
+        Button ready = new Button();
+        ready.setText("Ready");
+        ready.setOnMouseClicked((event) -> sendReady());
+        Platform.runLater(() -> gamePane.setCenter(ready));
+    }
+
+    public void sendReady() {
+        gamePane.setCenter(new Label("You are ready"));
+        fourCharmController.sendReady();
     }
 
 
     public void showMessage(String message) {
-        chatArea.textProperty().setValue(chatArea.textProperty().get() + "\n" + message);
+        Platform.runLater(() -> chatArea.textProperty().setValue(chatArea.textProperty().get() + "\n" + message));
     }
 
     public void sendChat() {

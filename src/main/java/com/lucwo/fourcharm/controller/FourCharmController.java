@@ -116,6 +116,7 @@ public class FourCharmController implements Observer {
         serverClient.setStrategy(strategy);
         new Thread(serverClient).start();
         view.showLobby();
+        view.showMessage("Hey there handsome, you are now connected to the server");
 
     }
 
