@@ -112,12 +112,18 @@ public class FourCharmController implements Observer {
 
     public static void main(String[] args) {
         boolean tui = false;
+        boolean server = false;
 
         for (String arg : args) {
             tui = "-c".equals(arg) || tui;
         }
+        for (String arg : args) {
+            server = "-s".equals(arg) || server;
+        }
 
-        if (tui) {
+        if (server) {
+            FourCharmServerController con = new FourCharmServerController();
+        } else if (tui) {
             FourCharmController con = new FourCharmController();
             FourCharmTUI view = new FourCharmTUI(con);
             con.setView(view);

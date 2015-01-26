@@ -35,10 +35,6 @@ public class FourCharmServerController {
 
 // ----------------------- Commands ---------------------
 
-    public static void main(String[] args) {
-        new FourCharmServerController();
-    }
-
     public void startServer(int port) {
         try {
             server = new FourCharmServer(port);
