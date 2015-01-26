@@ -47,19 +47,9 @@ public class SpacePresenter {
 
     public void setBoardPresenter(BoardPresenter newBoardPresenter) {
         boardPresenter = newBoardPresenter;
-        boardPresenter.getGamePresenter().getFourCharmPresenter().getStage().widthProperty().addListener((event) -> calculateRadius());
-        boardPresenter.getGamePresenter().getFourCharmPresenter().getStage().heightProperty().addListener((event) -> calculateRadius());
-    }
-
-    private void calculateRadius() {
-        double widthRadius = boardPresenter.getGamePresenter().getFourCharmPresenter().getStage().widthProperty().subtract(200).divide(15).get();
-        double heigthRadius = boardPresenter.getGamePresenter().getFourCharmPresenter().getStage().heightProperty().divide(20).get();
-        double radius = widthRadius < heigthRadius ? widthRadius : heigthRadius;
-        space.radiusProperty().setValue(radius);
     }
 
     public void setMark(Mark m) {
-        calculateRadius();
         unHighlight();
         mark = m;
 
@@ -107,6 +97,10 @@ public class SpacePresenter {
 
     public void setCol(int column) {
         col = column;
+    }
+
+    public void setRadius(double radius) {
+        space.radiusProperty().setValue(radius);
     }
 
     public void initialize() {

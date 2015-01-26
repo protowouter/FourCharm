@@ -6,7 +6,7 @@
 
 
 <?import javafx.scene.layout.VBox?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" fx:id="spacesPane" maxHeight="Infinity" maxWidth="Infinity"
+<VBox xmlns:fx="http://javafx.com/fxml/1" id="board" fx:id="spacesPane" maxHeight="Infinity" maxWidth="Infinity"
       minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8"
       fx:controller="com.lucwo.fourcharm.presenter.board.BoardPresenter" alignment="CENTER">
 </VBox>

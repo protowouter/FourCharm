@@ -4,13 +4,14 @@
   ~ Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
   -->
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="root" maxHeight="Infinity" maxWidth="Infinity"
             minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0"
-            xmlns="http://javafx.com/javafx/8" fx:controller="com.lucwo.fourcharm.presenter.FourCharmPresenter">
+            stylesheets="views/darktheme.css" xmlns="http://javafx.com/javafx/8"
+            fx:controller="com.lucwo.fourcharm.presenter.FourCharmPresenter">
     <top>
         <HBox maxWidth="1.7976931348623157E308">
             <children>
@@ -36,7 +37,7 @@
                 <ScrollPane fitToHeight="true" hbarPolicy="NEVER" maxWidth="-Infinity" minWidth="-Infinity"
                             prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <content>
-                        <TextArea fx:id="lobbyArea" disable="true" maxWidth="-Infinity" minWidth="-Infinity"
+                        <TextArea id="lobby" fx:id="lobbyArea" disable="true" maxWidth="-Infinity" minWidth="-Infinity"
                                   prefWidth="200.0" wrapText="true"/>
                     </content>
                 </ScrollPane>
@@ -62,10 +63,21 @@
             <bottom>
                 <HBox BorderPane.alignment="CENTER">
                     <children>
-                        <ChoiceBox prefHeight="26.0" prefWidth="63.0" fx:id="chatContextChoice"/>
+                        <ChoiceBox fx:id="chatContextChoice" prefHeight="26.0" prefWidth="63.0">
+                            <HBox.margin>
+                                <Insets right="5.0"/>
+                            </HBox.margin>
+                        </ChoiceBox>
                         <TextField fx:id="chatField" HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="chatButton" mnemonicParsing="false" onAction="#sendChat" text="Send"/>
+                        <Button fx:id="chatButton" mnemonicParsing="false" onAction="#sendChat" text="Send">
+                            <HBox.margin>
+                                <Insets left="5.0"/>
+                            </HBox.margin>
+                        </Button>
                     </children>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0"/>
+                    </padding>
                 </HBox>
             </bottom>
         </BorderPane>

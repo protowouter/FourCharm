@@ -7,9 +7,9 @@ package com.lucwo.fourcharm.presenter.board;
 import com.lucwo.fourcharm.model.board.Board;
 import com.lucwo.fourcharm.presenter.game.GamePresenter;
 import com.lucwo.fourcharm.presenter.space.SpacePresenter;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -49,15 +49,19 @@ public class BoardPresenter {
 // ----------------------- Commands ---------------------
 
     public void setGamePresenter(GamePresenter newGamePresenter) {
-        this.gamePresenter = newGamePresenter;
+        gamePresenter = newGamePresenter;
+        gamePresenter.getFourCharmPresenter().getStage().widthProperty().addListener((event) -> calculateRadius());
+        gamePresenter.getFourCharmPresenter().getStage().heightProperty().addListener((event) -> calculateRadius());
     }
 
-    public ReadOnlyDoubleProperty widthProperty() {
-        return spacesPane.widthProperty();
-    }
+    private void calculateRadius() {
 
-    public ReadOnlyDoubleProperty heigthProperty() {
-        return spacesPane.heightProperty();
+        double radius = calculatePieceRadius();
+        for (SpacePresenter[] sA : spaces) {
+            for (SpacePresenter s : sA) {
+                s.setRadius(radius);
+            }
+        }
     }
 
     public void initBoard(Board board) {
@@ -89,6 +93,7 @@ public class BoardPresenter {
             }
             spacesPane.getChildren().add(rowBox);
         }
+        calculateRadius();
 
     }
 
@@ -128,5 +133,21 @@ public class BoardPresenter {
                 sContr.enable();
             }
         }
+    }
+
+    public double calculatePieceRadius() {
+        double width = gamePresenter.getFourCharmPresenter().getStage().widthProperty().get() - 400;
+        double height = gamePresenter.getFourCharmPresenter().getStage().heightProperty().get() - 300;
+
+
+        double wRadius = (width / spaces.length) / 2;
+        double hRadius = (height / spaces[0].length) / 2;
+
+        if (wRadius > hRadius) {
+            double overWidth = width - hRadius * spaces.length * 2;
+            spacesPane.paddingProperty().setValue(new Insets(0, 0, 0, overWidth / 2));
+        }
+
+        return Math.min(wRadius, hRadius);
     }
 }

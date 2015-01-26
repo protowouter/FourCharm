@@ -71,7 +71,6 @@ public class GamePresenter implements Observer {
         colorMap.put(Mark.P1, "RoseRoze");
         colorMap.put(Mark.P2, "Babyblauw");
         moveQueue = new LinkedBlockingQueue<>(1);
-        initBoardPane();
     }
 
     public void enableInput() {

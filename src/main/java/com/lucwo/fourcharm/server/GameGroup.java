@@ -8,6 +8,7 @@ import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.board.BinaryBoard;
 import com.lucwo.fourcharm.model.player.ASyncPlayer;
 import com.lucwo.fourcharm.model.player.Mark;
+import com.lucwo.fourcharm.model.player.Player;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidMoveError;
@@ -104,12 +105,15 @@ public class GameGroup extends ClientGroup implements Observer {
         } else if (game.getCurrent().getName().equals(client.getName())) {
 
             try {
-                for (ClientHandler c : getClients()) {
-                    c.getCoreClient().doneMove(client.getName(), col);
-                }
+                forEveryClient(c -> {
+                    try {
+                        c.getCoreClient().doneMove(client.getName(), col);
+                    } catch (C4Exception e) {
+                        LOGGER.trace("doMove", e);
+                    }
+                });
                 playerMap.get(client).queueMove(col);
             } catch (IllegalStateException e) {
-                LOGGER.trace("doMove", e);
                 throw new InvalidMoveError("You are not allowed to make a move right now");
             }
         } else {
@@ -141,7 +145,8 @@ public class GameGroup extends ClientGroup implements Observer {
     @Override
     public synchronized void removeClientCallback(ClientHandler client) {
         if (!game.hasFinished()) {
-            for (ClientHandler cH : getClients()) {
+
+            forEveryClient(cH -> {
                 C4Exception c4e = new PlayerDisconnectError("Player " +
                         client.getName() + " disconnected");
                 try {
@@ -149,7 +154,7 @@ public class GameGroup extends ClientGroup implements Observer {
                 } catch (C4Exception e) {
                     LOGGER.trace("removeClientCallback", e);
                 }
-            }
+            });
             endGame();
         }
 
@@ -175,18 +180,16 @@ public class GameGroup extends ClientGroup implements Observer {
      */
     private void endGame() {
         game.shutdown();
-        String winnerName = null;
-        if (game.hasWinner()) {
-            winnerName = game.getWinner().getName();
-        }
-        try {
-            for (ClientHandler client : getClients()) {
+        Player winner = game.getWinner();
+        final String winnerName = winner == null ? null : winner.getName();
+        forEveryClient(client -> {
+            try {
                 client.getCoreClient().gameEnd(winnerName);
-                getServer().getLobby().addHandler(client);
+            } catch (C4Exception e) {
+                LOGGER.trace("startGame", e);
             }
-        } catch (C4Exception e) {
-            LOGGER.trace("startGame", e);
-        }
+                getServer().getLobby().addHandler(client);
+        });
         getServer().removeGame(this);
 
     }
@@ -212,14 +215,14 @@ public class GameGroup extends ClientGroup implements Observer {
                     }
                 }
                 if (client != null) {
-                    for (ClientHandler c : getClients()) {
+
+                    forEveryClient(cH -> {
                         try {
-                            c.getCoreClient().requestMove(currentName);
+                            cH.getCoreClient().requestMove(currentName);
                         } catch (C4Exception e) {
                             LOGGER.trace("update", e);
                         }
-                    }
-
+                    });
                 }
             } else {
                 endGame();

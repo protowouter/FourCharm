@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -35,7 +34,7 @@ public class FourCharmServer {
 
     private ClientGroup lobby;
     private ClientGroup preLobby;
-    private Collection<GameGroup> games;
+    private ConcurrentHashMultiset<GameGroup> games;
     private boolean running;
     private ServerSocket serverSocket;
     private int poort;
@@ -140,9 +139,9 @@ public class FourCharmServer {
         } catch (IOException e) {
             LOGGER.trace("stop", e);
         }
-        games.forEach(cG -> cG.getClients().forEach(ClientHandler::shutdown));
-        preLobby.getClients().forEach(ClientHandler::shutdown);
-        lobby.getClients().forEach(ClientHandler::shutdown);
+        games.forEach(cG -> cG.forEveryClient(ClientHandler::shutdown));
+        preLobby.forEveryClient(ClientHandler::shutdown);
+        lobby.forEveryClient(ClientHandler::shutdown);
 
 
     }
@@ -177,7 +176,7 @@ public class FourCharmServer {
         }
     }
 
-    public void stateChange(ClientHandler client, LobbyState state) {
+    public synchronized void stateChange(ClientHandler client, LobbyState state) {
         if (state != LobbyState.OFFLINE) {
             lobbyStates.put(client, state);
         } else {
@@ -191,6 +190,6 @@ public class FourCharmServer {
             }
         };
         lobby.forEveryClient(alertStateChange);
-        games.forEach((game) -> game.forEveryClient(alertStateChange));
+        games.forEach(game -> game.forEveryClient(alertStateChange));
     }
 }

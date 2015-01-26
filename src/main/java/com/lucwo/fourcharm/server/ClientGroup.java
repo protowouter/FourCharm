@@ -9,7 +9,6 @@ import nl.woutertimmermans.connect4.protocol.parameters.Extension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -40,7 +39,8 @@ public abstract class ClientGroup {
      * @return true if the name already exists, false if not
      */
     public boolean clientNameExists(String name) {
-        return clientMap.searchKeys(4, clientName -> clientName.equals(name)) != null;
+        Boolean result = clientMap.searchKeys(4, clientName -> clientName.equals(name));
+        return result != null && result == true;
     }
 
 
@@ -69,15 +69,6 @@ public abstract class ClientGroup {
         clientMap.remove(client.getName());
         client.setClientGroup(null);
         removeClientCallback(client);
-    }
-
-
-    /**
-     * Returns an {@link java.util.Iterator} over the Collection of ClientHandler.
-     * @return an iterator over the clients in this group.
-     */
-    public Collection<ClientHandler> getClients() {
-        return clientMap.values();
     }
 
     /**
