@@ -157,9 +157,13 @@ public class FourCharmServer {
 
     public void globalChat(ClientHandler client, String message) throws C4Exception {
         lobby.broadcastChat(client, message);
-        for (GameGroup game : games) {
-            game.broadcastChat(client, message);
-        }
+        games.forEach(game -> {
+            try {
+                game.broadcastChat(client, message);
+            } catch (C4Exception e) {
+                LOGGER.trace("globalChat", e);
+            }
+        });
 
     }
 
@@ -186,7 +190,7 @@ public class FourCharmServer {
                 LOGGER.trace("stateChange", e);
             }
         };
-        lobby.getClients().forEach(alertStateChange);
-        games.forEach((game) -> game.getClients().forEach(alertStateChange));
+        lobby.forEveryClient(alertStateChange);
+        games.forEach((game) -> game.forEveryClient(alertStateChange));
     }
 }
