@@ -1402,6 +1402,36 @@ Handles the connection to the server from the perspective of the client.
 \end_layout
 
 \begin_layout Section
+Controller
+\end_layout
+
+\begin_layout Paragraph
+C4Server
+\end_layout
+
+\begin_layout Paragraph
+FourCharmController
+\end_layout
+
+\begin_layout Standard
+The FourCharmController class makes use of the view classes FourCharmTUI
+ and FourCharmGUI to perfom its job.
+ This class will ask the TUI or GUI class for input.
+ After the input is received, the controller sends this input to the game,
+ so a move will be made.
+ The controller is used by the views to communicate with the other classes
+ of the FourCharm game of Connect four.
+\end_layout
+
+\begin_layout Paragraph
+FourCharmServerController
+\end_layout
+
+\begin_layout Paragraph
+LobbyList
+\end_layout
+
+\begin_layout Section
 Exception
 \end_layout
 
@@ -1422,6 +1452,10 @@ ServerConnectionException
 \begin_layout Standard
 Signals that a ServerConnectionException of some sort has occurred.
  If this exception is thrown, the connection to the server cannot be made.
+\end_layout
+
+\begin_layout Paragraph
+ServerStartException
 \end_layout
 
 \begin_layout Section
@@ -1796,6 +1830,14 @@ The PreLobbyGroup class extends the ClientGroup abstract class.
 \end_layout
 
 \begin_layout Section
+Util
+\end_layout
+
+\begin_layout Paragraph
+ExtensionFactory
+\end_layout
+
+\begin_layout Section
 View
 \end_layout
 
@@ -1810,6 +1852,10 @@ The FourCharmGUI is the Graphical User Interface of the FourCharm Connect4
 \end_layout
 
 \begin_layout Paragraph
+FourCharmServerTUI
+\end_layout
+
+\begin_layout Paragraph
 FourCharmTUI
 \end_layout
 
@@ -1821,24 +1867,6 @@ The FourCharmTUI is the Textual User Interface of the FourCharm Connect4
  The TUI takes care of communication with a user and uses the controller
  for communication with the rest of the system.
  
-\end_layout
-
-\begin_layout Section
-Controller
-\end_layout
-
-\begin_layout Paragraph
-FourCharmController
-\end_layout
-
-\begin_layout Standard
-The FourCharmController class makes use of the view classes FourCharmTUI
- and FourCharmGUI to perfom its job.
- This class will ask the TUI or GUI class for input.
- After the input is received, the controller sends this input to the game,
- so a move will be made.
- The controller is used by the views to communicate with the other classes
- of the FourCharm game of Connect four.
 \end_layout
 
 \begin_layout Chapter
@@ -3068,6 +3096,80 @@ Whenever a Client is in a game and it is his turn, but he tries to make
 Metrics report
 \end_layout
 
+\begin_layout Section
+Method Lines of Code
+\end_layout
+
+\begin_layout Standard
+We looked at the value of the 'Method Lines Of Code' by altering spaces,
+ tabs and new lines.
+ We looked at the value of the Methods Lines Of Code when adding and removing
+ spaces and tabs.
+ If spaces and or tabs are added, the value does not change.
+ This is the same for deleting spaces and tabs: the Method Lines Of Code
+ value does not change at all.
+ Whenever new lines are added or lines are removed by placing the text on
+ the previous line, the value changes.
+ The text is still divided by the 
+\begin_inset Quotes eld
+\end_inset
+
+ ; ", but the value has been changed.
+ Thus, the difference in value is only changed by adding and removing (new)
+ lines of text.
+\end_layout
+
+\begin_layout Section
+McCabe cyclomatic complexity
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Weight methods per class
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Lack of Cohesion in Methods
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Chapter
 Reflection on planning
 \end_layout
@@ -3185,8 +3287,9 @@ Make sure you plan some free time at the end of the project, right before
 \end_layout
 
 \begin_layout Itemize
-Make sure you have a couple of meetings during the project: you will be
- able to see what still needs to be done and what is already finished.
+Make sure you plan (and actually have) a couple of meetings during the project:
+ you will be able to see what still needs to be done and what is already
+ finished.
  This way you will be able to change your planning during the course according
  to what would be best for you and your group to make sure you're done in
  time.
@@ -3197,11 +3300,16 @@ Dont's:
 \end_layout
 
 \begin_layout Itemize
-Blablalba
+Do not underestimate the amount of time needed for certain parts of the
+ project.
+ For example, the writing of the report will take a lot of time as well
+ as the making of the tests for the project.
 \end_layout
 
 \begin_layout Itemize
-Blablaa
+Do not divide the works between the two of you in such a way that the other
+ does not know what you are doing or what you have done to make things work
+ in the project classes.
 \end_layout
 
 \begin_layout Chapter
