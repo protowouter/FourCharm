@@ -31,7 +31,7 @@ public class NewGamePresenter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NewGamePresenter.class);
     // ------------------ Instance variables ----------------
-
+    private static final Integer[] TIME_CHOICES = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 60};
     @FXML
     private Parent root;
     @FXML
@@ -44,6 +44,10 @@ public class NewGamePresenter {
     private ChoiceBox<GameStrategy> p1Strategy;
     @FXML
     private ChoiceBox<GameStrategy> p2Strategy;
+    @FXML
+    private ChoiceBox<Integer> p1timeChoice;
+    @FXML
+    private ChoiceBox<Integer> p2timeChoice;
     @FXML
     private TextField p1Name;
     @FXML
@@ -58,8 +62,6 @@ public class NewGamePresenter {
     private Label player2Label;
     @FXML
     private ChoiceBox<C4Server> serverChoice;
-
-
     private FourCharmPresenter fourCharmPresenter;
 
 
@@ -117,6 +119,15 @@ public class NewGamePresenter {
             serverPort.textProperty().setValue(Integer.toString(selected.getPort()));
         });
 
+
+        p1timeChoice.getItems().addAll(TIME_CHOICES);
+        p2timeChoice.getItems().addAll(TIME_CHOICES);
+        p1timeChoice.getSelectionModel().selectedItemProperty().addListener((hoi) -> checkAbleToPlayah());
+        p2timeChoice.getSelectionModel().selectedItemProperty().addListener((hoi) -> checkAbleToPlayah());
+
+
+
+
     }
 
     public void localNetworkChoice() {
@@ -147,6 +158,8 @@ public class NewGamePresenter {
         p2Select.setVisible(false);
         p2Strategy.setDisable(true);
         p2Strategy.setVisible(false);
+        p2timeChoice.setVisible(false);
+        p2timeChoice.setDisable(true);
     }
 
     private void enableNetworkFields(boolean enabled) {
@@ -173,6 +186,9 @@ public class NewGamePresenter {
             p2Strategy.setDisable(!computer);
             p2Strategy.setVisible(computer);
 
+            p2timeChoice.setDisable(!computer);
+            p2timeChoice.setVisible(computer);
+
             p2Name.setDisable(computer);
             p2Name.setVisible(!computer);
         }
@@ -184,6 +200,9 @@ public class NewGamePresenter {
                 getSelectedItem());
         p1Strategy.setDisable(!computer);
         p1Strategy.setVisible(computer);
+
+        p1timeChoice.setDisable(!computer);
+        p1timeChoice.setVisible(computer);
 
         p1Name.setDisable(computer && !netWorkGame);
         p1Name.setVisible(!computer || netWorkGame);
@@ -207,6 +226,7 @@ public class NewGamePresenter {
         canPlay = !"".equals(p1Name.textProperty().get());
         if (canPlay && "Computer".equals(p1Type)) {
             canPlay = !p1Strategy.getSelectionModel().isEmpty();
+            canPlay = p1TimeChosen() && canPlay;
         }
         if (canPlay) {
             canPlay = !"".equals(serverAddress.textProperty().get());
@@ -223,16 +243,34 @@ public class NewGamePresenter {
         return canPlay;
     }
 
+    private boolean p1TimeChosen() {
+        boolean result = true;
+        if (p1Strategy.getSelectionModel().selectedItemProperty().get() instanceof MTDfStrategy) {
+            result = p1timeChoice.getSelectionModel().selectedItemProperty().isNotNull().get();
+        }
+        return result;
+    }
+
+    private boolean p2TimeChosen() {
+        boolean result = true;
+        if (p2Strategy.getSelectionModel().selectedItemProperty().get() instanceof MTDfStrategy) {
+            result = p2timeChoice.getSelectionModel().selectedItemProperty().isNotNull().get();
+        }
+        return result;
+    }
+
     private boolean checkLocalGame(String p1Type, String p2Type) {
         boolean canPlay;
         if ("Computer".equals(p1Type)) {
             canPlay = !p1Strategy.getSelectionModel().isEmpty();
+            canPlay = p1TimeChosen() && canPlay;
         } else {
             canPlay = !"".equals(p1Name.textProperty().get());
         }
         if (canPlay) {
             if ("Computer".equals(p2Type)) {
                 canPlay = !p2Strategy.getSelectionModel().isEmpty();
+                canPlay = p2TimeChosen() && canPlay;
             } else {
                 canPlay = !"".equals(p2Name.textProperty().get());
             }
@@ -256,6 +294,10 @@ public class NewGamePresenter {
         String port = serverPort.textProperty().get();
         if ("Computer".equals(p1Type)) {
             strategy = p1Strategy.getSelectionModel().getSelectedItem();
+            if (strategy instanceof MTDfStrategy) {
+                int time = p1timeChoice.getSelectionModel().getSelectedItem();
+                strategy = new MTDfStrategy(time);
+            }
         }
         name = p1Name.textProperty().get();
 
@@ -281,11 +323,19 @@ public class NewGamePresenter {
             player1Name = p1Name.textProperty().get();
         } else {
             p1Strat = p1Strategy.getSelectionModel().getSelectedItem();
+            if (p1Strat instanceof MTDfStrategy) {
+                int time = p1timeChoice.getSelectionModel().getSelectedItem();
+                p1Strat = new MTDfStrategy(time);
+            }
         }
         if ("Human".equals(p2Type)) {
             player2Name = p2Name.textProperty().get();
         } else {
             p2Strat = p2Strategy.getSelectionModel().getSelectedItem();
+            if (p2Strat instanceof MTDfStrategy) {
+                int time = p2timeChoice.getSelectionModel().getSelectedItem();
+                p2Strat = new MTDfStrategy(time);
+            }
         }
 
         fourCharmPresenter.getFourCharmController().

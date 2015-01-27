@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="root" maxHeight="Infinity" maxWidth="Infinity"
             minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0"
-            stylesheets="views/darktheme.css" xmlns="http://javafx.com/javafx/8"
+            stylesheets="views/fourcharm.css" xmlns="http://javafx.com/javafx/8"
             fx:controller="com.lucwo.fourcharm.presenter.FourCharmPresenter">
     <top>
         <HBox maxWidth="1.7976931348623157E308">

@@ -14,8 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 /**
- * Interface for modeling a group of clients. This could be a LobbyGroup, a GameGroup or a
- * preLobbyGroup. This interface is used by the classes mentioned before.
+ * Abstract class for modeling a group of clients. This could be a LobbyGroup, a GameGroup or a
+ * preLobbyGroup. This class is used by the classes mentioned before.
  *
  * @author Luce Sandfort and Wouter Timmermans
  */
@@ -24,9 +24,13 @@ public abstract class ClientGroup {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientGroup.class);
 
+    //@ invariant clientMap != null;
     private ConcurrentHashMap<String, ClientHandler> clientMap;
+    //@ invariant server != null;
     private FourCharmServer server;
 
+
+    //@ requires theServer != null;
     public ClientGroup(FourCharmServer theServer) {
         server = theServer;
         clientMap = new ConcurrentHashMap<>();
@@ -37,6 +41,9 @@ public abstract class ClientGroup {
      *
      * @param name the name that will be checked
      * @return true if the name already exists, false if not
+     */
+    /*@
+        requires name != null;
      */
     public boolean clientNameExists(String name) {
         Boolean result = clientMap.searchKeys(4, clientName -> clientName.equals(name));
@@ -49,6 +56,10 @@ public abstract class ClientGroup {
      * ClientHandler of this change.
      *
      * @param client the ClientHandler that will be added.
+     */
+    /*@
+        requires client != null;
+        ensures clientNameExists(client.getName());
      */
     public void addHandler(ClientHandler client) {
         ClientGroup clientGroup = client.getClientGroup();
@@ -66,6 +77,10 @@ public abstract class ClientGroup {
      * ClientHandler of this change.
      *
      * @param client the Clienthandler that will be removed.
+     */
+    /*@
+        requires client != null;
+        ensures !clientNameExists(client.getName());
      */
     public void removeHandler(ClientHandler client) {
         clientMap.remove(client.getName());
@@ -122,6 +137,7 @@ public abstract class ClientGroup {
         server.globalChat(client, message);
     }
 
+    //@ ensures \result != null
     public FourCharmServer getServer() {
         return server;
     }

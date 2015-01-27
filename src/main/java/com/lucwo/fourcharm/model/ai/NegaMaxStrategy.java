@@ -43,6 +43,7 @@ public class NegaMaxStrategy implements GameStrategy {
     private final AtomicLong nodeCounter = new AtomicLong();
 
     private int searchDept;
+    private boolean aborted;
 
     /**
      * Constructs a new NegaMaxStrategy. Uses the default search depth.
@@ -101,6 +102,11 @@ public class NegaMaxStrategy implements GameStrategy {
 
     }
 
+    public Result startNegaMax(Board board, Mark mark, double alphaOrig, double betaOrig, int depth) {
+        aborted = false;
+        return negaMax(board, mark, alphaOrig, betaOrig, depth);
+    }
+
     /**
      * Finds the best move on a {@link com.lucwo.fourcharm.model.board.Board}
      * for a given {@link com.lucwo.fourcharm.model.player.Mark}.
@@ -147,7 +153,11 @@ public class NegaMaxStrategy implements GameStrategy {
 
                 result = getNegaResult(board, mark, depth, alpha, beta);
 
-                saveToTransPostTable(alphaOrig, depth, beta, posKey, result);
+                if (!aborted) {
+                    saveToTransPostTable(alphaOrig, depth, beta, posKey, result);
+                }
+
+
 
             }
         }
@@ -174,7 +184,7 @@ public class NegaMaxStrategy implements GameStrategy {
         int columns = board.getColumns();
 
         boolean searching = true;
-        for (int col = 0; searching && col < columns; col++) {
+        for (int col = 0; searching && !aborted && col < columns; col++) {
             if (board.columnHasFreeSpace(col)) {
                 try {
                     Board childBoard = board.deepCopy();
@@ -436,6 +446,9 @@ public class NegaMaxStrategy implements GameStrategy {
         return "NegamaxStrategy";
     }
 
+    public void abort() {
+        aborted = true;
+    }
 
     /**
      * Flag used to determine if a value in the transposition value can be used as the value(EXACT),

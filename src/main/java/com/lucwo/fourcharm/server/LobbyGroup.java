@@ -25,6 +25,7 @@ public class LobbyGroup extends ClientGroup {
     // ------------------ Instance variables ----------------
 
     private ClientHandler readyClient;
+    //@ server != null;
     private FourCharmServer server;
 
     // --------------------- Constructors -------------------
@@ -78,6 +79,9 @@ public class LobbyGroup extends ClientGroup {
      *
      * @param client the client that wants to play a game
      * @throws C4Exception
+     */
+    /*@
+        requires client != null;
      */
     @Override
     public synchronized void ready(ClientHandler client) throws C4Exception {
