@@ -600,7 +600,7 @@ Games, the Lobby and the PreLobby are modeled as ClientGroups.
 \begin_inset Float table
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align left
@@ -3361,7 +3361,7 @@ Do not underestimate the amount of time needed for certain parts of the
 \end_layout
 
 \begin_layout Itemize
-Do not divide the works between the two of you in such a way that the other
+Do not divide the work between the two of you in such a way that the other
  does not know what you are doing or what you have done to make things work
  in the project classes.
 \end_layout
