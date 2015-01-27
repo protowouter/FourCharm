@@ -691,7 +691,7 @@ Server listens to entered port number
 \begin_inset Text
 
 \begin_layout Plain Layout
-TODO
+FourCharmServerController
 \end_layout
 
 \end_inset
@@ -749,7 +749,7 @@ New port number can be entered
 \begin_inset Text
 
 \begin_layout Plain Layout
-TODO
+FourCharmServerTUI
 \end_layout
 
 \end_inset
@@ -1168,7 +1168,7 @@ Other players should be informed if a player quits the game before it has
 \begin_inset Text
 
 \begin_layout Plain Layout
-FourCharmTUI/TODO
+FourCharmController
 \end_layout
 
 \end_inset
@@ -1897,16 +1897,8 @@ FourCharmServerTUI
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
+The FourCharmServerTUI is the Textual User Interface of the FourCharmServer.
+ It makes use of the FourCharmServerController class.
 \end_layout
 
 \begin_layout Paragraph
