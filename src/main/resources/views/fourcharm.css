@@ -14,3 +14,27 @@
    -fx-background-color: black;
 
 }
+
+.space {
+    -fx-fill: #8a2be2;
+}
+
+.space:hover {
+    -fx-fill: #f5f5dc;
+}
+
+.space.p1 {
+
+}
+
+.space.p2 {
+
+}
+
+.space.higlight {
+
+}
+
+.space.empty {
+
+}

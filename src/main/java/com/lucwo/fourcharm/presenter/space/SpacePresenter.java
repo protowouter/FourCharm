@@ -8,7 +8,6 @@ import com.lucwo.fourcharm.model.player.Mark;
 import com.lucwo.fourcharm.presenter.board.BoardPresenter;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
@@ -54,11 +53,14 @@ public class SpacePresenter {
         mark = m;
 
         if (m == Mark.P1) {
-            space.setFill(Color.PINK);
+            space.getStyleClass().removeAll("p2", "empty");
+            space.getStyleClass().setAll("p1");
         } else if (m == Mark.P2) {
-            space.setFill(Color.SKYBLUE);
+            space.getStyleClass().removeAll("p1", "empty");
+            space.getStyleClass().setAll("p2");
         } else {
-            space.setFill(Color.WHITE);
+            space.getStyleClass().removeAll("p1", "p2");
+            space.getStyleClass().add("empty");
         }
 
 
@@ -84,14 +86,11 @@ public class SpacePresenter {
     }
 
     public void highlight() {
-        current = space.getFill();
-        space.setStroke(Color.CORNFLOWERBLUE);
-        space.setFill(Color.BEIGE);
+        space.getStyleClass().add("highlight");
     }
 
     public void unHighlight() {
-        space.setFill(current);
-        space.setStroke(Color.BLACK);
+        space.getStyleClass().remove("highlight");
     }
 
     public void setCol(int column) {
