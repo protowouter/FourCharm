@@ -2,12 +2,14 @@
     -fx-text-fill: #000000;
     -fx-prompt-text-fill: #000000;
     -fx-opacity: 1.0;
-    -fx-background-color: #fadbc8;
+    -fx-background-color: black;
+    -fx-fill: #fadbc8;
 }
 
 .text-area .scroll-pane:disabled {
-  -fx-opacity: 1.0;
-  -fx-background-color: #fadbc8;
+    -fx-opacity: 1.0;
+    -fx-background-color: black;
+    -fx-fill: #fadbc8;
 }
 
 #board {
@@ -32,21 +34,16 @@
     -fx-fill: #29d8f8;
 }
 
-.space.highlight.p1 {
 
-}
-
-.space.highlight.p2 {
-    -fx-fill: #caeef4;
-}
+.space.empty.highlight {
+     -fx-fill: white;
+ }
 
 .space.empty:hover {
     -fx-fill: #b9a2ed;
 }
 
-.space.empty.highlight {
-    -fx-fill: #f2cade;
-}
+
 
 .space.empty {
 
