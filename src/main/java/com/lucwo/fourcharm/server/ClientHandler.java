@@ -17,9 +17,14 @@ import nl.woutertimmermans.connect4.protocol.parameters.LobbyState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.CharArrayWriter;
+import java.io.IOException;
+import java.nio.CharBuffer;
+import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
+import java.util.Scanner;
 import java.util.Set;
 
 /**
@@ -49,11 +54,12 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
     private ChatClient.Client chatClient;
     //@ invariant lobbyClient != null;
     private LobbyClient.Client lobbyClient;
-    private BufferedReader in;
+    private Scanner in;
     private BufferedWriter out;
     private boolean running;
     //@ invariant server != null;
     private FourCharmServer server;
+    private CharArrayWriter writeBuffer;
 
 // --------------------- Constructors -------------------
 
@@ -228,8 +234,8 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
         CoreServer.Processor coreProcessor = new CoreServer.Processor<>(this);
         ChatServer.Processor chatProcessor = new ChatServer.Processor<>(this);
 
-        String input = in == null ? null : in.readLine();
-        while (running && input != null) {
+        while (in.hasNextLine()) {
+            String input = in.nextLine();
             LOGGER.info("Processing input {}", input);
             try {
                 boolean processed = coreProcessor.process(input);
@@ -251,12 +257,25 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
                 }
 
             }
-            input = in.readLine();
         }
     }
 
-    public void handleWrite() {
-
+    public void handleWrite(SelectionKey key) {
+        CharBuffer buf = CharBuffer.wrap(writeBuffer.toString());
+        while (buf.hasRemaining()) {
+            try {
+                int n = socket.write(Charset.forName("UTF-8").encode(buf));
+                if (n == 0) {
+                    key.interestOps(SelectionKey.OP_WRITE);
+                }
+            } catch (IOException e) {
+                writeBuffer.append(buf);
+            }
+        }
+        if (!buf.hasRemaining()) {
+            key.interestOps(SelectionKey.OP_READ);
+        }
+        buf.clear();
     }
 
     public void shutdown() {
@@ -269,16 +288,11 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
     }
 
 
-    public void init() {
-        out = null;
-        in = null;
-        try {
-            socket.
-            out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), Charset.forName("UTF-8")));
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream(), Charset.forName("UTF-8")));
-        } catch (IOException e) {
-            LOGGER.trace("init", e);
-        }
+    public void init(SelectionKey key) {
+        in = new Scanner(socket);
+        writeBuffer = new CharArrayWriter();
+        out = new BufferedWriter(writeBuffer);
+
 
         coreClient = new CoreClient.Client(out);
         chatClient = new ChatClient.Client(null);

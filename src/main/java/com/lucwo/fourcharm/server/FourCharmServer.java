@@ -17,12 +17,12 @@ import javax.jmdns.ServiceInfo;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -74,7 +74,7 @@ public class FourCharmServer {
     }
 
     public int getSocketPort() {
-        return serverChannel.getLocalPort();
+        return serverChannel.socket().getLocalPort();
     }
 
     /**
@@ -127,8 +127,15 @@ public class FourCharmServer {
 
 
         while (running) {
+            try {
+                selector.select();
+            } catch (IOException e) {
+                LOGGER.trace("selecting keys", e);
+            }
             Set<SelectionKey> readyKeys = selector.selectedKeys();
-            for (SelectionKey key : readyKeys) {
+            Iterator<SelectionKey> it = readyKeys.iterator();
+            while (it.hasNext()) {
+                SelectionKey key = it.next();
                 if (key.isAcceptable()) {
                     accept(key);
                 }
@@ -138,46 +145,45 @@ public class FourCharmServer {
                 if (key.isWritable()) {
                     write(key);
                 }
+                it.remove();
             }
         }
-            try {
-                Socket sock = serverChannel.accept();
-                LOGGER.debug("Incoming connection from {}", sock.getInetAddress());
-                ClientHandler client = new ClientHandler(sock, this);
-                preLobby.addHandler(client);
-                Thread t = new Thread(client);
-                t.setName("ClientHandler-" + clientCount);
-                t.start();
-                clientCount++;
-            } catch (IOException e) {
-                LOGGER.trace("startServer", e);
-            }
-        }
+        LOGGER.info("Shutting down FourCharm server");
+    }
 
-    LOGGER.info("Shutting down FourCharm server")
 
-}
 
     private void accept(SelectionKey key) {
         SocketChannel socket;
         ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
         try {
             socket = ssc.accept();
-            socket.configureBlocking(false);
-            SelectionKey newSocketKey =
-                    socket.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
-            socketChannelClientHandlerMap.put(newSocketKey, new ClientHandler(socket, this));
+            if (socket != null) {
+                socket.configureBlocking(false);
+                SelectionKey newSocketKey =
+                        socket.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+                ClientHandler client = new ClientHandler(socket, this);
+                client.init();
+                preLobby.addHandler(client);
+                socketChannelClientHandlerMap.put(newSocketKey, client);
+
+            }
         } catch (IOException e) {
             LOGGER.trace("startServer", e);
         }
+
     }
 
     private void read(SelectionKey key) {
-
+        try {
+            socketChannelClientHandlerMap.get(key).handleRead();
+        } catch (IOException e) {
+            LOGGER.trace("read", e);
+        }
     }
 
     private void write(SelectionKey key) {
-
+        socketChannelClientHandlerMap.get(key).handleWrite();
     }
 
     private void announceServer(int port) {
