@@ -20,6 +20,7 @@ public class ExtensionFactory {
         Set<Extension> result = new HashSet<>();
         result.add(chat());
         result.add(lobby());
+        result.add(challenge());
         return result;
     }
 
@@ -39,6 +40,16 @@ public class ExtensionFactory {
             result.setValue("Lobby");
         } catch (InvalidParameterError invalidParameterError) {
             LOGGER.trace("lobby", invalidParameterError);
+        }
+        return result;
+    }
+
+    public static Extension challenge() {
+        Extension result = new Extension();
+        try {
+            result.setValue("Challenge");
+        } catch (InvalidParameterError e) {
+            LOGGER.trace("challenge", e);
         }
         return result;
     }

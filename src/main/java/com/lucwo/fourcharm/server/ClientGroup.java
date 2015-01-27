@@ -140,5 +140,9 @@ public abstract class ClientGroup {
         clientMap.forEachValue(4, function);
     }
 
+    public abstract void issueChallenge(ClientHandler client, String playerName);
+
+    public abstract void respondChallenge(ClientHandler client, String playerName, boolean answer);
+
 
 }

@@ -7,6 +7,8 @@ package com.lucwo.fourcharm.server;
 import com.lucwo.fourcharm.util.ExtensionFactory;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
+import nl.woutertimmermans.connect4.protocol.fgroup.challenge.ChallengeClient;
+import nl.woutertimmermans.connect4.protocol.fgroup.challenge.ChallengeServer;
 import nl.woutertimmermans.connect4.protocol.fgroup.chat.ChatClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.chat.ChatServer;
 import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreClient;
@@ -31,7 +33,7 @@ import java.util.Set;
  * @author Luce Sandfort and Wouter Timmermans
  */
 
-public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnable {
+public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, ChallengeServer.Iface, Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientHandler.class);
 
@@ -43,6 +45,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
     private CoreClient.Client coreClient;
     private ChatClient.Client chatClient;
     private LobbyClient.Client lobbyClient;
+    private ChallengeClient.Client challengeClient;
     private BufferedReader in;
     private BufferedWriter out;
     private boolean running;
@@ -254,11 +257,13 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
         coreClient = new CoreClient.Client(out);
         chatClient = new ChatClient.Client(null);
         lobbyClient = new LobbyClient.Client(null);
+        challengeClient = new ChallengeClient.Client(null);
     }
 
     public void registerExtensions(Set<Extension> extensions) {
         Extension chat = ExtensionFactory.chat();
         Extension lobby = ExtensionFactory.lobby();
+        Extension challenge = ExtensionFactory.challenge();
 
         if (extensions != null) {
             if (extensions.contains(chat)) {
@@ -266,6 +271,9 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
             }
             if (extensions.contains(lobby)) {
                 lobbyClient = new LobbyClient.Client(out);
+            }
+            if (extensions.contains(challenge)) {
+                challengeClient = new ChallengeClient.Client(out);
             }
         }
 
@@ -297,5 +305,19 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 
     public LobbyClient.Client getLobbyClient() {
         return lobbyClient;
+    }
+
+    public ChallengeClient.Client getChallengeClient() {
+        return challengeClient;
+    }
+
+    @Override
+    public void issueChallenge(String playerName) throws C4Exception {
+        group.issueChallenge(this, playerName);
+    }
+
+    @Override
+    public void respondChallenge(String playerName, boolean answer) throws C4Exception {
+        group.respondChallenge(this, playerName, answer);
     }
 }
