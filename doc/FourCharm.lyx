@@ -342,7 +342,7 @@ Whenever a Client is connected to the server, he will start in the PreLobbyGroup
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -1409,6 +1409,12 @@ Controller
 C4Server
 \end_layout
 
+\begin_layout Standard
+The C4Server class does not make use of other classes.
+ This class is able to get the IP address, port and name of a given server.
+ 
+\end_layout
+
 \begin_layout Paragraph
 FourCharmController
 \end_layout
@@ -1427,8 +1433,26 @@ The FourCharmController class makes use of the view classes FourCharmTUI
 FourCharmServerController
 \end_layout
 
+\begin_layout Standard
+The FourCharmServerController class is responsible for starting and stopping
+ a server.
+ The startServer(int port) method and the stopServer() are the only methods
+ you will find in this class.
+ The server controller class makes use of the FourCharmerverTUI and the
+ FourCharmServer classes to perfom its duties.
+\end_layout
+
 \begin_layout Paragraph
 LobbyList
+\end_layout
+
+\begin_layout Standard
+The LobbyList class has one purpose: logging the state changes of the clients.
+ This class creates a map and puts clients and their states in this map.
+ If the state is not 'offline' the client is added to the map.
+ If the state is offline, the client will be removed from the map, because
+ the server does not have to keep track of the clients that used the server
+ and are not connected anymore.
 \end_layout
 
 \begin_layout Section
@@ -1456,6 +1480,12 @@ Signals that a ServerConnectionException of some sort has occurred.
 
 \begin_layout Paragraph
 ServerStartException
+\end_layout
+
+\begin_layout Standard
+The ServerStartException class gets thrown when the server is not started
+ correctly.
+ This class extends the Exception class.
 \end_layout
 
 \begin_layout Section
@@ -1837,6 +1867,17 @@ Util
 ExtensionFactory
 \end_layout
 
+\begin_layout Standard
+The ExtensionFactory class is responsible for the extensions you might want
+ to add to your log in.
+ For instance, if you want to join the server with the chat function, you
+ need to add this as an extension.
+ The ExtensionFactory class makes sure the given extension gives the right
+ functionality.
+ For now, a chat() method extension and a lobby() method extension were
+ added.
+\end_layout
+
 \begin_layout Section
 View
 \end_layout
@@ -1853,6 +1894,19 @@ The FourCharmGUI is the Graphical User Interface of the FourCharm Connect4
 
 \begin_layout Paragraph
 FourCharmServerTUI
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Paragraph
