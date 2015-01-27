@@ -16,9 +16,15 @@ import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.ServerSocket;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
@@ -27,6 +33,7 @@ import java.util.function.Consumer;
  * at a given time there are no players with the same name. This class also maintains a list of
  * GameGroups and uses {@link com.lucwo.fourcharm.server.PreLobbyGroup} and
  * {@link com.lucwo.fourcharm.server.LobbyGroup} to model the state of clients.
+ * This class implements uses the server using non blocking io from the java.nio package.
  *
  * @author Luce Sandfort and Wouter Timmermans
  */
@@ -38,10 +45,14 @@ public class FourCharmServer {
     private ClientGroup preLobby;
     private ConcurrentHashMultiset<GameGroup> games;
     private boolean running;
-    private ServerSocket serverSocket;
+    private ServerSocketChannel serverChannel;
     private int poort;
     private JmDNS jmDNS;
     private Map<ClientHandler, LobbyState> lobbyStates;
+    private Map<SelectionKey, ClientHandler> socketChannelClientHandlerMap;
+
+    // Selector is the "reactor" of the java.nio package.
+    private Selector selector;
 
     /**
      * Constructs a new FourCharmServer given a specific port.
@@ -55,10 +66,11 @@ public class FourCharmServer {
         running = true;
         poort = port;
         lobbyStates = new ConcurrentHashMap<>();
+        socketChannelClientHandlerMap = new HashMap<>();
     }
 
     public int getSocketPort() {
-        return serverSocket.getLocalPort();
+        return serverChannel.getLocalPort();
     }
 
     /**
@@ -81,7 +93,15 @@ public class FourCharmServer {
 
     public void openSocket() throws ServerStartException {
         try {
-            serverSocket = new ServerSocket(poort, 10, InetAddress.getLocalHost());
+            selector = Selector.open();
+            serverChannel = ServerSocketChannel.open();
+            serverChannel.configureBlocking(false);
+            InetSocketAddress isa = new InetSocketAddress(InetAddress.getLocalHost(), poort);
+            serverChannel.socket().bind(isa);
+
+            //Key for accepting incoming connections
+            SelectionKey acceptKey = serverChannel.register(selector, SelectionKey.OP_ACCEPT);
+
             Thread announceThread = new Thread(() -> announceServer(getSocketPort()));
             announceThread.setName("serverAnnouncer");
             announceThread.start();
@@ -102,8 +122,21 @@ public class FourCharmServer {
 
 
         while (running) {
+            Set<SelectionKey> readyKeys = selector.selectedKeys();
+            for (SelectionKey key : readyKeys) {
+                if (key.isAcceptable()) {
+                    accept(key);
+                }
+                if (key.isReadable()) {
+                    read(key);
+                }
+                if (key.isWritable()) {
+                    write(key);
+                }
+            }
+        }
             try {
-                Socket sock = serverSocket.accept();
+                Socket sock = serverChannel.accept();
                 LOGGER.debug("Incoming connection from {}", sock.getInetAddress());
                 ClientHandler client = new ClientHandler(sock, this);
                 preLobby.addHandler(client);
@@ -116,7 +149,29 @@ public class FourCharmServer {
             }
         }
 
-        LOGGER.info("Shutting down FourCharm server");
+    LOGGER.info("Shutting down FourCharm server")
+
+}
+
+    private void accept(SelectionKey key) {
+        SocketChannel socket;
+        ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
+        try {
+            socket = ssc.accept();
+            socket.configureBlocking(false);
+            SelectionKey newSocketKey =
+                    socket.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+            socketChannelClientHandlerMap.put(newSocketKey, new ClientHandler(socket, this));
+        } catch (IOException e) {
+            LOGGER.trace("startServer", e);
+        }
+    }
+
+    private void read(SelectionKey key) {
+
+    }
+
+    private void write(SelectionKey key) {
 
     }
 
@@ -157,7 +212,7 @@ public class FourCharmServer {
     public void stop() {
         running = false;
         try {
-            serverSocket.close();
+            serverChannel.close();
             jmDNS.close();
         } catch (IOException e) {
             LOGGER.trace("stop", e);

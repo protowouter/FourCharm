@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.Socket;
+import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.Set;
 
@@ -39,7 +39,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 
     private ClientGroup group;
     private String name;
-    private Socket socket;
+    private SocketChannel socket;
     private CoreClient.Client coreClient;
     private ChatClient.Client chatClient;
     private LobbyClient.Client lobbyClient;
@@ -55,7 +55,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      *
      * @param sock The socket which will be used to communicate with the client.
      */
-    public ClientHandler(Socket sock, FourCharmServer s) {
+    public ClientHandler(SocketChannel sock, FourCharmServer s) {
         socket = sock;
         running = true;
         name = sock.toString();
@@ -182,26 +182,18 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
         final String mName = "handleClient";
 
         try {
-
-            processCommands();
-
+            socket.close();
         } catch (IOException e) {
-            LOGGER.trace("handleClient", e);
-        } finally {
-            try {
-                socket.close();
-                group.removeHandler(this);
+            e.printStackTrace();
+        }
+        group.removeHandler(this);
                 server.stateChange(this, LobbyState.OFFLINE);
                 LOGGER.debug("Client {} disconnected", getName());
-            } catch (IOException e) {
-                LOGGER.trace("handleClient", e);
-            }
-        }
 
 
     }
 
-    private void processCommands() throws IOException {
+    public void handleRead() throws IOException {
         CoreServer.Processor coreProcessor = new CoreServer.Processor<>(this);
         ChatServer.Processor chatProcessor = new ChatServer.Processor<>(this);
 
@@ -232,6 +224,10 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
         }
     }
 
+    public void handleWrite() {
+
+    }
+
     public void shutdown() {
         try {
             socket.close();
@@ -245,6 +241,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
         out = null;
         in = null;
         try {
+            socket.
             out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), Charset.forName("UTF-8")));
             in = new BufferedReader(new InputStreamReader(socket.getInputStream(), Charset.forName("UTF-8")));
         } catch (IOException e) {
