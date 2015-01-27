@@ -32,7 +32,7 @@ public class MTDfStrategy implements GameStrategy {
     private static final Marker AI_DEBUG = MarkerFactory.getMarker("AI_DEBUG");
     private static final Marker AI_INFO = MarkerFactory.getMarker("AI_INFO");
 
-    private static final int MAX_DURATION = 10_000;
+    private static final int DEF_DURATION = 10_000;
     private static final double FIRST_GUESS = 17880;
     private static final int[] COLS = new int[]{3, 4, 2, 5, 1, 6, 0};
     private static final int DEPTH_STEP = 2;
@@ -42,6 +42,7 @@ public class MTDfStrategy implements GameStrategy {
     private long endTime;
     private Double prevValue;
     private NegaMaxStrategy nega;
+    private int duration;
 
     // --------------------- Constructors -------------------
 
@@ -49,12 +50,18 @@ public class MTDfStrategy implements GameStrategy {
      * This method constructs the MTDf strategy.
      */
     public MTDfStrategy() {
+        this(DEF_DURATION);
+
+
+
+
+    }
+
+    public MTDfStrategy(int time) {
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "5");
-
-
+        duration = time * 1000;
         nega = new NegaMaxStrategy();
         prevValue = FIRST_GUESS;
-
     }
 
 
@@ -71,7 +78,7 @@ public class MTDfStrategy implements GameStrategy {
     @Override
     public int determineMove(Board board, Mark mark) {
         nega.resetCounter();
-        endTime = System.currentTimeMillis() + MAX_DURATION;
+        endTime = System.currentTimeMillis() + duration;
         int freeSpots = board.getSpotCount() - board.getPlieCount();
         double bestValue = Double.NEGATIVE_INFINITY;
         int bestMove = -1;
@@ -113,9 +120,6 @@ public class MTDfStrategy implements GameStrategy {
                 bestMove = bestMoveCurrentIteration;
                 bestValue = bestValueCurrentIteration;
                 achievedDepth = depth;
-                if (bestValue == Double.POSITIVE_INFINITY) {
-                    break;
-                }
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 LOGGER.trace("determineMove", e);
             }
@@ -130,6 +134,7 @@ public class MTDfStrategy implements GameStrategy {
         LOGGER.debug(AI_DEBUG, "Search achieved a depth of {}", achievedDepth);
         LOGGER.debug(AI_INFO, "Best move {}", bestMove);
         LOGGER.debug(AI_DEBUG, "Best move value {}", bestValue);
+        nega.abort();
         return bestMove;
     }
 
@@ -161,7 +166,7 @@ public class MTDfStrategy implements GameStrategy {
 
             }
 
-            guess = nega.negaMax(board, mark, beta - 1, beta, depth).value;
+            guess = nega.startNegaMax(board, mark, beta - 1, beta, depth).value;
 
             if (guess < beta) {
                 upperBound = guess;

@@ -234,16 +234,22 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
      * @param args The arguments given to play a game (for instance: CHAT, CHALLENGE, etc.).
      */
     private void connect(String[] args) {
-        String host = args[0];
-        String port = args[1];
-        String playerName = args[2];
-        GameStrategy strat = parseStrategy(args[3]);
         try {
+            String host = args[0];
+            String port = args[1];
+            String playerName = args[2];
+            GameStrategy strat = parseStrategy(args[3]);
+            if (strat instanceof MTDfStrategy) {
+                int time = Integer.parseInt(args[4]);
+                strat = new MTDfStrategy(time);
+            }
             controller.startNetworkGame(host, port, playerName, strat);
-        } catch (ServerConnectionException e) {
+
+        } catch (NumberFormatException | ServerConnectionException e) {
             LOGGER.trace("connect", e);
-            showError(e.getMessage());
+            showError(e.toString());
         }
+
 
     }
 
@@ -404,7 +410,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
      */
     private enum Command {
         CHAT("Chatmessage"),
-        CONNECT("Host", "Port", "Playername", "| -m (MTDF) | -r (Random) | -h (Human)"),
+        CONNECT("Host", "Port", "Playername", "| -m (MTDF) | -r (Random) | -h (Human)", "Thinking time (s)"),
         LOCAL("Playername | -m (MTDF) | -r (Random)", "Playername | -m (MTDF) | -r (Random)"),
         HINT(),
         READY(),
