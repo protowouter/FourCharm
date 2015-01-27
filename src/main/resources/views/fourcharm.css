@@ -7,6 +7,7 @@
 
 .text-area .scroll-pane:disabled {
   -fx-opacity: 1.0;
+  -fx-background-color: #fadbc8;
 }
 
 #board {
@@ -16,7 +17,7 @@
 }
 
 .space {
-
+    -fx-fill: #dad4d4;
 }
 
 .space:hover {
@@ -32,11 +33,19 @@
 }
 
 .space.highlight.p1 {
-    -fx-fill: #f2cade;
+
 }
 
 .space.highlight.p2 {
     -fx-fill: #caeef4;
+}
+
+.space.empty:hover {
+    -fx-fill: #b9a2ed;
+}
+
+.space.empty.highlight {
+    -fx-fill: #f2cade;
 }
 
 .space.empty {

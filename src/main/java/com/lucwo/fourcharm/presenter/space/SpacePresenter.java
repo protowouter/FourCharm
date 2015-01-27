@@ -54,10 +54,10 @@ public class SpacePresenter {
 
         if (m == Mark.P1) {
             space.getStyleClass().removeAll("p2", "empty");
-            space.getStyleClass().setAll("p1");
+            space.getStyleClass().add("p1");
         } else if (m == Mark.P2) {
             space.getStyleClass().removeAll("p1", "empty");
-            space.getStyleClass().setAll("p2");
+            space.getStyleClass().add("p2");
         } else {
             space.getStyleClass().removeAll("p1", "p2");
             space.getStyleClass().add("empty");
