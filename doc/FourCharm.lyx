@@ -1776,6 +1776,17 @@ In this section the classes that make the Server are discussed.
 \end_layout
 
 \begin_layout Paragraph
+ClientGroup
+\end_layout
+
+\begin_layout Standard
+Abstract class for modeling a group of clients.
+ This could be a LobbyGroup, a GameGroup or a preLobbyGroup.
+ This class is used by the classes mentioned before.
+ 
+\end_layout
+
+\begin_layout Paragraph
 ClientHandler
 \end_layout
 
