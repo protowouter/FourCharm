@@ -34,13 +34,17 @@ public class FourCharmServer {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(FourCharmServer.class);
 
+    //@ invariant lobby != null;
     private ClientGroup lobby;
+    //@ invariant preLobby != null;
     private ClientGroup preLobby;
+    //@ invariant games != null;
     private ConcurrentHashMultiset<GameGroup> games;
     private boolean running;
     private ServerSocket serverSocket;
     private int poort;
     private JmDNS jmDNS;
+    //@ invariant lobbyStates != null;
     private Map<ClientHandler, LobbyState> lobbyStates;
 
     /**
@@ -78,6 +82,7 @@ public class FourCharmServer {
         }
         return nameExistsinGame || lobby.clientNameExists(name);
     }
+
 
     public void openSocket() throws ServerStartException {
         try {
@@ -178,6 +183,9 @@ public class FourCharmServer {
         return lobby;
     }
 
+    /*@
+        requires client != null
+     */
     public void globalChat(ClientHandler client, String message) throws C4Exception {
         lobby.broadcastChat(client, message);
         games.forEach(game -> {
@@ -190,6 +198,10 @@ public class FourCharmServer {
 
     }
 
+
+    /*@
+        requires client != null;
+     */
     public void sendCurrentStates(ClientHandler client) {
         for (Map.Entry<ClientHandler, LobbyState> e : lobbyStates.entrySet()) {
             try {
@@ -200,6 +212,10 @@ public class FourCharmServer {
         }
     }
 
+
+    /*@
+        requires client != null && state != null;
+     */
     public synchronized void stateChange(ClientHandler client, LobbyState state) {
         if (state != LobbyState.OFFLINE) {
             lobbyStates.put(client, state);

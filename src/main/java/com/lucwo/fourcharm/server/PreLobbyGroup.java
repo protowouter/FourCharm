@@ -59,6 +59,10 @@ public class PreLobbyGroup extends ClientGroup {
      * @param exts    Set of extensions supported
      * @throws C4Exception
      */
+    /*@
+        requires client != null && pName != null;
+        ensures getServer().hasClientWithName(pName);
+     */
     @Override
     public synchronized void join(ClientHandler client, String pName, int gNumber,
                                   Set<Extension> exts) throws C4Exception {

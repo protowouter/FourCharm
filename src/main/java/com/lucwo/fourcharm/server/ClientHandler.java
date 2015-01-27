@@ -38,14 +38,20 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 // ------------------ Instance variables ----------------
 
     private ClientGroup group;
+    //@ invariant name != null;
     private String name;
+    //@ invariant socket != null;
     private Socket socket;
+    //@ invariant coreClient != null;
     private CoreClient.Client coreClient;
+    //@ invariant chatClient != null;
     private ChatClient.Client chatClient;
+    //@ invariant lobbyClient != null;
     private LobbyClient.Client lobbyClient;
     private BufferedReader in;
     private BufferedWriter out;
     private boolean running;
+    //@ invariant server != null;
     private FourCharmServer server;
 
 // --------------------- Constructors -------------------
@@ -54,6 +60,9 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      * Constructs a new ClientHandler with a given socket.
      *
      * @param sock The socket which will be used to communicate with the client.
+     */
+    /*@
+        requires sock !=null && s != null;
      */
     public ClientHandler(Socket sock, FourCharmServer s) {
         socket = sock;
@@ -69,7 +78,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      *
      * @return the name of this ClientHandler
      */
-
+    //@ ensures \result != null;
     /*@ pure */ public String getName() {
         return name;
     }
@@ -80,8 +89,8 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      * @param newName the name of the ClientHandler
      */
     /*@
-    requires: newName != null;
-    ensures: getName().equals(newName);
+    requires newName != null;
+    ensures getName().equals(newName);
      */
     public void setName(String newName) {
         name = newName;
@@ -92,7 +101,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      *
      * @return the coreClient
      */
-
+    //@ ensures \result != null;
     /*@ pure */ public CoreClient.Client getCoreClient() {
         return coreClient;
     }
@@ -116,8 +125,8 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      * @param cG The clientgroup this ClientHandler will belong to.
      */
     /*@
-    requires: cG != null;
-    ensures getClientGroup().equals(cG);
+        requires cG != null;
+        ensures getClientGroup().equals(cG);
      */
     public void setClientGroup(ClientGroup cG) {
         group = cG;
@@ -130,6 +139,10 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      * @param gNumber the groupnumber
      * @param exts    extensions
      * @throws C4Exception
+     */
+    /*@
+        requires pName != null && gNumber >= 0;
+        requires getClientGroup() != null;
      */
     @Override
     public void join(String pName, int gNumber, Set<Extension> exts) throws C4Exception {
@@ -144,6 +157,9 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      *
      * @throws C4Exception
      */
+    /*@
+        requires getClientGroup() != null
+     */
     @Override
     public void ready() throws C4Exception {
         LOGGER.info("Received ready for user {}", getName());
@@ -155,6 +171,9 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      *
      * @param col the column the move is about
      * @throws C4Exception
+     */
+    /*@
+        requires getClientGroup() != null
      */
     @Override
     public void doMove(int col) throws C4Exception {
@@ -252,6 +271,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
         running = false;
     }
 
+
     public void init() {
         out = null;
         in = null;
@@ -266,6 +286,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
         chatClient = new ChatClient.Client(null);
         lobbyClient = new LobbyClient.Client(null);
     }
+
 
     public void registerExtensions(Set<Extension> extensions) {
         Extension chat = ExtensionFactory.chat();
@@ -287,6 +308,9 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      *
      * @param message The message that will be sent.
      */
+    /*@
+        requires getClientGroup() != null
+     */
     @Override
     public void chatLocal(String message) throws C4Exception {
         group.localChat(this, message);
@@ -297,15 +321,20 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      *
      * @param message The message that will be sent.
      */
+    /*@
+        requires getClientGroup() != null
+     */
     @Override
     public void chatGlobal(String message) throws C4Exception {
         group.globalChat(this, message);
     }
 
+    /*@ pure */
     public ChatClient.Client getChatClient() {
         return chatClient;
     }
 
+    /*@ pure */
     public LobbyClient.Client getLobbyClient() {
         return lobbyClient;
     }

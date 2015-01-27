@@ -34,8 +34,11 @@ public class GameGroup extends ClientGroup implements Observer {
 
 // ------------------ Instance variables ----------------
 
-    Map<ClientHandler, ASyncPlayer> playerMap;
-    Game game;
+
+    //@ invariant playerMap != null;
+    private Map<ClientHandler, ASyncPlayer> playerMap;
+    //@ invariant game != null;
+    private Game game;
 
 
     // --------------------- Constructors -------------------
@@ -46,6 +49,9 @@ public class GameGroup extends ClientGroup implements Observer {
      * @param theServer The server that will be used for the GameGroup.
      * @param client1   The first ClientHandler that will be player 1 in the Game.
      * @param client2   The second ClientHandler that will be player 2 in the Game.
+     */
+    /*@
+        requires theServer != null && client1 != null && client2 != null;
      */
     public GameGroup(FourCharmServer theServer, ClientHandler client1, ClientHandler client2) {
         super(theServer);
@@ -95,6 +101,9 @@ public class GameGroup extends ClientGroup implements Observer {
      * @param col    the column the move will be about
      * @throws C4Exception If the move is not allowed an InvalidMoveError will be thrown.
      */
+    /*@
+        requires client1 != null;
+     */
     @Override
     public void doMove(ClientHandler client, int col) throws C4Exception {
 
@@ -142,6 +151,9 @@ public class GameGroup extends ClientGroup implements Observer {
      * @param client The {@link com.lucwo.fourcharm.server.ClientHandler}
      *               which will has been removed from the group.
      */
+    /*@
+        requires client != null;
+     */
     @Override
     public synchronized void removeClientCallback(ClientHandler client) {
         if (!game.hasFinished()) {
@@ -160,6 +172,9 @@ public class GameGroup extends ClientGroup implements Observer {
 
     }
 
+    /*@
+        requires client != null;
+     */
     @Override
     public void addClientCallback(ClientHandler client) {
         getServer().stateChange(client, LobbyState.GAME);
