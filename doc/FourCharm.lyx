@@ -1897,16 +1897,8 @@ FourCharmServerTUI
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
+The FourCharmServerTUI is the Textual User Interface of the FourCharmServer.
+ It makes use of the FourCharmServerController class.
 \end_layout
 
 \begin_layout Paragraph
