@@ -69,7 +69,8 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      *
      * @return the name of this ClientHandler
      */
-    public String getName() {
+
+    /*@ pure */ public String getName() {
         return name;
     }
 
@@ -77,6 +78,10 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      * Sets the name of this ClientHandler.
      *
      * @param newName the name of the ClientHandler
+     */
+    /*@
+    requires: newName != null;
+    ensures: getName().equals(newName);
      */
     public void setName(String newName) {
         name = newName;
@@ -87,7 +92,8 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      *
      * @return the coreClient
      */
-    public CoreClient.Client getCoreClient() {
+
+    /*@ pure */ public CoreClient.Client getCoreClient() {
         return coreClient;
     }
 
@@ -99,7 +105,8 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      *
      * @return the ClientGroup of this ClientHandler
      */
-    public ClientGroup getClientGroup() {
+
+    /*@ pure */ public ClientGroup getClientGroup() {
         return group;
     }
 
@@ -107,6 +114,10 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      * Sets the ClientGroup of this ClientHandler.
      *
      * @param cG The clientgroup this ClientHandler will belong to.
+     */
+    /*@
+    requires: cG != null;
+    ensures getClientGroup().equals(cG);
      */
     public void setClientGroup(ClientGroup cG) {
         group = cG;
