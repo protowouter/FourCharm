@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.channels.ServerSocketChannel;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -25,7 +26,7 @@ public class FourCharmServerTest {
     @Mocked
     private GameGroup game;
     @Mocked
-    private ServerSocket socket;
+    private ServerSocketChannel socket;
 
     @Before
     public void setUp() throws Exception {
@@ -67,7 +68,7 @@ public class FourCharmServerTest {
     public void testOpenSocket(@Mocked ServerSocket anySocket) throws Exception {
 
         new Expectations() {{
-            new ServerSocket(0, anyInt, null);
+            ServerSocketChannel.open();
         }};
 
         server.openSocket();
@@ -80,9 +81,7 @@ public class FourCharmServerTest {
 
         new Expectations() {{
 
-            ServerSocket socket1 = new ServerSocket(0, anyInt, null);
-            socket1.accept();
-            returns(sock);
+            // TODO fill expectations
             //preLobby.removeHandler(null);
             //anyClient.getClientGroup(); result = preLobby;
 

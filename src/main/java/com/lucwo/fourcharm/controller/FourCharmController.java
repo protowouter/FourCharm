@@ -23,11 +23,6 @@ import nl.woutertimmermans.connect4.protocol.parameters.LobbyState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jmdns.JmDNS;
-import javax.jmdns.ServiceEvent;
-import javax.jmdns.ServiceListener;
-import java.io.IOException;
-import java.net.InetAddress;
 import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
@@ -56,39 +51,10 @@ public class FourCharmController implements Observer {
     private ServerHandler serverClient;
     private Player player1;
     private Player player2;
-    private JmDNS serverDiscoverer;
     private LobbyList lobbyStateList;
     private Set<C4Server> servers;
 
 // --------------------- Constructors -------------------
-
-    private ServiceListener fourCharmServiceListener = new ServiceListener() {
-        @Override
-        public void serviceAdded(ServiceEvent serviceEvent) {
-            LOGGER.info("Service added: {} {}", serviceEvent.getName(), serviceEvent.getType());
-            serverDiscoverer.requestServiceInfo(serviceEvent.getType(), serviceEvent.getName());
-
-        }
-
-        @Override
-        public void serviceRemoved(ServiceEvent serviceEvent) {
-            final int port = serviceEvent.getInfo().getPort();
-            for (InetAddress iA : serviceEvent.getInfo().getInet4Addresses()) {
-                servers.removeIf(server -> server.getAddress() == iA && server.getPort() == port);
-            }
-            view.updateServers(servers);
-
-        }
-
-        @Override
-        public void serviceResolved(ServiceEvent serviceEvent) {
-            for (InetAddress iA : serviceEvent.getInfo().getInet4Addresses()) {
-                servers.add(new C4Server(serviceEvent.getName(), iA, serviceEvent.getInfo().getPort()));
-            }
-            view.updateServers(servers);
-
-        }
-    };
 
 // ----------------------- Queries ----------------------
 
@@ -101,12 +67,6 @@ public class FourCharmController implements Observer {
 
         lobbyStateList = new LobbyList();
         servers = new HashSet<>();
-        try {
-            serverDiscoverer = JmDNS.create();
-            serverDiscoverer.addServiceListener("_c4._tcp.local.", fourCharmServiceListener);
-        } catch (IOException e) {
-            LOGGER.trace("constructor", e);
-        }
     }
 
 
@@ -320,12 +280,6 @@ public class FourCharmController implements Observer {
         }
         if (serverClient != null) {
             serverClient.disconnect();
-        }
-        serverDiscoverer.removeServiceListener("_c4._tcp.local.", fourCharmServiceListener);
-        try {
-            serverDiscoverer.close();
-        } catch (IOException e) {
-            LOGGER.trace("shutdown", e);
         }
     }
 

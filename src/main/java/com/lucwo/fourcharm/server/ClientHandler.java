@@ -17,15 +17,17 @@ import nl.woutertimmermans.connect4.protocol.parameters.LobbyState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedWriter;
-import java.io.CharArrayWriter;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.concurrent.ForkJoinPool;
 
 /**
  * A ClientHandler is responsible for maintaining a connection with a client and passing received
@@ -49,17 +51,15 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
     private SocketChannel socket;
     //@ invariant coreClient != null;
 
-    private CoreClient.Client coreClient;
+    private CoreClient.AsyncClient coreClient;
     //@ invariant chatClient != null;
-    private ChatClient.Client chatClient;
+    private ChatClient.AsyncClient chatClient;
     //@ invariant lobbyClient != null;
-    private LobbyClient.Client lobbyClient;
-    private Scanner in;
-    private BufferedWriter out;
+    private LobbyClient.AsyncClient lobbyClient;
     private boolean running;
     //@ invariant server != null;
     private FourCharmServer server;
-    private CharArrayWriter writeBuffer;
+    private SelectionKey key;
 
 // --------------------- Constructors -------------------
 
@@ -109,7 +109,8 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      * @return the coreClient
      */
     //@ ensures \result != null;
-    /*@ pure */ public CoreClient.Client getCoreClient() {
+    /*@ pure */
+    public CoreClient.AsyncClient getCoreClient() {
         return coreClient;
     }
 
@@ -207,7 +208,6 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
      */
     @Override
     public void run() {
-        init();
         handleClient();
     }
 
@@ -230,12 +230,46 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 
     }
 
-    public void handleRead() throws IOException {
+    public void handleRead(SelectionKey key) throws IOException {
+        ByteBuffer buf = ByteBuffer.allocateDirect(5120);
+        buf.clear();
+        StringBuilder builder = (StringBuilder) key.attachment();
+        builder = builder == null ? new StringBuilder() : builder;
+        int readCount = socket.read(buf);
+
+        if (readCount > 0) {
+            buf.flip();
+            CharBuffer decChar = Charset.forName("UTF-8").decode(buf);
+            builder.append(decChar);
+            String[] commands = removeCommands(builder, key);
+            ForkJoinPool.commonPool().submit(() -> executeCommands(commands));
+        } else if (readCount == -1) {
+            shutdown();
+        }
+
+
+    }
+
+    private String[] removeCommands(StringBuilder builder, SelectionKey key) {
+        List<String> result = new LinkedList<>();
+        Scanner commandScanner = new Scanner(builder.toString());
+        builder = new StringBuilder();
+
+        while (commandScanner.hasNextLine()) {
+            result.add(commandScanner.nextLine());
+        }
+        if (commandScanner.hasNext(".+")) {
+            builder.append(commandScanner.next(".+"));
+        }
+        key.attach(builder);
+        return result.toArray(new String[result.size()]);
+    }
+
+    private void executeCommands(String[] commands) {
         CoreServer.Processor coreProcessor = new CoreServer.Processor<>(this);
         ChatServer.Processor chatProcessor = new ChatServer.Processor<>(this);
 
-        while (in.hasNextLine()) {
-            String input = in.nextLine();
+        for (String input : commands) {
             LOGGER.info("Processing input {}", input);
             try {
                 boolean processed = coreProcessor.process(input);
@@ -258,29 +292,19 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 
             }
         }
+
     }
 
-    public void handleWrite(SelectionKey key) {
-        CharBuffer buf = CharBuffer.wrap(writeBuffer.toString());
-        while (buf.hasRemaining()) {
-            try {
-                int n = socket.write(Charset.forName("UTF-8").encode(buf));
-                if (n == 0) {
-                    key.interestOps(SelectionKey.OP_WRITE);
-                }
-            } catch (IOException e) {
-                writeBuffer.append(buf);
-            }
-        }
-        if (!buf.hasRemaining()) {
-            key.interestOps(SelectionKey.OP_READ);
-        }
-        buf.clear();
+    public void handleWrite() {
+        coreClient.write();
     }
 
     public void shutdown() {
         try {
             socket.close();
+            if (group != null) {
+                group.removeHandler(this);
+            }
         } catch (IOException e) {
             LOGGER.trace("shutdown", e);
         }
@@ -289,14 +313,9 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 
 
     public void init(SelectionKey key) {
-        in = new Scanner(socket);
-        writeBuffer = new CharArrayWriter();
-        out = new BufferedWriter(writeBuffer);
-
-
-        coreClient = new CoreClient.Client(out);
-        chatClient = new ChatClient.Client(null);
-        lobbyClient = new LobbyClient.Client(null);
+        coreClient = new CoreClient.AsyncClient(key);
+        chatClient = new ChatClient.AsyncClient(null);
+        lobbyClient = new LobbyClient.AsyncClient(null);
     }
 
 
@@ -306,10 +325,10 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
 
         if (extensions != null) {
             if (extensions.contains(chat)) {
-                chatClient = new ChatClient.Client(out);
+                chatClient = new ChatClient.AsyncClient(key);
             }
             if (extensions.contains(lobby)) {
-                lobbyClient = new LobbyClient.Client(out);
+                lobbyClient = new LobbyClient.AsyncClient(key);
             }
         }
 
@@ -342,12 +361,12 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
     }
 
     /*@ pure */
-    public ChatClient.Client getChatClient() {
+    public ChatClient.AsyncClient getChatClient() {
         return chatClient;
     }
 
     /*@ pure */
-    public LobbyClient.Client getLobbyClient() {
+    public LobbyClient.AsyncClient getLobbyClient() {
         return lobbyClient;
     }
 }

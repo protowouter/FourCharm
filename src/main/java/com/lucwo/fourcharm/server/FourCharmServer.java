@@ -12,8 +12,6 @@ import nl.woutertimmermans.connect4.protocol.parameters.LobbyState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jmdns.JmDNS;
-import javax.jmdns.ServiceInfo;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -50,7 +48,6 @@ public class FourCharmServer {
     private boolean running;
     private ServerSocketChannel serverChannel;
     private int poort;
-    private JmDNS jmDNS;
     //@ invariant lobbyStates != null;
     private Map<ClientHandler, LobbyState> lobbyStates;
     private Map<SelectionKey, ClientHandler> socketChannelClientHandlerMap;
@@ -106,10 +103,6 @@ public class FourCharmServer {
 
             //Key for accepting incoming connections
             SelectionKey acceptKey = serverChannel.register(selector, SelectionKey.OP_ACCEPT);
-
-            Thread announceThread = new Thread(() -> announceServer(getSocketPort()));
-            announceThread.setName("serverAnnouncer");
-            announceThread.start();
             LOGGER.info("Listening for connections on port {}", getSocketPort());
         } catch (IOException e) {
             LOGGER.trace("main", e);
@@ -136,13 +129,13 @@ public class FourCharmServer {
             Iterator<SelectionKey> it = readyKeys.iterator();
             while (it.hasNext()) {
                 SelectionKey key = it.next();
-                if (key.isAcceptable()) {
+                if (key.isValid() && key.isAcceptable()) {
                     accept(key);
                 }
-                if (key.isReadable()) {
+                if (key.isValid() && key.isReadable()) {
                     read(key);
                 }
-                if (key.isWritable()) {
+                if (key.isValid() && key.isWritable()) {
                     write(key);
                 }
                 it.remove();
@@ -161,9 +154,9 @@ public class FourCharmServer {
             if (socket != null) {
                 socket.configureBlocking(false);
                 SelectionKey newSocketKey =
-                        socket.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+                        socket.register(selector, SelectionKey.OP_READ);
                 ClientHandler client = new ClientHandler(socket, this);
-                client.init();
+                client.init(newSocketKey);
                 preLobby.addHandler(client);
                 socketChannelClientHandlerMap.put(newSocketKey, client);
 
@@ -176,7 +169,7 @@ public class FourCharmServer {
 
     private void read(SelectionKey key) {
         try {
-            socketChannelClientHandlerMap.get(key).handleRead();
+            socketChannelClientHandlerMap.get(key).handleRead(key);
         } catch (IOException e) {
             LOGGER.trace("read", e);
         }
@@ -184,18 +177,6 @@ public class FourCharmServer {
 
     private void write(SelectionKey key) {
         socketChannelClientHandlerMap.get(key).handleWrite();
-    }
-
-    private void announceServer(int port) {
-        try {
-            jmDNS = JmDNS.create();
-            ServiceInfo info = ServiceInfo.create("_c4._tcp.local.", "FourCharm", port, "FourCharm game server");
-            jmDNS.registerService(info);
-
-        } catch (IOException e) {
-            LOGGER.trace("announceServer", e);
-        }
-
     }
 
     /**
@@ -224,7 +205,7 @@ public class FourCharmServer {
         running = false;
         try {
             serverChannel.close();
-            jmDNS.close();
+            selector.wakeup();
         } catch (IOException e) {
             LOGGER.trace("stop", e);
         }
