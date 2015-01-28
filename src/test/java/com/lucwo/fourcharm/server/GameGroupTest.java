@@ -103,6 +103,5 @@ public class GameGroupTest {
     @Test
     public void testUpdate() throws Exception {
 
-        //TODO: invullen
     }
 }

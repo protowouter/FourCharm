@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 /**
- * TODO: GameGroup class javadoc verder uitbreiden.
  * The GameGroup class extends the ClientGroup abstract class and implements Observer.
  * This class uses the Protocol classes as well. Two Clients play against each other in
  * the GameGroup.

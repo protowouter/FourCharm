@@ -24,7 +24,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * TODO: Fourcharmpresenter javadoc.
  *
  * @author Luce Sandfort and Wouter Timmermans
  */

@@ -13,7 +13,6 @@ import javafx.scene.shape.Circle;
 
 
 /**
- * TODO spacepresenter javadoc.
  *
  * @author Luce Sandfort and Wouter Timmermans
  */

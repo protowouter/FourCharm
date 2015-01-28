@@ -24,9 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
-/**
- * TODO newgamepresenter javadoc.
- */
+
 public class NewGamePresenter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NewGamePresenter.class);

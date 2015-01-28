@@ -28,9 +28,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-/**
- * TODO gamepresenter javadoc.
- */
 public class GamePresenter implements Observer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GamePresenter.class);
