@@ -264,6 +264,16 @@ View
 \end_layout
 
 \begin_layout Standard
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:View-package-class"
+
+\end_inset
+
+ gives an overview of our views.
+\end_layout
+
+\begin_layout Standard
 Our system has two implementations of the FourCharmView interface.
  The main responsibility of controlling user input lies at the controller,
  but the Views are responsible for displaying changes in the game state.
@@ -276,6 +286,29 @@ Our system has two implementations of the FourCharmView interface.
 
 \begin_layout Paragraph
 Controller
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:Controller-and-ServerHandler"
+
+\end_inset
+
+ is the class diagram of the controller and the serverhandler of our system.
+\end_layout
+
+\begin_layout Standard
+We have made two controllers, one for the client part and one for the server
+ part of our system.
+ The controller takes care of instantiating the views and updating the state
+ of the view and sending and receiving messages from the view and relaying
+ these to other parts of the system.
+ The ServerHandler class maintains a connection with a server, the ServerHandler
+ communicates with the FourCharmController which makes sure the views are
+ updated with the new information received from the server.
+ The controller also keeps the game that is currently being played, no matter
+ if it is a networked game or a local game.
 \end_layout
 
 \begin_layout Paragraph
@@ -342,7 +375,7 @@ Whenever a Client is connected to the server, he will start in the PreLobbyGroup
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -600,7 +633,7 @@ Games, the Lobby and the PreLobby are modeled as ClientGroups.
 \begin_inset Float table
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align left
@@ -901,7 +934,7 @@ The entry point for the client portion of our system is the FourCharmController
 \begin_inset Float table
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \begin_inset Tabular
@@ -1346,7 +1379,7 @@ In developing of our system we made use of the Model View Controller pattern
 Presenter
 \end_layout
 
-\begin_layout Standard
+\begin_layout Quotation
 For the Graphical User Interface we added an addition layer in the form
  of presenters.
  We made use of FXML 
@@ -1993,14 +2026,57 @@ The ServerHandler has been tested in isolation by using mocked instances.
  The startGame() en gameEnd() methods have been tested as well as the joinServer
 (), accept(), doneMove(), handleServerCommands() and setStrategy() methods.
  These tests are done by JUNIT testing.
+ 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:ServerHandler-test-coverage"
+
+\end_inset
+
+ shows the unit test coverage of the ServerHandler test.
+ The score of 49% is somewhat low, however we are partial to the opinion
+ that this is of no consequence because the methods that are not tested
+ are either covered by the integration tests or part of an optional extension
+ of the protocol.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
-status open
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
 
 \begin_layout Plain Layout
-Discussion test coverage
+\align center
+\begin_inset Graphics
+	filename serverHandler test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ServerHandler-test-coverage"
+
+\end_inset
+
+ServerHandler test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -2039,6 +2115,58 @@ egy class.
  move.
  This class is not tested in isolation: the class makes use of the Board
  class.
+ 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:NegaMaxStrategy-test-coverage"
+
+\end_inset
+
+ shows the test coverage of the NegaMaxStrategy class.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename negamax strategy test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:NegaMaxStrategy-test-coverage"
+
+\end_inset
+
+NegaMaxStrategy test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2064,6 +2192,50 @@ The RandomStrategy class has been tested the same way as the NegaMaxStrategy.
  makes use of the Board class to make a move.
  The doMove() method is the only method that is tested.
  This method is tested the same way as the NegaMaxStrategy with an assertTrue.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename random strategy test coverage.png
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:RandomStrategy-test-coverage"
+
+\end_inset
+
+RandomStrategy test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2136,10 +2308,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename boardTest coverage.png
 	width 100col%
@@ -2199,6 +2368,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename referenceboard test coverage.png
 	width 100col%
@@ -2235,10 +2405,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename binaryboard test coverage.png
 	width 100col%
@@ -2408,10 +2575,6 @@ sideways false
 status open
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset Graphics
 	filename game test coverage.png
 	width 100col%
@@ -2483,11 +2646,41 @@ The join(), ready() and doMove() methods have been tested by checking if
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-Discussion test coverage
+\begin_inset Graphics
+	filename clienthandler test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ClientHandler-test-coverage"
+
+\end_inset
+
+ClientHandler test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -2535,6 +2728,49 @@ Most of the methods have been tested by making a new Expectations() {{ }}.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename fourcharmserver test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:FourCharmServer"
+
+\end_inset
+
+FourCharmServer
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Note Comment
 status open
 
@@ -2572,6 +2808,49 @@ The basic commands join doMove and ready are tested whether the Client is
 \begin_layout Standard
 Furthermore making an invalid move and making a valid move while it is not
  your turn are tested.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename game group test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:GameGroup-test-coverage"
+
+\end_inset
+
+GameGroup test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2613,11 +2892,41 @@ The ready() method makes use of new Expectations () {{ }}.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-Discussion test coverage
+\begin_inset Graphics
+	filename lobbygroup test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:LobbyGroup-test-coverage"
+
+\end_inset
+
+LobbyGroup test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -2672,6 +2981,49 @@ Wouter") does not exist.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename prelobbygroup test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:PreLobbyGroup-test-coverage"
+
+\end_inset
+
+PreLobbyGroup test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Note Comment
 status open
 
@@ -2719,6 +3071,49 @@ Whenever a game shuts down or a client disconnects the controller needs
  which either the game stops, or the client disconnects.
  The get and set human / AI move are also tested by expectation boxes and
  mocked instances.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename fourcharmcontroller test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:FourCharmController-test-coverag"
+
+\end_inset
+
+FourCharmController test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
