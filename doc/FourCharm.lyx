@@ -138,7 +138,7 @@ Class Diagrams
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -313,6 +313,16 @@ We have made two controllers, one for the client part and one for the server
 Presenter
 \end_layout
 
+\begin_layout Standard
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "par:Presenter"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Paragraph
 Server
 \end_layout
@@ -373,7 +383,7 @@ Whenever a Client is connected to the server, he will start in the PreLobbyGroup
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \begin_inset Graphics
@@ -1373,6 +1383,13 @@ In developing of our system we made use of the Model View Controller pattern
 
 \begin_layout Paragraph
 Presenter
+\begin_inset CommandInset label
+LatexCommand label
+name "par:Presenter"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Quotation
@@ -3559,33 +3576,30 @@ McCabe cyclomatic complexity
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
+Cyclomatic complexity is a measure of how complex a method is.
+ It is calculated by determining how many different paths there are through
+ a method.
+ A complexity higher than 10 is considered too high by McCabe.
+ In our system there is only on method that has a higher complexity than
+ 10, that method has a complexity of 11.
+ So we can conclude that we don't have too complex methods in our implementation.
 \end_layout
 
 \begin_layout Section
-Weight methods per class
+Weighted methods per class
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
+Weighted methods per class is the combined cyclomatic complexity of all
+ methods in that class.
+ A high WMC could indicate that it would be advisable to split the class
+ in multiple parts.
+ A WMC of 30 and higher is considered too high.
+ We have 7 classes that exceed this value, from these classes there are
+ only classes that can't be easily divided into subclasses: BinaryBoard
+ and ReferenceBoard.
+ We recognize that the other should be divided in multiple parts and recommend
+ the future maintainers to do so.
 \end_layout
 
 \begin_layout Section
@@ -3593,16 +3607,12 @@ Lack of Cohesion in Methods
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
+Lack of Cohesion in Methods is a measure used in Object Oriented projects.
+ When the LCOM is high it means that the functionality of that object has
+ too much responsibilities that are not related to each other or to the
+ object.
+ We don't believe we have classes that have a too high LCOM, the highest
+ value is 10.
 \end_layout
 
 \begin_layout Chapter
