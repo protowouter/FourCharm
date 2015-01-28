@@ -92,9 +92,9 @@ public class NewGamePresenter {
                 }
         );
         p1Strategy.getItems().addAll(new MTDfStrategy(),
-                new RandomStrategy(), new NegaMaxStrategy(12));
+                new RandomStrategy(), new NegaMaxStrategy(8));
         p2Strategy.getItems().addAll(new MTDfStrategy(),
-                new RandomStrategy(), new NegaMaxStrategy(12));
+                new RandomStrategy(), new NegaMaxStrategy(8));
 
         InvalidationListener playahlistener = (observable) -> checkAbleToPlayah();
         p1Strategy.getSelectionModel().selectedItemProperty().addListener(playahlistener);
