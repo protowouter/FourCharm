@@ -12,8 +12,6 @@ import nl.woutertimmermans.connect4.protocol.parameters.LobbyState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jmdns.JmDNS;
-import javax.jmdns.ServiceInfo;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -43,7 +41,6 @@ public class FourCharmServer {
     private boolean running;
     private ServerSocket serverSocket;
     private int poort;
-    private JmDNS jmDNS;
     //@ invariant lobbyStates != null;
     private Map<ClientHandler, LobbyState> lobbyStates;
 
@@ -87,9 +84,6 @@ public class FourCharmServer {
     public void openSocket() throws ServerStartException {
         try {
             serverSocket = new ServerSocket(poort, 10, InetAddress.getLocalHost());
-            Thread announceThread = new Thread(() -> announceServer(getSocketPort()));
-            announceThread.setName("serverAnnouncer");
-            announceThread.start();
             LOGGER.info("Listening for connections on port {}", getSocketPort());
         } catch (IOException e) {
             LOGGER.trace("main", e);
@@ -125,18 +119,6 @@ public class FourCharmServer {
 
     }
 
-    private void announceServer(int port) {
-        try {
-            jmDNS = JmDNS.create();
-            ServiceInfo info = ServiceInfo.create("_c4._tcp.local.", "FourCharm", port, "FourCharm game server");
-            jmDNS.registerService(info);
-
-        } catch (IOException e) {
-            LOGGER.trace("announceServer", e);
-        }
-
-    }
-
     /**
      * Adds a game to the GameGroup.
      *
@@ -163,7 +145,6 @@ public class FourCharmServer {
         running = false;
         try {
             serverSocket.close();
-            jmDNS.close();
         } catch (IOException e) {
             LOGGER.trace("stop", e);
         }
