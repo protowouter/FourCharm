@@ -178,7 +178,7 @@
         <dependency>
             <groupId>nl.woutertimmermans.connect4</groupId>
             <artifactId>c4-protocol</artifactId>
-            <version>0.9.0</version>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
