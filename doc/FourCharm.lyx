@@ -138,18 +138,10 @@ Class Diagrams
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
-\begin_inset Graphics
-	filename classDiagramTotalPackage.png
-	height 60pheight%
-	rotateAngle 270
-	rotateOrigin center
-
-\end_inset
-
 
 \end_layout
 
@@ -375,19 +367,7 @@ Whenever a Client is connected to the server, he will start in the PreLobbyGroup
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename classDiagramModel.png
-	width 75col%
-	rotateAngle 270
-
-\end_inset
-
-
-\end_layout
+status open
 
 \begin_layout Plain Layout
 \begin_inset Caption Standard
@@ -416,18 +396,7 @@ Model package
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename classDiagramView.png
-	width 100col%
-
-\end_inset
-
-
-\end_layout
+status open
 
 \begin_layout Plain Layout
 \begin_inset Caption Standard
@@ -456,16 +425,10 @@ View package class diagram
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
-\begin_inset Graphics
-	filename classDiagramControllerServerHandler.png
-	width 100col%
-
-\end_inset
-
 
 \end_layout
 
@@ -496,18 +459,7 @@ Controller and ServerHandler
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename classDiagramPresenter.png
-	width 100col%
-
-\end_inset
-
-
-\end_layout
+status open
 
 \begin_layout Plain Layout
 \begin_inset Caption Standard
@@ -536,18 +488,7 @@ Presenter package
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename classDiagramServer.png
-	width 100col%
-
-\end_inset
-
-
-\end_layout
+status open
 
 \begin_layout Plain Layout
 \begin_inset Caption Standard
@@ -2123,6 +2064,16 @@ reference "fig:NegaMaxStrategy-test-coverage"
 \end_inset
 
  shows the test coverage of the NegaMaxStrategy class.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:NegaMaxStrategy-test-coverage"
+
+\end_inset
+
+ shows the test coverage of the NegaMaxStrategy test.
+ We are quite happy with the results, since 95% test coverage is a good
+ percentage.
 \end_layout
 
 \begin_layout Standard
@@ -2169,19 +2120,6 @@ NegaMaxStrategy test coverage
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-Discussion test coverage
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Paragraph
 RandomStrategyTest
 \end_layout
@@ -2192,6 +2130,16 @@ The RandomStrategy class has been tested the same way as the NegaMaxStrategy.
  makes use of the Board class to make a move.
  The doMove() method is the only method that is tested.
  This method is tested the same way as the NegaMaxStrategy with an assertTrue.
+ The RandomStrategy test coverage can be seen in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:RandomStrategy-test-coverage"
+
+\end_inset
+
+.
+ The test coverage of 70% is caused by the determineMove() method.
+ The other methods are well tested.
 \end_layout
 
 \begin_layout Standard
@@ -2239,15 +2187,6 @@ RandomStrategy test coverage
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-Discussion test coverage
-\end_layout
-
-\end_inset
-
 
 \end_layout
 
@@ -2635,14 +2574,25 @@ In this test, the get methods and the set methods have been tested by using
  of the Client, this is tested by making a new group, putting (using the
  set method) the Client in there and checking if the group has been updated
  by using the getClientGroup() method.
-\end_layout
-
-\begin_layout Standard
-The join(), ready() and doMove() methods have been tested by checking if
+ The join(), ready() and doMove() methods have been tested by checking if
  the commands are being sent to the current group.
  This is done by making a new Expectations() {{ }}.
  To see if the current group receives the commands, the ClientGroup instance
  is made injectable in stead of mocked.
+\end_layout
+
+\begin_layout Standard
+The test coverage of the ClientHandler test can be seen in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:ClientHandler-test-coverage"
+
+\end_inset
+
+.
+ The test coverage is not particularly high, but that is not a problem.
+ Most of the methods with 0% test coverage were not worth testing.
+ The upper three methods could have been tested a little bit better.
 \end_layout
 
 \begin_layout Standard
@@ -2688,19 +2638,6 @@ ClientHandler test coverage
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-Discussion test coverage
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Paragraph
 FourCharmServerTest
 \end_layout
@@ -2719,12 +2656,23 @@ In this test a FourCharmServer class has been tested by opening sockets
  When a Client wants to join the server, the FourCharmServerTest class will
  check is there already is a Client with the same name (i.e.
  if he name of the Client already exists in server).
+ Most of the methods have been tested by making a new Expectations() {{
+ }}.
  
 \end_layout
 
 \begin_layout Standard
-Most of the methods have been tested by making a new Expectations() {{ }}.
- 
+The FourCharmServer test coverage can be seen in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:FourCharmServer"
+
+\end_inset
+
+.
+ This percentage is not high, because of the new methods we added to make
+ the Lobby extension possible.
+ We did not have enough time to test these new methods completely.
 \end_layout
 
 \begin_layout Standard
@@ -2770,19 +2718,6 @@ FourCharmServer
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-Discussion test coverage
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Paragraph
 GameGroupTest
 \end_layout
@@ -2803,11 +2738,21 @@ The basic commands join doMove and ready are tested whether the Client is
  The doMove command is tested by new Expectations() {{ }}.
  If there is a game and the column where you want to make your move is free,
  the move should be made.
+ Furthermore making an invalid move and making a valid move while it is
+ not your turn are tested.
 \end_layout
 
 \begin_layout Standard
-Furthermore making an invalid move and making a valid move while it is not
- your turn are tested.
+The test coverage of this GameGroup test can be seen in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:GameGroup-test-coverage"
+
+\end_inset
+
+.
+ The update method was hard to test, which causes the low coverage percentage
+ of this test.
 \end_layout
 
 \begin_layout Standard
@@ -2853,19 +2798,6 @@ GameGroup test coverage
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-Discussion test coverage
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Paragraph
 LobbyGroupTest
 \end_layout
@@ -2883,12 +2815,22 @@ The LobbyGroup tests look a lot like the GameGroup and PreLobbyGroup tests.
  If a invalid command is called, an error should be send by the server.
  In this case the join command and the doMove command are not allowed, so
  the server will send an InvalidCommandError.
+ The ready() method makes use of new Expectations () {{ }}.
+ Two ClientHandlers get names in the expectations box and a GameGroup is
+ made with those two ClientHandlers.
 \end_layout
 
 \begin_layout Standard
-The ready() method makes use of new Expectations () {{ }}.
- Two ClientHandlers get names in the expectations box and a GameGroup is
- made with those two ClientHandlers.
+The test coverage of the LobbyGroup test can be seen in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:LobbyGroup-test-coverage"
+
+\end_inset
+
+.
+ This percentage is high enough, so the tests of this class have been good
+ enough.
 \end_layout
 
 \begin_layout Standard
@@ -2934,19 +2876,6 @@ LobbyGroup test coverage
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-Discussion test coverage
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Paragraph
 PreLobbyGroupTest
 \end_layout
@@ -2978,6 +2907,18 @@ Wouter") does not exist.
  he should be allowed and able to do so.
  The test for joining a server with a existing name should not let the client
  join the server: this is not allowed.
+\end_layout
+
+\begin_layout Standard
+The PreLobbyGroup test coverage can be seen 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:PreLobbyGroup-test-coverage"
+
+\end_inset
+
+.
+ This percentage is quite high, so the tests were good enough.
 \end_layout
 
 \begin_layout Standard
@@ -3023,19 +2964,6 @@ PreLobbyGroup test coverage
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-Discussion test coverage
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Subsection
 Controller
 \end_layout
@@ -3062,15 +2990,28 @@ Tests are done for the start of a network game and for the start of a local
  These methods are tested by using new Expectations() {{ }}.
  The expectations box 'creates' a game and after that the controller will
  be able to start the game.
-\end_layout
-
-\begin_layout Standard
-Whenever a game shuts down or a client disconnects the controller needs
+ Whenever a game shuts down or a client disconnects the controller needs
  to send a shutdown() command.
  This is tested in two different methods by using the expectations box in
  which either the game stops, or the client disconnects.
  The get and set human / AI move are also tested by expectation boxes and
  mocked instances.
+\end_layout
+
+\begin_layout Standard
+The test coverage overview of the FourCharmControllerTest can be seen in
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:FourCharmController-test-coverag"
+
+\end_inset
+
+.
+ This class has a lot of methods and we tried to test these method as good
+ as possible.
+ The percentage of the coverage of the test is not that high.
+ This is caused by a couple of methods that were hard to test.
 \end_layout
 
 \begin_layout Standard
@@ -3107,25 +3048,12 @@ FourCharmController test coverage
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-Discussion test coverage
-\end_layout
-
-\end_inset
-
 
 \end_layout
 
