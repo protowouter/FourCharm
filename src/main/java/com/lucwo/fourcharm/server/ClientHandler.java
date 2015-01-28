@@ -276,8 +276,10 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
         out = null;
         in = null;
         try {
-            out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), Charset.forName("UTF-8")));
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream(), Charset.forName("UTF-8")));
+            out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),
+                    Charset.forName("UTF-8")));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream(),
+                    Charset.forName("UTF-8")));
         } catch (IOException e) {
             LOGGER.trace("init", e);
         }

@@ -44,7 +44,8 @@ import java.util.Set;
  * @author Luce Sandfort and Wouter Timmermans.
  */
 
-public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, LobbyClient.Iface, Runnable {
+public class ServerHandler implements CoreClient.Iface,
+        ChatClient.Iface, LobbyClient.Iface, Runnable {
 
     private static final int GROUP_NUMBER = 23;
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerHandler.class);

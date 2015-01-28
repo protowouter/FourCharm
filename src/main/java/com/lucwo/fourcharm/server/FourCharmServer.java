@@ -170,12 +170,12 @@ public class FourCharmServer {
     public void globalChat(ClientHandler client, String message) throws C4Exception {
         lobby.broadcastChat(client, message);
         games.forEach(game -> {
-            try {
-                game.broadcastChat(client, message);
-            } catch (C4Exception e) {
-                LOGGER.trace("globalChat", e);
-            }
-        });
+                try {
+                    game.broadcastChat(client, message);
+                } catch (C4Exception e) {
+                    LOGGER.trace("globalChat", e);
+                }
+            });
 
     }
 

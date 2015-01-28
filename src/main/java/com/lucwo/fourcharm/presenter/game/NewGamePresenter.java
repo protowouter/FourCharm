@@ -31,7 +31,8 @@ public class NewGamePresenter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NewGamePresenter.class);
     // ------------------ Instance variables ----------------
-    private static final Integer[] TIME_CHOICES = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 60};
+    private static final Integer[] TIME_CHOICES =
+            new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 60};
     @FXML
     private Parent root;
     @FXML
@@ -80,16 +81,16 @@ public class NewGamePresenter {
         p1Select.getItems().addAll("Human", "Computer");
         p1Select.getSelectionModel().select(1);
         p1Select.getSelectionModel().selectedItemProperty().addListener(
-                (observable) -> {
-                    showPlayerFields();
-                }
+            (observable) -> {
+                showPlayerFields();
+            }
         );
         p2Select.getItems().addAll("Human", "Computer");
         p2Select.getSelectionModel().select(1);
         p2Select.getSelectionModel().selectedItemProperty().addListener(
-                (observable) -> {
-                    showPlayerFields();
-                }
+            (observable) -> {
+                showPlayerFields();
+            }
         );
         p1Strategy.getItems().addAll(new MTDfStrategy(),
                 new RandomStrategy(), new NegaMaxStrategy(10));
@@ -114,16 +115,18 @@ public class NewGamePresenter {
         localNetworkChoice();
         showPlayerFields();
         serverChoice.getSelectionModel().selectedItemProperty().addListener(observable -> {
-            C4Server selected = serverChoice.getSelectionModel().selectedItemProperty().get();
-            serverAddress.textProperty().setValue(selected.getAddress().getHostAddress());
-            serverPort.textProperty().setValue(Integer.toString(selected.getPort()));
-        });
+                C4Server selected = serverChoice.getSelectionModel().selectedItemProperty().get();
+                serverAddress.textProperty().setValue(selected.getAddress().getHostAddress());
+                serverPort.textProperty().setValue(Integer.toString(selected.getPort()));
+            });
 
 
         p1timeChoice.getItems().addAll(TIME_CHOICES);
         p2timeChoice.getItems().addAll(TIME_CHOICES);
-        p1timeChoice.getSelectionModel().selectedItemProperty().addListener((hoi) -> checkAbleToPlayah());
-        p2timeChoice.getSelectionModel().selectedItemProperty().addListener((hoi) -> checkAbleToPlayah());
+        p1timeChoice.getSelectionModel().selectedItemProperty().
+                addListener((hoi) -> checkAbleToPlayah());
+        p2timeChoice.getSelectionModel().selectedItemProperty().
+                addListener((hoi) -> checkAbleToPlayah());
 
 
 

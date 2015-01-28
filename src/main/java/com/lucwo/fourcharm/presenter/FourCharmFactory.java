@@ -84,7 +84,8 @@ public class FourCharmFactory {
         if (gamePresenter == null) {
             try {
                 FXMLLoader loader = new FXMLLoader();
-                loader.load(getClass().getClassLoader().getResourceAsStream("views/game/show.fxml"));
+                loader.load(getClass().getClassLoader().
+                        getResourceAsStream("views/game/show.fxml"));
                 gamePresenter = loader.getController();
                 gamePresenter.setFourCharmPresenter(fourCharmPresenter);
                 gamePresenter.init();

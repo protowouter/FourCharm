@@ -103,7 +103,8 @@ public class NegaMaxStrategy implements GameStrategy {
 
     }
 
-    public Result startNegaMax(Board board, Mark mark, double alphaOrig, double betaOrig, int depth) {
+    public Result startNegaMax(Board board, Mark mark,
+                               double alphaOrig, double betaOrig, int depth) {
         aborted.set(false);
         return negaMax(board, mark, alphaOrig, betaOrig, depth);
     }

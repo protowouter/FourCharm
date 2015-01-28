@@ -98,9 +98,9 @@ public class FourCharmPresenter implements Observer {
 
     public void showGame(Game game) {
         Platform.runLater(() -> {
-            gamePresenter.showGame(game);
-            gamePane.setCenter(gamePresenter.getView());
-        });
+                gamePresenter.showGame(game);
+                gamePane.setCenter(gamePresenter.getView());
+            });
 
 
     }
@@ -135,7 +135,8 @@ public class FourCharmPresenter implements Observer {
 
 
     public void showMessage(String message) {
-        Platform.runLater(() -> chatArea.textProperty().setValue(chatArea.textProperty().get() + "\n" + message));
+        Platform.runLater(() -> chatArea.textProperty().
+                setValue(chatArea.textProperty().get() + "\n" + message));
     }
 
     public void sendChat() {

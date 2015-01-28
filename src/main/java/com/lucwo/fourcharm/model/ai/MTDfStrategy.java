@@ -13,8 +13,6 @@ import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.concurrent.*;
 
@@ -40,7 +38,7 @@ public class MTDfStrategy implements GameStrategy {
     private static final int DEPTH_STEP = 2;
     private static final int TIMEOUT = 10;
 
-    private static final ExecutorService pool = Executors.newFixedThreadPool(6);
+    private static final ExecutorService POOL = Executors.newFixedThreadPool(6);
 
     // ------------------ Instance variables ----------------
     private long endTime;
@@ -103,7 +101,7 @@ public class MTDfStrategy implements GameStrategy {
                     try {
                         Board cBoard = board.deepCopy();
                         cBoard.makemove(col, mark);
-                        Future<Double> valFut = pool
+                        Future<Double> valFut = POOL
                                 .submit(() -> -mtdf(cBoard, mark.other(), mtDepth));
                         valueFutures.put(col, valFut);
                     } catch (InvalidMoveException e) {
@@ -122,7 +120,8 @@ public class MTDfStrategy implements GameStrategy {
                         bestMoveCurrentIteration = valFut.getKey();
                         bestValueCurrentIteration = value;
                     }
-                    LOGGER.debug(AI_DEBUG, "Depth: {} Col: {} Value: {}", achievedDepth, valFut.getKey(), value);
+                    LOGGER.debug(AI_DEBUG, "Depth: {} Col: {} Value: {}",
+                            achievedDepth, valFut.getKey(), value);
                 }
                 bestMove = bestMoveCurrentIteration;
                 bestValue = bestValueCurrentIteration;
