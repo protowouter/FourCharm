@@ -142,6 +142,12 @@ status open
 
 \begin_layout Plain Layout
 \align center
+\begin_inset Graphics
+	filename new/global diagram organic.png
+	width 100col%
+
+\end_inset
+
 
 \end_layout
 
@@ -370,6 +376,19 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\begin_inset Graphics
+	filename new/package model diagram.png
+	width 80col%
+	rotateAngle -90
+	rotateOrigin center
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -396,7 +415,17 @@ Model package
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename new/package view diagram.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
 
 \begin_layout Plain Layout
 \begin_inset Caption Standard
@@ -425,10 +454,16 @@ View package class diagram
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
+\begin_inset Graphics
+	filename new/package controller diagram.png
+	width 100col%
+
+\end_inset
+
 
 \end_layout
 
@@ -459,7 +494,17 @@ Controller and ServerHandler
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename new/package presenter diagram.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
 
 \begin_layout Plain Layout
 \begin_inset Caption Standard
@@ -488,7 +533,17 @@ Presenter package
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename new/package server diagram.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
 
 \begin_layout Plain Layout
 \begin_inset Caption Standard
