@@ -13,6 +13,8 @@ import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.concurrent.*;
 
@@ -38,11 +40,13 @@ public class MTDfStrategy implements GameStrategy {
     private static final int DEPTH_STEP = 2;
     private static final int TIMEOUT = 10;
 
+    private static final ExecutorService pool = Executors.newFixedThreadPool(6);
+
     // ------------------ Instance variables ----------------
     private long endTime;
     private Double prevValue;
     private NegaMaxStrategy nega;
-    private int duration;
+    private long duration;
 
     // --------------------- Constructors -------------------
 
@@ -57,9 +61,9 @@ public class MTDfStrategy implements GameStrategy {
 
     }
 
-    public MTDfStrategy(int time) {
+    public MTDfStrategy(long time) {
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "5");
-        duration = time * 1000;
+        duration = time * 1000L;
         nega = new NegaMaxStrategy();
         prevValue = FIRST_GUESS;
     }
@@ -77,6 +81,7 @@ public class MTDfStrategy implements GameStrategy {
      */
     @Override
     public int determineMove(Board board, Mark mark) {
+        LOGGER.debug("Starting negamax with timeout {}", duration);
         nega.resetCounter();
         endTime = System.currentTimeMillis() + duration;
         int freeSpots = board.getSpotCount() - board.getPlieCount();
@@ -84,7 +89,7 @@ public class MTDfStrategy implements GameStrategy {
         int bestMove = -1;
         int achievedDepth = 0;
 
-        for (int depth = DEPTH_STEP - 1; System.currentTimeMillis() < endTime && depth < freeSpots - 1;
+        for (int depth = DEPTH_STEP - 1; System.currentTimeMillis() < endTime;
              depth += DEPTH_STEP) {
             int bestMoveCurrentIteration = -1;
             double bestValueCurrentIteration = Double.NEGATIVE_INFINITY;
@@ -98,7 +103,7 @@ public class MTDfStrategy implements GameStrategy {
                     try {
                         Board cBoard = board.deepCopy();
                         cBoard.makemove(col, mark);
-                        Future<Double> valFut = ForkJoinPool.commonPool()
+                        Future<Double> valFut = pool
                                 .submit(() -> -mtdf(cBoard, mark.other(), mtDepth));
                         valueFutures.put(col, valFut);
                     } catch (InvalidMoveException e) {
@@ -108,9 +113,11 @@ public class MTDfStrategy implements GameStrategy {
             }
             try {
                 for (Map.Entry<Integer, Future<Double>> valFut : valueFutures.entrySet()) {
-
-                    double value = valFut.getValue().
-                            get(endTime - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+                    long waitTime = endTime - System.currentTimeMillis();
+                    if (waitTime <= 0) {
+                        throw new TimeoutException("Time's up");
+                    }
+                    double value = valFut.getValue().get(waitTime, TimeUnit.MILLISECONDS);
                     if (value > bestValueCurrentIteration) {
                         bestMoveCurrentIteration = valFut.getKey();
                         bestValueCurrentIteration = value;
@@ -156,7 +163,7 @@ public class MTDfStrategy implements GameStrategy {
         //@ invariant lowerBound < upperBound;
         double lowerBound = Double.NEGATIVE_INFINITY;
 
-        while (lowerBound < upperBound && System.currentTimeMillis() - TIMEOUT < endTime) {
+        while (lowerBound < upperBound && System.currentTimeMillis() < endTime + 100L) {
             double beta;
 
             if (guess == lowerBound) {

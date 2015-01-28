@@ -14,6 +14,7 @@ import org.slf4j.MarkerFactory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -43,7 +44,7 @@ public class NegaMaxStrategy implements GameStrategy {
     private final AtomicLong nodeCounter = new AtomicLong();
 
     private int searchDept;
-    private boolean aborted;
+    private final AtomicBoolean aborted = new AtomicBoolean();
 
     /**
      * Constructs a new NegaMaxStrategy. Uses the default search depth.
@@ -103,7 +104,7 @@ public class NegaMaxStrategy implements GameStrategy {
     }
 
     public Result startNegaMax(Board board, Mark mark, double alphaOrig, double betaOrig, int depth) {
-        aborted = false;
+        aborted.set(false);
         return negaMax(board, mark, alphaOrig, betaOrig, depth);
     }
 
@@ -153,7 +154,7 @@ public class NegaMaxStrategy implements GameStrategy {
 
                 result = getNegaResult(board, mark, depth, alpha, beta);
 
-                if (!aborted) {
+                if (!aborted.get()) {
                     saveToTransPostTable(alphaOrig, depth, beta, posKey, result);
                 }
 
@@ -184,7 +185,7 @@ public class NegaMaxStrategy implements GameStrategy {
         int columns = board.getColumns();
 
         boolean searching = true;
-        for (int col = 0; searching && !aborted && col < columns; col++) {
+        for (int col = 0; searching && !aborted.get() && col < columns; col++) {
             if (board.columnHasFreeSpace(col)) {
                 try {
                     Board childBoard = board.deepCopy();
@@ -447,7 +448,7 @@ public class NegaMaxStrategy implements GameStrategy {
     }
 
     public void abort() {
-        aborted = true;
+        aborted.set(true);
     }
 
     /**
