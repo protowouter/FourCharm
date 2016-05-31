@@ -20,7 +20,7 @@ import java.util.function.Consumer;
  * @author Luce Sandfort and Wouter Timmermans
  */
 
-public abstract class ClientGroup {
+public abstract class  ClientGroup {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientGroup.class);
 
@@ -46,8 +46,8 @@ public abstract class ClientGroup {
         requires name != null;
      */
     public boolean clientNameExists(String name) {
-        Boolean result = clientMap.searchKeys(4, clientName -> clientName.equals(name));
-        return result != null && result == true;
+        Boolean isInMap = clientMap.searchKeys(4, clientName -> clientName.equals(name));
+        return isInMap != null && isInMap;
     }
 
 
