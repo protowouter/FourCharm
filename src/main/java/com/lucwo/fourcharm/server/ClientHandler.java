@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
+ * Copyright (c) 2016. Luce Sandfort and Wouter Timmermans
  */
 
 package com.lucwo.fourcharm.server;
@@ -13,7 +13,6 @@ import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreClient;
 import nl.woutertimmermans.connect4.protocol.fgroup.core.CoreServer;
 import nl.woutertimmermans.connect4.protocol.fgroup.lobby.LobbyClient;
 import nl.woutertimmermans.connect4.protocol.parameters.Extension;
-import nl.woutertimmermans.connect4.protocol.parameters.LobbyState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +37,7 @@ import java.util.concurrent.ForkJoinPool;
  * @author Luce Sandfort and Wouter Timmermans
  */
 
-public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnable {
+public class ClientHandler implements CoreServer.Iface, ChatServer.Iface {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientHandler.class);
 
@@ -199,35 +198,6 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface, Runnab
     @Override
     public void error(int errorCode, String message) throws C4Exception {
         LOGGER.info("{} {}", errorCode, message);
-    }
-
-    /**
-     * Starts the input handling of this coreClient.
-     *
-     * @see Thread#run()
-     */
-    @Override
-    public void run() {
-        handleClient();
-    }
-
-    /**
-     * Processes the commands received from the client via the {@link java.net.Socket}.
-     */
-    public void handleClient() {
-
-        final String mName = "handleClient";
-
-        try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        group.removeHandler(this);
-                server.stateChange(this, LobbyState.OFFLINE);
-                LOGGER.debug("Client {} disconnected", getName());
-
-
     }
 
     public void handleRead(SelectionKey key) throws IOException {
