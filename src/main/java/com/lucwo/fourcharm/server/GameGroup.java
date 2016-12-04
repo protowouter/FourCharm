@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 /**
- * TODO: GameGroup class javadoc verder uitbreiden.
  * The GameGroup class extends the ClientGroup abstract class and implements Observer.
  * This class uses the Protocol classes as well. Two Clients play against each other in
  * the GameGroup.
@@ -111,12 +110,12 @@ public class GameGroup extends ClientGroup implements Observer {
 
             try {
                 forEveryClient(c -> {
-                    try {
-                        c.getCoreClient().doneMove(client.getName(), col);
-                    } catch (C4Exception e) {
-                        LOGGER.trace("doMove", e);
-                    }
-                });
+                        try {
+                            c.getCoreClient().doneMove(client.getName(), col);
+                        } catch (C4Exception e) {
+                            LOGGER.trace("doMove", e);
+                        }
+                    });
                 playerMap.get(client).queueMove(col);
             } catch (IllegalStateException e) {
                 throw new InvalidMoveError("You are not allowed to make a move right now");
@@ -155,14 +154,14 @@ public class GameGroup extends ClientGroup implements Observer {
         if (!game.hasFinished()) {
 
             forEveryClient(cH -> {
-                C4Exception c4e = new PlayerDisconnectError("Player " +
-                        client.getName() + " disconnected");
-                try {
-                    cH.getCoreClient().error(c4e.getErrorCode(), c4e.getMessage());
-                } catch (C4Exception e) {
-                    LOGGER.trace("removeClientCallback", e);
-                }
-            });
+                    C4Exception c4e = new PlayerDisconnectError("Player " +
+                            client.getName() + " disconnected");
+                    try {
+                        cH.getCoreClient().error(c4e.getErrorCode(), c4e.getMessage());
+                    } catch (C4Exception e) {
+                        LOGGER.trace("removeClientCallback", e);
+                    }
+                });
             endGame();
         }
 
@@ -201,13 +200,13 @@ public class GameGroup extends ClientGroup implements Observer {
         Player winner = game.getWinner();
         final String winnerName = winner == null ? null : winner.getName();
         forEveryClient(client -> {
-            try {
-                client.getCoreClient().gameEnd(winnerName);
-            } catch (C4Exception e) {
-                LOGGER.trace("startGame", e);
-            }
-            getServer().getLobby().addHandler(client);
-        });
+                try {
+                    client.getCoreClient().gameEnd(winnerName);
+                } catch (C4Exception e) {
+                    LOGGER.trace("startGame", e);
+                }
+                getServer().getLobby().addHandler(client);
+            });
         getServer().removeGame(this);
 
     }
@@ -235,12 +234,12 @@ public class GameGroup extends ClientGroup implements Observer {
                 if (client != null) {
 
                     forEveryClient(cH -> {
-                        try {
-                            cH.getCoreClient().requestMove(currentName);
-                        } catch (C4Exception e) {
-                            LOGGER.trace("update", e);
-                        }
-                    });
+                            try {
+                                cH.getCoreClient().requestMove(currentName);
+                            } catch (C4Exception e) {
+                                LOGGER.trace("update", e);
+                            }
+                        });
                 }
             } else {
                 endGame();

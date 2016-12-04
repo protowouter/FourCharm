@@ -28,9 +28,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-/**
- * TODO gamepresenter javadoc.
- */
 public class GamePresenter implements Observer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GamePresenter.class);
@@ -184,9 +181,9 @@ public class GamePresenter implements Observer {
         String prevText = currentPlayer.textProperty().get();
         currentPlayer.textProperty().setValue("Calculating hint...");
         new Thread(() -> {
-            int hint = fourCharmPresenter.getFourCharmController().getHint();
-            Platform.runLater(() -> boardPresenter.highlightColumn(hint));
-        }).start();
+                int hint = fourCharmPresenter.getFourCharmController().getHint();
+                Platform.runLater(() -> boardPresenter.highlightColumn(hint));
+            }).start();
         currentPlayer.textProperty().setValue(prevText);
     }
 

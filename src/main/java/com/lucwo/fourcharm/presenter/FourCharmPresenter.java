@@ -24,7 +24,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * TODO: Fourcharmpresenter javadoc.
  *
  * @author Luce Sandfort and Wouter Timmermans
  */
@@ -98,9 +97,9 @@ public class FourCharmPresenter implements Observer {
 
     public void showGame(Game game) {
         Platform.runLater(() -> {
-            gamePresenter.showGame(game);
-            gamePane.setCenter(gamePresenter.getView());
-        });
+                gamePresenter.showGame(game);
+                gamePane.setCenter(gamePresenter.getView());
+            });
 
 
     }
@@ -135,7 +134,8 @@ public class FourCharmPresenter implements Observer {
 
 
     public void showMessage(String message) {
-        Platform.runLater(() -> chatArea.textProperty().setValue(chatArea.textProperty().get() + "\n" + message));
+        Platform.runLater(() -> chatArea.textProperty().
+                setValue(chatArea.textProperty().get() + "\n" + message));
     }
 
     public void sendChat() {

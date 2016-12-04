@@ -143,10 +143,8 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename classDiagramTotalPackage.png
-	height 60pheight%
-	rotateAngle 270
-	rotateOrigin center
+	filename new/global diagram organic.png
+	width 100col%
 
 \end_inset
 
@@ -181,6 +179,7 @@ Global overview
 \end_layout
 
 \begin_layout Standard
+Figure 
 \begin_inset CommandInset ref
 LatexCommand vref
 reference "fig:Global-overview-of"
@@ -196,6 +195,7 @@ Model
 \end_layout
 
 \begin_layout Standard
+Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Model-package"
@@ -204,9 +204,9 @@ reference "fig:Model-package"
 
  is a detailed class diagram of the Game model component of our system.
  The main entry point to the Game model is the Game class.
- The game class uses a Board and two Players to achieve te responsibilities.
- The Board is responsible to maintain a valid Board state and the Game makes
- sure that only the current player can make a move.
+ The Game class uses a Board and two Players to achieve its responsibilities.
+ The Board is responsible for maintaining a valid Board state and the Game
+ makes sure that only the current player can make a move.
  We have developed two Board implementations: ReferenceBoard and BinaryBoard.
  The binary board implementation is explained in more detail at 
 \begin_inset CommandInset ref
@@ -219,31 +219,8 @@ reference "chap:BinaryBoard"
  The ReferenceBoard class is an implementation of the Board that is a little
  bit more orthodox.
  ReferenceBoard is mainly used for performance comparison to the BinaryBoard.
- Both boards conform to the same specification and are 
-\begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset Quotes erd
-\end_inset
-
-
-\begin_inset Quotes erd
-\end_inset
-
-
-\begin_inset Quotes erd
-\end_inset
-
-
-\begin_inset Quotes erd
-\end_inset
-
-
-\begin_inset Quotes erd
-\end_inset
-
- to the same test regimen.
+ Both boards conform to the same specification and have to pass the same
+ tests.
  The Player interface is implemented by two Classes, ASyncPlayer and LocalAIPlay
 er.
  A LocalAIPlayer uses a GameStrategy to determine the best move.
@@ -253,7 +230,8 @@ s way: this could be a player connected via a server or a human player connected
  There is also the LocalHumanPlayer class which extends ASyncPlayer and
  provides no further functionality, this is chiefly done to simplify checking
  if the current player is a human connected to the local machine.
- No distinction is made between AI an human players connected via a server.
+ No distinction is made between AI players and human players connected via
+ a server.
  The GameStrategy collection of classes is also used to provide hint functionali
 ty to a locally connected user.
  
@@ -261,6 +239,17 @@ ty to a locally connected user.
 
 \begin_layout Paragraph
 View
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:View-package-class"
+
+\end_inset
+
+ gives an overview of our view classes.
 \end_layout
 
 \begin_layout Standard
@@ -278,8 +267,43 @@ Our system has two implementations of the FourCharmView interface.
 Controller
 \end_layout
 
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:Controller-and-ServerHandler"
+
+\end_inset
+
+ is the class diagram of the controllers and the ServerHandler of our system.
+\end_layout
+
+\begin_layout Standard
+We have made two controllers, one for the client part and one for the server
+ part of our system.
+ The controller takes care of instantiating the views and updating the state
+ of the view and sending and receiving messages from the view and relaying
+ these to other parts of the system.
+ The ServerHandler class maintains a connection with a server, the ServerHandler
+ communicates with the FourCharmController which makes sure the views are
+ updated with the newest information received from the server.
+ The controller also keeps track of the game that is currently being played,
+ no matter if it is a networked game or a local game.
+\end_layout
+
 \begin_layout Paragraph
 Presenter
+\end_layout
+
+\begin_layout Standard
+See 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "par:Presenter"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Paragraph
@@ -287,6 +311,7 @@ Server
 \end_layout
 
 \begin_layout Standard
+Figure 
 \begin_inset CommandInset ref
 LatexCommand vref
 reference "fig:Server-package"
@@ -312,7 +337,7 @@ roup, LobbyGroup and GameGroup.
 ClientHandler: holds the connection to a client.
  ClientHandler uses C4 Protocol to parse incoming commands from the server
  and relays these messages to the ClientGroup this ClientHandler currently
- resides.
+ resides in.
 \end_layout
 
 \begin_layout Standard
@@ -328,7 +353,7 @@ y.
 \begin_layout Standard
 Whenever a Client is connected to the server, he will start in the PreLobbyGroup.
  If the Client gives the command 'join' and he is accepted by the server,
- he will be deleted from the PreLobbyGroup.
+ the client will be deleted from the PreLobbyGroup.
  Then, the Client will be added to the LobbyGroup.
  In here, whenever two Clients give the command 'ready' a game will be started
  with these two Clients.
@@ -342,14 +367,14 @@ Whenever a Client is connected to the server, he will start in the PreLobbyGroup
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
-\align center
 \begin_inset Graphics
-	filename classDiagramModel.png
-	width 75col%
-	rotateAngle 270
+	filename new/package model diagram.png
+	width 80col%
+	rotateAngle -90
+	rotateOrigin center
 
 \end_inset
 
@@ -357,6 +382,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -386,9 +412,8 @@ sideways false
 status collapsed
 
 \begin_layout Plain Layout
-\align center
 \begin_inset Graphics
-	filename classDiagramView.png
+	filename new/package view diagram.png
 	width 100col%
 
 \end_inset
@@ -428,7 +453,7 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename classDiagramControllerServerHandler.png
+	filename new/package controller diagram.png
 	width 100col%
 
 \end_inset
@@ -466,9 +491,8 @@ sideways false
 status collapsed
 
 \begin_layout Plain Layout
-\align center
 \begin_inset Graphics
-	filename classDiagramPresenter.png
+	filename new/package presenter diagram.png
 	width 100col%
 
 \end_inset
@@ -506,9 +530,8 @@ sideways false
 status collapsed
 
 \begin_layout Plain Layout
-\align center
 \begin_inset Graphics
-	filename classDiagramServer.png
+	filename new/package server diagram.png
 	width 100col%
 
 \end_inset
@@ -569,12 +592,12 @@ Server
 
 \begin_layout Standard
 The entry point for the server is the FourCharmServer class.
- This class accept clients and creates a ClientHandler to take care of sending
- and receiving the commands.
+ This class accepts clients and creates a ClientHandler to take care of
+ sending and receiving the commands.
  ClientHandler uses a C4 Protocol C4Processor to convert incoming command
  strings to method calls on the ClientHandler.
- C4 Protocol checks all parameters and parses them to native Java types.
- When one of the parameters is not correct a C4Exception is thrown, that
+ C4 Protocol checks all parameters and parses them to Java types.
+ When one of the parameters is not correct a C4Exception is thrown and that
  error is then sent to the client.
  C4 Protocol also makes sure that the error never sends a command that doesn't
  respect the protocol because it throws a C4Exception when this is attempted.
@@ -591,7 +614,7 @@ Games, the Lobby and the PreLobby are modeled as ClientGroups.
  of games simultaneously.
  The clienthandlers forward the received commands to the current group the
  clienthandler is in.
- The FourCharmServer class offers an minimal UI for monitoring communication
+ The FourCharmServerTUI class offers an minimal UI for monitoring communication
  messages and entering or changing the port number the server listens on.
 \end_layout
 
@@ -600,7 +623,7 @@ Games, the Lobby and the PreLobby are modeled as ClientGroups.
 \begin_inset Float table
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align left
@@ -885,10 +908,10 @@ The entry point for the client portion of our system is the FourCharmController
  FourCharmGUI.
  The controller both supports local games without a server and games played
  via a server.
- The class ServerHandler is responsible for communicating with the server
- using C4 Protocol.
- C4 Protocol again makes sure that only valid commands are processed and
- that no invalid commands are being sent.
+ The ServerHandler class is responsible for communicating with the server
+ usingclass the C4 Protocol.
+ The C4 Protocol makes sure that only valid commands are processed and that
+ no invalid commands are being sent.
  The ServerHandler class is the only class that has access to the C4 Protocol
  Server Client and is therefore responsible for all communications with
  the server and makes sure that commands only get sent when the client is
@@ -901,7 +924,7 @@ The entry point for the client portion of our system is the FourCharmController
 \begin_inset Float table
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \begin_inset Tabular
@@ -1300,24 +1323,25 @@ Observer
 \end_layout
 
 \begin_layout Standard
-There is only one class in our application that is an Observable: Game.
+There are two classes in our application that are Observable: Game and LobbyList.
  There are however multiple classes that are Observers.
 \end_layout
 
 \begin_layout Standard
 The observer pattern is used in multiple places in our application.
- Both the view and the controller are observers of the Game.
- The view just renders the board on an update, the controller checks wether
+ Both the views and the controllers are observers of the Game.
+ The view just renders the board on an update, the controller checks whether
  input from a human is required and enables the move input of the view when
  it is.
- GameGroup is also an Observer of Game, after every move when notifyObserver
- is called, the server notifies all clients in the Game of the current player.
+ GameGroup is also an Observer of Game.
+ After every move when notifyObserver is called, the server notifies all
+ clients in the Game of the current player.
  When the game has ended the server also informs all clients in the GameGroup
  of this.
  The observer pattern allows us to decouple the game logic from the rest
  of the system.
- The model doesn't need to have any knowledge of the the other system components
- that use is.
+ The model doesn't need to have any knowledge of the other system components
+ that use it.
  The view and the controller and the GameGroup however need to know about
  the Game and how to use it.
  
@@ -1328,8 +1352,8 @@ Model View Controller
 \end_layout
 
 \begin_layout Standard
-In developing of our system we made use of the Model View Controller pattern
- for the client-side UI.
+For the development of our system we made use of the Model View Controller
+ pattern for the client-side UI.
  The model consists of the Game, Board, Player and Mark classes.
  The responsibility of the model is to represent the game logic of our system,
  it keeps track of the current player, asks the players for moves and makes
@@ -1338,16 +1362,24 @@ In developing of our system we made use of the Model View Controller pattern
  and for handling user interaction.
  The controller takes care of the manipulation of the model.
  In our implementation both the view and the controller are observers of
- the Game, the view updates the board representation and the controller
- checks if user input for a move is required.
+ the Game.
+ The view updates the board representation and the controller checks if
+ user input for a move is required.
 \end_layout
 
 \begin_layout Paragraph
 Presenter
+\begin_inset CommandInset label
+LatexCommand label
+name "par:Presenter"
+
+\end_inset
+
+
 \end_layout
 
-\begin_layout Standard
-For the Graphical User Interface we added an addition layer in the form
+\begin_layout Quotation
+For the Graphical User Interface we added a additional layer in the form
  of presenters.
  We made use of FXML 
 \begin_inset CommandInset citation
@@ -1356,9 +1388,9 @@ key "fxml-intro"
 
 \end_inset
 
-views, because these views contain no logic another layer of logic is needed.
+views, because these views contain no logic: another layer of logic is needed.
  For this we used a presenter for every view in the GUI collection of views.
- The presenters are responsible for updating the view elements and responding
+ The presenters are responsible for updating the view elements and handling
  to user input.
  The view is just a description of how the model is represented.
  This division has the added benefit that the appearance can be changed
@@ -1406,16 +1438,6 @@ Controller
 \end_layout
 
 \begin_layout Paragraph
-C4Server
-\end_layout
-
-\begin_layout Standard
-The C4Server class does not make use of other classes.
- This class is able to get the IP address, port and name of a given server.
- 
-\end_layout
-
-\begin_layout Paragraph
 FourCharmController
 \end_layout
 
@@ -1426,7 +1448,7 @@ The FourCharmController class makes use of the view classes FourCharmTUI
  After the input is received, the controller sends this input to the game,
  so a move will be made.
  The controller is used by the views to communicate with the other classes
- of the FourCharm game of Connect four.
+ of the FourCharm game of Connect Four.
 \end_layout
 
 \begin_layout Paragraph
@@ -1559,7 +1581,7 @@ BinaryBoard
 \end_layout
 
 \begin_layout Standard
-Class for modeling a board for the game connect four.
+Class for modeling a board for the game Connect Four.
  The responsibility of this class is to keep the state of the board.
  For efficiency reasons the board state is implemented in an array of 2
  longs.
@@ -1574,7 +1596,7 @@ ReferenceBoard
 \end_layout
 
 \begin_layout Standard
-Class for modeling a board for the game connect four.
+Class for modeling a board for the game Connect Four.
  This class's responsibility is to keep the state of the board.
  This is the reference implementation implemented using an 2D array.
  This class makes use of the Board abstract class and the Mark class.
@@ -1595,7 +1617,7 @@ The AsyncPlayer class models a player that makes its decision for a move
  in a different 'Thread' than the game class.
  For instance, this could be a human connected to the local computer or
  a player on the other end of a server connection.
- This class uses in internal queue to provide synchronisation between the
+ This class uses an internal queue to provide synchronisation between the
  game thread and the thread which receives the input from the actual player.
 \end_layout
 
@@ -1604,11 +1626,12 @@ LocalAIPlayer
 \end_layout
 
 \begin_layout Standard
-Create a Artificial Intelligence (AI) player given a strategy.
+The LocalAIPlayer class creates a Artificial Intelligence (AI) player given
+ a strategy.
  This class is responsible for making a (smart) computer player.
  The LocalAIPlayer class makes use of the GameStrategy Interface and the
- classes belonging to this interface (the MDTDfStrategy class, the NegaMaxStrate
-gy class and the RandomStrategy class).
+ classes belonging to this interface (the MTDfStrategy class, the NegaMaxStrateg
+y class and the RandomStrategy class).
 \end_layout
 
 \begin_layout Paragraph
@@ -1656,7 +1679,7 @@ The Game class models a game of Connect4.
 The Game class makes sure only the current player is allowed to and can
  make a move.
  This class will also end the game if one of the players is not playing
- fair.
+ fairly.
  
 \end_layout
 
@@ -1864,7 +1887,7 @@ The PreLobbyGroup class extends the ClientGroup abstract class.
  After this, by using the command join, the Client will be able to move
  from the PreLobbyGroup to the LobbyGroup to find a partner to play a game
  with.
- Whenever the join command is send by the client, the server first needs
+ Whenever the join command is sent by the client, the server first needs
  to check if there is not another player with the same name already in the
  server.
  This is one of the requirements of the protocol of the INF-3 group.
@@ -1940,12 +1963,12 @@ For unit testing our system we mainly made use of dedicated test classes.
  Unit tests are meant to test your units of code in isolation.
  Quickly however, we ran into issues isolating our test classes from its
  dependencies on other parts of our system or external code.
- It is not desirable to test the dependencies of the unit under test and
+ It is not desirable to test the dependencies of the unit under test, and
  the unit under test at the same time.
  One of the benefits of isolated units tests is that it can be used to quickly
  pinpoint the errors in the code.
- When the unit test depent too much on each other a single error could cause
- a lot of tests to fail, if the tests are performed in perfect isolation
+ When the unit tests depent too much on each other a single error could
+ cause a lot of tests to fail, if the tests are performed in perfect isolation
  only the test for the class that contains the error fails.
  It also improves the maintainability of the tests because they are less
  dependent on the API of the dependencies.
@@ -1955,8 +1978,9 @@ For unit testing our system we mainly made use of dedicated test classes.
 To help isolate the class under test from its dependencies we made use of
  a technique called mocking.
  Mocking allows the programmer to inject 'fake' mocked objects in place
- of the dependencies, the tester then can have full control over the behavior
- of these mocked dependencies.
+ of the dependencies.
+ The tester then can have full control over the behavior of these mocked
+ dependencies.
  We made use of JMockit 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -1993,14 +2017,59 @@ The ServerHandler has been tested in isolation by using mocked instances.
  The startGame() en gameEnd() methods have been tested as well as the joinServer
 (), accept(), doneMove(), handleServerCommands() and setStrategy() methods.
  These tests are done by JUNIT testing.
+ 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
-status open
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:ServerHandler-test-coverage"
+
+\end_inset
+
+ shows the unit test coverage of the ServerHandler test.
+ The score of 49% is somewhat low, however it is our opinion that this is
+ of no consequence because the methods that are not tested are either covered
+ by the integration tests, or part of an optional extension of the protocol.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
 
 \begin_layout Plain Layout
-Discussion test coverage
+\align center
+\begin_inset Graphics
+	filename serverHandler test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ServerHandler-test-coverage"
+
+\end_inset
+
+ServerHandler test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -2039,14 +2108,67 @@ egy class.
  move.
  This class is not tested in isolation: the class makes use of the Board
  class.
+ 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
+Figure 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:NegaMaxStrategy-test-coverage"
+
+\end_inset
+
+ shows the test coverage of the NegaMaxStrategy class.
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:NegaMaxStrategy-test-coverage"
+
+\end_inset
+
+ shows the test coverage of the NegaMaxStrategy test.
+ We are quite happy with the results, since 95% test coverage is a good
+ percentage.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-Discussion test coverage
+\align center
+\begin_inset Graphics
+	filename negamax strategy test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:NegaMaxStrategy-test-coverage"
+
+\end_inset
+
+NegaMaxStrategy test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -2064,18 +2186,67 @@ The RandomStrategy class has been tested the same way as the NegaMaxStrategy.
  makes use of the Board class to make a move.
  The doMove() method is the only method that is tested.
  This method is tested the same way as the NegaMaxStrategy with an assertTrue.
+ 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
+The RandomStrategy test coverage can be seen in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:RandomStrategy-test-coverage"
+
+\end_inset
+
+.
+ The test coverage of 70% is caused by the determineMove() method.
+ The other methods are well tested.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-Discussion test coverage
+\align center
+\begin_inset Graphics
+	filename random strategy test coverage.png
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:RandomStrategy-test-coverage"
+
+\end_inset
+
+RandomStrategy test coverage
 \end_layout
 
 \end_inset
 
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 
 \end_layout
 
@@ -2136,10 +2307,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename boardTest coverage.png
 	width 100col%
@@ -2188,7 +2356,7 @@ reference "fig:BinaryBoard.java-test-coverage"
 
 \end_inset
 
-) is good enough.
+) are good enough.
  Almost every method has been tested.
 \end_layout
 
@@ -2199,6 +2367,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename referenceboard test coverage.png
 	width 100col%
@@ -2235,10 +2404,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename binaryboard test coverage.png
 	width 100col%
@@ -2286,8 +2452,8 @@ LocalAIPlayerTest
 
 \begin_layout Standard
 The LocalAIPlayer class has been tested by JUNIT tests.
- It is not tested in complete isolation, but a dedicated test class has
- been made.
+ This class is not tested in complete isolation, but a dedicated test class
+ has been made.
  By using assertTrue and assertEquals the methods doMove() and getMark()
  are tested to see if they do what they should do.
  
@@ -2379,8 +2545,7 @@ Before the tests take place a setUp() method creates a new Game.
  While the game is busy playing, multiple tests are done: is the game finished
  yet (if so: does the game have a winner), what is the current state of
  the board (is it not null), who is the current player, is the getPlieCount()
- not null after starting the game.
- 
+ not null after starting the game, etc.
 \end_layout
 
 \begin_layout Standard
@@ -2406,10 +2571,6 @@ reference "fig:Game.java-test-coverage"
 wide false
 sideways false
 status open
-
-\begin_layout Plain Layout
-
-\end_layout
 
 \begin_layout Plain Layout
 \begin_inset Graphics
@@ -2472,22 +2633,54 @@ In this test, the get methods and the set methods have been tested by using
  of the Client, this is tested by making a new group, putting (using the
  set method) the Client in there and checking if the group has been updated
  by using the getClientGroup() method.
-\end_layout
-
-\begin_layout Standard
-The join(), ready() and doMove() methods have been tested by checking if
- the commands are being sent to the current group.
- This is done by making a new Expectations() {{ }}.
+ The join(), ready() and doMove() methods have been tested by checking if
+ the commands are being sent to the current and correct group.
+ This is done by making a new Expectations() block.
  To see if the current group receives the commands, the ClientGroup instance
  is made injectable in stead of mocked.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
+The test coverage of the ClientHandler test can be seen in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:ClientHandler-test-coverage"
+
+\end_inset
+
+.
+ The test coverage is not particularly high, but that is not a problem.
+ Most of the methods with 0% test coverage were not worth testing.
+ The upper three methods could have been tested a little bit better.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-Discussion test coverage
+\begin_inset Graphics
+	filename clienthandler test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ClientHandler-test-coverage"
+
+\end_inset
+
+ClientHandler test coverage
 \end_layout
 
 \end_inset
@@ -2495,12 +2688,8 @@ Discussion test coverage
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Note Comment
-status open
-
 \begin_layout Plain Layout
-Discussion test coverage
+
 \end_layout
 
 \end_inset
@@ -2524,22 +2713,61 @@ The FourCharmServer class has been tested by JUNIT tests in isolation from
 In this test a FourCharmServer class has been tested by opening sockets
  and starting a new server.
  When a Client wants to join the server, the FourCharmServerTest class will
- check is there already is a Client with the same name (i.e.
- if he name of the Client already exists in server).
+ check if a Client with that name already exists in the server.
+ Most of the methods have been tested by making a new Expectations() block.
  
 \end_layout
 
 \begin_layout Standard
-Most of the methods have been tested by making a new Expectations() {{ }}.
- 
+The FourCharmServer test coverage can be seen in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:FourCharmServer"
+
+\end_inset
+
+.
+ This percentage is not high, because of the new methods we added to make
+ the Lobby extension possible.
+ We did not have enough time to test these new methods completely.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-Discussion test coverage
+\begin_inset Graphics
+	filename fourcharmserver test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:FourCharmServer"
+
+\end_inset
+
+FourCharmServer
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -2555,31 +2783,71 @@ GameGroupTest
 The GameGroup class has been tested in isolation from other classes by JUNIT
  tests.
  The dedicated mocked class has multiple mocked instances.
- The FourCharmServer, ClientHandler and game instances are mocked, so simulated
- instances.
+ The FourCharmServer, ClientHandler and Game instances are mocked instances,
+ so simulated instances.
 \end_layout
 
 \begin_layout Standard
-The basic commands join doMove and ready are tested whether the Client is
- allowed to use them in de GameGroup.
+The basic commands join, doMove and ready are tested whether the Client
+ is allowed to use them in de GameGroup.
  The join() and ready() methods are not allowed to be used in the GameGroup,
- so an appropriate error is send (InvalidCommandError).
- The doMove command is tested by new Expectations() {{ }}.
+ so an appropriate error is sent (InvalidCommandError).
+ The doMove() command is tested by new Expectations() block.
  If there is a game and the column where you want to make your move is free,
  the move should be made.
+ Furthermore making an invalid move and making a valid move while it is
+ not your turn are tested.
 \end_layout
 
 \begin_layout Standard
-Furthermore making an invalid move and making a valid move while it is not
- your turn are tested.
+The test coverage of this GameGroup test can be seen in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:GameGroup-test-coverage"
+
+\end_inset
+
+.
+ The update method was hard to test, which causes the low coverage percentage
+ of this test.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-Discussion test coverage
+\begin_inset Graphics
+	filename game group test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:GameGroup-test-coverage"
+
+\end_inset
+
+GameGroup test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -2604,20 +2872,51 @@ The LobbyGroup tests look a lot like the GameGroup and PreLobbyGroup tests.
  If a invalid command is called, an error should be send by the server.
  In this case the join command and the doMove command are not allowed, so
  the server will send an InvalidCommandError.
-\end_layout
-
-\begin_layout Standard
-The ready() method makes use of new Expectations () {{ }}.
+ The ready() method makes use of new Expectations () block.
  Two ClientHandlers get names in the expectations box and a GameGroup is
  made with those two ClientHandlers.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
+The test coverage of the LobbyGroup test can be seen in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:LobbyGroup-test-coverage"
+
+\end_inset
+
+.
+ This percentage is high enough, so the tests of this class have been good
+ enough.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-Discussion test coverage
+\begin_inset Graphics
+	filename lobbygroup test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:LobbyGroup-test-coverage"
+
+\end_inset
+
+LobbyGroup test coverage
 \end_layout
 
 \end_inset
@@ -2625,12 +2924,8 @@ Discussion test coverage
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Note Comment
-status open
-
 \begin_layout Plain Layout
-Discussion test coverage
+
 \end_layout
 
 \end_inset
@@ -2652,31 +2947,73 @@ The PreLobbyGroup class makes use of mocked instances for testing as well.
 \begin_layout Standard
 The PreLobbyGroup testing methods look like the testing methods from the
  LobbyGroup and the GameGroup.
- The ready() test and the doMove test should give an error, because those
+ The ready() test and the doMove() test should give an error, because those
  commands are not valid in the PreLobbyGroup.
  Thus the expected outcome of these method tests would be an InvalidCommandError.
 \end_layout
 
 \begin_layout Standard
 The only valid command to use in this context is the join command.
- This is tested by using new Expectations() {{ }} where a situation is created
+ This is tested by using new Expectations() block where a situation is created
  where theServer.hasClientWithName(
 \begin_inset Quotes eld
 \end_inset
 
 Wouter") does not exist.
- Whenever a client wants to connect to the server and his name is Wouter,
+ Whenever a client wants to connect to the server and his name is "Wouter",
  he should be allowed and able to do so.
  The test for joining a server with a existing name should not let the client
  join the server: this is not allowed.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
+The PreLobbyGroup test coverage can be seen in figure
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:PreLobbyGroup-test-coverage"
+
+\end_inset
+
+.
+ This percentage is quite high, so the tests were good enough.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-Discussion test coverage
+\begin_inset Graphics
+	filename prelobbygroup test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:PreLobbyGroup-test-coverage"
+
+\end_inset
+
+PreLobbyGroup test coverage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -2707,30 +3044,73 @@ The FourCharmController class uses mocked instances.
 \begin_layout Standard
 Tests are done for the start of a network game and for the start of a local
  game with human players or AI players.
- These methods are tested by using new Expectations() {{ }}.
- The expectations box 'creates' a game and after that the controller will
+ These methods are tested by using new Expectations() block.
+ The expectations block 'creates' a game and after that the controller will
  be able to start the game.
-\end_layout
-
-\begin_layout Standard
-Whenever a game shuts down or a client disconnects the controller needs
+ Whenever a game shuts down or a client disconnects the controller needs
  to send a shutdown() command.
- This is tested in two different methods by using the expectations box in
- which either the game stops, or the client disconnects.
+ This is tested in two different methods by using the expectations block
+ in which either the game stops, or the client disconnects.
  The get and set human / AI move are also tested by expectation boxes and
  mocked instances.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
+The test coverage overview of the FourCharmControllerTest can be seen in
+ figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:FourCharmController-test-coverag"
+
+\end_inset
+
+.
+ This class has a lot of methods and we tried to test these methods as good
+ as possible.
+ The percentage of the coverage of the test is not that high.
+ This is caused by a couple of methods that were hard to test.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-Discussion test coverage
+\begin_inset Graphics
+	filename fourcharmcontroller test coverage.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:FourCharmController-test-coverag"
+
+\end_inset
+
+FourCharmController test coverage
 \end_layout
 
 \end_inset
 
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 
 \end_layout
 
@@ -3181,33 +3561,30 @@ McCabe cyclomatic complexity
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
+Cyclomatic complexity is a measure of how complex a method is.
+ It is calculated by determining how many different paths there are through
+ a method.
+ A complexity higher than 10 is considered too high by McCabe.
+ In our system there is only one method (executeCommand() in class FourCharmTUI)
+ that has a higher complexity than 10, that method has a complexity of 11.
+ So we can conclude that we don't have too complex methods in our implementation.
 \end_layout
 
 \begin_layout Section
-Weight methods per class
+Weighted methods per class
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
+Weighted methods per class is the combined cyclomatic complexity of all
+ methods in that class.
+ A high WMC could indicate that it would be advisable to split the class
+ in multiple parts.
+ A WMC of 30 and higher is considered too high.
+ We have 7 classes that exceed this value, from these classes there are
+ only two classes that can't be easily divided into subclasses: BinaryBoard
+ and ReferenceBoard.
+ We recognize that the other classes should be divided in multiple parts
+ and recommend the future maintainers to do so.
 \end_layout
 
 \begin_layout Section
@@ -3215,16 +3592,12 @@ Lack of Cohesion in Methods
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
+Lack of Cohesion in Methods is a measure used in Object Oriented projects.
+ When the LCOM is high it means that the functionality of that object has
+ too much responsibilities that are not related to each other or to the
+ object.
+ We don't believe we have classes that have LCOM value that is too high:
+ the highest value is 10.
 \end_layout
 
 \begin_layout Chapter

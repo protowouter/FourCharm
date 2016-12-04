@@ -125,12 +125,12 @@ public abstract class  ClientGroup {
 
     public void broadcastChat(ClientHandler client, String message) throws C4Exception {
         forEveryClient(clientHandler -> {
-            try {
-                clientHandler.getChatClient().message(client.getName(), message);
-            } catch (C4Exception e) {
-                LOGGER.trace("broadcastChat", e);
-            }
-        });
+                try {
+                    clientHandler.getChatClient().message(client.getName(), message);
+                } catch (C4Exception e) {
+                    LOGGER.trace("broadcastChat", e);
+                }
+            });
     }
 
     public void globalChat(ClientHandler client, String message) throws C4Exception {

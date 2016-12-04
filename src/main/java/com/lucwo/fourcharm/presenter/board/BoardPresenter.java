@@ -18,9 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-/**
- * TODO: boardpresenter javadoc.
- */
 
 public class BoardPresenter {
 
@@ -50,8 +47,10 @@ public class BoardPresenter {
 
     public void setGamePresenter(GamePresenter newGamePresenter) {
         gamePresenter = newGamePresenter;
-        gamePresenter.getFourCharmPresenter().getStage().widthProperty().addListener((event) -> calculateRadius());
-        gamePresenter.getFourCharmPresenter().getStage().heightProperty().addListener((event) -> calculateRadius());
+        gamePresenter.getFourCharmPresenter().getStage().
+                widthProperty().addListener((event) -> calculateRadius());
+        gamePresenter.getFourCharmPresenter().getStage().
+                heightProperty().addListener((event) -> calculateRadius());
     }
 
     private void calculateRadius() {
@@ -138,7 +137,8 @@ public class BoardPresenter {
 
     public double calculatePieceRadius() {
         double width = gamePresenter.getFourCharmPresenter().getStage().widthProperty().get() - 400;
-        double height = gamePresenter.getFourCharmPresenter().getStage().heightProperty().get() - 300;
+        double height = gamePresenter.getFourCharmPresenter().
+                getStage().heightProperty().get() - 300;
 
 
         double wRadius = (width / spaces.length) / 2;

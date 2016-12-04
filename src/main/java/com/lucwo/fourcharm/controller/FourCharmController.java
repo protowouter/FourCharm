@@ -263,7 +263,8 @@ public class FourCharmController implements Observer {
      * Returns the best move according to a AI. This can be used by views when
      * a human user wants a hint on the best next move.
      *
-     * @return The best move for the current board. The move is zero based. The leftmost column would
+     * @return The best move for the current board.
+     * The move is zero based. The leftmost column would
      * be move 0.
      */
     public int getHint() {

@@ -344,12 +344,10 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     @Override
     public void showLobby() {
-        // TODO Print message of all users.
     }
 
     @Override
     public void showRematch() {
-        //TODO implement.
     }
 
     @Override
@@ -410,7 +408,8 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
      */
     private enum Command {
         CHAT("Chatmessage"),
-        CONNECT("Host", "Port", "Playername", "| -m (MTDF) | -r (Random) | -h (Human)", "Thinking time (s)"),
+        CONNECT("Host", "Port", "Playername", "| -m (MTDF) | -r (Random) | -h (Human)"
+                , "Thinking time (s)"),
         LOCAL("Playername | -m (MTDF) | -r (Random)", "Playername | -m (MTDF) | -r (Random)"),
         HINT(),
         READY(),

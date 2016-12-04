@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>FourCharm</groupId>
     <artifactId>FourCharm</artifactId>
-    <version>v0.6.2-SNAPSHOT</version>
+    <version>v1.1-SNAPSHOT</version>
     <build>
         <plugins>
             <plugin>
@@ -185,11 +185,6 @@
             <artifactId>logback-classic</artifactId>
             <version>1.1.2</version>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>javax.jmdns</groupId>
-            <artifactId>jmdns</artifactId>
-            <version>3.4.1</version>
         </dependency>
     </dependencies>
     <properties>

@@ -17,7 +17,6 @@ import javafx.stage.Stage;
 import java.util.Collection;
 
 /**
- * TODO: fourcharmgui javadoc verder uitwerken.
  * The FourCharmGUI is the Graphical User Interface of the FourCharm
  * Connect4 game. It makes use of the FourCharmController, Presenter,
  * Factory and Game class.

@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * TODO fourcharmfactory javadoc.
  *
  * @author Luce Sandfort and Wouter Timmermans
  */
@@ -84,7 +83,8 @@ public class FourCharmFactory {
         if (gamePresenter == null) {
             try {
                 FXMLLoader loader = new FXMLLoader();
-                loader.load(getClass().getClassLoader().getResourceAsStream("views/game/show.fxml"));
+                loader.load(getClass().getClassLoader().
+                        getResourceAsStream("views/game/show.fxml"));
                 gamePresenter = loader.getController();
                 gamePresenter.setFourCharmPresenter(fourCharmPresenter);
                 gamePresenter.init();
