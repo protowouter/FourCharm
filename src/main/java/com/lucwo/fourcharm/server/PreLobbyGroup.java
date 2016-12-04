@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
+ * Copyright (c) 2016. Luce Sandfort and Wouter Timmermans
  */
 
 package com.lucwo.fourcharm.server;
@@ -71,8 +71,8 @@ public class PreLobbyGroup extends ClientGroup {
         } else {
             client.setName(pName);
             client.registerExtensions(exts);
-            client.getCoreClient().accept(LUCWO_GROUP_NUMBER, extensions);
             lobby.addHandler(client);
+            client.getCoreClient().accept(LUCWO_GROUP_NUMBER, extensions);
         }
 
     }
@@ -100,7 +100,7 @@ public class PreLobbyGroup extends ClientGroup {
     @Override
     public void ready(ClientHandler client) throws C4Exception {
 
-        throw new InvalidCommandError("You are not allowed to use this command now.");
+        throw new InvalidCommandError("You are not allowed to use this command now. First wait until you are accepted.");
     }
 
     @Override

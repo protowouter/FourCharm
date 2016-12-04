@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
+ * Copyright (c) 2016. Luce Sandfort and Wouter Timmermans
  */
 
 package com.lucwo.fourcharm.client;
@@ -284,6 +284,8 @@ public class ServerHandler implements CoreClient.Iface, ChatClient.Iface, LobbyC
         ASyncPlayer player = playerMap.get(playerName);
         if (game.getCurrent() == player) {
             if (game.getBoard().columnHasFreeSpace(col)) {
+                /* FIXME: Race condition, this only queues the move, if another move already gets submitted before the
+                            Game thread is allowed to execute, it throws an error */
                 player.queueMove(col);
             } else {
                 throw new InvalidMoveError("The board has no free space a column " + col);

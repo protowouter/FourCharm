@@ -55,9 +55,6 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface {
     private ChatClient.AsyncClient chatClient;
     //@ invariant lobbyClient != null;
     private LobbyClient.AsyncClient lobbyClient;
-    private boolean running;
-    //@ invariant server != null;
-    private FourCharmServer server;
     private SelectionKey key;
 
 // --------------------- Constructors -------------------
@@ -72,9 +69,7 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface {
      */
     public ClientHandler(SocketChannel sock, FourCharmServer s) {
         socket = sock;
-        running = true;
         name = sock.toString();
-        server = s;
     }
 
 // ----------------------- Queries ----------------------
@@ -266,7 +261,13 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface {
     }
 
     public void handleWrite() {
-        coreClient.write();
+        boolean done = coreClient.write();
+        done = chatClient.write() && done;
+        done = lobbyClient.write() && done;
+
+        if (done) {
+            key.interestOps(SelectionKey.OP_READ);
+        }
     }
 
     public void shutdown() {
@@ -278,11 +279,11 @@ public class ClientHandler implements CoreServer.Iface, ChatServer.Iface {
         } catch (IOException e) {
             LOGGER.trace("shutdown", e);
         }
-        running = false;
     }
 
 
     public void init(SelectionKey key) {
+        this.key = key;
         coreClient = new CoreClient.AsyncClient(key);
         chatClient = new ChatClient.AsyncClient(null);
         lobbyClient = new LobbyClient.AsyncClient(null);

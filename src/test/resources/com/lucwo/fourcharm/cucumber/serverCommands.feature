@@ -13,8 +13,8 @@ Feature: Server recognizes invalid commands
   Scenario: Client sends ready twice
     Given a empty server
     When I join the server with name Wouter
-    And I send the ready command
     Then the server will accept me
+    And I send the ready command
     And I send the ready command
     Then the server will send an InvalidCommandError
 

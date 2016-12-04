@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015. Luce Sandfort and Wouter Timmermans
+ * Copyright (c) 2016. Luce Sandfort and Wouter Timmermans
  */
 
 package com.lucwo.fourcharm.server;
@@ -39,6 +39,8 @@ public class GameGroup extends ClientGroup implements Observer {
     private Map<ClientHandler, ASyncPlayer> playerMap;
     //@ invariant game != null;
     private Game game;
+    private ClientHandler client1;
+    private ClientHandler client2;
 
 
     // --------------------- Constructors -------------------
@@ -55,22 +57,16 @@ public class GameGroup extends ClientGroup implements Observer {
      */
     public GameGroup(FourCharmServer theServer, ClientHandler client1, ClientHandler client2) {
         super(theServer);
+        this.client1 = client1;
+        this.client2 = client2;
         playerMap = new HashMap<>();
         ASyncPlayer player1 = new ASyncPlayer(client1.getName(), Mark.P1);
         ASyncPlayer player2 = new ASyncPlayer(client2.getName(), Mark.P2);
         playerMap.put(client1, player1);
         playerMap.put(client2, player2);
-        addHandler(client1);
-        addHandler(client2);
 
         game = new Game(BinaryBoard.class, player1, player2);
         game.addObserver(this);
-        try {
-            client1.getCoreClient().startGame(client1.getName(), client2.getName());
-            client2.getCoreClient().startGame(client1.getName(), client2.getName());
-        } catch (C4Exception e) {
-            LOGGER.trace("constructor", e);
-        }
     }
 
 // ----------------------- Queries ----------------------
@@ -184,7 +180,14 @@ public class GameGroup extends ClientGroup implements Observer {
      * Starts a new game.
      */
     public void startGame() {
-
+        addHandler(client1);
+        addHandler(client2);
+        try {
+            client1.getCoreClient().startGame(client1.getName(), client2.getName());
+            client2.getCoreClient().startGame(client1.getName(), client2.getName());
+        } catch (C4Exception e) {
+            LOGGER.trace("constructor", e);
+        }
         Thread gameThread = new Thread(game);
         gameThread.setName("Game" + SimpleTimeZone.UTC_TIME);
         gameThread.start();
