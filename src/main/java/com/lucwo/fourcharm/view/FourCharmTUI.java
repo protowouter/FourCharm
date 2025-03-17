@@ -200,7 +200,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
             GameStrategy p1Strat = parseStrategy(args[0]);
             GameStrategy p2Strat = parseStrategy(args[1]);
             if (p1Strat instanceof MTDfStrategy) {
-                p2Strat = new MTDfStrategy(turnTimeout);
+                p1Strat = new MTDfStrategy(turnTimeout);
             }
             if (p2Strat instanceof MTDfStrategy) {
                 p2Strat = new MTDfStrategy(turnTimeout);

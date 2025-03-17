@@ -14,6 +14,7 @@ import org.slf4j.MarkerFactory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -43,8 +44,8 @@ public class NegaMaxStrategy implements GameStrategy {
 
     private final AtomicLong nodeCounter = new AtomicLong();
 
-    private int searchDept;
-    private final AtomicBoolean aborted = new AtomicBoolean();
+    private final int searchDept;
+    private final CountDownLatch no_abort_received;
 
     /**
      * Constructs a new NegaMaxStrategy. Uses the default search depth.
@@ -63,6 +64,7 @@ public class NegaMaxStrategy implements GameStrategy {
      */
     public NegaMaxStrategy(int depth) {
         searchDept = depth;
+        no_abort_received = new CountDownLatch(1);
     }
 
     /**
@@ -105,7 +107,6 @@ public class NegaMaxStrategy implements GameStrategy {
 
     public Result startNegaMax(Board board, Mark mark,
                                double alphaOrig, double betaOrig, int depth) {
-        aborted.set(false);
         return negaMax(board, mark, alphaOrig, betaOrig, depth);
     }
 
@@ -155,7 +156,7 @@ public class NegaMaxStrategy implements GameStrategy {
 
                 result = getNegaResult(board, mark, depth, alpha, beta);
 
-                if (!aborted.get()) {
+                if (no_abort_received.getCount() > 0) {
                     saveToTransPostTable(alphaOrig, depth, beta, posKey, result);
                 }
             }
@@ -183,7 +184,7 @@ public class NegaMaxStrategy implements GameStrategy {
         int columns = board.getColumns();
 
         boolean searching = true;
-        for (int col = 0; searching && !aborted.get() && col < columns; col++) {
+        for (int col = 0; searching && no_abort_received.getCount() > 0 && col < columns; col++) {
             if (board.columnHasFreeSpace(col)) {
                 try {
                     Board childBoard = board.deepCopy();
@@ -207,7 +208,7 @@ public class NegaMaxStrategy implements GameStrategy {
     }
 
     /**
-     * Saves the found NegaMax value in the ranspositiontable.
+     * Saves the found NegaMax value in the transpositiontable.
      *
      * @param alphaOrig the original value of alpha.
      * @param depth     the depth at which the value was found.
@@ -279,7 +280,7 @@ public class NegaMaxStrategy implements GameStrategy {
         int value = 0;
 
         int startCol = vCol - streak + 1;
-        startCol = startCol < 0 ? 0 : startCol;
+        startCol = Math.max(startCol, 0);
 
 
         for (int col = startCol; col < vCol + streak && col < cols; col++) {
@@ -305,7 +306,7 @@ public class NegaMaxStrategy implements GameStrategy {
         int value = 0;
 
         int startRow = vRow - streak + 1;
-        startRow = startRow < 0 ? 0 : startRow;
+        startRow = Math.max(startRow, 0);
 
         for (int row = startRow; row < vRow + streak && row < rows; row++) {
             value += positionValue(board, mark, vCol, row);
@@ -398,7 +399,7 @@ public class NegaMaxStrategy implements GameStrategy {
      * @param mark  The mark of the current player.
      * @param col   The column of the move.
      * @param row   The row of the move.
-     * @return The calculated postion value.
+     * @return The calculated position value.
      */
     private int positionValue(Board board, Mark mark, int col, int row) {
         Mark posMark = board.getMark(col, row);
@@ -446,7 +447,7 @@ public class NegaMaxStrategy implements GameStrategy {
     }
 
     public void abort() {
-        aborted.set(true);
+        no_abort_received.countDown();
     }
 
     /**
