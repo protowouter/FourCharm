@@ -10,6 +10,7 @@ import com.lucwo.fourcharm.exception.ServerConnectionException;
 import com.lucwo.fourcharm.model.Game;
 import com.lucwo.fourcharm.model.ai.GameStrategy;
 import com.lucwo.fourcharm.model.ai.MTDfStrategy;
+import com.lucwo.fourcharm.model.ai.NegaMaxStrategy;
 import com.lucwo.fourcharm.model.ai.RandomStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,12 +35,12 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     // ------------------ Instance variables ----------------
 
-    private Scanner inputScanner;
+    private final Scanner inputScanner;
     private boolean running;
     private boolean gameOn;
-    private FourCharmController controller;
+    private final FourCharmController controller;
     private boolean moveNeeded;
-    private LinkedBlockingQueue<Integer> moveQueue;
+    private final LinkedBlockingQueue<Integer> moveQueue;
     private boolean hintEnabled;
     private boolean waitingForMove;
 
@@ -78,7 +79,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
             while (commandScanner.hasNext()) {
                 args.add(commandScanner.next());
             }
-            checkCommand(command, args.toArray(new String[args.size()]));
+            checkCommand(command, args.toArray(new String[0]));
         }
         commandScanner.close();
 
@@ -152,7 +153,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
                 showError(NOT_IMPLEMENTED);
                 break;
             case LIST_PLAYERS:
-                //List all of the players in the lobby
+                //List all the players in the lobby
                 showError(NOT_IMPLEMENTED);
                 break;
             case HELP:
@@ -195,8 +196,15 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
      */
     private void createLocalGame(String[] args) {
         if (!gameOn) {
+            int turnTimeout = Integer.parseInt(args[2]);
             GameStrategy p1Strat = parseStrategy(args[0]);
             GameStrategy p2Strat = parseStrategy(args[1]);
+            if (p1Strat instanceof MTDfStrategy) {
+                p2Strat = new MTDfStrategy(turnTimeout);
+            }
+            if (p2Strat instanceof MTDfStrategy) {
+                p2Strat = new MTDfStrategy(turnTimeout);
+            }
             if (p1Strat == null && p2Strat == null) {
                 controller.startLocalGame(args[0], args[1], null, null);
             } else if (p1Strat == null) {
@@ -222,6 +230,8 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
         GameStrategy strategy = null;
         if ("-m".equals(strat)) {
             strategy = new MTDfStrategy();
+        } else if ("-n".equals(strat)) {
+            strategy = new NegaMaxStrategy();
         } else if ("-r".equals(strat)) {
             strategy = new RandomStrategy();
         }
@@ -254,7 +264,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
     }
 
     /**
-     * Shows all of the available commands.
+     * Shows all the available commands.
      */
     private void showHelp() {
         showMessage("These commands I know: ");
@@ -286,7 +296,7 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
 
     @Override
     public void update(Observable o, Object arg) {
-        LOGGER.debug("Tui is getting message from: {}" + o);
+        LOGGER.debug("Tui is getting message from: {}", o);
         if (o instanceof Game) {
             gameOn = true;
             Game newGame = (Game) o;
@@ -410,7 +420,8 @@ public class FourCharmTUI implements FourCharmView, Observer, Runnable {
         CHAT("Chatmessage"),
         CONNECT("Host", "Port", "Playername", "| -m (MTDF) | -r (Random) | -h (Human)"
                 , "Thinking time (s)"),
-        LOCAL("Playername | -m (MTDF) | -r (Random)", "Playername | -m (MTDF) | -r (Random)"),
+        LOCAL("Playername | -m (MTDF) | -n (NegaMax) | -r (Random)",
+                "Playername | -m (MTDF) | -n (NegaMax) | -r (Random)", "Thinking time (s)"),
         HINT(),
         READY(),
         DISCONNECT(),

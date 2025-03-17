@@ -6,7 +6,6 @@ package com.lucwo.fourcharm.server;
 
 import mockit.Expectations;
 import mockit.Mocked;
-import mockit.NonStrictExpectations;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +25,7 @@ public class LobbyGroupTest {
 
     @Before
     public void setUp() throws Exception {
-        new NonStrictExpectations() {{
+        new Expectations() {{
             clientje1.getName();
             result = "John";
             clientje2.getName();

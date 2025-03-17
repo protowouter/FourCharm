@@ -31,7 +31,7 @@ public class NegaMaxStrategy implements GameStrategy {
     /**
      * Default search depth for the NegaMax algorithm.
      */
-    public static final int DEF_DEPTH = 6;
+    public static final int DEF_DEPTH = 10;
     private static final Logger LOGGER = LoggerFactory.getLogger(MTDfStrategy.class);
     private static final Marker AI_DEBUG = MarkerFactory.getMarker("AI_DEBUG");
     private static final Marker AI_INFO = MarkerFactory.getMarker("AI_INFO");
@@ -158,9 +158,6 @@ public class NegaMaxStrategy implements GameStrategy {
                 if (!aborted.get()) {
                     saveToTransPostTable(alphaOrig, depth, beta, posKey, result);
                 }
-
-
-
             }
         }
         return result;

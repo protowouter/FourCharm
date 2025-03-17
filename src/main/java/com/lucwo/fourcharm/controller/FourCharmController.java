@@ -30,9 +30,9 @@ import java.util.Set;
 
 /**
  * Functions as the Controller part of MVC for the FourCharm system.
- * The controllers maintains a connection with a server if applicable
+ * The controllers maintain a connection with a server if applicable
  * and handles the communication between the model and the view for human players.
- * This class uses a Serverhandler for communication with a server and a Object implementing
+ * This class uses a ServerHandler for communication with a server and an Object implementing
  * {@link com.lucwo.fourcharm.view.FourCharmView} to communicate with users of the system.
  *
  * @author Luce Sandfort and Wouter Timmermans
@@ -247,9 +247,15 @@ public class FourCharmController implements Observer {
      */
     private void handlePlayerTurn(Player player) {
         if (player instanceof LocalHumanPlayer) {
-            view.enableInput();
             view.enableHint();
-            ((LocalHumanPlayer) player).queueMove(view.requestMove());
+            // Keep requesting moves from the human player until a valid move has been entered.
+            int move;
+            do {
+                view.enableInput();
+                move = view.requestMove();
+            } while (move < 0 || move >= game.getBoard().getColumns() || !game.getBoard().columnHasFreeSpace(move));
+
+            ((LocalHumanPlayer) player).queueMove(move);
             view.disableHint();
         }
     }

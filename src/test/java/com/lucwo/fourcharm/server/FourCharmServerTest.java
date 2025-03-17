@@ -82,7 +82,7 @@ public class FourCharmServerTest {
 
             ServerSocket socket1 = new ServerSocket(0, anyInt, null);
             socket1.accept();
-            returns(sock);
+            result = sock;
             //preLobby.removeHandler(null);
             //anyClient.getClientGroup(); result = preLobby;
 

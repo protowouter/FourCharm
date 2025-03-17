@@ -32,7 +32,7 @@ public class MTDfStrategy implements GameStrategy {
     private static final Marker AI_DEBUG = MarkerFactory.getMarker("AI_DEBUG");
     private static final Marker AI_INFO = MarkerFactory.getMarker("AI_INFO");
 
-    private static final int DEF_DURATION = 10_000;
+    private static final int DEF_DURATION = 10;
     private static final double FIRST_GUESS = 17880;
     private static final int[] COLS = new int[]{3, 4, 2, 5, 1, 6, 0};
     private static final int DEPTH_STEP = 2;
@@ -43,8 +43,8 @@ public class MTDfStrategy implements GameStrategy {
     // ------------------ Instance variables ----------------
     private long endTime;
     private Double prevValue;
-    private NegaMaxStrategy nega;
-    private long duration;
+    private final NegaMaxStrategy nega;
+    private final long duration;
 
     // --------------------- Constructors -------------------
 
@@ -53,14 +53,10 @@ public class MTDfStrategy implements GameStrategy {
      */
     public MTDfStrategy() {
         this(DEF_DURATION);
-
-
-
-
     }
 
     public MTDfStrategy(long time) {
-        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "5");
+        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "2");
         duration = time * 1000L;
         nega = new NegaMaxStrategy();
         prevValue = FIRST_GUESS;
@@ -194,6 +190,4 @@ public class MTDfStrategy implements GameStrategy {
     public String toString() {
         return "MTDfStrategy";
     }
-
-
 }
