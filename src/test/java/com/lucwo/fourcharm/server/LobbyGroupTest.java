@@ -25,18 +25,11 @@ public class LobbyGroupTest {
 
     @Before
     public void setUp() throws Exception {
-        new Expectations() {{
-            clientje1.getName();
-            result = "John";
-            clientje2.getName();
-            result = "Mary";
-        }};
         sock = new Socket();
         lobbyGroup = new LobbyGroup(theServer);
         clientje1 = new ClientHandler(sock, theServer);
         clientje2 = new ClientHandler(sock, theServer);
         lobbyGroup.ready(clientje2);
-
     }
 
     @Test(expected = InvalidCommandError.class)
@@ -54,7 +47,6 @@ public class LobbyGroupTest {
         new Expectations() {
             {
                 new GameGroup(theServer, clientje2, clientje1);// expect constructor
-                //theServer.addGame(game);
             }
         };
         lobbyGroup.ready(clientje1);

@@ -33,12 +33,8 @@ public class GameGroupTest {
     public void setUp() throws Exception {
 
         new Expectations() {{
-            c1.getName();
-            result = "Wouter";
-            c2.getName();
-            result = "Luce";
-            c3.getName();
-            result = "Frits";
+            c1.getName(); result = "Wouter";
+            c2.getName(); result = "Luce";
         }};
 
         gameGroup = new GameGroup(server, c1, c2);

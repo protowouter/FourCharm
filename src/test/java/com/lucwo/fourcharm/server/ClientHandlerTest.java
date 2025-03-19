@@ -95,8 +95,7 @@ public class ClientHandlerTest {
     public void testHandleClient(@Mocked BufferedReader anyReader) throws Exception {
 
         new Expectations() {{
-            anyReader.readLine();
-            returns("hallo", "hoi", null);
+            anyReader.readLine(); returns("hallo", "hoi", (String) null);
             group.removeHandler(clientHandler);
         }};
 
