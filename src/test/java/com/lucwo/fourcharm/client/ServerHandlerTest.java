@@ -63,7 +63,7 @@ public class ServerHandlerTest {
 
         new Expectations() {{
             anyReader.readLine();
-            returns("hoi", "hallo", null);
+            returns("hoi", "hallo", (Object) null);
 
         }};
 

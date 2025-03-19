@@ -32,7 +32,7 @@ public class MTDfStrategy implements GameStrategy {
     private static final Marker AI_DEBUG = MarkerFactory.getMarker("AI_DEBUG");
     private static final Marker AI_INFO = MarkerFactory.getMarker("AI_INFO");
 
-    private static final int DEF_DURATION = 10_000;
+    private static final int DEF_DURATION = 10;
     private static final double FIRST_GUESS = 17880;
     private static final int[] COLS = new int[]{3, 4, 2, 5, 1, 6, 0};
     private static final int DEPTH_STEP = 2;
@@ -43,8 +43,8 @@ public class MTDfStrategy implements GameStrategy {
     // ------------------ Instance variables ----------------
     private long endTime;
     private Double prevValue;
-    private NegaMaxStrategy nega;
-    private long duration;
+    //private final NegaMaxStrategy nega;
+    private final long duration;
 
     // --------------------- Constructors -------------------
 
@@ -53,16 +53,11 @@ public class MTDfStrategy implements GameStrategy {
      */
     public MTDfStrategy() {
         this(DEF_DURATION);
-
-
-
-
     }
 
     public MTDfStrategy(long time) {
-        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "5");
+        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "2");
         duration = time * 1000L;
-        nega = new NegaMaxStrategy();
         prevValue = FIRST_GUESS;
     }
 
@@ -80,7 +75,7 @@ public class MTDfStrategy implements GameStrategy {
     @Override
     public int determineMove(Board board, Mark mark) {
         LOGGER.debug("Starting negamax with timeout {}", duration);
-        nega.resetCounter();
+        NegaMaxStrategy strategy = new NegaMaxStrategy();
         endTime = System.currentTimeMillis() + duration;
         int freeSpots = board.getSpotCount() - board.getPlieCount();
         double bestValue = Double.NEGATIVE_INFINITY;
@@ -102,7 +97,7 @@ public class MTDfStrategy implements GameStrategy {
                         Board cBoard = board.deepCopy();
                         cBoard.makemove(col, mark);
                         Future<Double> valFut = POOL
-                                .submit(() -> -mtdf(cBoard, mark.other(), mtDepth));
+                                .submit(() -> -mtdf(strategy, cBoard, mark.other(), mtDepth));
                         valueFutures.put(col, valFut);
                     } catch (InvalidMoveException e) {
                         LOGGER.trace("determineMove", e);
@@ -126,6 +121,11 @@ public class MTDfStrategy implements GameStrategy {
                 bestMove = bestMoveCurrentIteration;
                 bestValue = bestValueCurrentIteration;
                 achievedDepth = depth;
+                if(bestValue == Double.POSITIVE_INFINITY){
+                    // We found a winning move, no sense in looking further
+                    break;
+                }
+
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 LOGGER.trace("determineMove", e);
             }
@@ -136,11 +136,11 @@ public class MTDfStrategy implements GameStrategy {
         } else {
             prevValue = bestValue;
         }
-        LOGGER.debug(AI_DEBUG, "Evaluated nodes: {}", nega.getCounter());
+        LOGGER.debug(AI_DEBUG, "Evaluated nodes: {}", strategy.getCounter());
         LOGGER.debug(AI_DEBUG, "Search achieved a depth of {}", achievedDepth);
         LOGGER.debug(AI_INFO, "Best move {}", bestMove);
         LOGGER.debug(AI_DEBUG, "Best move value {}", bestValue);
-        nega.abort();
+        strategy.abort();
         return bestMove;
     }
 
@@ -154,7 +154,7 @@ public class MTDfStrategy implements GameStrategy {
      * @param depth The maximum search depth of the algorithm.
      * @return The NegaMax value of the current board.
      */
-    private double mtdf(Board board, Mark mark, int depth) {
+    private double mtdf(NegaMaxStrategy strategy, Board board, Mark mark, int depth) {
         double guess = prevValue;
 
         //@ invariant upperBound > lowerBound;
@@ -172,7 +172,7 @@ public class MTDfStrategy implements GameStrategy {
 
             }
 
-            guess = nega.startNegaMax(board, mark, beta - 1, beta, depth).value;
+            guess = strategy.startNegaMax(board, mark, beta - 1, beta, depth).value;
 
             if (guess < beta) {
                 upperBound = guess;
@@ -194,6 +194,4 @@ public class MTDfStrategy implements GameStrategy {
     public String toString() {
         return "MTDfStrategy";
     }
-
-
 }

@@ -10,9 +10,9 @@ public class C4Server {
 
 // ------------------ Instance variables ----------------
 
-    private InetAddress address;
-    private int port;
-    private String name;
+    private final InetAddress address;
+    private final int port;
+    private final String name;
 
 // --------------------- Constructors -------------------
 

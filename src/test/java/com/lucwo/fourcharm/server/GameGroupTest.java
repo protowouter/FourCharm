@@ -9,7 +9,6 @@ import com.lucwo.fourcharm.model.player.ASyncPlayer;
 import com.lucwo.fourcharm.model.player.Mark;
 import mockit.Expectations;
 import mockit.Mocked;
-import mockit.NonStrictExpectations;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidCommandError;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidMoveError;
 import org.junit.Before;
@@ -33,13 +32,9 @@ public class GameGroupTest {
     @Before
     public void setUp() throws Exception {
 
-        new NonStrictExpectations() {{
-            c1.getName();
-            result = "Wouter";
-            c2.getName();
-            result = "Luce";
-            c3.getName();
-            result = "Frits";
+        new Expectations() {{
+            c1.getName(); result = "Wouter";
+            c2.getName(); result = "Luce";
         }};
 
         gameGroup = new GameGroup(server, c1, c2);
@@ -93,7 +88,7 @@ public class GameGroupTest {
     @Test
     public void testRemoveClientCallback() throws Exception {
 
-        new NonStrictExpectations() {{
+        new Expectations() {{
             c1.getCoreClient();
         }};
         gameGroup.removeClientCallback(c2);

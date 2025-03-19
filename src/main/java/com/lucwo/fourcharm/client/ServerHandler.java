@@ -32,6 +32,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -93,9 +94,9 @@ public class ServerHandler implements CoreClient.Iface,
             int port = Integer.parseInt(portString);
             sock = new Socket(host, port);
             in = new BufferedReader(new InputStreamReader(sock.getInputStream(),
-                    Charset.forName("UTF-8")));
+                    StandardCharsets.UTF_8));
             out = new BufferedWriter(
-                    new OutputStreamWriter(sock.getOutputStream(), Charset.forName("UTF-8")));
+                    new OutputStreamWriter(sock.getOutputStream(), StandardCharsets.UTF_8));
             coreProcessor = new CoreClient.Processor<>(this);
             chatProcessor = new ChatClient.Processor<>(this);
             lobbyProcessor = new LobbyClient.Processor<>(this);
@@ -255,7 +256,7 @@ public class ServerHandler implements CoreClient.Iface,
      * Handles the request move method. The method will use the AI if there is one,
      * otherwise the serverHandler will get the move from the controller.
      *
-     * @param player The player who's turn it is.
+     * @param player The player whose turn it is.
      */
     private void handleRequestMove(String player) {
         if (name.equals(player)) {

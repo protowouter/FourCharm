@@ -129,11 +129,15 @@ public class FourCharmControllerTest {
         final LocalAIPlayer p2 = new LocalAIPlayer(new RandomStrategy(), Mark.P2);
         final Game game = new Game(BinaryBoard.class, p1, p2);
 
+        controller.setGame(game);
+
         new Expectations() {
             {
-                game.getCurrent();
-                result = p1;
+                game.getCurrent(); result = p1;
                 view.enableInput();
+                view.requestMove(); result = 2;
+                game.getBoard().getColumns(); result = 6;
+                game.getBoard().columnHasFreeSpace(anyInt); result = true;
             }
         };
 
