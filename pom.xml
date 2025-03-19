@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>FourCharm</groupId>
     <artifactId>FourCharm</artifactId>
-    <version>v1.0</version>
+    <version>v1.0.1</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>21</javafx.version>
